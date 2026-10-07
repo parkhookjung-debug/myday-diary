@@ -1,0 +1,16 @@
+.gradle/
+.kotlin/
+.idea/
+**/build/
+local.properties
+*.iml
+.bootstrap/
+.gradle-user-home/
+# Local preview capture helper tied to the development machine.
+/previews/capture.cjs
+# Local signing credentials and environment files.
+*.jks
+*.keystore
+keystore.properties
+.env
+.env.*

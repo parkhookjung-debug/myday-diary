@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/widget_root" android:layout_width="match_parent" android:layout_height="match_parent"
+    android:orientation="vertical" android:padding="16dp" android:background="@drawable/widget_cream">
+    <TextView android:id="@+id/widget_date" android:layout_width="match_parent" android:layout_height="wrap_content"
+        android:text="MY DAY · 오늘의 하루" android:textSize="12sp" android:textColor="#805C49" />
+    <LinearLayout android:layout_width="match_parent" android:layout_height="0dp" android:layout_weight="1"
+        android:orientation="horizontal" android:gravity="center_vertical">
+        <TextView android:id="@+id/widget_character" android:layout_width="64dp" android:layout_height="match_parent"
+            android:gravity="center" android:text="🐰" android:textSize="36sp" android:contentDescription="@string/widget_character_description" />
+        <LinearLayout android:layout_width="0dp" android:layout_weight="1" android:layout_height="wrap_content" android:orientation="vertical">
+            <TextView android:id="@+id/widget_message" android:layout_width="match_parent" android:layout_height="wrap_content"
+                android:text="작은 기록 하나면 충분해!" android:textSize="15sp" android:textColor="#392B24" android:maxLines="2" android:ellipsize="end" />
+            <TextView android:id="@+id/widget_progress" android:layout_width="match_parent" android:layout_height="wrap_content"
+                android:layout_marginTop="6dp" android:text="할 일 0/0 · 습관 0/0" android:textSize="12sp" android:textColor="#66554B" />
+        </LinearLayout>
+    </LinearLayout>
+    <TextView android:id="@+id/widget_open" android:layout_width="match_parent" android:layout_height="40dp"
+        android:gravity="center" android:text="일기 쓰러 가기  ›" android:textSize="14sp" android:textColor="#805C49" />
+</LinearLayout>

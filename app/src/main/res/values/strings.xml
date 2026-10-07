@@ -1,0 +1,5 @@
+<resources>
+    <string name="widget_description">오늘의 할 일과 습관을 확인하고 캐릭터의 응원을 받아요.</string>
+    <string name="widget_character_description">캐릭터를 눌러 응원 메시지 바꾸기</string>
+    <string name="wallpaper_description">홈 화면에서 움직이는 오늘의 친구. 캐릭터를 드래그하거나 눌러 보세요.</string>
+</resources>
