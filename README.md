@@ -9,6 +9,7 @@ Kotlin + Jetpack Compose로 구현했습니다.
 MIT 라이선스로 공개하는 오픈소스 프로젝트입니다.
 팀 작업은 이슈 → 작업 브랜치 → PR → 리뷰 → 병합 순서로 진행합니다.
 개발 참여 방법과 5명 팀의 담당 영역 제안은 [기여 안내](CONTRIBUTING.md)를 참고하세요.
+디자인 파일의 수정 위치와 Android Studio 미리보기 방법은 [팀 디자인 적용 안내](docs/DESIGN.md)를 참고하세요.
 
 ## 저장소 받기
 
@@ -20,7 +21,7 @@ cd myday-diary
 Android Studio에서 clone한 `myday-diary` 폴더를 엽니다.
 `main`은 함께 사용하는 기준 브랜치입니다.
 GitHub Actions는 push와 PR에서 APK 빌드·Android Lint·등록된 단위 테스트를 실행합니다.
-성공한 실행의 Artifacts에서 디버그 APK를 받을 수 있습니다. 현재 단위 테스트 파일은 없습니다.
+성공한 실행의 Artifacts에서 디버그 APK를 받을 수 있습니다. 저장·날짜 이동 관련 단위 테스트를 포함합니다.
 
 ## 예시 화면
 

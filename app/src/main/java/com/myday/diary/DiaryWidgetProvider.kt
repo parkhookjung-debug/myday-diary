@@ -7,6 +7,7 @@ import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
 import android.widget.RemoteViews
+import com.myday.diary.data.DiaryStore
 import java.time.LocalDate
 
 /** A lightweight home-screen widget: no service or background animation loop. */

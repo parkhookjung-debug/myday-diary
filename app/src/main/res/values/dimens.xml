@@ -1,0 +1,21 @@
+<resources>
+    <!-- Home widget appearance. App spacing is in ui/design/DiaryDimensions.kt. -->
+    <dimen name="widget_padding">16dp</dimen>
+    <dimen name="widget_corner">24dp</dimen>
+    <dimen name="widget_date_text">12sp</dimen>
+    <dimen name="widget_character_width">64dp</dimen>
+    <dimen name="widget_character_text">36sp</dimen>
+    <dimen name="widget_message_text">15sp</dimen>
+    <dimen name="widget_progress_gap">6dp</dimen>
+    <dimen name="widget_progress_text">12sp</dimen>
+    <dimen name="widget_action_height">40dp</dimen>
+    <dimen name="widget_action_text">14sp</dimen>
+    <!-- Wallpaper appearance. Movement and lifecycle remain in the service. -->
+    <dimen name="wallpaper_character_radius">48dp</dimen>
+    <dimen name="wallpaper_dot_inset">26dp</dimen>
+    <dimen name="wallpaper_dot_spacing">52dp</dimen>
+    <dimen name="wallpaper_dot_radius">1dp</dimen>
+    <dimen name="wallpaper_heart_size">14dp</dimen>
+    <dimen name="wallpaper_heart_gap">12dp</dimen>
+    <dimen name="wallpaper_heart_top">20dp</dimen>
+</resources>

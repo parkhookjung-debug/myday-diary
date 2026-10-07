@@ -1,0 +1,13 @@
+<resources>
+    <!-- Shared palette: app, home widget and live wallpaper. -->
+    <color name="myday_primary">#805C49</color>
+    <color name="myday_secondary">#66745D</color>
+    <color name="myday_cream">#FFF8F3</color>
+    <color name="myday_forest">#F0F5EF</color>
+    <color name="myday_lavender">#F3F0FA</color>
+    <color name="myday_card">#FFFFFF</color>
+    <color name="myday_text">#392B24</color>
+    <color name="myday_text_muted">#66554B</color>
+    <color name="myday_wallpaper_dots">#1E805C49</color>
+    <color name="myday_character_circle">#D2FFFFFF</color>
+</resources>

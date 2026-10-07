@@ -1,14 +1,14 @@
 package com.myday.diary
 
 import android.graphics.Canvas
-import android.graphics.Color
-import android.graphics.Paint
 import android.os.Handler
 import android.os.Looper
 import android.os.SystemClock
 import android.service.wallpaper.WallpaperService
 import android.view.MotionEvent
 import android.view.SurfaceHolder
+import com.myday.diary.data.DiaryStore
+import com.myday.diary.ui.wallpaper.CharacterWallpaperRenderer
 import java.time.LocalDate
 import kotlin.math.abs
 import kotlin.math.hypot
@@ -20,7 +20,7 @@ class CharacterWallpaperService : WallpaperService() {
 
     inner class CharacterEngine : Engine() {
         private val handler = Handler(Looper.getMainLooper())
-        private val paint = Paint(Paint.ANTI_ALIAS_FLAG)
+        private val renderer = CharacterWallpaperRenderer(this@CharacterWallpaperService)
         private val density = resources.displayMetrics.density
         private val store by lazy { DiaryStore(this@CharacterWallpaperService) }
         private var character = "🐰"
@@ -42,7 +42,7 @@ class CharacterWallpaperService : WallpaperService() {
         private var previousFrame = 0L
         private var nextRead = 0L
         private var happyUntil = 0L
-        private val radius get() = min(48f * density, min(width, height) / 4f).coerceAtLeast(1f)
+        private val radius get() = min(renderer.characterRadius, min(width, height) / 4f).coerceAtLeast(1f)
         private val frame = object : Runnable {
             override fun run() {
                 if (!visible || !ready) return
@@ -139,28 +139,7 @@ class CharacterWallpaperService : WallpaperService() {
             val holder = surfaceHolder
             val canvas: Canvas = try { holder.lockCanvas() ?: return } catch (_: IllegalStateException) { return }
             try {
-                val backgrounds = intArrayOf(Color.rgb(255, 248, 243), Color.rgb(240, 245, 239), Color.rgb(243, 240, 250))
-                canvas.drawColor(backgrounds[theme])
-                // Quiet decorative dots belong to the wallpaper, never a touch overlay.
-                paint.color = Color.argb(30, 128, 92, 73)
-                var dotX = 26f * density
-                while (dotX < width) {
-                    var dotY = 26f * density
-                    while (dotY < height) { canvas.drawCircle(dotX, dotY, density, paint); dotY += 52f * density }
-                    dotX += 52f * density
-                }
-                paint.color = Color.argb(210, 255, 255, 255)
-                canvas.drawCircle(x, y, radius, paint)
-                paint.color = Color.rgb(57, 43, 36)
-                paint.textAlign = Paint.Align.CENTER
-                paint.textSize = radius * 1.35f
-                val baseline = y - (paint.fontMetrics.ascent + paint.fontMetrics.descent) / 2f
-                canvas.drawText(character, x, baseline, paint)
-                if (now < happyUntil) {
-                    paint.textSize = 14f * density
-                    paint.color = Color.rgb(128, 92, 73)
-                    canvas.drawText("♡", x, (y - radius - 12f * density).coerceAtLeast(20f * density), paint)
-                }
+                renderer.draw(canvas, theme, character, x, y, radius, now < happyUntil)
             } finally { holder.unlockCanvasAndPost(canvas) }
         }
     }
