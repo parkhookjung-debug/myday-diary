@@ -1,0 +1,25 @@
+name: 기능 제안 또는 작업 계획
+description: 새로운 기능이나 팀 작업을 제안합니다.
+title: "[기능] "
+labels: [enhancement]
+body:
+  - type: textarea
+    id: purpose
+    attributes:
+      label: 사용자가 해결하려는 문제
+    validations:
+      required: true
+  - type: textarea
+    id: scope
+    attributes:
+      label: 구현 범위
+      description: 이번 작업에 포함할 내용과 완료 기준을 적어 주세요.
+    validations:
+      required: true
+  - type: textarea
+    id: verification
+    attributes:
+      label: 확인 방법
+      description: 완료 후 어떻게 동작을 확인할까요?
+    validations:
+      required: true

@@ -1,0 +1,30 @@
+name: 오류 제보
+description: 앱이 예상과 다르게 동작하는 경우
+title: "[오류] "
+labels: [bug]
+body:
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: 재현 순서
+      description: 어느 화면에서 어떤 순서로 동작했는지 적어 주세요.
+    validations:
+      required: true
+  - type: textarea
+    id: behavior
+    attributes:
+      label: 예상 결과와 실제 결과
+    validations:
+      required: true
+  - type: input
+    id: device
+    attributes:
+      label: 기기와 Android 버전
+      placeholder: Galaxy S24 / Android 15 / 앱 0.2.0
+    validations:
+      required: true
+  - type: textarea
+    id: evidence
+    attributes:
+      label: 스크린샷 또는 로그
+      description: 개인 일기 내용과 개인정보를 지운 후 첨부해 주세요.

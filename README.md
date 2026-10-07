@@ -1,7 +1,26 @@
 # 마이데이 (MyDay)
 
+[![Android CI](https://github.com/parkhookjung-debug/myday-diary/actions/workflows/android.yml/badge.svg)](https://github.com/parkhookjung-debug/myday-diary/actions/workflows/android.yml)
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
+
 갤럭시에서 실행하는 커스터마이즈 일기 앱의 첫 프로토타입입니다.
 Kotlin + Jetpack Compose로 구현했습니다.
+
+MIT 라이선스로 공개하는 오픈소스 프로젝트입니다.
+팀 작업은 이슈 → 작업 브랜치 → PR → 리뷰 → 병합 순서로 진행합니다.
+개발 참여 방법과 5명 팀의 담당 영역 제안은 [기여 안내](CONTRIBUTING.md)를 참고하세요.
+
+## 저장소 받기
+
+```sh
+git clone https://github.com/parkhookjung-debug/myday-diary.git
+cd myday-diary
+```
+
+Android Studio에서 clone한 `myday-diary` 폴더를 엽니다.
+`main`은 함께 사용하는 기준 브랜치입니다.
+GitHub Actions는 push와 PR에서 APK 빌드·Android Lint·등록된 단위 테스트를 실행합니다.
+성공한 실행의 Artifacts에서 디버그 APK를 받을 수 있습니다. 현재 단위 테스트 파일은 없습니다.
 
 ## 예시 화면
 
