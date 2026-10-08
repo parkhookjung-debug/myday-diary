@@ -46,7 +46,7 @@ namespace MyDay.Windows
                 using(var stream=new MemoryStream(Encoding.UTF8.GetBytes("{\"Version\":1,\"Days\":[]}"))) Check(DiaryStore.Read(stream).CharacterStyle=="original","Older diary without variant field loads with original character");
                 using(var stream=new MemoryStream(Encoding.UTF8.GetBytes("{\"Version\":1,\"Days\":[{\"Key\":\"2026-10-08\",\"Value\":{\"Theme\":0,\"Mood\":\"평온해요\",\"Blocks\":[{\"Id\":\"old\",\"Kind\":\"text\",\"Text\":\"기존 글\",\"Checked\":false,\"Wide\":false}]}}]}"))) {
                     var legacy=DiaryStore.Read(stream).Days["2026-10-08"];
-                    Check(legacy.LayoutMode=="cards" && legacy.Blocks[0].Width==0 && legacy.Blocks[0].Text=="기존 글","Older diary loads without placement fields or losing text");
+                    Check(legacy.LayoutMode=="cards" && legacy.PageStyle=="plain" && legacy.Blocks[0].Title==null && legacy.Blocks[0].Width==0 && legacy.Blocks[0].Text=="기존 글","Older diary loads without template or placement fields or losing text");
                 }
                 var layout=DiaryEntry.FirstPage(); layout.Blocks[0].Text="이동해도 그대로"; layout.Blocks[1].Checked=true;
                 var originalIds=layout.Blocks.Select(b=>b.Id).ToArray(); DiaryLayout.EnableFree(layout,800);
@@ -64,6 +64,27 @@ namespace MyDay.Windows
                 var safeLayout=File.ReadAllBytes(layoutStore.FilePath); layout.Blocks[0].Width=-1; rejected=false;
                 try { layoutStore.Save(layoutBook); } catch(InvalidDataException) { rejected=true; }
                 Check(rejected && safeLayout.SequenceEqual(File.ReadAllBytes(layoutStore.FilePath)),"Invalid placement does not overwrite saved diary");
+                var journal=DiaryEntry.FirstPage(); journal.Blocks[0].Text="내가 이미 쓴 글"; journal.Blocks[1].Checked=true; journal.Mood="설레요";
+                DiaryLayout.EnableFree(journal,800); var retained=journal.Blocks.Select(b=>b.Id).ToArray(); var position=DiaryLayout.Bounds(journal.Blocks[0]);
+                DiaryTemplates.Append(journal,DiaryTemplates.All[1]);
+                Check(journal.Blocks.Take(4).Select(b=>b.Id).SequenceEqual(retained) && journal.Blocks[0].Text=="내가 이미 쓴 글" && journal.Blocks[1].Checked && journal.Mood=="설레요" && DiaryLayout.Bounds(journal.Blocks[0])==position,"Template append preserves existing content, checks, mood and free placement");
+                Check(journal.Blocks.Skip(4).All(b=>b.Y>=position.Bottom+16 && b.Width>=DiaryLayout.MinWidth),"Template sections append below existing free canvas");
+                var templateBook=new DiaryBook(); bool templatesSaved=true;
+                for(int i=0;i<DiaryTemplates.All.Length;i++) {
+                    var templateEntry=DiaryEntry.Empty(); templateEntry.PageStyle=DiaryTemplates.All[i].Style;
+                    DiaryTemplates.Append(templateEntry,DiaryTemplates.All[i]); templateBook.Days[DiaryStore.Key(new DateTime(2026,9,1).AddDays(i))]=templateEntry;
+                }
+                var templateStore=new DiaryStore(Path.Combine(directory,"templates")); templateStore.Save(templateBook); var templateReload=templateStore.Load();
+                foreach(var pair in templateBook.Days) templatesSaved&=pair.Value.PageStyle==templateReload.Days[pair.Key].PageStyle && pair.Value.Blocks.Select(b=>b.Title+"|"+b.Prompt+"|"+b.Text).SequenceEqual(templateReload.Days[pair.Key].Blocks.Select(b=>b.Title+"|"+b.Prompt+"|"+b.Text));
+                Check(templatesSaved,"All six journal formats preserve titles, prompts and paper styles through storage");
+                var full=DiaryEntry.Empty(); for(int i=0;i<199;i++) full.Blocks.Add(DiaryBlock.Create("text"));
+                Check(!DiaryTemplates.Append(full,DiaryTemplates.All[1]) && full.Blocks.Count==199,"Over-limit template inserts no partial sections");
+                var blank=DiaryTemplates.NewPage(); Check(blank.Blocks.Count==1 && blank.Blocks[0].Wide && blank.Blocks[0].Text=="" && blank.PageStyle=="paper","New diary starts with a spacious empty writing page");
+                var invalidBook=new DiaryBook(); var invalidEntry=DiaryTemplates.NewPage(); invalidBook.Days["2026-10-08"]=invalidEntry;
+                invalidEntry.Blocks[0].Title=new string('x',81); rejected=false; try { DiaryStore.Validate(invalidBook); } catch(InvalidDataException) { rejected=true; }
+                Check(rejected,"Oversized custom block title is rejected before saving");
+                invalidEntry.Blocks[0].Title="제목"; invalidEntry.PageStyle="unknown"; DiaryStore.Validate(invalidBook);
+                Check(invalidEntry.PageStyle=="plain" && invalidEntry.Blocks[0].Title=="제목","Unknown paper style falls back without losing custom title");
                 book.CharacterStyle="future-skin"; DiaryStore.Validate(book);
                 Check(book.CharacterStyle=="original" && book.Days.Count==2,"Unknown imported variant falls back without losing dates");
                 Check(MonsterVariants.All.Select(MonsterVariants.Id).Distinct().Count()==56 && MonsterVariants.All.All(v=>MonsterVariants.FromId(MonsterVariants.Id(v))==v),"Fifty-six variant IDs are distinct and round-trip");
@@ -198,8 +219,9 @@ namespace MyDay.Windows
         public static void Smoke(string directory)
         {
             Directory.CreateDirectory(directory);
-            var store=new DiaryStore(Path.Combine(directory,"isolated-data"));
-            using(var form=new DiaryWindow(store,new DiaryBook(),true))
+            var store=new DiaryStore(Path.Combine(directory,"isolated-data-"+Guid.NewGuid().ToString("N")));
+            var fixture=new DiaryBook(); fixture.Days[DiaryStore.Key(DateTime.Today)]=DiaryEntry.FirstPage();
+            using(var form=new DiaryWindow(store,fixture,true))
             {
                 Console.WriteLine("Smoke: preparing isolated diary window.");
                 form.StartPosition=FormStartPosition.Manual; form.Location=new Point(-30000,-30000);

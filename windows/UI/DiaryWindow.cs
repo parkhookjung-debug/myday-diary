@@ -14,14 +14,17 @@ namespace MyDay.Windows.UI
         private DiaryBook book;
         private DiaryEntry entry;
         private DateTime date = DateTime.Today;
+        private int historyPage;
         private bool dirty, binding, exitRequested,editingLayout;
         private readonly Timer saveTimer = new Timer { Interval = 350 };
         private readonly DiaryBoard board;
-        private readonly ChoiceButton layoutChoice=Design.Choice(108);
+        private readonly ChoiceButton layoutChoice=Design.Choice(92);
+        private readonly ChoiceButton pageStyle=Design.Choice(86);
+        private readonly Button templates=Design.Button("일기 형식",true);
         private readonly Button editLayout=Design.Button("배치 편집"),arrangeLayout=Design.Button("자동 정리");
         private readonly Label layoutHint=Design.Label("",9);
         private readonly Label status = Design.Label("내 컴퓨터에 자동 저장", 9);
-        private readonly Label dayTitle = Design.Label("", 15, true);
+        private readonly Label dayTitle = Design.Label("", 22, true);
         private readonly FlowLayoutPanel history = new FlowLayoutPanel { Dock=DockStyle.Fill, FlowDirection=FlowDirection.TopDown, WrapContents=false, AutoScroll=true, BackColor=Color.White, Padding=Design.Pad(12,8,4,0) };
         private readonly Label summary = Design.Label("", 9);
         private readonly DateTimePicker picker = new DateTimePicker { Format=DateTimePickerFormat.Custom, CustomFormat="yyyy. MM. dd", Width=Design.P(135) };
@@ -38,7 +41,7 @@ namespace MyDay.Windows.UI
         {
             this.store=store; this.book=book; this.testMode=testMode;
             board=new DiaryBoard(QueueSave) { Dock=DockStyle.Fill };
-            Text="MyDay · 나에게 보내는 하루";
+            Text="MyDay · 나의 작은 일기장";
             var work=Screen.PrimaryScreen.WorkingArea;
             Size=new Size(Math.Min(Design.P(1220),work.Width-32),Math.Min(Design.P(860),work.Height-32));
             MinimumSize=new Size(Math.Min(Design.P(860),work.Width-32),Math.Min(Design.P(570),work.Height-32));
@@ -48,7 +51,7 @@ namespace MyDay.Windows.UI
             var side = new Panel { Dock=DockStyle.Left, Width=Design.P(260), BackColor=Color.White };
             var sideHeader=new Panel { Dock=DockStyle.Top, Height=Design.P(158), BackColor=Color.White };
             var brand=Design.Label("myday",20,true); brand.Location=Design.Point(24,20); sideHeader.Controls.Add(brand);
-            var tagline=Design.Label("나에게 보내는 하루",9); tagline.ForeColor=Design.Muted; tagline.Location=Design.Point(25,64); sideHeader.Controls.Add(tagline);
+            var tagline=Design.Label("나의 작은 일기장",9); tagline.ForeColor=Design.Muted; tagline.Location=Design.Point(25,64); sideHeader.Controls.Add(tagline);
             var newDay=Design.Button("＋ 오늘 기록하기",true); newDay.Location=Design.Point(24,96); newDay.Width=Design.P(212);
             newDay.Click+=delegate { ChangeDate(DateTime.Today); }; sideHeader.Controls.Add(newDay);
             var historyTitle=Design.Label("기록함",9,true); historyTitle.Location=Design.Point(26,140); sideHeader.Controls.Add(historyTitle);
@@ -67,14 +70,14 @@ namespace MyDay.Windows.UI
             side.Controls.Add(history); side.Controls.Add(sideHeader); side.Controls.Add(companion);
             var divider=new Panel { Dock=DockStyle.Right, Width=1, BackColor=Design.Soft }; side.Controls.Add(divider);
             var grid=new TableLayoutPanel { Dock=DockStyle.Fill, ColumnCount=1, RowCount=5, Margin=Design.Pad(0), BackColor=Color.Transparent };
-            grid.RowStyles.Add(new RowStyle(SizeType.Absolute,Design.P(80))); grid.RowStyles.Add(new RowStyle(SizeType.Absolute,Design.P(44)));
+            grid.RowStyles.Add(new RowStyle(SizeType.Absolute,Design.P(126))); grid.RowStyles.Add(new RowStyle(SizeType.Absolute,Design.P(44)));
             grid.RowStyles.Add(new RowStyle(SizeType.Absolute,Design.P(48)));
             grid.RowStyles.Add(new RowStyle(SizeType.Percent,100)); grid.RowStyles.Add(new RowStyle(SizeType.Absolute,Design.P(62)));
-            var header=new Panel { Dock=DockStyle.Fill }; dayTitle.Location=Design.Point(0,6); header.Controls.Add(dayTitle);
-            var subtitle=Design.Label("나와의 대화  /  오늘의 작은 조각들",9); subtitle.ForeColor=Design.Muted; subtitle.Location=Design.Point(2,40); header.Controls.Add(subtitle);
-            var headerLine=new Panel { Dock=DockStyle.Bottom, Height=1, BackColor=Design.Soft }; header.Controls.Add(headerLine);
-            var dates=new FlowLayoutPanel { FlowDirection=FlowDirection.LeftToRight, Top=Design.P(20), Width=Design.P(270), Height=Design.P(32), WrapContents=false, Anchor=AnchorStyles.Top|AnchorStyles.Right };
-            header.Resize+=delegate { dates.Left=header.ClientSize.Width-dates.Width; dayTitle.MaximumSize=new Size(Math.Max(Design.P(100),dates.Left-Design.P(12)),Design.P(32)); };
+            var header=new JournalCover { Dock=DockStyle.Fill, Margin=Design.Pad(0,0,0,12) }; dayTitle.Location=Design.Point(24,34); header.Controls.Add(dayTitle);
+            var eyebrow=Design.Label("MY PERSONAL JOURNAL",8,true); eyebrow.ForeColor=Design.Accent; eyebrow.Location=Design.Point(25,14); header.Controls.Add(eyebrow);
+            var subtitle=Design.Label("조용히 쌓이는, 나만의 시간",9); subtitle.ForeColor=Design.Muted; subtitle.Location=Design.Point(25,82); header.Controls.Add(subtitle);
+            var dates=new FlowLayoutPanel { FlowDirection=FlowDirection.LeftToRight, Top=Design.P(49), Width=Design.P(270), Height=Design.P(32), WrapContents=false, Anchor=AnchorStyles.Top|AnchorStyles.Right, BackColor=header.BackColor };
+            header.Resize+=delegate { dates.Left=header.ClientSize.Width-dates.Width-Design.P(12); dayTitle.MaximumSize=new Size(Math.Max(Design.P(100),dates.Left-Design.P(36)),Design.P(42)); };
             var prev=Design.Button("‹"); prev.Size=Design.Size(30,26); prev.AccessibleName="이전 날짜"; prev.Click+=delegate { ChangeDate(date.AddDays(-1)); };
             var next=Design.Button("›"); next.Size=Design.Size(30,26); next.AccessibleName="다음 날짜"; next.Click+=delegate { ChangeDate(date.AddDays(1)); };
             var today=Design.Button("오늘"); today.Size=Design.Size(58,26); today.Click+=delegate { ChangeDate(DateTime.Today); };
@@ -86,9 +89,12 @@ namespace MyDay.Windows.UI
             mood.Items.AddRange(new object[] { "평온해요","행복해요","피곤해요","속상해요","설레요" }); mood.AccessibleName="오늘의 마음";
             mood.SelectedIndexChanged+=delegate { if (!binding) { entry.Mood=(string)mood.SelectedItem; QueueSave(); } };
             var themeLabel=Design.Label("배경",9); themeLabel.Margin=Design.Pad(26,4,10,0);
-            theme.Items.AddRange(new object[] { "라이트","블루","라일락" }); theme.AccessibleName="배경 테마";
+            theme.Items.AddRange(new object[] { "아이보리","화이트","미스트" }); theme.AccessibleName="배경 테마";
             theme.SelectedIndexChanged+=delegate { if (!binding) { entry.Theme=theme.SelectedIndex; ApplyTheme(); QueueSave(); } };
-            appearance.Controls.AddRange(new Control[] { moodLabel,mood,themeLabel,theme }); grid.Controls.Add(appearance,0,1);
+            pageStyle.Items.AddRange(new object[] {"노트","카드","도트"}); pageStyle.AccessibleName="일기 종이 스타일";
+            pageStyle.Margin=Design.Pad(12,0,0,0);
+            pageStyle.SelectedIndexChanged+=delegate { if(!binding) { entry.PageStyle=new[] {"paper","plain","dots"}[pageStyle.SelectedIndex]; QueueSave(); RenderCards(); } };
+            appearance.Controls.AddRange(new Control[] { moodLabel,mood,themeLabel,theme,pageStyle }); grid.Controls.Add(appearance,0,1);
             var layoutBar=new FlowLayoutPanel { Dock=DockStyle.Fill,WrapContents=false,Padding=Design.Pad(0,5,0,0) };
             var layoutLabel=Design.Label("배치",9); layoutLabel.Margin=Design.Pad(0,7,10,0);
             layoutChoice.Items.AddRange(new object[] {"자동 정렬","자유 배치"}); layoutChoice.AccessibleName="일기 블록 배치 방식";
@@ -101,8 +107,10 @@ namespace MyDay.Windows.UI
             };
             arrangeLayout.Click+=delegate { board.CancelPlacement(); DiaryLayout.ArrangeFree(entry,board.LogicalWidth); QueueSave(); ArrangeCards(); };
             layoutHint.ForeColor=Design.Muted; layoutHint.Font=Design.Font(8); layoutHint.Margin=Design.Pad(2,9,0,0);
-            editLayout.Width=Design.P(90); arrangeLayout.Width=Design.P(90);
-            layoutBar.Controls.AddRange(new Control[] {layoutLabel,layoutChoice,editLayout,arrangeLayout,layoutHint}); grid.Controls.Add(layoutBar,0,2);
+            editLayout.Width=Design.P(84); arrangeLayout.Width=Design.P(84); templates.Width=Design.P(92);
+            templates.Click+=delegate { using(var gallery=new TemplateGallery()) if(gallery.ShowDialog(this)==DialogResult.OK) ApplyTemplate(gallery.SelectedTemplate); };
+            layoutBar.Controls.AddRange(new Control[] {layoutLabel,layoutChoice,editLayout,arrangeLayout,templates,layoutHint}); grid.Controls.Add(layoutBar,0,2);
+            layoutBar.Resize+=delegate { layoutHint.Visible=layoutBar.ClientSize.Width>=Design.P(640); };
             var toolbar=new FlowLayoutPanel { Dock=DockStyle.Fill, WrapContents=false, Padding=Design.Pad(0,14,0,0) };
             string[] kinds={"text","todo","habit","emotion"}; string[] names={"＋ 글 일기","＋ 할 일","＋ 습관","＋ 감정 기록"};
             for(int i=0;i<kinds.Length;i++) { string kind=kinds[i]; var add=Design.Button(names[i],i==0); add.Width=Design.P(100); add.Click+=delegate { AddBlock(kind); }; toolbar.Controls.Add(add); }
@@ -168,14 +176,15 @@ namespace MyDay.Windows.UI
         }
         private void LoadDate()
         {
-            if(!book.Days.TryGetValue(DiaryStore.Key(date),out entry)) entry=DiaryEntry.FirstPage();
+            if(!book.Days.TryGetValue(DiaryStore.Key(date),out entry)) entry=DiaryTemplates.NewPage();
             editingLayout=false;
             if(entry.LayoutMode=="free") DiaryLayout.EnableFree(entry,board.LogicalWidth);
             binding=true; picker.Value=date;
-            dayTitle.Text=date.ToString("M월 d일, dddd",new System.Globalization.CultureInfo("ko-KR"));
+            dayTitle.Text=date.ToString("M월 d일",new System.Globalization.CultureInfo("ko-KR"));
             mood.SelectedIndex=Math.Max(0,mood.Items.IndexOf(entry.Mood)); theme.SelectedIndex=entry.Theme;
             layoutChoice.SelectedIndex=entry.LayoutMode=="free"?1:0;
-            binding=false; RefreshLayoutControls(); ApplyTheme(); ApplyVariant(); RenderCards(); RefreshHistory();
+            pageStyle.SelectedIndex=entry.PageStyle=="paper"?0:entry.PageStyle=="dots"?2:1;
+            binding=false; RefreshLayoutControls(); ApplyTheme(); ApplyVariant(); RenderCards(); RefreshHistory(true);
         }
         private void SelectLayout(bool free)
         {
@@ -201,7 +210,7 @@ namespace MyDay.Windows.UI
             foreach(var block in entry.Blocks)
             {
                 var item=block;
-                var card=new BlockCard(item,QueueSave,delegate(int step) { MoveBlock(item,step); },delegate { RemoveBlock(item); },delegate { item.Wide=!item.Wide; QueueSave(); RenderCards(); });
+                var card=new BlockCard(item,QueueSave,delegate(int step) { MoveBlock(item,step); },delegate { RemoveBlock(item); },delegate { item.Wide=!item.Wide; QueueSave(); RenderCards(); },entry.PageStyle);
                 card.SetEditing(editingLayout,entry.LayoutMode=="free"); board.AddCard(card);
             }
             if(entry.Blocks.Count==0) { var empty=Design.Label("빈 페이지예요. 위에서 원하는 블록을 추가해보세요.",11); empty.Margin=Design.Pad(20); board.Controls.Add(empty); }
@@ -218,6 +227,19 @@ namespace MyDay.Windows.UI
             if(entry.LayoutMode=="free") DiaryLayout.PlaceNew(entry,block);
             QueueSave(); RenderCards();
             var last=board.Controls.OfType<BlockCard>().First(c=>c.Block==block); board.ScrollControlIntoView(last); if(!editingLayout) last.Editor.Focus();
+        }
+        private void ApplyTemplate(JournalTemplate template)
+        {
+            board.CancelPlacement();
+            bool untouched=!book.Days.ContainsKey(DiaryStore.Key(date)) && entry.LayoutMode=="cards" && entry.Blocks.Count==1 &&
+                entry.Blocks[0].Text.Length==0 && entry.Blocks[0].Title==DiaryTemplates.All[0].Sections[0].Title && entry.Blocks[0].Width==0;
+            if(!DiaryTemplates.Append(entry,template)) { MessageBox.Show(this,"블록은 한 날짜에 최대 200개까지 추가할 수 있어요."); return; }
+            if(untouched) entry.Blocks.RemoveAt(0);
+            entry.PageStyle=template.Style;
+            bool previous=binding; binding=true; pageStyle.SelectedIndex=entry.PageStyle=="paper"?0:entry.PageStyle=="dots"?2:1; binding=previous;
+            QueueSave(); RenderCards();
+            var firstAdded=entry.Blocks[entry.Blocks.Count-template.Sections.Length];
+            var card=board.Controls.OfType<BlockCard>().First(c=>c.Block==firstAdded); board.ScrollControlIntoView(card); if(!editingLayout) card.Editor.Focus();
         }
         public void MoveBlock(DiaryBlock block,int step)
         {
@@ -255,14 +277,16 @@ namespace MyDay.Windows.UI
                 MessageBox.Show(this,"기록을 저장하지 못했어요. 창을 닫기 전에 디스크 공간과 폴더 권한을 확인해주세요.\n\n"+ex.Message,"저장 오류",MessageBoxButtons.OK,MessageBoxIcon.Error); return false;
             }
         }
-        private void RefreshHistory()
+        private void RefreshHistory(bool reveal=false)
         {
             var scroll=history.AutoScrollPosition;
             history.SuspendLayout();
             foreach(Control row in history.Controls.Cast<Control>().ToArray()) row.Dispose();
             var dates=book.Days.Keys.Select(key=>DateTime.ParseExact(key,"yyyy-MM-dd",System.Globalization.CultureInfo.InvariantCulture))
                 .Concat(new[] {date,DateTime.Today}).Distinct().OrderByDescending(value=>value).ToList();
-            foreach(var value in dates) {
+            if(reveal) historyPage=dates.IndexOf(date)/60;
+            historyPage=Math.Max(0,Math.Min(historyPage,(dates.Count-1)/60));
+            foreach(var value in dates.Skip(historyPage*60).Take(60)) {
                 DiaryEntry saved;
                 string preview="새로운 하루를 기록해보세요";
                 if(book.Days.TryGetValue(DiaryStore.Key(value),out saved)) {
@@ -273,6 +297,16 @@ namespace MyDay.Windows.UI
                 var target=value;
                 var row=new HistoryRow(target,preview,target==date); row.Click+=delegate { ChangeDate(target); };
                 history.Controls.Add(row);
+            }
+            if(dates.Count>60) {
+                var pages=new FlowLayoutPanel { Width=Design.P(232), Height=Design.P(38), WrapContents=false };
+                var prev=Design.Button("‹"); prev.Width=Design.P(36); prev.Enabled=historyPage>0;
+                var next=Design.Button("›"); next.Width=Design.P(36); next.Enabled=(historyPage+1)*60<dates.Count;
+                prev.AccessibleName="최근 기록 목록"; next.AccessibleName="이전 기록 목록";
+                prev.Click+=delegate { historyPage--; RefreshHistory(); history.AutoScrollPosition=Point.Empty; };
+                next.Click+=delegate { historyPage++; RefreshHistory(); history.AutoScrollPosition=Point.Empty; };
+                var count=Design.Label((historyPage+1)+" / "+((dates.Count+59)/60),8); count.Margin=Design.Pad(8,10,8,0);
+                pages.Controls.AddRange(new Control[] {prev,count,next}); history.Controls.Add(pages);
             }
             history.ResumeLayout(); history.AutoScrollPosition=new Point(-scroll.X,-scroll.Y);
         }
@@ -382,11 +416,31 @@ namespace MyDay.Windows.UI
             original=Size; Size=MinimumSize; PerformLayout(); ArrangeCards();
             if(DiaryLayout.Bounds(entry.Blocks.First(b=>b.Id==id))!=bounds || board.AutoScrollMinSize.Width<positioned.Block.Width) throw new Exception("Small window changed saved placement or lost scrolling");
             Size=original; PerformLayout(); ArrangeCards();
+            var savedIds=entry.Blocks.Select(b=>b.Id).ToArray();
+            var savedText=entry.Blocks.Select(b=>b.Text).ToArray();
+            var savedPositions=entry.Blocks.Select(DiaryLayout.Bounds).ToArray();
+            ApplyTemplate(DiaryTemplates.All[1]);
+            if(!entry.Blocks.Take(savedIds.Length).Select(b=>b.Id).SequenceEqual(savedIds) ||
+                !entry.Blocks.Take(savedIds.Length).Select(b=>b.Text).SequenceEqual(savedText) ||
+                !entry.Blocks.Take(savedIds.Length).Select(DiaryLayout.Bounds).SequenceEqual(savedPositions)) throw new Exception("Template overwrote existing diary content or placement");
+            FlushSave(); ChangeDate(date.AddDays(1)); ChangeDate(date.AddDays(-1));
+            if(entry.PageStyle!="paper" || !entry.Blocks.Any(b=>b.Title=="기억에 남는 장면" && b.Prompt!=null)) throw new Exception("Template metadata did not survive date reload");
+            entry.Blocks.RemoveAll(b=>!savedIds.Contains(b.Id)); RenderCards();
+            var historyDates=Enumerable.Range(0,121).Select(i=>new DateTime(2024,1,1).AddDays(i)).ToArray();
+            foreach(var value in historyDates) book.Days[DiaryStore.Key(value)]=DiaryEntry.Empty();
+            RefreshHistory(true);
+            if(history.Controls.OfType<HistoryRow>().Count()>60) throw new Exception("History created an unbounded number of native rows");
+            var pageControls=history.Controls.OfType<FlowLayoutPanel>().Single();
+            pageControls.Controls.OfType<Button>().First(button=>button.AccessibleName=="이전 기록 목록").PerformClick();
+            if(historyPage!=1 || history.Controls.OfType<HistoryRow>().Count()>60) throw new Exception("History pagination failed");
+            var returnDate=date; ChangeDate(historyDates[0]);
+            if(historyPage==0 || !history.Controls.OfType<HistoryRow>().Any(row=>row.AccessibleName==historyDates[0].ToString("yyyy년 M월 d일")+" 일기")) throw new Exception("Selecting old date did not reveal its history page");
+            foreach(var value in historyDates) book.Days.Remove(DiaryStore.Key(value)); ChangeDate(returnDate);
             // Recompose this example freely to demonstrate positions independent of the card grid.
             var textBlock=entry.Blocks.First(b=>b.Id==id); DiaryLayout.SetBounds(textBlock,new Rectangle(18,12,450,250));
             DiaryLayout.SetBounds(entry.Blocks.First(b=>b.Kind=="todo"),new Rectangle(492,34,300,210));
             DiaryLayout.SetBounds(entry.Blocks.First(b=>b.Kind=="habit"),new Rectangle(480,274,310,200));
-            DiaryLayout.SetBounds(entry.Blocks.First(b=>b.Kind=="emotion"),new Rectangle(34,290,434,230));
+            DiaryLayout.SetBounds(entry.Blocks.First(b=>b.Kind=="emotion"),new Rectangle(34,284,434,200));
             entry.Blocks.First(b=>b.Kind=="todo").Text="산책 20분 하기\r\n책상 정리하기";
             entry.Blocks.First(b=>b.Kind=="todo").Checked=true;
             for(int i=1;i<=2;i++) {
@@ -394,12 +448,27 @@ namespace MyDay.Windows.UI
                 message.Text=i==1?"바쁜 하루 끝에, 잠깐의 여유.":"시작이 조금 서툴러도 괜찮아.";
                 previous.Blocks.Add(message); book.Days[DiaryStore.Key(date.AddDays(-i))]=previous;
             }
-            RenderCards();
+            theme.SelectedIndex=0; RenderCards();
             ArrangeCards(); board.AutoScrollPosition=Point.Empty; QueueSave(); FlushSave();
             avatar.Fire(); PerformLayout(); ArrangeCards(); Update();
             using(var image=new Bitmap(Width,Height)) { DrawToBitmap(image,new Rectangle(Point.Empty,Size)); image.Save(destination,System.Drawing.Imaging.ImageFormat.Png); }
             editLayout.PerformClick(); PerformLayout(); Update();
             using(var image=new Bitmap(Width,Height)) { DrawToBitmap(image,new Rectangle(Point.Empty,Size)); image.Save(Path.Combine(Path.GetDirectoryName(destination),"windows-free-layout.png"),System.Drawing.Imaging.ImageFormat.Png); }
+            using(var gallery=new TemplateGallery()) {
+                gallery.StartPosition=FormStartPosition.Manual; gallery.Location=new Point(-30000,-30000); gallery.Show(); Application.DoEvents();
+                gallery.VerifyAndRender(Path.Combine(Path.GetDirectoryName(destination),"windows-journal-templates.png"));
+            }
+            ChangeDate(date.AddDays(1)); ApplyTemplate(DiaryTemplates.All[1]);
+            if(entry.Blocks.Count!=3) throw new Exception("Fresh page retained a redundant empty starter when selecting format");
+            entry.Blocks[0].Text="오랜만에 창문을 열고,\r\n좋아하는 음악을 들으며 하루를 시작했다.";
+            entry.Blocks[1].Text="작게 시작해도 충분하다는 것.\r\n끝낸 일 하나가 다음 일을 할 힘이 되어줬다.";
+            entry.Blocks[2].Text="점심 먹고 10분 산책하기";
+            SelectLayout(true);
+            DiaryLayout.SetBounds(entry.Blocks[0],new Rectangle(18,12,450,210));
+            DiaryLayout.SetBounds(entry.Blocks[1],new Rectangle(34,244,434,230));
+            DiaryLayout.SetBounds(entry.Blocks[2],new Rectangle(492,46,300,220));
+            RenderCards(); QueueSave(); FlushSave(); board.AutoScrollPosition=Point.Empty; PerformLayout(); Update();
+            using(var image=new Bitmap(Width,Height)) { DrawToBitmap(image,new Rectangle(Point.Empty,Size)); image.Save(Path.Combine(Path.GetDirectoryName(destination),"windows-reflection.png"),System.Drawing.Imaging.ImageFormat.Png); }
         }
         protected override void Dispose(bool disposing)
         {

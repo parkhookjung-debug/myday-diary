@@ -16,12 +16,13 @@ namespace MyDay.Windows.UI
         public static Size Size(int width, int height) { return new Size(P(width), P(height)); }
         public static Padding Pad(int all) { return new Padding(P(all)); }
         public static Padding Pad(int l, int t, int r, int b) { return new Padding(P(l), P(t), P(r), P(b)); }
-        public static readonly Color Ink = Color.FromArgb(35, 35, 48);
-        public static readonly Color Muted = Color.FromArgb(115, 115, 132);
-        public static readonly Color Accent = Color.FromArgb(112, 86, 232);
-        public static readonly Color Soft = Color.FromArgb(235, 235, 243);
-        public static readonly Color Tint = Color.FromArgb(242, 238, 255);
-        public static readonly Color[] Backgrounds = { Color.FromArgb(249, 249, 252), Color.FromArgb(246, 249, 255), Color.FromArgb(249, 246, 255) };
+        public static readonly Color Ink = Color.FromArgb(37, 52, 47);
+        public static readonly Color Muted = Color.FromArgb(109, 117, 112);
+        public static readonly Color Accent = Color.FromArgb(38, 99, 84);
+        public static readonly Color Soft = Color.FromArgb(229, 231, 225);
+        public static readonly Color Tint = Color.FromArgb(233, 242, 234);
+        public static readonly Color Paper = Color.FromArgb(255, 253, 247);
+        public static readonly Color[] Backgrounds = { Color.FromArgb(246, 245, 240), Color.FromArgb(248, 249, 248), Color.FromArgb(240, 245, 240) };
         private static readonly Dictionary<string, Font> Fonts = new Dictionary<string, Font>();
         public static Font Font(float size, bool bold = false)
         {
@@ -68,7 +69,7 @@ namespace MyDay.Windows.UI
             while(surface!=null && surface.BackColor.A<255) surface=surface.Parent;
             e.Graphics.Clear(surface==null?Color.White:surface.BackColor);
             e.Graphics.SmoothingMode=SmoothingMode.AntiAlias;
-            Color fill=hover && Enabled ? (BackColor==Design.Accent ? Color.FromArgb(96,70,213) : Design.Tint) : BackColor;
+            Color fill=hover && Enabled ? (BackColor==Design.Accent ? Color.FromArgb(29,78,66) : Design.Tint) : BackColor;
             using(var path=Design.Rounded(new RectangleF(1,1,Width-3,Height-3),Design.P(10)))
             using(var brush=new SolidBrush(fill))
             using(var pen=new Pen(FlatAppearance.BorderColor)) {
@@ -115,6 +116,7 @@ namespace MyDay.Windows.UI
     public class CardPanel : Panel
     {
         public Color Fill = Color.White;
+        public string Pattern="plain";
         public CardPanel() { DoubleBuffered = true; Padding = Design.Pad(22); BackColor = Color.Transparent; }
         protected override void OnPaint(PaintEventArgs e)
         {
@@ -123,6 +125,16 @@ namespace MyDay.Windows.UI
             using (var brush = new SolidBrush(Fill))
             using (var pen = new Pen(Design.Soft))
             { e.Graphics.FillPath(brush, path); e.Graphics.DrawPath(pen, path); }
+            if(Pattern=="paper") {
+                using(var pen=new Pen(Color.FromArgb(225,220,207))) {
+                    e.Graphics.DrawLine(pen,Design.P(14),Design.P(78),Design.P(14),Height-Design.P(28));
+                    for(int y=Design.P(94);y<Height-Design.P(36);y+=Design.P(28)) e.Graphics.DrawLine(pen,Design.P(11),y,Design.P(17),y);
+                }
+            } else if(Pattern=="dots") {
+                using(var brush=new SolidBrush(Color.FromArgb(218,224,216)))
+                    for(int y=Design.P(86);y<Height-Design.P(34);y+=Design.P(18))
+                        e.Graphics.FillEllipse(brush,Design.P(13),y,Design.P(2),Design.P(2));
+            }
             base.OnPaint(e);
         }
     }
