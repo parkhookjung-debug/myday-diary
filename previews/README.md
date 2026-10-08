@@ -11,6 +11,7 @@
 | 파일 | 내용 |
 | --- | --- |
 | `windows/windows-example.png` | 실제 Windows UI에 격리된 예시 기록을 넣은 화면 |
+| `windows/windows-free-layout.png` | 블록을 자유롭게 옮기고 크기를 조절하는 편집 화면 |
 | `windows/windows-pet.png` | 초기 투명 바탕화면 캐릭터 예시 |
 | `windows/windows-lively.gif` | 캐릭터 포즈·생동감 있는 동작 예시 |
 | `windows/windows-variants-first.gif` | 상몬 1–16번 |

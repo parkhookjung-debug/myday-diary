@@ -44,6 +44,26 @@ namespace MyDay.Windows
                 book.CharacterStyle="winged"; store.Save(book);
                 Check(store.Load().CharacterStyle=="winged" && store.Load().Days["2026-10-08"].Blocks[0].Text==entry.Blocks[0].Text,"Selected variant survives reload without changing diary text");
                 using(var stream=new MemoryStream(Encoding.UTF8.GetBytes("{\"Version\":1,\"Days\":[]}"))) Check(DiaryStore.Read(stream).CharacterStyle=="original","Older diary without variant field loads with original character");
+                using(var stream=new MemoryStream(Encoding.UTF8.GetBytes("{\"Version\":1,\"Days\":[{\"Key\":\"2026-10-08\",\"Value\":{\"Theme\":0,\"Mood\":\"평온해요\",\"Blocks\":[{\"Id\":\"old\",\"Kind\":\"text\",\"Text\":\"기존 글\",\"Checked\":false,\"Wide\":false}]}}]}"))) {
+                    var legacy=DiaryStore.Read(stream).Days["2026-10-08"];
+                    Check(legacy.LayoutMode=="cards" && legacy.Blocks[0].Width==0 && legacy.Blocks[0].Text=="기존 글","Older diary loads without placement fields or losing text");
+                }
+                var layout=DiaryEntry.FirstPage(); layout.Blocks[0].Text="이동해도 그대로"; layout.Blocks[1].Checked=true;
+                var originalIds=layout.Blocks.Select(b=>b.Id).ToArray(); DiaryLayout.EnableFree(layout,800);
+                Check(layout.LayoutMode=="free" && layout.Blocks.Select(b=>b.Id).SequenceEqual(originalIds) && layout.Blocks[0].Text=="이동해도 그대로" && layout.Blocks[1].Checked,"Entering free placement retains block IDs, text and checks");
+                DiaryLayout.SetBounds(layout.Blocks[0],new Rectangle(73,145,410,330)); layout.LayoutMode="cards"; DiaryLayout.EnableFree(layout,450);
+                Check(DiaryLayout.Bounds(layout.Blocks[0])==new Rectangle(73,145,410,330),"Returning from automatic layout restores prior free placement");
+                var newBlock=DiaryBlock.Create("habit"); layout.Blocks.Add(newBlock); DiaryLayout.PlaceNew(layout,newBlock);
+                Check(newBlock.Y>=layout.Blocks.Take(4).Max(b=>b.Y+b.Height)+16,"New blocks appear below placed blocks");
+                Check(DiaryLayout.Drag(new Rectangle(15,20,400,300),new Point(-1000,-1000),false)==new Rectangle(0,0,400,300) &&
+                    DiaryLayout.Drag(new Rectangle(15,20,400,300),new Point(-1000,-1000),true)==new Rectangle(15,20,DiaryLayout.MinWidth,DiaryLayout.MinHeight),"Movement and resizing retain safe positions and usable minimum sizes");
+                var layoutBook=new DiaryBook(); layoutBook.Days["2026-10-08"]=layout; layoutBook.Days["2026-10-09"]=DiaryEntry.FirstPage();
+                var layoutStore=new DiaryStore(Path.Combine(directory,"layouts")); layoutStore.Save(layoutBook);
+                var restored=layoutStore.Load();
+                Check(restored.Days["2026-10-08"].LayoutMode=="free" && DiaryLayout.Bounds(restored.Days["2026-10-08"].Blocks[0])==new Rectangle(73,145,410,330) && restored.Days["2026-10-09"].LayoutMode=="cards","Placement and size survive saving independently for each date");
+                var safeLayout=File.ReadAllBytes(layoutStore.FilePath); layout.Blocks[0].Width=-1; rejected=false;
+                try { layoutStore.Save(layoutBook); } catch(InvalidDataException) { rejected=true; }
+                Check(rejected && safeLayout.SequenceEqual(File.ReadAllBytes(layoutStore.FilePath)),"Invalid placement does not overwrite saved diary");
                 book.CharacterStyle="future-skin"; DiaryStore.Validate(book);
                 Check(book.CharacterStyle=="original" && book.Days.Count==2,"Unknown imported variant falls back without losing dates");
                 Check(MonsterVariants.All.Select(MonsterVariants.Id).Distinct().Count()==56 && MonsterVariants.All.All(v=>MonsterVariants.FromId(MonsterVariants.Id(v))==v),"Fifty-six variant IDs are distinct and round-trip");

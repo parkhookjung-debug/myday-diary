@@ -53,7 +53,7 @@ namespace MyDay.Windows
                 {
                     var directory=Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),"MyDay","Windows");
                     var store=new DiaryStore(directory);
-                    using(var session=new DiarySession(store,store.Load())) Application.Run(session);
+                    using(var session=new DiarySession(store,store.Load(),args.Length==1 && args[0]=="--open-diary")) Application.Run(session);
                     return 0;
                 }
                 catch(Exception ex)
@@ -68,11 +68,12 @@ namespace MyDay.Windows
     internal sealed class DiarySession : ApplicationContext
     {
         private readonly DiaryWindow window;
-        public DiarySession(DiaryStore store,DiaryBook book)
+        public DiarySession(DiaryStore store,DiaryBook book,bool openDiary=false)
         {
             window=new DiaryWindow(store,book);
             window.FormClosed+=delegate { ExitThread(); };
             window.StartOnDesktop();
+            if(openDiary) window.OpenDiary();
         }
         protected override void Dispose(bool disposing)
         {

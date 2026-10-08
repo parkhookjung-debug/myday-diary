@@ -17,6 +17,10 @@ namespace MyDay.Windows.Core
         [DataMember] public string Text;
         [DataMember] public bool Checked;
         [DataMember] public bool Wide;
+        [DataMember(EmitDefaultValue=false)] public int X;
+        [DataMember(EmitDefaultValue=false)] public int Y;
+        [DataMember(EmitDefaultValue=false)] public int Width;
+        [DataMember(EmitDefaultValue=false)] public int Height;
         public static DiaryBlock Create(string kind)
         {
             return new DiaryBlock { Id = Guid.NewGuid().ToString("N"), Kind = kind, Text = "" };
@@ -29,6 +33,7 @@ namespace MyDay.Windows.Core
         [DataMember] public int Theme;
         [DataMember] public string Mood;
         [DataMember] public List<DiaryBlock> Blocks;
+        [DataMember(EmitDefaultValue=false)] public string LayoutMode="cards";
         public static DiaryEntry Empty()
         {
             return new DiaryEntry { Mood = "평온해요", Blocks = new List<DiaryBlock>() };
@@ -81,12 +86,17 @@ namespace MyDay.Windows.Core
                 var entry = pair.Value;
                 if (entry == null || entry.Blocks == null || entry.Blocks.Count > 200 || entry.Theme < 0 || entry.Theme > 2)
                     throw new InvalidDataException("일기 구성이 올바르지 않습니다.");
+                if(entry.LayoutMode!="free") entry.LayoutMode="cards";
                 var ids = new HashSet<string>();
                 foreach (var block in entry.Blocks)
                 {
                     if (block == null || String.IsNullOrWhiteSpace(block.Id) || !ids.Add(block.Id) ||
                         !new[] { "text", "todo", "habit", "emotion" }.Contains(block.Kind) || block.Text == null || block.Text.Length > 100000)
                         throw new InvalidDataException("일기 블록 형식이 올바르지 않습니다.");
+                    if(block.X<0 || block.Y<0 || block.X>DiaryLayout.MaxPosition || block.Y>DiaryLayout.MaxPosition ||
+                        block.Width<0 || block.Width>DiaryLayout.MaxWidth || block.Width>0 && block.Width<DiaryLayout.MinWidth ||
+                        block.Height<0 || block.Height>DiaryLayout.MaxHeight || block.Height>0 && block.Height<DiaryLayout.MinHeight)
+                        throw new InvalidDataException("일기 블록의 위치 또는 크기가 올바르지 않습니다.");
                 }
                 if (entry.Mood == null) entry.Mood = "평온해요";
             }

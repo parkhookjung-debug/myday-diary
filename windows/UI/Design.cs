@@ -11,6 +11,7 @@ namespace MyDay.Windows.UI
         private static readonly float Dpi = GetScale();
         private static float GetScale() { using (var g = Graphics.FromHwnd(System.IntPtr.Zero)) return g.DpiX / 96f; }
         public static int P(int value) { return (int)System.Math.Round(value * Dpi); }
+        public static int U(int pixels) { return (int)System.Math.Round(pixels / Dpi); }
         public static Point Point(int x, int y) { return new Point(P(x), P(y)); }
         public static Size Size(int width, int height) { return new Size(P(width), P(height)); }
         public static Padding Pad(int all) { return new Padding(P(all)); }

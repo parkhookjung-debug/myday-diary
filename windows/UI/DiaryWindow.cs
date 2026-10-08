@@ -14,9 +14,12 @@ namespace MyDay.Windows.UI
         private DiaryBook book;
         private DiaryEntry entry;
         private DateTime date = DateTime.Today;
-        private bool dirty, binding, exitRequested;
+        private bool dirty, binding, exitRequested,editingLayout;
         private readonly Timer saveTimer = new Timer { Interval = 350 };
-        private readonly FlowLayoutPanel board = new FlowLayoutPanel { Dock=DockStyle.Fill, AutoScroll=true, WrapContents=true, Padding=Design.Pad(0,4,0,16) };
+        private readonly DiaryBoard board;
+        private readonly ChoiceButton layoutChoice=Design.Choice(108);
+        private readonly Button editLayout=Design.Button("배치 편집"),arrangeLayout=Design.Button("자동 정리");
+        private readonly Label layoutHint=Design.Label("",9);
         private readonly Label status = Design.Label("내 컴퓨터에 자동 저장", 9);
         private readonly Label dayTitle = Design.Label("", 23, true);
         private readonly Label summary = Design.Label("", 9);
@@ -33,12 +36,14 @@ namespace MyDay.Windows.UI
         public DiaryWindow(DiaryStore store, DiaryBook book, bool testMode = false)
         {
             this.store=store; this.book=book; this.testMode=testMode;
+            board=new DiaryBoard(QueueSave) { Dock=DockStyle.Fill };
             Text="마이데이 · 나만의 하루";
             var work=Screen.PrimaryScreen.WorkingArea;
             Size=new Size(Math.Min(Design.P(1220),work.Width-32),Math.Min(Design.P(860),work.Height-32));
             MinimumSize=new Size(Math.Min(Design.P(860),work.Width-32),Math.Min(Design.P(570),work.Height-32));
             StartPosition=FormStartPosition.CenterScreen; Font=Design.Font(10); ForeColor=Design.Ink;
             AutoScaleMode=AutoScaleMode.None; DoubleBuffered=true;
+            KeyPreview=true; KeyDown+=delegate(object sender,KeyEventArgs e) { if(editingLayout && e.KeyCode==Keys.Escape) { board.CancelPlacement(); e.Handled=true; } };
             var side = new Panel { Dock=DockStyle.Left, AutoScroll=true, Width=Design.P(210), BackColor=Color.White, Padding=Design.Pad(24) };
             var brand=Design.Label("myday.",29,true); brand.Location=Design.Point(24,28); side.Controls.Add(brand);
             var tagline=Design.Label("하루를 담는 나만의 공간",9); tagline.ForeColor=Design.Muted; tagline.Location=Design.Point(24,90); side.Controls.Add(tagline);
@@ -57,8 +62,9 @@ namespace MyDay.Windows.UI
             var import=Design.Button("백업 가져오기"); import.Width=Design.P(160); import.Margin=Design.Pad(0,0,0,12); import.Click+=delegate { ImportBook(); };
             status.MaximumSize=Design.Size(160,0); status.ForeColor=Design.Muted;
             bottom.Controls.AddRange(new Control[] { export,import,status }); side.Controls.Add(bottom);
-            var grid=new TableLayoutPanel { Dock=DockStyle.Fill, ColumnCount=1, RowCount=4, Margin=Design.Pad(0), BackColor=Color.Transparent };
+            var grid=new TableLayoutPanel { Dock=DockStyle.Fill, ColumnCount=1, RowCount=5, Margin=Design.Pad(0), BackColor=Color.Transparent };
             grid.RowStyles.Add(new RowStyle(SizeType.Absolute,Design.P(105))); grid.RowStyles.Add(new RowStyle(SizeType.Absolute,Design.P(68)));
+            grid.RowStyles.Add(new RowStyle(SizeType.Absolute,Design.P(48)));
             grid.RowStyles.Add(new RowStyle(SizeType.Absolute,Design.P(50))); grid.RowStyles.Add(new RowStyle(SizeType.Percent,100));
             var header=new Panel { Dock=DockStyle.Fill }; dayTitle.Location=Design.Point(0,0); header.Controls.Add(dayTitle);
             var subtitle=Design.Label("오늘을 원하는 조각으로 채워보세요.",10); subtitle.ForeColor=Design.Muted; subtitle.Location=Design.Point(2,46); header.Controls.Add(subtitle);
@@ -77,11 +83,24 @@ namespace MyDay.Windows.UI
             theme.Items.AddRange(new object[] { "크림","세이지","라벤더" }); theme.AccessibleName="배경 테마";
             theme.SelectedIndexChanged+=delegate { if (!binding) { entry.Theme=theme.SelectedIndex; ApplyTheme(); QueueSave(); } };
             appearance.Controls.AddRange(new Control[] { moodLabel,mood,themeLabel,theme }); grid.Controls.Add(appearance,0,1);
+            var layoutBar=new FlowLayoutPanel { Dock=DockStyle.Fill,WrapContents=false,Padding=Design.Pad(0,5,0,0) };
+            var layoutLabel=Design.Label("배치",9); layoutLabel.Margin=Design.Pad(0,7,10,0);
+            layoutChoice.Items.AddRange(new object[] {"자동 정렬","자유 배치"}); layoutChoice.AccessibleName="일기 블록 배치 방식";
+            layoutChoice.SelectedIndexChanged+=delegate { if(!binding) SelectLayout(layoutChoice.SelectedIndex==1); };
+            editLayout.Click+=delegate {
+                board.CancelPlacement();
+                if(entry.LayoutMode!="free") SelectLayout(true);
+                editingLayout=!editingLayout; RefreshLayoutControls();
+                foreach(var card in board.Controls.OfType<BlockCard>()) card.SetEditing(editingLayout,true);
+            };
+            arrangeLayout.Click+=delegate { board.CancelPlacement(); DiaryLayout.ArrangeFree(entry,board.LogicalWidth); QueueSave(); ArrangeCards(); };
+            layoutHint.ForeColor=Design.Muted; layoutHint.Margin=Design.Pad(2,8,0,0);
+            layoutBar.Controls.AddRange(new Control[] {layoutLabel,layoutChoice,editLayout,arrangeLayout,layoutHint}); grid.Controls.Add(layoutBar,0,2);
             var toolbar=new FlowLayoutPanel { Dock=DockStyle.Fill, WrapContents=false, Padding=Design.Pad(0,5,0,0) };
             string[] kinds={"text","todo","habit","emotion"}; string[] names={"＋ 글 일기","＋ 할 일","＋ 습관","＋ 감정 기록"};
             for(int i=0;i<kinds.Length;i++) { string kind=kinds[i]; var add=Design.Button(names[i]); add.Click+=delegate { AddBlock(kind); }; toolbar.Controls.Add(add); }
-            summary.Margin=Design.Pad(8,9,0,0); summary.ForeColor=Design.Muted; toolbar.Controls.Add(summary); grid.Controls.Add(toolbar,0,2);
-            grid.Controls.Add(board,0,3); content.Controls.Add(grid); Controls.Add(content); Controls.Add(side);
+            summary.Margin=Design.Pad(8,9,0,0); summary.ForeColor=Design.Muted; toolbar.Controls.Add(summary); grid.Controls.Add(toolbar,0,3);
+            grid.Controls.Add(board,0,4); content.Controls.Add(grid); Controls.Add(content); Controls.Add(side);
             board.SizeChanged+=delegate { ArrangeCards(); };
             saveTimer.Tick+=delegate { FlushSave(); };
             tray=new NotifyIcon { Icon=SystemIcons.Application, Text="MyDay · 일기와 불꽃 몬스터", Visible=!testMode };
@@ -91,6 +110,7 @@ namespace MyDay.Windows.UI
             tray.DoubleClick+=delegate { OpenDiary(); };
             avatar.Fired+=delegate { if (pet!=null) pet.Fire(); };
             FormClosing+=delegate(object sender,FormClosingEventArgs e) {
+                board.CancelPlacement();
                 if(!FlushSave()) { e.Cancel=true; return; }
                 if(!exitRequested && e.CloseReason==CloseReason.UserClosing) { e.Cancel=true; Hide(); }
             };
@@ -135,20 +155,39 @@ namespace MyDay.Windows.UI
         public void ChangeDate(DateTime target)
         {
             if(target.Date<picker.MinDate.Date || target.Date>picker.MaxDate.Date) return;
+            board.CancelPlacement();
             if(!FlushSave()) { binding=true; picker.Value=date; binding=false; return; }
             date=target.Date; LoadDate();
         }
         private void LoadDate()
         {
             if(!book.Days.TryGetValue(DiaryStore.Key(date),out entry)) entry=DiaryEntry.FirstPage();
+            editingLayout=false;
+            if(entry.LayoutMode=="free") DiaryLayout.EnableFree(entry,board.LogicalWidth);
             binding=true; picker.Value=date;
             dayTitle.Text=date.ToString("M월 d일, dddd",new System.Globalization.CultureInfo("ko-KR"));
             mood.SelectedIndex=Math.Max(0,mood.Items.IndexOf(entry.Mood)); theme.SelectedIndex=entry.Theme;
-            binding=false; ApplyTheme(); ApplyVariant(); RenderCards();
+            layoutChoice.SelectedIndex=entry.LayoutMode=="free"?1:0;
+            binding=false; RefreshLayoutControls(); ApplyTheme(); ApplyVariant(); RenderCards();
+        }
+        private void SelectLayout(bool free)
+        {
+            board.CancelPlacement(); editingLayout=false;
+            if(free) DiaryLayout.EnableFree(entry,board.LogicalWidth); else entry.LayoutMode="cards";
+            bool previous=binding; binding=true; layoutChoice.SelectedIndex=free?1:0; binding=previous;
+            RefreshLayoutControls(); QueueSave(); RenderCards();
+        }
+        private void RefreshLayoutControls()
+        {
+            editLayout.Text=editingLayout?"편집 완료":"배치 편집";
+            editLayout.BackColor=editingLayout?Design.Accent:Color.White; editLayout.ForeColor=editingLayout?Color.White:Design.Ink;
+            arrangeLayout.Enabled=entry.LayoutMode=="free";
+            layoutHint.Text=editingLayout?"제목으로 이동 · ↘로 크기 조절":entry.LayoutMode=="free"?"위치·크기 자동 저장":"창 크기에 맞춰 정렬";
         }
         private void ApplyTheme() { BackColor=Design.Backgrounds[entry.Theme]; content.BackColor=BackColor; board.BackColor=BackColor; }
         private void RenderCards()
         {
+            board.CancelPlacement();
             board.SuspendLayout();
             foreach(Control control in board.Controls.Cast<Control>().ToArray()) control.Dispose();
             board.Controls.Clear();
@@ -156,22 +195,22 @@ namespace MyDay.Windows.UI
             {
                 var item=block;
                 var card=new BlockCard(item,QueueSave,delegate(int step) { MoveBlock(item,step); },delegate { RemoveBlock(item); },delegate { item.Wide=!item.Wide; QueueSave(); RenderCards(); });
-                card.Margin=Design.Pad(0,0,12,12); board.Controls.Add(card);
+                card.SetEditing(editingLayout,entry.LayoutMode=="free"); board.AddCard(card);
             }
             if(entry.Blocks.Count==0) { var empty=Design.Label("빈 페이지예요. 위에서 원하는 블록을 추가해보세요.",11); empty.Margin=Design.Pad(20); board.Controls.Add(empty); }
-            board.ResumeLayout(); ArrangeCards(); UpdateSummary();
+            board.ResumeLayout(false); ArrangeCards(); UpdateSummary();
         }
         private void ArrangeCards()
         {
-            int available=Math.Max(Design.P(200),board.ClientSize.Width-SystemInformation.VerticalScrollBarWidth-Design.P(16));
-            bool two=available>=Design.P(620);
-            foreach(var card in board.Controls.OfType<BlockCard>()) card.Width=card.Block.Wide || !two ? available-Design.P(12) : (available-Design.P(24))/2;
+            if(entry!=null) board.Arrange(entry);
         }
         public void AddBlock(string kind)
         {
             if(entry.Blocks.Count>=200) { MessageBox.Show(this,"한 날짜에는 최대 200개 블록을 넣을 수 있어요."); return; }
-            entry.Blocks.Add(DiaryBlock.Create(kind)); QueueSave(); RenderCards();
-            var last=board.Controls.OfType<BlockCard>().Last(); board.ScrollControlIntoView(last); last.Editor.Focus();
+            var block=DiaryBlock.Create(kind); entry.Blocks.Add(block);
+            if(entry.LayoutMode=="free") DiaryLayout.PlaceNew(entry,block);
+            QueueSave(); RenderCards();
+            var last=board.Controls.OfType<BlockCard>().First(c=>c.Block==block); board.ScrollControlIntoView(last); if(!editingLayout) last.Editor.Focus();
         }
         public void MoveBlock(DiaryBlock block,int step)
         {
@@ -240,7 +279,7 @@ namespace MyDay.Windows.UI
         public void SmokeTest(string destination)
         {
             mood.SelectedIndex=3; theme.SelectedIndex=1;
-            var first=board.Controls.OfType<BlockCard>().First();
+            var first=board.Controls.OfType<BlockCard>().First(c=>c.Block.Kind=="text");
             first.Editor.Text="윈도우에서도 나만의 하루를 기록해요.\r\n\r\n오늘은 작은 목표 하나를 끝냈어요. 창 옆에서는 불꽃 몬스터가 함께해요.";
             var check=board.Controls.OfType<BlockCard>().First(c=>c.Check!=null); check.Editor.Text="오늘의 일기 한 줄 쓰기"; check.Check.Checked=true;
             var emotion=board.Controls.OfType<BlockCard>().First(c=>c.Block.Kind=="emotion"); emotion.Editor.Text="처음이라 조금 떨리지만, 하나씩 만들어보려고 해.";
@@ -278,8 +317,49 @@ namespace MyDay.Windows.UI
             foreach(var card in board.Controls.OfType<BlockCard>())
                 if(card.Width>board.ClientSize.Width || card.Editor.Width<=0 || card.Editor.Height<=0) throw new Exception("Small window layout overflow");
             Size=original; PerformLayout(); ArrangeCards();
+            editLayout.PerformClick();
+            if(entry.LayoutMode!="free" || !editingLayout) throw new Exception("Placement editor did not enable free mode");
+            var positioned=board.Controls.OfType<BlockCard>().First(c=>c.Block.Id==id);
+            var bounds=DiaryLayout.Bounds(positioned.Block);
+            Point start=positioned.DragHandle.PointToScreen(new Point(Design.P(8),Design.P(8)));
+            positioned.DragHandle.DragForTest(start,new Point(start.X+Design.P(35),start.Y+Design.P(42)),false);
+            if(positioned.Block.X!=bounds.X+35 || positioned.Block.Y!=bounds.Y+42 || !positioned.Editor.Text.Contains("윈도우")) throw new Exception("Native header drag did not retain text or move block");
+            bounds=DiaryLayout.Bounds(positioned.Block);
+            start=positioned.ResizeHandle.PointToScreen(new Point(Design.P(4),Design.P(4)));
+            positioned.ResizeHandle.DragForTest(start,new Point(start.X+Design.P(50),start.Y+Design.P(30)),false);
+            if(positioned.Block.Width!=bounds.Width+50 || positioned.Block.Height!=bounds.Height+30) throw new Exception("Native grip did not resize block");
+            bounds=DiaryLayout.Bounds(positioned.Block);
+            start=positioned.DragHandle.PointToScreen(new Point(Design.P(8),Design.P(8)));
+            positioned.DragHandle.DragForTest(start,new Point(start.X+Design.P(24),start.Y+Design.P(24)),true);
+            if(DiaryLayout.Bounds(positioned.Block)!=bounds) throw new Exception("Cancelled placement changed saved geometry");
+            var scrolledBlock=entry.Blocks.First(b=>b.Kind=="emotion");
+            DiaryLayout.SetBounds(scrolledBlock,new Rectangle(60,900,350,288)); RenderCards();
+            var scrolledCard=board.Controls.OfType<BlockCard>().First(c=>c.Block==scrolledBlock);
+            board.ScrollControlIntoView(scrolledCard);
+            if(board.AutoScrollPosition.Y>=0) throw new Exception("Free canvas did not scroll to distant block");
+            start=scrolledCard.DragHandle.PointToScreen(new Point(Design.P(8),Design.P(8)));
+            scrolledCard.DragHandle.DragForTest(start,new Point(start.X+Design.P(21),start.Y+Design.P(17)),false);
+            if(scrolledBlock.X!=81 || scrolledBlock.Y!=917) throw new Exception("Scrolled drag used viewport coordinates instead of saved coordinates");
+            foreach(var card in board.Controls.OfType<BlockCard>())
+                if(!card.DeleteButton.Visible || card.DeleteButton.Right>card.DeleteButton.Parent.ClientSize.Width) throw new Exception("Free placement hid or clipped delete button");
+            if(!FlushSave()) throw new Exception("Placement save failed");
+            ChangeDate(date.AddDays(1)); ChangeDate(date.AddDays(-1));
+            if(entry.LayoutMode!="free" || DiaryLayout.Bounds(entry.Blocks.First(b=>b.Id==id))!=bounds || editingLayout) throw new Exception("Date change lost placement or retained edit lock");
+            var diskEntry=store.Load().Days[DiaryStore.Key(date)];
+            if(diskEntry.LayoutMode!="free" || DiaryLayout.Bounds(diskEntry.Blocks.First(b=>b.Id==id))!=bounds) throw new Exception("Disk reload lost placement");
+            original=Size; Size=MinimumSize; PerformLayout(); ArrangeCards();
+            if(DiaryLayout.Bounds(entry.Blocks.First(b=>b.Id==id))!=bounds || board.AutoScrollMinSize.Width<positioned.Block.Width) throw new Exception("Small window changed saved placement or lost scrolling");
+            Size=original; PerformLayout(); ArrangeCards();
+            // Recompose this example freely to demonstrate positions independent of the card grid.
+            var textBlock=entry.Blocks.First(b=>b.Id==id); DiaryLayout.SetBounds(textBlock,new Rectangle(18,12,470,340));
+            DiaryLayout.SetBounds(entry.Blocks.First(b=>b.Kind=="todo"),new Rectangle(510,34,300,220));
+            DiaryLayout.SetBounds(entry.Blocks.First(b=>b.Kind=="habit"),new Rectangle(500,284,310,200));
+            DiaryLayout.SetBounds(entry.Blocks.First(b=>b.Kind=="emotion"),new Rectangle(34,386,450,280));
+            ArrangeCards(); board.AutoScrollPosition=Point.Empty; QueueSave(); FlushSave();
             avatar.Fire(); PerformLayout(); ArrangeCards(); Update();
             using(var image=new Bitmap(Width,Height)) { DrawToBitmap(image,new Rectangle(Point.Empty,Size)); image.Save(destination,System.Drawing.Imaging.ImageFormat.Png); }
+            editLayout.PerformClick(); PerformLayout(); Update();
+            using(var image=new Bitmap(Width,Height)) { DrawToBitmap(image,new Rectangle(Point.Empty,Size)); image.Save(Path.Combine(Path.GetDirectoryName(destination),"windows-free-layout.png"),System.Drawing.Imaging.ImageFormat.Png); }
         }
         protected override void Dispose(bool disposing)
         {

@@ -10,12 +10,13 @@ Windows 10/11과 .NET Framework 4.8 이상을 사용합니다.
 캐릭터를 한 번 클릭하면 일기 창이 열립니다.
 빌드 후에는 `bin/MyDay.exe`만 더블클릭해도 실행할 수 있습니다.
 GitHub CI의 Windows artifact에서도 실행 파일을 받을 수 있습니다.
-[다운로드용 Windows ZIP](https://github.com/parkhookjung-debug/myday-diary/releases/tag/v0.3.0-preview)은 압축을 풀고 `MyDay.exe`를 실행합니다.
+[다운로드용 Windows ZIP](https://github.com/parkhookjung-debug/myday-diary/releases/tag/v0.3.1-preview)은 압축을 풀고 `MyDay.exe`를 실행합니다.
 
 ## 기능
 
 - 날짜별 글 일기, 할 일, 습관 체크, 감정 기록
 - 블록 추가, 순서 이동, 너비 변경, 삭제 확인
+- 자유 배치: 제목을 잡아 드래그 이동, 오른쪽 아래 ↘로 크기 조절, 날짜별 위치·크기 저장
 - 배경 테마 3종과 오늘의 마음 기록
 - 입력 후 자동 저장, 날짜 이동·종료 전 저장 확인
 - JSON 백업과 가져오기 (같은 날짜는 확인 후 교체)
@@ -31,6 +32,7 @@ GitHub CI의 Windows artifact에서도 실행 파일을 받을 수 있습니다.
 일기 창의 X는 기록을 저장한 뒤 창만 숨깁니다. 캐릭터는 계속 움직이며 다시 한 번 클릭하면 일기를 열 수 있습니다.
 알림 영역의 **모두 종료**는 앱과 캐릭터를 함께 종료합니다. 캐릭터 클릭은 짧은 불꽃 반응과 함께 일기를 열고, 우클릭 메뉴나 일기 안의 몬스터에서도 잠깐 불을 뿜게 할 수 있습니다. 마우스를 가까이 대기만 할 때는 불을 뿜지 않습니다.
 감정 기록은 일기 저장 기능이며 AI 대화는 없습니다.
+[자유 배치 사용·개발 안내](../docs/FREE-LAYOUT.md): 위쪽 **배치 편집**을 누르고 제목으로 이동하거나 ↘로 크기를 바꾼 뒤 **편집 완료**로 글 입력을 다시 켭니다. **자동 정리**는 블록을 겹치지 않게 배치합니다. **자동 정렬**로 전환했다가 자유 배치로 돌아와도 저장된 위치를 유지합니다.
 일기 왼쪽 캐릭터 아래 선택 메뉴 또는 캐릭터 우클릭 → **캐릭터 버전**에서 모습을 바꿉니다. 앱과 바탕화면에 함께 적용하며 재실행해도 선택을 유지합니다. 캐릭터 선택은 날짜별이 아닌 앱 전체 설정입니다.
 이 버전의 캐릭터는 Windows 위에 뜨는 투명 창입니다. Windows 배경화면을 교체하지 않습니다.
 Android 기록과 자동 동기화하지 않습니다. 사진·영상·시작 시 자동 실행은 아직 추가하지 않았습니다.
@@ -47,8 +49,10 @@ Android 기록과 자동 동기화하지 않습니다. 사진·영상·시작 �
 | --- | --- |
 | 색상·글꼴·버튼·카드 | `UI/Design.cs` |
 | 일기 창 배치·날짜·연결 | `UI/DiaryWindow.cs` |
+| 자유 캔버스·드래그·리사이즈 핸들 | `UI/DiaryBoard.cs` |
 | 일기 블록 UI | `UI/BlockCard.cs` |
 | 기록 모델·검증·저장·백업 | `Core/DiaryData.cs` |
+| 논리 좌표·자동 정렬·크기 범위 | `Core/DiaryLayout.cs` |
 | 스케치 캐릭터 그림·포즈 | `Character/MonsterPainter.cs` |
 | 캐릭터 버전 ID·이름 | `Character/MonsterVariants.cs` |
 | 원형을 유지하는 추가 외형·장식 | `Character/MonsterAdditions.cs` |
@@ -60,6 +64,8 @@ Android 기록과 자동 동기화하지 않습니다. 사진·영상·시작 �
 캐릭터는 Android 버전과 같은 스케치 좌표를 사용하지만 플랫폼별 렌더링 코드로 관리합니다. 생동감 있는 추가 행동은 현재 Windows 버전에 적용했습니다.
 
 ![Windows 캐릭터 움직임 코드로 렌더링한 예시](../previews/windows/windows-lively.gif)
+
+![자유 배치 편집 예시](../previews/windows/windows-free-layout.png)
 
 ![상몬 1–16번 움직임 예시](../previews/windows/windows-variants-first.gif)
 

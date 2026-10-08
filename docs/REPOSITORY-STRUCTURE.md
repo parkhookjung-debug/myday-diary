@@ -40,7 +40,8 @@ myday-diary/
 | 원하는 작업 | Android | Windows |
 | --- | --- | --- |
 | 색·글꼴·간격 | `ui/design/`, `res/values/` | `UI/Design.cs` |
-| 일기 화면·블록 | `ui/diary/`, `ui/components/` | `UI/DiaryWindow.cs`, `UI/BlockCard.cs` |
+| 일기 화면·블록 | `ui/diary/`, `ui/components/` | `UI/DiaryWindow.cs`, `UI/BlockCard.cs`, `UI/DiaryBoard.cs` |
+| 자유 배치·크기 조절 | 현재 Windows에 적용 | `Core/DiaryLayout.cs`, `UI/DiaryBoard.cs` |
 | 기록·저장 | `data/`, `diary/` | `Core/DiaryData.cs` |
 | 캐릭터 그림 | `ui/character/` | `Character/MonsterPainter.cs`, `MonsterAdditions.cs` |
 | 게임 속성 재질 | 현재 Windows에 적용 | `Character/GameSkins.cs` |
@@ -54,7 +55,7 @@ Android 표의 Java 경로는 `app/src/main/java/com/myday/diary/` 기준입니�
 
 GitHub Releases에 플랫폼별로 배포합니다.
 
-- Windows: `MyDay-Windows-v0.3.0-preview.zip`에 `MyDay.exe`, 실행 안내, 라이선스
+- Windows: `MyDay-Windows-v0.3.1-preview.zip`에 `MyDay.exe`, 실행 안내, 라이선스
 - Android: `MyDay-Android-v0.3.0-preview.apk` 개발용 debug 빌드
 - GitHub에서 자동 제공하는 Source code ZIP/TAR: 같은 태그의 전체 소스
 
@@ -66,5 +67,6 @@ GitHub Releases에 플랫폼별로 배포합니다.
 - [Windows 실행과 개발](../windows/README.md)
 - [Android 디자인 수정](DESIGN.md)
 - [상몬 외형·게임 스타일](SANGMON-DESIGN.md)
+- [일기 자유 배치](FREE-LAYOUT.md)
 - [5명 팀 역할](TEAM.md)
 - [미리보기 설명](../previews/README.md)
