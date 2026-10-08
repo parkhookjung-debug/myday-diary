@@ -10,6 +10,7 @@ Windows 10/11과 .NET Framework 4.8 이상을 사용합니다.
 캐릭터를 한 번 클릭하면 일기 창이 열립니다.
 빌드 후에는 `bin/MyDay.exe`만 더블클릭해도 실행할 수 있습니다.
 GitHub CI의 Windows artifact에서도 실행 파일을 받을 수 있습니다.
+[다운로드용 Windows ZIP](https://github.com/parkhookjung-debug/myday-diary/releases/tag/v0.3.0-preview)은 압축을 풀고 `MyDay.exe`를 실행합니다.
 
 ## 기능
 
@@ -58,15 +59,15 @@ Android 기록과 자동 동기화하지 않습니다. 사진·영상·시작 �
 
 캐릭터는 Android 버전과 같은 스케치 좌표를 사용하지만 플랫폼별 렌더링 코드로 관리합니다. 생동감 있는 추가 행동은 현재 Windows 버전에 적용했습니다.
 
-![Windows 캐릭터 움직임 코드로 렌더링한 예시](../previews/windows-lively.gif)
+![Windows 캐릭터 움직임 코드로 렌더링한 예시](../previews/windows/windows-lively.gif)
 
-![상몬 1–16번 움직임 예시](../previews/windows-variants-first.gif)
+![상몬 1–16번 움직임 예시](../previews/windows/windows-variants-first.gif)
 
-![상몬 17–32번 움직임 예시](../previews/windows-variants-second.gif)
+![상몬 17–32번 움직임 예시](../previews/windows/windows-variants-second.gif)
 
-![상몬 33–48번 움직임 예시](../previews/windows-variants-third.gif)
+![상몬 33–48번 움직임 예시](../previews/windows/windows-variants-third.gif)
 
-![게임 스타일 상몬 8종](../previews/windows-game-styles.gif)
+![게임 스타일 상몬 8종](../previews/windows/windows-game-styles.gif)
 
 참고 자료와 새 형태의 특징은 [상몬 형태 연구](../docs/SANGMON-DESIGN.md)에 정리했습니다.
 

@@ -35,10 +35,10 @@
 
 2026-10-08에 [Slime Rancher 공식 미디어](https://www.slimerancher.com/media/), [Minecraft 공식 Slime 소개](https://www.minecraft.net/en-us/article/slime), [Pikepicture의 Slime Character Set](https://designbundles.net/pikepicture/3942363-slime-character-set-cartoon-vector-illustration)을 살펴봤습니다. 여러 캐릭터를 구분하는 부속 요소와 움직임을 참고하며, 상몬의 몸과 얼굴은 사용자가 제공한 원래 스케치를 기준으로 합니다. 외부 게임 이미지를 앱에 넣지 않고 C# 벡터 경로로 외형을 그립니다.
 
-![상몬 1–16번](../previews/windows-variants-first.gif)
+![상몬 1–16번](../previews/windows/windows-variants-first.gif)
 
-![상몬 17–32번](../previews/windows-variants-second.gif)
+![상몬 17–32번](../previews/windows/windows-variants-second.gif)
 
-![상몬 33–48번](../previews/windows-variants-third.gif)
+![상몬 33–48번](../previews/windows/windows-variants-third.gif)
 
-![게임 스타일 상몬](../previews/windows-game-styles.gif)
+![게임 스타일 상몬](../previews/windows/windows-game-styles.gif)

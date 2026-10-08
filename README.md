@@ -1,115 +1,75 @@
 # 마이데이 (MyDay)
 
 [![Android CI](https://github.com/parkhookjung-debug/myday-diary/actions/workflows/android.yml/badge.svg)](https://github.com/parkhookjung-debug/myday-diary/actions/workflows/android.yml)
+[![Windows CI](https://github.com/parkhookjung-debug/myday-diary/actions/workflows/windows.yml/badge.svg)](https://github.com/parkhookjung-debug/myday-diary/actions/workflows/windows.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 
-갤럭시에서 실행하는 커스터마이즈 일기 앱의 첫 프로토타입입니다.
-Kotlin + Jetpack Compose로 구현했습니다.
+갤럭시와 Windows에서 사용하는 커스터마이즈 일기 앱입니다. 글·할 일·습관·감정을 기록하고 나만의 레이아웃을 구성합니다. Windows에서는 상몬이 바탕화면을 돌아다니며, 한 번 클릭하면 일기 창을 엽니다.
 
-**Windows 노트북 버전**도 추가했습니다. [Windows 실행·개발 안내](windows/README.md)를 참고하세요.
-`windows/실행.cmd`를 더블클릭하면 불꽃 몬스터가 바탕화면에서 움직이고, 캐릭터를 한 번 클릭하면 일기 창이 열립니다.
-빌드 후에는 `windows/bin/MyDay.exe`를 직접 실행할 수 있습니다.
-PC 기록은 해당 Windows 계정에 저장하며 Android와 자동 동기화하지 않습니다.
+MIT 라이선스의 오픈소스 프로젝트입니다. 5명이 UI·저장·캐릭터·통합·검증을 나눠 작업할 수 있도록 기능과 디자인 파일을 분리했습니다.
 
-MIT 라이선스로 공개하는 오픈소스 프로젝트입니다.
-팀 작업은 이슈 → 작업 브랜치 → PR → 리뷰 → 병합 순서로 진행합니다.
-개발 참여 방법과 5명 팀의 담당 영역 제안은 [기여 안내](CONTRIBUTING.md)를 참고하세요.
-디자인 파일의 수정 위치와 Android Studio 미리보기 방법은 [팀 디자인 적용 안내](docs/DESIGN.md)를 참고하세요.
-5명이 맡을 역할과 담당 파일은 [팀 작업 분담안](docs/TEAM.md)에 정리했습니다.
+현재 최신 통합 작업은 [codex/windows-app 브랜치](https://github.com/parkhookjung-debug/myday-diary/tree/codex/windows-app)와 [통합 PR #7](https://github.com/parkhookjung-debug/myday-diary/pull/7)에 있습니다. `main` 반영에는 팀원 1명의 리뷰 승인이 필요합니다.
 
-## 저장소 받기
+## 실행하기
+
+| 플랫폼 | 실행 방법 | 자세한 안내 |
+| --- | --- | --- |
+| Windows 10/11 | 소스의 `windows/실행.cmd`를 더블클릭하거나 배포 ZIP에서 `MyDay.exe` 실행 | [Windows 실행·개발 안내](windows/README.md) |
+| Android 8 이상 | Android Studio에서 저장소 루트를 열고 `app` 실행 또는 배포 APK 설치 | [Android 실행·기능 안내](docs/ANDROID.md) |
+
+빌드된 Windows ZIP과 Android APK는 [v0.3.0-preview 다운로드](https://github.com/parkhookjung-debug/myday-diary/releases/tag/v0.3.0-preview)에서 제공합니다. APK는 개발용 debug 빌드입니다.
 
 ```sh
 git clone https://github.com/parkhookjung-debug/myday-diary.git
 cd myday-diary
+# 통합 PR이 main에 반영되기 전에는 최신 작업 브랜치를 사용합니다.
+git switch codex/windows-app
 ```
 
-Android Studio에서 clone한 `myday-diary` 폴더를 엽니다.
-`main`은 함께 사용하는 기준 브랜치입니다.
-GitHub Actions는 push와 PR에서 APK 빌드·Android Lint·등록된 단위 테스트를 실행합니다.
-성공한 실행의 Artifacts에서 디버그 APK를 받을 수 있습니다. 저장·날짜 이동 관련 단위 테스트를 포함합니다.
+Windows 소스 실행에는 .NET Framework 4.8 이상이 필요합니다. Android 개발에는 JDK 17 이상과 Android SDK 35가 필요합니다.
 
-## 예시 화면
+## 파일 찾기
 
-Windows 앱의 실제 UI 코드에 격리된 예시 기록을 넣어 렌더링한 화면입니다.
+| 폴더 | 내용 |
+| --- | --- |
+| `app/` | Android 화면·저장·위젯·라이브 배경화면·테스트 |
+| `windows/Core/` | Windows 일기 모델·저장·클릭/드래그 구분 |
+| `windows/UI/` | Windows 일기 화면·블록·디자인 |
+| `windows/Character/` | 상몬 그림·외형·게임 스타일·움직임·투명 창 |
+| `docs/` | 플랫폼 실행 안내·디자인 기준·팀 역할·저장소 구조 |
+| `previews/android/` | Android 및 초기 화면의 PNG·GIF·HTML 예시 |
+| `previews/windows/` | Windows 화면·상몬·게임 스타일 PNG·GIF |
+| `.github/` | 플랫폼별 자동 검사·이슈와 PR 양식 |
 
-![MyDay Windows 일기 화면](previews/windows-example.png)
+전체 구조와 기능별 수정 파일은 [파일·폴더 안내](docs/REPOSITORY-STRUCTURE.md), 자료 설명은 [미리보기 안내](previews/README.md)에 정리했습니다.
 
-앱에서 사용하는 캐릭터 그림·동작 코드로 만든 미리보기입니다. 실제 갤럭시 화면 캡처는 아닙니다.
+## Windows와 상몬
 
-![불꽃 몬스터 동작 예시](previews/monster-motion.gif)
+- 날짜별 일기·할 일·습관·감정, 블록 순서·너비 변경, 자동 저장과 JSON 백업
+- 바탕화면 이동·클릭으로 일기 열기·드래그·숨기기·다시 표시
+- 기존 외형 48종과 RPG 속성 스타일 8종: 총 56종
+- 화염·빙결·전격·맹독·그림자·암석·해류·비전은 몸 색·명암·재질·효과로 구분
+- 불 뿜기는 터치와 드문 하품에만 잠깐 표시
 
-제공된 스케치의 두 눈·아치형 몸·입·불꽃을 살린 기본 캐릭터입니다.
-앱의 **오늘의 분위기 → 불꽃 몬스터**를 선택하면 기존 날짜의 캐릭터도 바꿀 수 있습니다.
+캐릭터를 숨긴 뒤에는 알림 영역 MyDay 아이콘을 더블클릭해 일기를 열고 왼쪽 표시 버튼을 사용합니다. 캐릭터 우클릭의 **게임 스타일**에서 RPG 외형을 바로 고를 수 있습니다.
 
-아래 이미지는 초기 일기 화면을 재현한 예시입니다. 실제 갤럭시 캡처가 아니며, 이후 추가한 위젯·라이브 배경화면 설정은 포함하지 않습니다.
+![Windows 일기 예시](previews/windows/windows-example.png)
 
-![마이데이 초기 일기 화면](previews/myday-example.png)
+![게임 스타일 상몬](previews/windows/windows-game-styles.gif)
 
-## 현재 기능
+## Android
 
-- 날짜 선택 및 날짜별 기록
-- 글 일기, 할 일, 습관 체크, 감정처리반 블록 추가
-- 블록 순서 변경 및 삭제 확인
-- 배경 테마 3종과 캐릭터 3종 선택
-- 휴대폰 내부 자동 저장 및 저장 실패 시 재시도
-- 홈 화면 위젯: 오늘의 할 일·습관 완료 수, 캐릭터 응원 문구, 일기 앱 열기
-- 라이브 배경화면: 떠다니는 캐릭터, 벽에서 방향 전환, 드래그 이동, 탭하면 하트 반응
-- 직접 그린 토끼·고양이·곰: 눈 깜박임, 숨 쉬기, 귀 움직임, 걷는 팔다리, 탭하면 인사
-- 스케치를 참고한 불꽃 몬스터: 몸 들썩임, 눈 깜박임, 이동, 탭하면 불꽃이 커지며 맥동
+날짜별 일기·블록 편집·자동 저장, 홈 화면 위젯, 움직이는 캐릭터 라이브 배경화면을 제공합니다. Android의 캐릭터 구성과 동작은 Windows와 다르며, Windows의 56종 외형을 Android에 모두 적용한 상태는 아닙니다.
 
-감정처리반은 캐릭터에게 감정을 적는 기록 기능입니다. AI 응답은 없습니다.
-사진, 영상, 일기 블록의 자유로운 크기 조절, 계정 및 동기화는 후속 기능입니다.
-습관 체크는 날짜별 체크 기능이며 누적 통계는 아직 없습니다.
-앱을 삭제하거나 앱 데이터를 지우면 기록이 사라집니다.
+![Android 캐릭터 동작 예시](previews/android/monster-motion.gif)
 
-## Android Studio에서 실행
+## 공동 작업
 
-1. Android Studio의 **Open**으로 이 README가 있는 프로젝트 폴더를 엽니다.
-2. Gradle Sync가 끝날 때까지 기다립니다. 처음에는 인터넷 연결이 필요합니다.
-3. SDK Manager에서 Android API 35를 설치합니다.
-4. Gradle JDK는 Android Studio에 포함된 JDK(17 이상)를 선택합니다.
-5. 갤럭시에서 설정 → 휴대전화 정보 → 소프트웨어 정보 → 빌드번호를 7회 눌러 개발자 옵션을 켭니다.
-6. 개발자 옵션에서 USB 디버깅을 켜고 PC와 연결합니다. 휴대폰의 디버깅 허용 메시지를 승인합니다.
-7. Android Studio 상단에서 연결된 갤럭시와 `app`을 선택하고 ▶ Run을 누릅니다.
+- [개발 참여·PR·검증](CONTRIBUTING.md)
+- [5명 팀 역할과 담당 파일](docs/TEAM.md)
+- [Android 디자인 수정](docs/DESIGN.md)
+- [상몬 디자인·게임 스타일 수정](docs/SANGMON-DESIGN.md)
 
-Android 8.0 이상에서 실행됩니다. 연결된 기기가 없으면 에뮬레이터로 실행할 수 있습니다.
+Android CI는 APK 빌드·Lint·단위 테스트를, Windows CI는 C# 빌드·저장 및 캐릭터 테스트를 실행합니다. Windows의 자동 테스트는 41개이며 네이티브 화면 흐름은 격리된 예시 데이터로 별도 확인했습니다. 갤럭시 실기기, 여러 모니터·DPI·절전 복귀 확인은 추가 검증 대상입니다.
 
-## 직접 확인할 흐름
-
-1. 글·할 일·습관·감정 블록을 각각 추가합니다.
-2. 내용을 입력하고 체크박스를 선택한 뒤 순서를 변경합니다.
-3. 날짜를 이동했다가 돌아와 내용이 유지되는지 확인합니다.
-4. 앱을 종료하고 다시 실행해 기록이 유지되는지 확인합니다.
-5. 테마와 캐릭터가 날짜별로 저장되는지 확인합니다.
-6. 삭제 창에서 취소하면 내용이 유지되고, 삭제하면 해당 블록만 없어지는지 확인합니다.
-
-## 홈 화면 위젯과 움직이는 캐릭터
-
-앱의 **홈 화면의 작은 친구**에서 각각 설정합니다.
-
-- **홈 화면에 일기 위젯 추가**: 시스템 추가 창에서 확인합니다. 지원되지 않으면 갤럭시 홈 화면을 길게 누르고 위젯 → 마이데이를 선택합니다.
-- **움직이는 캐릭터 배경화면 설정**: Android 라이브 배경화면 미리보기가 열립니다. 배경화면 적용을 직접 확정합니다. 기존 배경화면을 대체하므로 확인 후 적용하세요.
-- 기본 캐릭터는 제공된 스케치를 참고해 그린 불꽃 몬스터입니다. 토끼·고양이·곰도 선택할 수 있으며, 오늘 날짜에서 선택한 캐릭터와 테마를 사용합니다.
-- 캐릭터가 화면 경계에서 방향을 바꾸며 이동합니다. 캐릭터를 끌어 이동하고, 누르면 잠깐 하트가 나타납니다. 터치 전달 여부는 홈 런처에 따라 달라질 수 있습니다.
-- 다른 앱을 열거나 화면을 꺼 배경화면이 보이지 않으면 애니메이션 루프를 중지합니다. 배경화면이 보이는 동안 최대 약 30fps로 그립니다.
-- 홈 위젯은 연속 애니메이션 대신 캐릭터를 누르면 포즈와 응원 문구가 바뀝니다. 오늘의 할 일·습관 체크와 테마·캐릭터 변경은 저장 직후 반영합니다.
-- 자정 이후 위젯 날짜는 시스템의 주기 갱신 시 반영합니다(30분 주기 요청, 실제 시간은 시스템에 따라 지연 가능). 위젯 캐릭터를 누르면 즉시 오늘 날짜로 갱신합니다.
-- 배경화면은 오늘 기록의 캐릭터와 테마를 3초마다 다시 읽습니다. 새 날짜에 기록이 없으면 기본 불꽃 몬스터·크림 테마입니다. 기존 날짜에 저장한 캐릭터 선택은 유지됩니다.
-- 위젯에는 개인 일기나 감정의 본문을 노출하지 않습니다.
-
-확인 순서: 오늘 날짜에서 캐릭터/테마 변경 → 위젯 추가 → 체크 수 반영 확인 → 위젯 캐릭터 탭 → 일기 열기 → 라이브 배경화면 적용 → 캐릭터 이동/드래그/탭 확인 → 앱 실행 후 다시 홈으로 돌아오기.
-
-## 빌드 및 검증
-
-2026-10-08에 홈 위젯과 라이브 배경화면을 추가한 v0.2.0의 `:app:assembleDebug` 빌드가 성공했습니다.
-`:app:lintDebug` Android 정적 검사도 통과했습니다.
-APK 경로는 `app/build/outputs/apk/debug/app-debug.apk`입니다.
-실제 갤럭시 및 에뮬레이터에서의 화면·터치·저장 동작은 아직 검증하지 않았습니다.
-Windows Gradle 캐시의 임시 폴더 이동 오류가 발생해 로컬 생성 캐시를 복구하고 빌드했습니다.
-한글 폴더 경로 때문에 `android.overridePathCheck=true`를 적용했습니다.
-
-- AGP/Gradle 호환성: https://developer.android.com/build/releases/agp-8-9-0-release-notes
-- Compose 컴파일러 설정: https://developer.android.com/develop/ui/compose/setup-compose-dependencies-and-compiler
-- 홈 위젯: https://developer.android.com/develop/ui/views/appwidgets
-- 라이브 배경화면 수명주기·터치: https://developer.android.com/reference/android/service/wallpaper/WallpaperService.Engine
+일기는 각 기기에 저장합니다. Android와 Windows 사이의 자동 동기화, 사진·영상 첨부, AI 감정 대화는 후속 기능입니다.

@@ -8,6 +8,10 @@ local.properties
 .gradle-user-home/
 # Local preview capture helper tied to the development machine.
 /previews/capture.cjs
+# Local copies preserve images already shared in chat; tracked previews use platform folders.
+/previews/*.png
+/previews/*.gif
+/previews/*.html
 # Local signing credentials and environment files.
 *.jks
 *.keystore
