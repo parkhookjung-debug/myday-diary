@@ -16,6 +16,7 @@ class AnimatedCharacterPainter(context: Context) {
     private val bunny = context.getColor(R.color.character_rabbit)
     private val cat = context.getColor(R.color.character_cat)
     private val bear = context.getColor(R.color.character_bear)
+    private val monster = SketchMonsterPainter(context)
 
     private fun fill(color: Int) { paint.color = color; paint.style = Paint.Style.FILL }
     private fun stroke(width: Float = 1.8f) { paint.color = outline; paint.style = Paint.Style.STROKE; paint.strokeWidth = width }
@@ -24,15 +25,19 @@ class AnimatedCharacterPainter(context: Context) {
         if (bordered) { stroke(); canvas.drawOval(left, top, right, bottom, paint) }
     }
 
-    fun draw(canvas: Canvas, kind: CharacterKind, x: Float, y: Float, radius: Float, pose: CharacterPose, facingLeft: Boolean = false) {
+    fun draw(canvas: Canvas, kind: CharacterKind, x: Float, y: Float, radius: Float, pose: CharacterPose, facingLeft: Boolean = kind == CharacterKind.MONSTER) {
         val checkpoint = canvas.save()
         try {
             canvas.translate(x, y)
             canvas.scale(radius / 50f, radius / 50f)
+            if (kind == CharacterKind.MONSTER) {
+                monster.draw(canvas, pose, facingLeft)
+                return
+            }
             oval(canvas, -19f, 39f, 19f, 44f, shadow, bordered = false)
             canvas.translate(0f, pose.bob)
             if (facingLeft) canvas.scale(-1f, 1f)
-            val fur = when (kind) { CharacterKind.RABBIT -> bunny; CharacterKind.CAT -> cat; CharacterKind.BEAR -> bear }
+            val fur = when (kind) { CharacterKind.RABBIT -> bunny; CharacterKind.CAT -> cat; CharacterKind.BEAR -> bear; CharacterKind.MONSTER -> bunny }
             if (kind == CharacterKind.CAT) {
                 val tail = Path().apply { moveTo(12f, 23f); cubicTo(32f, 26f, 35f, 9f + pose.earAngle, 27f, 9f + pose.earAngle) }
                 stroke(7f); canvas.drawPath(tail, paint)
@@ -70,6 +75,7 @@ class AnimatedCharacterPainter(context: Context) {
                         oval(canvas, side * 17f - 8f, -33f, side * 17f + 8f, -17f, fur)
                         oval(canvas, side * 17f - 4f, -29f, side * 17f + 4f, -21f, inner, bordered = false)
                     }
+                    CharacterKind.MONSTER -> Unit
                 }
                 canvas.restoreToCount(earSave)
             }

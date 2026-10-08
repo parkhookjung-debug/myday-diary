@@ -10,7 +10,9 @@ data class DiaryBlock(
     val checked: Boolean = false
 )
 
-data class DiaryEntry(val theme: Int = 0, val character: String = "🐰", val blocks: List<DiaryBlock> = emptyList())
+const val DEFAULT_CHARACTER = "sketch-monster"
+
+data class DiaryEntry(val theme: Int = 0, val character: String = DEFAULT_CHARACTER, val blocks: List<DiaryBlock> = emptyList())
 
 interface DiaryRepository {
     fun read(date: String): DiaryEntry

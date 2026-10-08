@@ -2,8 +2,22 @@ package com.myday.diary.ui.character
 
 import org.junit.Assert.*
 import org.junit.Test
+import com.myday.diary.data.DEFAULT_CHARACTER
+import com.myday.diary.data.DiaryEntry
 
 class CharacterAnimationTest {
+    @Test
+    fun referenceMonsterKeepsStableIdentityAndLoopingFirePulse() {
+        assertEquals(CharacterKind.MONSTER, CharacterKind.fromStoredValue(DEFAULT_CHARACTER))
+        assertEquals("sketch-monster", DiaryEntry().character)
+        assertNotEquals(CharacterAnimation.pose(0).flamePulse, CharacterAnimation.pose(150).flamePulse)
+        for (time in 0L..16800L step 120L) {
+            assertTrue(CharacterAnimation.pose(time, happy = true).flamePulse in 0f..1f)
+        }
+        assertEquals(CharacterAnimation.pose(0).flamePulse,
+            CharacterAnimation.pose(CharacterAnimation.LOOP_MILLIS.toLong()).flamePulse, 0.001f)
+    }
+
     @Test
     fun blinkingIsBriefAndRepeats() {
         assertFalse(CharacterAnimation.pose(3999).eyesClosed)

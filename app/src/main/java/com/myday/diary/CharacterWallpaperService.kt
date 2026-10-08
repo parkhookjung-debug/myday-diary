@@ -8,6 +8,7 @@ import android.service.wallpaper.WallpaperService
 import android.view.MotionEvent
 import android.view.SurfaceHolder
 import com.myday.diary.data.DiaryStore
+import com.myday.diary.data.DEFAULT_CHARACTER
 import com.myday.diary.ui.wallpaper.CharacterWallpaperRenderer
 import java.time.LocalDate
 import kotlin.math.abs
@@ -23,7 +24,7 @@ class CharacterWallpaperService : WallpaperService() {
         private val renderer = CharacterWallpaperRenderer(this@CharacterWallpaperService)
         private val density = resources.displayMetrics.density
         private val store by lazy { DiaryStore(this@CharacterWallpaperService) }
-        private var character = "🐰"
+        private var character = DEFAULT_CHARACTER
         private var theme = 0
         private var width = 0
         private var height = 0

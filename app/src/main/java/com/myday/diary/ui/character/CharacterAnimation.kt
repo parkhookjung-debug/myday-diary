@@ -5,9 +5,9 @@ import kotlin.math.abs
 import kotlin.math.sin
 
 enum class CharacterKind(val storedValue: String, val displayName: String) {
-    RABBIT("🐰", "토끼"), CAT("🐱", "고양이"), BEAR("🐻", "곰");
+    MONSTER("sketch-monster", "불꽃 몬스터"), RABBIT("🐰", "토끼"), CAT("🐱", "고양이"), BEAR("🐻", "곰");
     companion object {
-        fun fromStoredValue(value: String) = entries.firstOrNull { it.storedValue == value } ?: RABBIT
+        fun fromStoredValue(value: String) = entries.firstOrNull { it.storedValue == value } ?: MONSTER
     }
 }
 
@@ -21,7 +21,8 @@ data class CharacterPose(
     val rightArm: Float,
     val eyesClosed: Boolean,
     val happy: Boolean,
-    val held: Boolean
+    val held: Boolean,
+    val flamePulse: Float = 0f
 )
 
 /** Pure pose calculation shared by the wallpaper, app avatar and widget still image. */
@@ -45,7 +46,8 @@ object CharacterAnimation {
             rightArm = when { dragging -> -65f; happy -> -95f - stride * 12f; moving -> -stride * 22f; else -> 0f },
             eyesClosed = !dragging && (happy || blink),
             happy = happy && !dragging,
-            held = dragging
+            held = dragging,
+            flamePulse = ((sin(seconds * 2 * PI / 0.6) + 1.0) / 2.0).toFloat()
         )
     }
 }

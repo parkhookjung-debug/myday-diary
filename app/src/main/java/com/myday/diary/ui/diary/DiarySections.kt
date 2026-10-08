@@ -36,6 +36,7 @@ fun DiaryDateBar(date: LocalDate, saved: Boolean, actions: DiaryScreenActions) {
 }
 
 @Composable
+@OptIn(ExperimentalLayoutApi::class)
 fun DiaryAppearancePicker(entry: DiaryEntry, actions: DiaryScreenActions) {
     DiaryCard {
         Column(Modifier.padding(DiaryDimensions.cardPadding)) {
@@ -46,7 +47,7 @@ fun DiaryAppearancePicker(entry: DiaryEntry, actions: DiaryScreenActions) {
                     FilterChip(selected = entry.theme == theme.id, onClick = { actions.onThemeChange(theme.id) }, label = { Text(theme.name) })
                 }
             }
-            Row(horizontalArrangement = Arrangement.spacedBy(DiaryDimensions.controlGap)) {
+            FlowRow(horizontalArrangement = Arrangement.spacedBy(DiaryDimensions.controlGap)) {
                 DiaryOptions.characters.forEach { character ->
                     FilterChip(selected = entry.character == character, onClick = { actions.onCharacterChange(character) }, label = { Text(CharacterKind.fromStoredValue(character).displayName) })
                 }

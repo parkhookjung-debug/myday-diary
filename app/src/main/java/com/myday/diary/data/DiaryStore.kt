@@ -15,7 +15,7 @@ class DiaryStore(context: Context) : DiaryRepository {
         val raw = prefs.getString(date, null) ?: return DiaryEntry()
         val json = JSONObject(raw)
         val array = json.getJSONArray("blocks")
-        return DiaryEntry(json.optInt("theme").coerceIn(0, 2), json.optString("character", "🐰"),
+        return DiaryEntry(json.optInt("theme").coerceIn(0, 2), json.optString("character", DEFAULT_CHARACTER),
             (0 until array.length()).map {
                 val block = array.getJSONObject(it)
                 DiaryBlock(block.getString("id"), block.getString("type"), block.optString("text"), block.optBoolean("checked"))

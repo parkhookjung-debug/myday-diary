@@ -17,4 +17,9 @@
     <color name="character_inner">#E8AAA9</color>
     <color name="character_belly">#FFF1DF</color>
     <color name="character_shadow">#18805C49</color>
+    <color name="character_monster_body">#FFFEFC</color>
+    <color name="character_monster_outline">#393735</color>
+    <color name="character_monster_mouth">#F6F1E8</color>
+    <color name="character_monster_flame">#FFD79A</color>
+    <color name="character_monster_flame_core">#FFF7DB</color>
 </resources>

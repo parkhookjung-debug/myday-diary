@@ -11,6 +11,6 @@ object DiaryOptions {
         DiaryThemeOption(1, "숲", R.color.myday_forest),
         DiaryThemeOption(2, "라벤더", R.color.myday_lavender)
     )
-    val characters = listOf("🐰", "🐱", "🐻")
+    val characters = listOf("sketch-monster", "🐰", "🐱", "🐻")
     fun backgroundResource(theme: Int) = themes.firstOrNull { it.id == theme }?.colorResource ?: R.color.myday_cream
 }

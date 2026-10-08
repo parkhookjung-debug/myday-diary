@@ -7,7 +7,7 @@
     <LinearLayout android:layout_width="match_parent" android:layout_height="0dp" android:layout_weight="1"
         android:orientation="horizontal" android:gravity="center_vertical">
         <ImageView android:id="@+id/widget_character" android:layout_width="@dimen/widget_character_width" android:layout_height="match_parent"
-            android:src="@drawable/character_rabbit" android:scaleType="fitCenter" android:contentDescription="@string/widget_character_description" />
+            android:src="@drawable/character_monster" android:scaleType="fitCenter" android:contentDescription="@string/widget_character_description" />
         <LinearLayout android:layout_width="0dp" android:layout_weight="1" android:layout_height="wrap_content" android:orientation="vertical">
             <TextView android:id="@+id/widget_message" android:layout_width="match_parent" android:layout_height="wrap_content"
                 android:text="작은 기록 하나면 충분해!" android:textSize="@dimen/widget_message_text" android:textColor="@color/myday_text" android:maxLines="2" android:ellipsize="end" />

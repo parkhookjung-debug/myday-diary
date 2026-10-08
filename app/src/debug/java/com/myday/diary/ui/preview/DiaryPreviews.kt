@@ -89,3 +89,15 @@ fun CatAnimationPreview() { MyDayTheme { CharacterAvatar("🐱", moving = true) 
 @Preview(name = "곰 · 손 흔들기", showBackground = true)
 @Composable
 fun BearAnimationPreview() { MyDayTheme { CharacterAvatar("🐻", greeting = true) } }
+
+@Preview(name = "불꽃 몬스터 · 숨 쉬기", showBackground = true)
+@Composable
+fun MonsterIdlePreview() { MyDayTheme { CharacterAvatar("sketch-monster") } }
+
+@Preview(name = "불꽃 몬스터 · 이동", showBackground = true)
+@Composable
+fun MonsterWalkPreview() { MyDayTheme { CharacterAvatar("sketch-monster", moving = true) } }
+
+@Preview(name = "불꽃 몬스터 · 불 뿜기", showBackground = true)
+@Composable
+fun MonsterFirePreview() { MyDayTheme { CharacterAvatar("sketch-monster", greeting = true) } }

@@ -14,3 +14,4 @@ local.properties
 keystore.properties
 .env
 .env.*
+/.codex-remote-attachments/

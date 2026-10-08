@@ -34,9 +34,10 @@ class CharacterWallpaperRenderer(private val context: Context) {
         }
         paint.color = context.getColor(R.color.myday_character_circle)
         canvas.drawCircle(x, y, radius, paint)
-        characterPainter.draw(canvas, CharacterKind.fromStoredValue(character), x, y, radius * 0.88f,
+        val kind = CharacterKind.fromStoredValue(character)
+        characterPainter.draw(canvas, kind, x, y, radius * 0.88f,
             CharacterAnimation.pose(timeMillis, moving, dragging, happy), facingLeft)
-        if (happy) {
+        if (happy && kind != CharacterKind.MONSTER) {
             paint.textAlign = Paint.Align.CENTER
             paint.textSize = heartSize
             paint.color = context.getColor(R.color.myday_primary)
