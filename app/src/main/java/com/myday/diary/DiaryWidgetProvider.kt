@@ -6,8 +6,14 @@ import android.appwidget.AppWidgetProvider
 import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
+import android.graphics.Bitmap
+import android.graphics.Canvas
 import android.widget.RemoteViews
 import com.myday.diary.data.DiaryStore
+import com.myday.diary.ui.character.AnimatedCharacterPainter
+import com.myday.diary.ui.character.CharacterAnimation
+import com.myday.diary.ui.character.CharacterKind
+import kotlin.math.roundToInt
 import java.time.LocalDate
 
 /** A lightweight home-screen widget: no service or background animation loop. */
@@ -52,7 +58,12 @@ class DiaryWidgetProvider : AppWidgetProvider() {
             val cheer = context.getSharedPreferences("widget", Context.MODE_PRIVATE).getInt("cheer_$id", 0)
             val views = RemoteViews(context.packageName, R.layout.diary_widget)
             views.setTextViewText(R.id.widget_date, "${today.monthValue}월 ${today.dayOfMonth}일 · MY DAY")
-            views.setTextViewText(R.id.widget_character, entry.character)
+            val bitmapSize = (96 * context.resources.displayMetrics.density).roundToInt().coerceIn(64, 256)
+            val characterBitmap = Bitmap.createBitmap(bitmapSize, bitmapSize, Bitmap.Config.ARGB_8888)
+            AnimatedCharacterPainter(context).draw(Canvas(characterBitmap), CharacterKind.fromStoredValue(entry.character),
+                bitmapSize / 2f, bitmapSize / 2f, bitmapSize * 0.46f,
+                CharacterAnimation.pose(cheer * 200L, happy = cheer % 2 == 1))
+            views.setImageViewBitmap(R.id.widget_character, characterBitmap)
             views.setTextViewText(R.id.widget_message, cheers[cheer % cheers.size])
             views.setTextViewText(R.id.widget_progress, "할 일 ${tasks.count { it.checked }}/${tasks.size}  ·  습관 ${habits.count { it.checked }}/${habits.size}")
             val backgrounds = intArrayOf(R.drawable.widget_cream, R.drawable.widget_forest, R.drawable.widget_lavender)

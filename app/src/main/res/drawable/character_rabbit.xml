@@ -1,0 +1,11 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android" android:width="96dp" android:height="96dp" android:viewportWidth="100" android:viewportHeight="100">
+    <path android:fillColor="@color/character_rabbit" android:strokeColor="@color/character_outline" android:strokeWidth="1.8"
+        android:pathData="M33,51 C25,51 25,70 32,74 C35,75 38,70 38,64 L38,52 Z M67,51 C75,51 75,70 68,74 C65,75 62,70 62,64 L62,52 Z M40,76 C31,76 31,88 40,88 C49,88 49,76 40,76 Z M60,76 C51,76 51,88 60,88 C69,88 69,76 60,76 Z M50,49 C27,49 27,83 50,83 C73,83 73,49 50,49 Z M38,3 C30,3 33,34 38,34 C43,34 46,3 38,3 Z M62,3 C54,3 57,34 62,34 C67,34 70,3 62,3 Z" />
+    <path android:fillColor="@color/character_inner" android:pathData="M38,9 C35,9 36,29 38,29 C40,29 41,9 38,9 Z M62,9 C59,9 60,29 62,29 C64,29 65,9 62,9 Z" />
+    <path android:fillColor="@color/character_belly" android:pathData="M50,61 C37,61 37,79 50,79 C63,79 63,61 50,61 Z" />
+    <path android:fillColor="@color/character_rabbit" android:strokeColor="@color/character_outline" android:strokeWidth="1.8"
+        android:pathData="M50,26 C20,26 20,65 50,65 C80,65 80,26 50,26 Z" />
+    <path android:fillColor="@color/character_outline" android:pathData="M42,42 C39,42 39,47 42,47 C45,47 45,42 42,42 Z M58,42 C55,42 55,47 58,47 C61,47 61,42 58,42 Z M47.5,50 L52.5,50 L50,53 Z" />
+    <path android:fillColor="@android:color/transparent" android:strokeColor="@color/character_outline" android:strokeWidth="1.5" android:strokeLineCap="round"
+        android:pathData="M44,55 Q47,60 50,55 Q53,60 56,55" />
+</vector>

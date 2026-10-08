@@ -14,6 +14,7 @@ import com.myday.diary.ui.design.MyDayTheme
 import com.myday.diary.ui.diary.DiaryBlockCard
 import com.myday.diary.ui.diary.DiaryScreen
 import com.myday.diary.ui.diary.DiaryScreenActions
+import com.myday.diary.ui.components.CharacterAvatar
 import java.time.LocalDate
 
 private val exampleDate = LocalDate.of(2026, 10, 8)
@@ -76,3 +77,15 @@ fun DiaryBlockPreview() {
         DiaryBlockCard(block, "🐰", false, false, onEdit = { block = it }, onMoveUp = {}, onMoveDown = {}, onDelete = {})
     }
 }
+
+@Preview(name = "토끼 · 숨 쉬기와 눈 깜박임", showBackground = true)
+@Composable
+fun RabbitAnimationPreview() { MyDayTheme { CharacterAvatar("🐰") } }
+
+@Preview(name = "고양이 · 걷기", showBackground = true)
+@Composable
+fun CatAnimationPreview() { MyDayTheme { CharacterAvatar("🐱", moving = true) } }
+
+@Preview(name = "곰 · 손 흔들기", showBackground = true)
+@Composable
+fun BearAnimationPreview() { MyDayTheme { CharacterAvatar("🐻", greeting = true) } }

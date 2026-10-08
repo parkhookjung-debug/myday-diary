@@ -4,7 +4,6 @@
     <dimen name="widget_corner">24dp</dimen>
     <dimen name="widget_date_text">12sp</dimen>
     <dimen name="widget_character_width">64dp</dimen>
-    <dimen name="widget_character_text">36sp</dimen>
     <dimen name="widget_message_text">15sp</dimen>
     <dimen name="widget_progress_gap">6dp</dimen>
     <dimen name="widget_progress_text">12sp</dimen>

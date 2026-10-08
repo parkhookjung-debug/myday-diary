@@ -10,4 +10,11 @@
     <color name="myday_text_muted">#66554B</color>
     <color name="myday_wallpaper_dots">#1E805C49</color>
     <color name="myday_character_circle">#D2FFFFFF</color>
+    <color name="character_rabbit">#FFF7EF</color>
+    <color name="character_cat">#E8B989</color>
+    <color name="character_bear">#B48262</color>
+    <color name="character_outline">#694F44</color>
+    <color name="character_inner">#E8AAA9</color>
+    <color name="character_belly">#FFF1DF</color>
+    <color name="character_shadow">#18805C49</color>
 </resources>

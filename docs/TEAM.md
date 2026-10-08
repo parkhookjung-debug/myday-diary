@@ -26,7 +26,7 @@ Kotlin 경로의 기준은 `app/src/main/java/com/myday/diary/`입니다.
 | 너 | `MainActivity.kt`, `ui/diary/DiaryRoute.kt`, `app/build.gradle.kts`, `.github/workflows/android.yml` | 콜백 연결, 라이브러리 추가, SDK 변경 |
 | A | `ui/design/`, `ui/components/`, `ui/diary/DiaryScreen.kt`, `DiarySections.kt`, `DiaryBlockCard.kt`, `DiaryDialogs.kt`, `app/src/main/res/values/colors.xml` | 저장 모델 변경은 B, 시스템 버튼 동작 변경은 너/C |
 | B | `data/DiaryModels.kt`, `data/DiaryStore.kt`, `diary/DiaryController.kt`, 새 사진 저장 코드 | 사진 선택 버튼/블록 표시 방식은 A, 화면 연결은 너 |
-| C | `DiaryWidgetProvider.kt`, `CharacterWallpaperService.kt`, `platform/HomeScreenActions.kt`, `ui/wallpaper/`, 위젯 layout/drawable/XML, `app/src/main/res/values/dimens.xml` | 공통 색상은 A, 기록 필드 변경은 B |
+| C | `DiaryWidgetProvider.kt`, `CharacterWallpaperService.kt`, `platform/HomeScreenActions.kt`, `ui/wallpaper/`, `ui/character/`, 위젯 layout/drawable/XML, `app/src/main/res/values/dimens.xml` | 캐릭터 그림·앱 표시·공통 색상은 A, 기록 필드 변경은 B |
 | D | `app/src/test/`, `app/src/debug/java/com/myday/diary/ui/preview/DiaryPreviews.kt`, `README.md`, `docs/` | 화면 예시 데이터는 A, 기능 테스트 기준은 해당 기능 담당자 |
 
 `DiarySections.kt`·`DiaryBlockCard.kt`·`DiaryDialogs.kt`는 모두 `ui/diary/` 안에 있습니다.

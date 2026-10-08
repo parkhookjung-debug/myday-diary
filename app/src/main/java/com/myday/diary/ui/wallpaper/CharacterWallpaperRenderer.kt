@@ -5,10 +5,14 @@ import android.graphics.Canvas
 import android.graphics.Paint
 import com.myday.diary.R
 import com.myday.diary.ui.design.DiaryOptions
+import com.myday.diary.ui.character.AnimatedCharacterPainter
+import com.myday.diary.ui.character.CharacterAnimation
+import com.myday.diary.ui.character.CharacterKind
 
 /** Change artwork here without editing motion, touch handling or frame scheduling. */
 class CharacterWallpaperRenderer(private val context: Context) {
     private val paint = Paint(Paint.ANTI_ALIAS_FLAG)
+    private val characterPainter = AnimatedCharacterPainter(context)
     private val resources = context.resources
     val characterRadius = resources.getDimension(R.dimen.wallpaper_character_radius)
     private val dotInset = resources.getDimension(R.dimen.wallpaper_dot_inset)
@@ -18,7 +22,8 @@ class CharacterWallpaperRenderer(private val context: Context) {
     private val heartGap = resources.getDimension(R.dimen.wallpaper_heart_gap)
     private val heartTop = resources.getDimension(R.dimen.wallpaper_heart_top)
 
-    fun draw(canvas: Canvas, theme: Int, character: String, x: Float, y: Float, radius: Float, happy: Boolean) {
+    fun draw(canvas: Canvas, theme: Int, character: String, x: Float, y: Float, radius: Float, happy: Boolean,
+        timeMillis: Long, moving: Boolean, dragging: Boolean, facingLeft: Boolean) {
         canvas.drawColor(context.getColor(DiaryOptions.backgroundResource(theme)))
         paint.color = context.getColor(R.color.myday_wallpaper_dots)
         var dotX = dotInset
@@ -29,12 +34,10 @@ class CharacterWallpaperRenderer(private val context: Context) {
         }
         paint.color = context.getColor(R.color.myday_character_circle)
         canvas.drawCircle(x, y, radius, paint)
-        paint.color = context.getColor(R.color.myday_text)
-        paint.textAlign = Paint.Align.CENTER
-        paint.textSize = radius * 1.35f
-        val baseline = y - (paint.fontMetrics.ascent + paint.fontMetrics.descent) / 2f
-        canvas.drawText(character, x, baseline, paint)
+        characterPainter.draw(canvas, CharacterKind.fromStoredValue(character), x, y, radius * 0.88f,
+            CharacterAnimation.pose(timeMillis, moving, dragging, happy), facingLeft)
         if (happy) {
+            paint.textAlign = Paint.Align.CENTER
             paint.textSize = heartSize
             paint.color = context.getColor(R.color.myday_primary)
             canvas.drawText("♡", x, (y - radius - heartGap).coerceAtLeast(heartTop), paint)

@@ -23,6 +23,9 @@
 | 홈 위젯 배치 | `app/src/main/res/layout/diary_widget.xml` |
 | 위젯과 배경화면의 크기·간격 | `app/src/main/res/values/dimens.xml` |
 | 배경화면의 캐릭터·배경 그리기 | `app/src/main/java/com/myday/diary/ui/wallpaper/CharacterWallpaperRenderer.kt` |
+| 캐릭터의 얼굴·몸·귀·팔다리 그림 | `app/src/main/java/com/myday/diary/ui/character/AnimatedCharacterPainter.kt` |
+| 눈 깜박임·숨 쉬기·걷기·인사 동작 | `app/src/main/java/com/myday/diary/ui/character/CharacterAnimation.kt` |
+| 앱 안 캐릭터 표시·탭 반응 | `app/src/main/java/com/myday/diary/ui/components/CharacterAvatar.kt` |
 
 ## 빠른 수정 예시
 
@@ -47,6 +50,12 @@ Interactive Preview에서는 블록 추가·수정·삭제·순서 변경과 날
 예시 기록은 메모리에만 있으며 실제 기록 파일을 읽거나 쓰지 않습니다.
 날짜 선택 대화상자·홈 위젯 추가·배경화면 설정 버튼은 미리보기에서 시스템 화면을 열지 않습니다.
 실제 홈 위젯·배경화면 동작은 갤럭시에서 확인합니다.
+
+캐릭터 미리보기 3종(토끼 쉬기·고양이 걷기·곰 인사)도 제공합니다.
+정지 미리보기에서는 한 프레임만 보이므로 **Interactive Preview**에서 움직임을 확인합니다.
+앱과 배경화면은 같은 `AnimatedCharacterPainter`의 동작을 사용합니다.
+홈 위젯은 같은 그림에서 만든 정지 이미지를 표시하고, 탭할 때 포즈를 바꿉니다.
+기존 기록의 이모지 값은 캐릭터 종류를 구분하는 저장 ID로만 유지하여 예전 기록을 계속 읽습니다.
 
 ## 기능 담당자가 관리하는 파일
 

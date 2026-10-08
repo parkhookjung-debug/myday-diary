@@ -7,12 +7,13 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import com.myday.diary.ui.character.CharacterKind
 
 @Composable
 fun AddDiaryBlockDialog(character: String, onAdd: (String) -> Unit, onDismiss: () -> Unit) {
     AlertDialog(onDismissRequest = onDismiss, title = { Text("어떤 블록을 넣을까요?") },
         text = { Column {
-            listOf("text" to "✍ 글 일기", "todo" to "☑ 할 일", "habit" to "🌱 습관 체크", "emotion" to "$character 감정처리반").forEach { (type, title) ->
+            listOf("text" to "✍ 글 일기", "todo" to "☑ 할 일", "habit" to "🌱 습관 체크", "emotion" to "${CharacterKind.fromStoredValue(character).displayName}의 감정처리반").forEach { (type, title) ->
                 TextButton(onClick = { onAdd(type) }, modifier = Modifier.fillMaxWidth()) { Text(title) }
             }
         } }, confirmButton = { TextButton(onClick = onDismiss) { Text("닫기") } })

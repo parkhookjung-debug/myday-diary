@@ -139,7 +139,8 @@ class CharacterWallpaperService : WallpaperService() {
             val holder = surfaceHolder
             val canvas: Canvas = try { holder.lockCanvas() ?: return } catch (_: IllegalStateException) { return }
             try {
-                renderer.draw(canvas, theme, character, x, y, radius, now < happyUntil)
+                renderer.draw(canvas, theme, character, x, y, radius, now < happyUntil,
+                    timeMillis = now, moving = !dragging, dragging = dragging, facingLeft = vx < 0f)
             } finally { holder.unlockCanvasAndPost(canvas) }
         }
     }

@@ -11,6 +11,8 @@ import com.myday.diary.R
 import com.myday.diary.data.DiaryEntry
 import com.myday.diary.ui.components.DiaryActionButton
 import com.myday.diary.ui.components.DiaryCard
+import com.myday.diary.ui.components.CharacterAvatar
+import com.myday.diary.ui.character.CharacterKind
 import com.myday.diary.ui.design.DiaryDimensions
 import com.myday.diary.ui.design.DiaryOptions
 import java.time.LocalDate
@@ -38,6 +40,7 @@ fun DiaryAppearancePicker(entry: DiaryEntry, actions: DiaryScreenActions) {
     DiaryCard {
         Column(Modifier.padding(DiaryDimensions.cardPadding)) {
             Text("오늘의 분위기", style = MaterialTheme.typography.titleMedium)
+            CharacterAvatar(entry.character)
             Row(horizontalArrangement = Arrangement.spacedBy(DiaryDimensions.controlGap)) {
                 DiaryOptions.themes.forEach { theme ->
                     FilterChip(selected = entry.theme == theme.id, onClick = { actions.onThemeChange(theme.id) }, label = { Text(theme.name) })
@@ -45,7 +48,7 @@ fun DiaryAppearancePicker(entry: DiaryEntry, actions: DiaryScreenActions) {
             }
             Row(horizontalArrangement = Arrangement.spacedBy(DiaryDimensions.controlGap)) {
                 DiaryOptions.characters.forEach { character ->
-                    FilterChip(selected = entry.character == character, onClick = { actions.onCharacterChange(character) }, label = { Text(character) })
+                    FilterChip(selected = entry.character == character, onClick = { actions.onCharacterChange(character) }, label = { Text(CharacterKind.fromStoredValue(character).displayName) })
                 }
             }
         }
@@ -70,7 +73,7 @@ fun HomeScreenControls(actions: DiaryScreenActions) {
 fun DiaryEmptyState(character: String) {
     Column(Modifier.fillMaxWidth().background(colorResource(R.color.myday_card).copy(alpha = DiaryDimensions.emptyStateOpacity),
         RoundedCornerShape(DiaryDimensions.cardCorner)).padding(DiaryDimensions.emptyStatePadding)) {
-        Text(character, style = MaterialTheme.typography.displayMedium)
+        CharacterAvatar(character)
         Text("아직 비어 있는 하루", style = MaterialTheme.typography.titleLarge)
         Text("아래 버튼으로 첫 블록을 추가해 보세요.")
     }
