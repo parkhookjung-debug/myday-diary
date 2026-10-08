@@ -6,6 +6,11 @@
 갤럭시에서 실행하는 커스터마이즈 일기 앱의 첫 프로토타입입니다.
 Kotlin + Jetpack Compose로 구현했습니다.
 
+**Windows 노트북 버전**도 추가했습니다. [Windows 실행·개발 안내](windows/README.md)를 참고하세요.
+`windows/실행.cmd`를 더블클릭하면 일기 앱과 움직이는 불꽃 몬스터가 열립니다.
+빌드 후에는 `windows/bin/MyDay.exe`를 직접 실행할 수 있습니다.
+PC 기록은 해당 Windows 계정에 저장하며 Android와 자동 동기화하지 않습니다.
+
 MIT 라이선스로 공개하는 오픈소스 프로젝트입니다.
 팀 작업은 이슈 → 작업 브랜치 → PR → 리뷰 → 병합 순서로 진행합니다.
 개발 참여 방법과 5명 팀의 담당 영역 제안은 [기여 안내](CONTRIBUTING.md)를 참고하세요.
@@ -25,6 +30,10 @@ GitHub Actions는 push와 PR에서 APK 빌드·Android Lint·등록된 단위 �
 성공한 실행의 Artifacts에서 디버그 APK를 받을 수 있습니다. 저장·날짜 이동 관련 단위 테스트를 포함합니다.
 
 ## 예시 화면
+
+Windows 앱의 실제 UI 코드에 격리된 예시 기록을 넣어 렌더링한 화면입니다.
+
+![MyDay Windows 일기 화면](previews/windows-example.png)
 
 앱에서 사용하는 캐릭터 그림·동작 코드로 만든 미리보기입니다. 실제 갤럭시 화면 캡처는 아닙니다.
 

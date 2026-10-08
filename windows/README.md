@@ -1,0 +1,61 @@
+# MyDay Windows
+
+Windows에서 실행하는 C# / Windows Forms 일기 앱과 투명한 바탕화면 캐릭터입니다.
+Android 프로젝트와 별도 폴더에서 개발하며 외부 패키지, 브라우저, Node.js가 필요하지 않습니다.
+
+## 실행
+
+Windows 10/11과 .NET Framework 4.8 이상을 사용합니다.
+`실행.cmd`를 더블클릭하면 처음에는 소스를 빌드한 뒤 앱이 열립니다.
+빌드 후에는 `bin/MyDay.exe`만 더블클릭해도 실행할 수 있습니다.
+GitHub CI의 Windows artifact에서도 실행 파일을 받을 수 있습니다.
+
+## 기능
+
+- 날짜별 글 일기, 할 일, 습관 체크, 감정 기록
+- 블록 추가, 순서 이동, 너비 변경, 삭제 확인
+- 배경 테마 3종과 오늘의 마음 기록
+- 입력 후 자동 저장, 날짜 이동·종료 전 저장 확인
+- JSON 백업과 가져오기 (같은 날짜는 확인 후 교체)
+- 투명한 불꽃 몬스터: 이동, 경계 반사, 눈 깜박임, 숨 쉬기, 클릭 시 불 뿜기, 드래그
+- 캐릭터 우클릭: 일기 열기, 이동 켜기/끄기, 다른 창 위에 표시, 불 뿜기, 숨기기
+- 알림 영역 아이콘: 일기 열기, 캐릭터 표시/숨기기, 모두 종료
+
+일기 창을 숨기거나 최소화해도 캐릭터를 사용할 수 있습니다. 창의 X 또는 알림 영역의 **모두 종료**는 앱과 캐릭터를 함께 종료합니다.
+감정 기록은 일기 저장 기능이며 AI 대화는 없습니다.
+이 버전의 캐릭터는 Windows 위에 뜨는 투명 창입니다. Windows 배경화면을 교체하지 않습니다.
+Android 기록과 자동 동기화하지 않습니다. 사진·영상·시작 시 자동 실행은 아직 추가하지 않았습니다.
+
+## 기록 위치
+
+`%LOCALAPPDATA%/MyDay/Windows/diary.json`에 보관합니다. 프로그램 폴더를 옮겨도 같은 Windows 계정의 기록을 유지합니다.
+이전 저장본은 `diary.json.bak`에 남습니다. 기록을 수정하거나 PC를 옮기기 전 **기록 백업**으로 별도 파일을 보관하세요.
+손상된 기록을 읽지 못하면 앱이 오류를 표시하고 종료하며 빈 기록으로 덮어쓰지 않습니다.
+
+## 팀 디자인·기능 수정
+
+| 영역 | 파일 |
+| --- | --- |
+| 색상·글꼴·버튼·카드 | `UI/Design.cs` |
+| 일기 창 배치·날짜·연결 | `UI/DiaryWindow.cs` |
+| 일기 블록 UI | `UI/BlockCard.cs` |
+| 기록 모델·검증·저장·백업 | `Core/DiaryData.cs` |
+| 스케치 캐릭터 그림·포즈 | `Character/MonsterPainter.cs` |
+| 바탕화면 이동·드래그·투명 창 | `Character/DesktopPet.cs` |
+| 앱 안의 캐릭터 | `UI/MonsterView.cs` |
+
+캐릭터는 Android 버전과 같은 스케치 좌표를 사용하지만 플랫폼별 렌더링 코드로 관리합니다.
+
+## 빌드 및 확인
+
+```powershell
+powershell -NoProfile -ExecutionPolicy Bypass -File windows/build.ps1
+$process = Start-Process windows/bin/MyDay.exe -ArgumentList '--self-test' -Wait -PassThru -WindowStyle Hidden
+if ($process.ExitCode -ne 0) { throw 'Tests failed' }
+```
+
+자동 테스트는 실제 기록과 분리된 임시 폴더에서 저장 보존·날짜 분리·백업·손상 파일 처리·애니메이션을 확인합니다.
+`--smoke-test <출력 폴더>`는 격리된 예시 데이터로 입력·체크·순서 이동·날짜 이동·재로드와 네이티브 투명 창을 확인하고 PNG를 만듭니다.
+다중 모니터·고배율 DPI·절전 복귀·우클릭 메뉴·드래그는 실제 사용 환경에서도 확인해주세요.
+
+기반 기술: [Microsoft Windows Forms](https://learn.microsoft.com/en-us/dotnet/desktop/winforms/overview/), [UpdateLayeredWindow](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-updatelayeredwindow).

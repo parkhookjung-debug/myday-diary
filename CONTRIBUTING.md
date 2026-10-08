@@ -1,6 +1,7 @@
 # 함께 개발하기
 
 MyDay는 Kotlin과 Jetpack Compose로 만드는 Android 일기 앱입니다.
+Windows 버전은 `windows/`의 C# / Windows Forms 앱이며, [Windows 개발 안내](windows/README.md)에 빌드·검증·담당 파일을 정리했습니다.
 기능 제안, 오류 제보, 문서 개선도 환영합니다.
 
 ## 첫 실행
@@ -17,6 +18,8 @@ MyDay는 Kotlin과 Jetpack Compose로 만드는 Android 일기 앱입니다.
 3. 한 가지 기능이나 오류 수정에 집중하고 작은 커밋으로 저장합니다.
 4. GitHub에서 `main`을 대상으로 Pull Request(PR)를 만듭니다.
 5. 팀원 한 명의 승인과 Android 자동 검사가 통과하면 squash merge합니다.
+
+Windows 변경은 Windows 자동 검사도 확인합니다. Windows와 Android는 별도 소스·저장소 형식을 사용하므로 각 플랫폼의 데이터 보존을 확인합니다.
 
 ```sh
 git switch main

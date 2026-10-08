@@ -15,3 +15,5 @@ keystore.properties
 .env
 .env.*
 /.codex-remote-attachments/
+/windows/bin/
+/windows/test-output/

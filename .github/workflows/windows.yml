@@ -1,0 +1,46 @@
+name: Windows CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: windows-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  windows:
+    name: Windows checks
+    runs-on: windows-2025
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          persist-credentials: false
+      - name: Build native Windows app
+        shell: pwsh
+        run: ./windows/build.ps1
+      - name: Validate storage and character animation
+        shell: pwsh
+        run: |
+          $testRun = Start-Process -FilePath "$pwd/windows/bin/MyDay.exe" -ArgumentList '--self-test' -Wait -PassThru -WindowStyle Hidden -RedirectStandardOutput 'windows/bin/test-results.txt' -RedirectStandardError 'windows/bin/test-errors.txt'
+          Get-Content windows/bin/test-results.txt
+          Get-Content windows/bin/test-errors.txt
+          if ($testRun.ExitCode -ne 0) { throw "Tests failed: $($testRun.ExitCode)" }
+      - name: Upload app and validation results
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: myday-windows-${{ github.run_number }}
+          path: |
+            windows/bin/MyDay.exe
+            windows/bin/test-results.txt
+            windows/bin/test-errors.txt
+            windows/README.md
+          if-no-files-found: error
+          retention-days: 14

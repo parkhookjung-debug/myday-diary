@@ -67,6 +67,8 @@ Kotlin 경로의 기준은 `app/src/main/java/com/myday/diary/`입니다.
 
 ## 실제 담당자 등록
 
+Windows 작업도 같은 역할 구분을 사용합니다. UI 담당은 `windows/UI/`, 기록 담당은 `windows/Core/`, 캐릭터 담당은 `windows/Character/`, 통합 담당은 `windows/Program.cs`·`build.ps1`·Windows CI, 검증 담당은 `windows/Tests.cs`·문서를 맡을 수 있습니다. 플랫폼 전환 시 담당자끼리 먼저 작업 범위를 정합니다.
+
 | GitHub 계정 | 등록 상태 | 담당 역할 |
 | --- | --- | --- |
 | [parkhookjung-debug](https://github.com/parkhookjung-debug) | 저장소 소유자 | 기획·통합 |
