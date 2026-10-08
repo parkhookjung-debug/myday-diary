@@ -72,9 +72,10 @@ Windows 작업도 같은 역할 구분을 사용합니다. UI 담당은 `windows
 | GitHub 계정 | 등록 상태 | 담당 역할 |
 | --- | --- | --- |
 | [parkhookjung-debug](https://github.com/parkhookjung-debug) | 저장소 소유자 | 기획·통합 |
-| [ceed3927](https://github.com/ceed3927) | 2026-10-08 초대 발송, 수락 대기 | 미정 |
-| [mrsandwith-76](https://github.com/mrsandwith-76) | 2026-10-08 초대 발송, 수락 대기 | 미정 |
-| 추가 팀원 2명 | GitHub 아이디 확인 대기 | 미정 |
+| [ceed3927](https://github.com/ceed3927) | 2026-10-08 쓰기 권한 등록 확인 | 미정 |
+| [mrsandwith-76](https://github.com/mrsandwith-76) | 2026-10-08 쓰기 권한 등록 확인 | 미정 |
+| [hongmin060115-create](https://github.com/hongmin060115-create) | 2026-10-08 쓰기 권한 초대 발송, 수락 대기 | 미정 |
+| 추가 팀원 1명 | GitHub 아이디 확인 대기 | 미정 |
 
 초대한 팀원은 쓰기(Write) 권한으로 브랜치 작업, PR 작성 및 리뷰에 참여합니다.
 초대를 수락하고 담당 역할을 정하면 해당 이슈의 Assignee를 지정하고 이 표를 갱신합니다.
