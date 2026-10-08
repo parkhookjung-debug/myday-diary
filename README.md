@@ -17,7 +17,7 @@ MIT 라이선스의 오픈소스 프로젝트입니다. 5명이 UI·저장·캐�
 | Windows 10/11 | 소스의 `windows/실행.cmd`를 더블클릭하거나 배포 ZIP에서 `MyDay.exe` 실행 | [Windows 실행·개발 안내](windows/README.md) |
 | Android 8 이상 | Android Studio에서 저장소 루트를 열고 `app` 실행 또는 배포 APK 설치 | [Android 실행·기능 안내](docs/ANDROID.md) |
 
-Windows의 자유 배치를 포함한 ZIP은 [v0.3.1-preview](https://github.com/parkhookjung-debug/myday-diary/releases/tag/v0.3.1-preview), Android APK는 [v0.3.0-preview](https://github.com/parkhookjung-debug/myday-diary/releases/tag/v0.3.0-preview)에서 받습니다. APK는 개발용 debug 빌드입니다.
+Windows의 DM 스타일 화면과 자유 배치를 포함한 ZIP은 [v0.3.2-preview](https://github.com/parkhookjung-debug/myday-diary/releases/tag/v0.3.2-preview), Android APK는 [v0.3.0-preview](https://github.com/parkhookjung-debug/myday-diary/releases/tag/v0.3.0-preview)에서 받습니다. APK는 개발용 debug 빌드입니다.
 
 ```sh
 git clone https://github.com/parkhookjung-debug/myday-diary.git
@@ -45,6 +45,7 @@ Windows 소스 실행에는 .NET Framework 4.8 이상이 필요합니다. Androi
 
 ## Windows와 상몬
 
+- DM 대화 목록처럼 날짜별 기록·본문 미리보기를 보여주는 기록함, 둥근 카드와 보라색 포인트. [Windows 디자인 수정 안내](docs/WINDOWS-DESIGN.md)
 - 날짜별 일기·할 일·습관·감정, 블록 순서·너비 변경, 자동 저장과 JSON 백업
 - [자유 배치](docs/FREE-LAYOUT.md): 블록 제목을 드래그해서 이동하고 모서리로 크기를 조절하며 날짜별 위치·크기를 저장
 - 바탕화면 이동·클릭으로 일기 열기·드래그·숨기기·다시 표시

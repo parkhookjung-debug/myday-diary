@@ -10,10 +10,12 @@ Windows 10/11과 .NET Framework 4.8 이상을 사용합니다.
 캐릭터를 한 번 클릭하면 일기 창이 열립니다.
 빌드 후에는 `bin/MyDay.exe`만 더블클릭해도 실행할 수 있습니다.
 GitHub CI의 Windows artifact에서도 실행 파일을 받을 수 있습니다.
-[다운로드용 Windows ZIP](https://github.com/parkhookjung-debug/myday-diary/releases/tag/v0.3.1-preview)은 압축을 풀고 `MyDay.exe`를 실행합니다.
+[다운로드용 Windows ZIP](https://github.com/parkhookjung-debug/myday-diary/releases/tag/v0.3.2-preview)은 압축을 풀고 `MyDay.exe`를 실행합니다.
 
 ## 기능
 
+- DM 스타일 기록함: 날짜별 목록·본문 미리보기·현재 날짜 강조, 목록 클릭으로 기록 이동
+- 보라색 포인트, 둥근 버튼·카드, 작은 상몬 프로필과 아래쪽 블록 추가 버튼. [디자인 변경 안내](../docs/WINDOWS-DESIGN.md)
 - 날짜별 글 일기, 할 일, 습관 체크, 감정 기록
 - 블록 추가, 순서 이동, 너비 변경, 삭제 확인
 - 자유 배치: 제목을 잡아 드래그 이동, 오른쪽 아래 ↘로 크기 조절, 날짜별 위치·크기 저장
@@ -49,6 +51,7 @@ Android 기록과 자동 동기화하지 않습니다. 사진·영상·시작 �
 | --- | --- |
 | 색상·글꼴·버튼·카드 | `UI/Design.cs` |
 | 일기 창 배치·날짜·연결 | `UI/DiaryWindow.cs` |
+| 날짜별 기록 목록의 표시 | `UI/HistoryRow.cs` |
 | 자유 캔버스·드래그·리사이즈 핸들 | `UI/DiaryBoard.cs` |
 | 일기 블록 UI | `UI/BlockCard.cs` |
 | 기록 모델·검증·저장·백업 | `Core/DiaryData.cs` |

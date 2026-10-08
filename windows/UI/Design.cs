@@ -16,11 +16,12 @@ namespace MyDay.Windows.UI
         public static Size Size(int width, int height) { return new Size(P(width), P(height)); }
         public static Padding Pad(int all) { return new Padding(P(all)); }
         public static Padding Pad(int l, int t, int r, int b) { return new Padding(P(l), P(t), P(r), P(b)); }
-        public static readonly Color Ink = Color.FromArgb(51, 57, 49);
-        public static readonly Color Muted = Color.FromArgb(119, 124, 112);
-        public static readonly Color Accent = Color.FromArgb(74, 101, 77);
-        public static readonly Color Soft = Color.FromArgb(228, 234, 219);
-        public static readonly Color[] Backgrounds = { Color.FromArgb(247, 245, 238), Color.FromArgb(237, 243, 237), Color.FromArgb(242, 239, 248) };
+        public static readonly Color Ink = Color.FromArgb(35, 35, 48);
+        public static readonly Color Muted = Color.FromArgb(115, 115, 132);
+        public static readonly Color Accent = Color.FromArgb(112, 86, 232);
+        public static readonly Color Soft = Color.FromArgb(235, 235, 243);
+        public static readonly Color Tint = Color.FromArgb(242, 238, 255);
+        public static readonly Color[] Backgrounds = { Color.FromArgb(249, 249, 252), Color.FromArgb(246, 249, 255), Color.FromArgb(249, 246, 255) };
         private static readonly Dictionary<string, Font> Fonts = new Dictionary<string, Font>();
         public static Font Font(float size, bool bold = false)
         {
@@ -36,7 +37,7 @@ namespace MyDay.Windows.UI
         }
         public static Button Button(string text, bool primary = false)
         {
-            var b = new Button { Text = text, AutoSize = false, Height = 36, Width = 106,
+            var b = new RoundedButton { Text = text, AutoSize = false, Height = 36, Width = 106,
                 Font = Font(9), FlatStyle = FlatStyle.Flat, Cursor = Cursors.Hand,
                 BackColor = primary ? Accent : Color.White, ForeColor = primary ? Color.White : Ink,
                 Margin = new Padding(0, 0, 8, 0), UseVisualStyleBackColor = false };
@@ -55,7 +56,31 @@ namespace MyDay.Windows.UI
         }
     }
 
-    public sealed class ChoiceButton : Button
+    public class RoundedButton : Button
+    {
+        private bool hover;
+        public RoundedButton() { SetStyle(ControlStyles.UserPaint | ControlStyles.AllPaintingInWmPaint | ControlStyles.OptimizedDoubleBuffer, true); }
+        protected override void OnMouseEnter(System.EventArgs e) { hover=true; Invalidate(); base.OnMouseEnter(e); }
+        protected override void OnMouseLeave(System.EventArgs e) { hover=false; Invalidate(); base.OnMouseLeave(e); }
+        protected override void OnPaint(PaintEventArgs e)
+        {
+            var surface=Parent;
+            while(surface!=null && surface.BackColor.A<255) surface=surface.Parent;
+            e.Graphics.Clear(surface==null?Color.White:surface.BackColor);
+            e.Graphics.SmoothingMode=SmoothingMode.AntiAlias;
+            Color fill=hover && Enabled ? (BackColor==Design.Accent ? Color.FromArgb(96,70,213) : Design.Tint) : BackColor;
+            using(var path=Design.Rounded(new RectangleF(1,1,Width-3,Height-3),Design.P(10)))
+            using(var brush=new SolidBrush(fill))
+            using(var pen=new Pen(FlatAppearance.BorderColor)) {
+                e.Graphics.FillPath(brush,path);
+                if(FlatAppearance.BorderSize>0) e.Graphics.DrawPath(pen,path);
+            }
+            TextRenderer.DrawText(e.Graphics,Text,Font,ClientRectangle,Enabled?ForeColor:Design.Muted,TextFormatFlags.HorizontalCenter|TextFormatFlags.VerticalCenter|TextFormatFlags.EndEllipsis);
+            if(Focused && ShowFocusCues) ControlPaint.DrawFocusRectangle(e.Graphics,Rectangle.Inflate(ClientRectangle,-Design.P(5),-Design.P(5)));
+        }
+    }
+
+    public sealed class ChoiceButton : RoundedButton
     {
         public readonly List<object> Items = new List<object>();
         private int selected = -1;
@@ -94,9 +119,9 @@ namespace MyDay.Windows.UI
         protected override void OnPaint(PaintEventArgs e)
         {
             e.Graphics.SmoothingMode = SmoothingMode.AntiAlias;
-            using (var path = Design.Rounded(new RectangleF(1, 1, Width - 3, Height - 3), Design.P(14)))
+            using (var path = Design.Rounded(new RectangleF(1, 1, Width - 3, Height - 3), Design.P(20)))
             using (var brush = new SolidBrush(Fill))
-            using (var pen = new Pen(Color.FromArgb(227, 230, 219)))
+            using (var pen = new Pen(Design.Soft))
             { e.Graphics.FillPath(brush, path); e.Graphics.DrawPath(pen, path); }
             base.OnPaint(e);
         }
