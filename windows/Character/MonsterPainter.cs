@@ -6,7 +6,7 @@ namespace MyDay.Windows.Character
 {
     public struct MonsterPose
     {
-        public float Bob, BodyScale, WidthScale, Toe, Pulse, Tilt, LookX, LookY, EyeScale, FireStrength, Phase;
+        public float Bob, BodyScale, WidthScale, Toe, Pulse, Tilt, LookX, LookY, EyeScale, FireStrength, Phase, YawnStretch;
         public bool Closed, Happy, Held, Sleeping, Curious;
         public static MonsterPose At(double seconds, bool moving, bool held, bool happy)
         {
@@ -18,20 +18,23 @@ namespace MyDay.Windows.Character
             float breath = (float)Math.Sin(seconds * Math.PI * 2 / 2.4);
             bool held=activity==PetActivity.Drag, happy=activity==PetActivity.Fire, moving=activity==PetActivity.Walk;
             bool hop=activity==PetActivity.Hop, sleeping=activity==PetActivity.Sleep, curious=activity==PetActivity.Hover || activity==PetActivity.Look;
+            bool yawn=activity==PetActivity.Yawn;
             float leap=(float)Math.Abs(Math.Sin(age*Math.PI/.65));
             float squash=hop?(float)Math.Cos(age*Math.PI*2/.65)*.08f:moving?stride*.045f:breath*.025f;
-            float strength=happy?(float)Math.Min(1,Math.Min(age/.16,(1.8-age)/.3)):0;
+            float strength=happy?(float)Math.Min(1,Math.Min(age/.08,(PetBehavior.TouchFireSeconds-age)/.18)):0;
+            float mouth=yawn && age>=0 && age<PetBehavior.YawnSeconds?(float)Math.Sin(age/PetBehavior.YawnSeconds*Math.PI):0;
+            if(yawn && age>.65 && age<1) strength=(float)Math.Sin((age-.65)/.35*Math.PI)*.35f;
             strength=Math.Max(0,strength);
             var result = new MonsterPose {
                 Bob = held?0:hop?-leap*11:happy?-Math.Abs(stride)*4:moving?-Math.Abs(stride)*4:breath*1.5f,
-                BodyScale = held?1.08f:sleeping?.91f+breath*.018f:1+squash,
+                BodyScale = held?1.08f:sleeping?.91f+breath*.018f:1+squash+mouth*.045f,
                 WidthScale = held?.94f:sleeping?1.08f:1-squash*.65f,
                 Toe = moving?stride*9:hop?leap*4:0,
-                Tilt = held?7:hop?(float)Math.Sin(age*Math.PI/.65)*-5:moving?stride*3:curious?(float)Math.Sin(age*2)*3:sleeping?-5:breath*1.5f,
+                Tilt = held?7:hop?(float)Math.Sin(age*Math.PI/.65)*-5:moving?stride*3:curious?(float)Math.Sin(age*2)*3:sleeping?-5:yawn?-mouth*4:breath*1.5f,
                 LookX = Math.Max(-1,Math.Min(1,lookX)), LookY=Math.Max(-1,Math.Min(1,lookY)),
-                EyeScale=held?1.2f:curious?1.1f:1, FireStrength=strength, Phase=(float)seconds,
+                EyeScale=held?1.2f:curious?1.1f:1, FireStrength=strength, Phase=(float)seconds, YawnStretch=mouth,
                 Pulse = (float)((Math.Sin(seconds * Math.PI * 2 / .6) + 1) / 2),
-                Closed = !held && (sleeping || happy || seconds%4.2>=3.83 && seconds%4.2<3.92 || seconds%4.2>=4.01 && seconds%4.2<4.09),
+                Closed = !held && (sleeping || happy || yawn || seconds%4.2>=3.83 && seconds%4.2<3.92 || seconds%4.2>=4.01 && seconds%4.2<4.09),
                 Happy = happy, Held = held, Sleeping=sleeping, Curious=curious
             };
             if(activity==PetActivity.Look) { result.LookX=(float)Math.Sin(age*2.4)*.8f; result.LookY=-.3f; }
@@ -109,18 +112,18 @@ namespace MyDay.Windows.Character
                 }
             }
             g.Restore(bodySave);
-            if (!pose.Held)
+            if (!pose.Held && pose.FireStrength>.01f)
             {
-                float size = pose.Happy ? .76f + pose.FireStrength*(.27f + pose.Pulse*.16f) : .73f + pose.Pulse * .04f;
+                float size = .42f + pose.FireStrength*(.47f + pose.Pulse*.13f);
                 g.TranslateTransform(136,636); g.ScaleTransform(size,size); g.RotateTransform((pose.Pulse-.5f)*7); g.TranslateTransform(-136,-636);
-                if (pose.Happy) using (var stream = new Shape().M(121,607).Q(103,611,106,624).L(133,639).Q(129,620,121,607).Close()) Fill(g,stream,Fire,false);
+                using (var stream = new Shape().M(121,607).Q(103,611,106,624).L(133,639).Q(129,620,121,607).Close()) Fill(g,stream,Fire,false);
                 using (var fire = new Shape().M(130,630).C(115,613,95,609,81,617).C(63,610,42,625,32,638).Q(40,646,56,644)
                     .C(37,658,22,677,30,695).C(33,708,43,708,57,696).C(51,711,52,724,63,725).C(73,726,82,706,83,701)
                     .C(79,718,82,732,91,729).C(102,725,108,708,110,704).C(106,720,111,730,120,721)
-                    .C(135,705,150,672,139,650).Q(136,638,130,630).Close()) Fill(g,fire,pose.Happy?Fire:Body);
+                    .C(135,705,150,672,139,650).Q(136,638,130,630).Close()) Fill(g,fire,Fire);
                 using (var core = new Shape().M(83,620).Q(68,632,77,640).Q(84,635,88,635).Q(79,650,91,657)
                     .Q(98,650,100,642).Q(95,664,106,665).Q(116,653,116,646).Q(115,669,125,661)
-                    .Q(139,640,119,625).Q(100,616,83,620).Close()) Fill(g,core,pose.Happy?Core:Mouth);
+                    .Q(139,640,119,625).Q(100,616,83,620).Close()) Fill(g,core,Core);
                 if(pose.Happy && pose.FireStrength>0) {
                     for(int i=0;i<5;i++) {
                         float phase=(pose.Phase*1.7f+i*.19f)%1;

@@ -21,7 +21,7 @@ namespace MyDay.Windows.UI
             HandleCreated += delegate { if (Visible) timer.Start(); };
             Click += delegate { Fire(); if (Fired != null) Fired(this, EventArgs.Empty); };
         }
-        public void Fire() { happyStarted=clock.Elapsed.TotalSeconds; happyUntil=happyStarted + 1.8; Invalidate(); }
+        public void Fire() { happyStarted=clock.Elapsed.TotalSeconds; happyUntil=happyStarted + PetBehavior.TouchFireSeconds; Invalidate(); }
         protected override void OnPaint(PaintEventArgs e)
         {
             base.OnPaint(e);

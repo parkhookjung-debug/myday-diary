@@ -77,7 +77,7 @@ namespace MyDay.Windows
                     activities.Add(replay.Activity); same&=a==b;
                     bounded&=Math.Abs(replay.VelocityX)<=52 && Math.Abs(replay.VelocityY)<=25;
                 }
-                Check(bounded && same && activities.Contains(PetActivity.Look) && activities.Contains(PetActivity.Sleep) && activities.Contains(PetActivity.Walk),"Seeded behavior varies activity and keeps velocity bounded");
+                Check(bounded && same && activities.Contains(PetActivity.Look) && (activities.Contains(PetActivity.Sleep) || activities.Contains(PetActivity.Yawn)) && activities.Contains(PetActivity.Walk),"Seeded behavior varies activity and keeps velocity bounded");
                 var bounce=new PetBehavior(1); bounce.Step(.1,true,false,false); float speed=bounce.VelocityX; bounce.Bounce(true,false);
                 Check(bounce.VelocityX==-speed && !bounce.FacingLeft,"Wall reaction reverses motion and facing");
                 var jump=MonsterPose.ForActivity(.325,PetActivity.Hop,.325,0,0);
@@ -85,13 +85,33 @@ namespace MyDay.Windows
                 Check(jump.Bob<ground.Bob-8 && jump.WidthScale>ground.WidthScale && !jump.Closed,"Jump has lift and stretch distinct from landing");
                 Check(MonsterPose.ForActivity(4,PetActivity.Sleep,1,0,0).Closed && MonsterPose.ForActivity(4,PetActivity.Drag,1,0,0).EyeScale>1,"Sleeping and held expressions stay distinct");
                 bool fits=true;
-                foreach(var activity in new[] { PetActivity.Walk,PetActivity.Hop,PetActivity.Look,PetActivity.Fire,PetActivity.Drag,PetActivity.Sleep })
+                foreach(var activity in new[] { PetActivity.Walk,PetActivity.Hop,PetActivity.Look,PetActivity.Fire,PetActivity.Drag,PetActivity.Sleep,PetActivity.Yawn })
                 for(int i=0;i<24;i++) using(var image=new Bitmap(240,220)) {
                     using(var g=Graphics.FromImage(image)) MonsterPainter.Draw(g,new Rectangle(16,22,208,176),MonsterPose.ForActivity(i*.075,activity,i*.075,1,-1),true);
                     for(int x=0;x<image.Width;x++) fits&=image.GetPixel(x,0).A==0 && image.GetPixel(x,image.Height-1).A==0;
                     for(int y=0;y<image.Height;y++) fits&=image.GetPixel(0,y).A==0 && image.GetPixel(image.Width-1,y).A==0;
                 }
                 Check(fits,"Animated poses remain inside the transparent desktop window");
+                bool quiet=true;
+                foreach(var activity in new[] { PetActivity.Rest,PetActivity.Walk,PetActivity.Hop,PetActivity.Look,PetActivity.Sleep,PetActivity.Hover,PetActivity.Drag })
+                    for(int i=0;i<30;i++) quiet&=MonsterPose.ForActivity(i*.1,activity,i*.1,0,0).FireStrength==0;
+                Check(quiet,"Ordinary movement, hover and rest never emit fire");
+                Check(MonsterPose.ForActivity(.2,PetActivity.Fire,.2,0,0).FireStrength>0 && MonsterPose.ForActivity(.71,PetActivity.Fire,.71,0,0).FireStrength==0,"Touch fire ends within 0.7 seconds");
+                var yawn=MonsterPose.ForActivity(.8,PetActivity.Yawn,.8,0,0);
+                Check(yawn.Closed && yawn.YawnStretch>.8 && yawn.FireStrength>0 && yawn.FireStrength<=.35 && MonsterPose.ForActivity(1.1,PetActivity.Yawn,1.1,0,0).FireStrength==0,"Yawn closes eyes, stretches and emits only a small brief puff");
+                var calm=new PetBehavior(22); double previousYawn=-100,time=0; bool rare=true, everYawned=false;
+                for(int i=0;i<20000;i++) {
+                    var previous=calm.Activity; calm.Step(.05,true,false,false); time+=.05;
+                    rare&=calm.Activity!=PetActivity.Fire;
+                    if(calm.Activity==PetActivity.Yawn && previous!=PetActivity.Yawn) { rare&=time-previousYawn>=29.9; previousYawn=time; everYawned=true; }
+                }
+                Check(rare && everYawned,"Autonomous yawns have cooldown and never trigger touch fire");
+                using(var image=new Bitmap(240,220)) {
+                    using(var g=Graphics.FromImage(image)) MonsterPainter.Draw(g,new Rectangle(16,22,208,176),MonsterPose.ForActivity(.2,PetActivity.Rest,.2,0,0),true);
+                    int warm=0;
+                    for(int y=0;y<image.Height;y++) for(int x=0;x<image.Width;x++) { var p=image.GetPixel(x,y); if(p.A>0 && p.R>240 && p.G>170 && p.G<235 && p.B<180) warm++; }
+                    Check(warm==0,"Idle renderer has no flame-colored pixels");
+                }
                 Console.WriteLine("Passed "+passed+" tests.");
             }
             finally
@@ -135,8 +155,8 @@ namespace MyDay.Windows
         public static void Preview(string directory)
         {
             Directory.CreateDirectory(directory);
-            var activities=new[] { PetActivity.Walk,PetActivity.Hop,PetActivity.Look,PetActivity.Fire };
-            var labels=new[] { "몸을 흔들며 걷기","통통 뛰기","두리번거리기","불꽃과 작은 불티" };
+            var activities=new[] { PetActivity.Rest,PetActivity.Fire,PetActivity.Yawn,PetActivity.Walk };
+            var labels=new[] { "평소에는 불꽃 없이","건드리면 잠깐만","가끔 하품할 때 조금","다시 걸어다니기" };
             using(var font=new Font("맑은 고딕",15,FontStyle.Bold,GraphicsUnit.Pixel))
             using(var text=new SolidBrush(Color.FromArgb(70,85,65)))
             for(int frame=0;frame<80;frame++) {
@@ -148,8 +168,9 @@ namespace MyDay.Windows
                             int x=i%2*360,y=i/2*290;
                             using(var panel=new SolidBrush(Color.White))
                             using(var rounded=Design.Rounded(new RectangleF(x+10,y+10,340,270),18)) g.FillPath(panel,rounded);
-                            double age=activities[i]==PetActivity.Fire?time%2:time;
-                            var activity=activities[i]==PetActivity.Fire && age>=1.8?PetActivity.Rest:activities[i];
+                            double age=activities[i]==PetActivity.Yawn?time-1:time;
+                            var activity=activities[i];
+                            if(activity==PetActivity.Fire && age>=PetBehavior.TouchFireSeconds || activity==PetActivity.Yawn && (age<0 || age>=PetBehavior.YawnSeconds)) { activity=PetActivity.Rest; age=time; }
                             MonsterPainter.Draw(g,new Rectangle(x+50,y+62,260,180),MonsterPose.ForActivity(time,activity,age,0,0),true);
                             g.DrawString(labels[i],font,text,x+98,y+255);
                         }

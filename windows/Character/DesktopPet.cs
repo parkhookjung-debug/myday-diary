@@ -70,8 +70,8 @@ namespace MyDay.Windows.Character
             if (e.Button != MouseButtons.Left || !gesture.Active) return;
             bool click = gesture.Release(Cursor.Position);
             Capture = false; ClampToScreen();
-            if (click) openDiary();
-            else behavior.Land();
+            if (click) { Fire(); openDiary(); }
+            else { behavior.Land(); Fire(); }
         }
         protected override void OnMouseCaptureChanged(EventArgs e)
         {
