@@ -46,8 +46,13 @@ namespace MyDay.Windows
                 using(var stream=new MemoryStream(Encoding.UTF8.GetBytes("{\"Version\":1,\"Days\":[]}"))) Check(DiaryStore.Read(stream).CharacterStyle=="original","Older diary without variant field loads with original character");
                 book.CharacterStyle="future-skin"; DiaryStore.Validate(book);
                 Check(book.CharacterStyle=="original" && book.Days.Count==2,"Unknown imported variant falls back without losing dates");
-                Check(MonsterVariants.All.Select(MonsterVariants.Id).Distinct().Count()==16 && MonsterVariants.All.All(v=>MonsterVariants.FromId(MonsterVariants.Id(v))==v),"Sixteen variant IDs are distinct and round-trip");
+                Check(MonsterVariants.All.Select(MonsterVariants.Id).Distinct().Count()==32 && MonsterVariants.All.All(v=>MonsterVariants.FromId(MonsterVariants.Id(v))==v),"Thirty-two variant IDs are distinct and round-trip");
                 Check(MonsterVariants.All.Take(8).Select(MonsterVariants.Id).SequenceEqual(new[] {"original","puffy","winged","speedy","dazed","spiky","horned","mini"}),"Original eight saved IDs retain their values and order");
+                var oldForms=new[] {"droplet","puddle","pill","cube","cloud","twin"};
+                var corrected=new[] {"fin","shell","tailed","crystal","furry","flower"};
+                bool legacyForms=true;
+                for(int i=0;i<oldForms.Length;i++) { book.CharacterStyle=oldForms[i]; DiaryStore.Validate(book); legacyForms&=book.CharacterStyle==corrected[i] && book.Days.Count==2; }
+                Check(legacyForms,"Earlier slime choices migrate to corrected appearances without losing diary entries");
                 bool allSaved=true;
                 foreach(var variant in MonsterVariants.All) { book.CharacterStyle=MonsterVariants.Id(variant); store.Save(book); allSaved&=store.Load().CharacterStyle==MonsterVariants.Id(variant); }
                 Check(allSaved,"Every character form survives JSON saving and reloading");
@@ -122,14 +127,16 @@ namespace MyDay.Windows
                 }
                 Check(fingerprints.Count==MonsterVariants.All.Length,"All character forms render distinct images");
                 Check(variantFits,"Variants fit transparent window when facing either direction: "+failingVariant);
-                var silhouettes=new System.Collections.Generic.HashSet<string>();
+                bool identity=true;
                 foreach(var variant in MonsterVariants.All.Skip(8)) using(var image=new Bitmap(240,220)) {
-                    using(var g=Graphics.FromImage(image)) MonsterPainter.Draw(g,new Rectangle(16,22,208,176),MonsterPose.ForActivity(.2,PetActivity.Rest,.2,0,0),true,variant);
-                    var mask=new byte[240*220];
-                    for(int y=0;y<220;y++) for(int x=0;x<240;x++) mask[y*240+x]=(byte)(image.GetPixel(x,y).A>120?1:0);
-                    silhouettes.Add(Convert.ToBase64String(mask));
+                    using(var g=Graphics.FromImage(image)) MonsterPainter.Draw(g,new Rectangle(16,22,208,176),MonsterPose.ForActivity(0,PetActivity.Rest,0,0,0),true,variant);
+                    float scale=208f/555;
+                    Func<float,float,Color> sample=(x,y)=>image.GetPixel((int)Math.Round(120+(x-275)*.86f*scale),(int)Math.Round(110+((y-650)*.86f+35)*scale));
+                    identity&=sample(246,455).A>120 && sample(305,455).A>120;
+                    identity&=sample(246,476).R<100 && sample(305,476).R<100;
+                    identity&=sample(350,730).A==0;
                 }
-                Check(silhouettes.Count==8,"Eight new forms differ by silhouette rather than palette alone");
+                Check(identity,"All 24 additions retain raised eyes, original pupils and the open arch between the feet");
                 bool quiet=true;
                 foreach(var activity in new[] { PetActivity.Rest,PetActivity.Walk,PetActivity.Hop,PetActivity.Look,PetActivity.Sleep,PetActivity.Hover,PetActivity.Drag })
                     for(int i=0;i<30;i++) quiet&=MonsterPose.ForActivity(i*.1,activity,i*.1,0,0).FireStrength==0;
@@ -220,12 +227,11 @@ namespace MyDay.Windows
             }
             Console.WriteLine("Rendered 80 native animation frames.");
         }
-        public static void VariantPreview(string directory,bool newFormsOnly=false)
+        public static void VariantPreview(string directory,int start=0,int count=32)
         {
             Directory.CreateDirectory(directory);
-            var variants=newFormsOnly?MonsterVariants.All.Skip(8).ToArray():MonsterVariants.All;
+            var variants=MonsterVariants.All.Skip(start).Take(count).ToArray();
             using(var font=new Font("맑은 고딕",14,FontStyle.Bold,GraphicsUnit.Pixel))
-            using(var text=new SolidBrush(Color.FromArgb(70,85,65)))
             for(int frame=0;frame<80;frame++) {
                 double time=frame*.05;
                 using(var image=new Bitmap(960,((variants.Length+3)/4)*290)) {
@@ -235,10 +241,10 @@ namespace MyDay.Windows
                             var variant=variants[index]; int x=index%4*240,y=index/4*290;
                             using(var panel=new SolidBrush(Color.White))
                             using(var rounded=Design.Rounded(new RectangleF(x+8,y+8,224,274),16)) g.FillPath(panel,rounded);
-                            var activity=variant==MonsterVariant.Dazed?PetActivity.Rest:variant==MonsterVariant.Spiky?PetActivity.Look:variant==MonsterVariant.Puffy || variant==MonsterVariant.Mini || variant==MonsterVariant.Droplet || variant==MonsterVariant.Cloud?PetActivity.Hop:PetActivity.Walk;
+                            var activity=variant==MonsterVariant.Dazed?PetActivity.Rest:variant==MonsterVariant.Spiky?PetActivity.Look:variant==MonsterVariant.Puffy || variant==MonsterVariant.Mini || variant==MonsterVariant.Angel?PetActivity.Hop:PetActivity.Walk;
                             MonsterPainter.Draw(g,new Rectangle(x+16,y+52,208,176),MonsterPose.ForActivity(time,activity,time,0,0),true,variant);
-                            string label=MonsterVariants.Name(variant); float width=g.MeasureString(label,font).Width;
-                            g.DrawString(label,font,text,x+120-width/2,y+253);
+                            TextRenderer.DrawText(g,MonsterVariants.Name(variant),font,new Rectangle(x+8,y+247,224,28),Color.FromArgb(70,85,65),
+                                TextFormatFlags.HorizontalCenter|TextFormatFlags.VerticalCenter|TextFormatFlags.NoPadding|TextFormatFlags.NoPrefix);
                         }
                     }
                     image.Save(Path.Combine(directory,frame.ToString("D3")+".png"),System.Drawing.Imaging.ImageFormat.Png);

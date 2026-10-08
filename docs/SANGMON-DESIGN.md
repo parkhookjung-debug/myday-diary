@@ -1,26 +1,32 @@
-# 상몬 형태 연구
+# 상몬 외형 디자인
 
-2026-10-08에 슬라임의 다양한 외형을 검색하고 아래 자료를 참고했습니다.
+상몬의 기본 형태 위에 특징을 덧붙입니다. 두 눈이 솟은 머리, 옆으로 나온 입, 아치형 몸과 발, 검은 스케치 선과 밝은 몸색을 공통 기준으로 삼습니다. 몸을 물방울이나 네모로 교체하지 않습니다.
 
-- [Slime Rancher 2 공식 미디어](https://www.slimerancher.com/media/): 유기적인 덩어리와 말랑하게 변형되는 캐릭터를 관찰했습니다.
-- [Minecraft 공식 Slime 소개](https://www.minecraft.net/en-us/article/slime): 각진 덩어리, 부피 차이, 튀는 움직임을 참고했습니다.
-- [Slime Character Set — Pikepicture](https://designbundles.net/pikepicture/3942363-slime-character-set-cartoon-vector-illustration): 여러 윤곽과 표정을 비교하는 참고 자료입니다.
+기존 참고 스케치 8종은 유지하고, 같은 기본 몸과 얼굴에 신체 요소 또는 장식을 추가한 24종을 제공합니다. 추가 외형은 기본 몸의 뒤와 앞에 그리는 두 레이어로 분리합니다. 눈·입의 위치와 발 사이의 빈 공간을 유지합니다. 걷기·늘어남·눈 깜박임·불꽃 반응은 공통 렌더러를 사용하며 지느러미·꼬리·날개·목도리에는 작은 흔들림을 더합니다.
 
-참고 이미지를 앱에 넣지 않고 새 윤곽을 C#의 벡터 경로로 작성했습니다. 상몬의 검은 선, 두 눈, 옆으로 나온 입을 얼굴의 공통 특징으로 유지합니다. 기존 8종의 저장 ID는 유지하고 새 ID를 뒤에 추가했습니다.
-
-| 추가 형태 | 윤곽과 움직임 |
+| 그룹 | 버전 |
 | --- | --- |
-| 물방울 | 꼭대기가 휘는 물방울 몸, 통통 튀기 |
-| 납작 | 바닥으로 퍼진 물웅덩이, 가장자리 흔들림, 느린 이동 |
-| 길쭉 | 세로로 늘어난 말랑한 몸 |
-| 네모 | 모서리가 둥근 젤리 블록, 눌렸다 펴지는 움직임 |
-| 구름 | 여러 둥근 덩어리가 이어진 몸 |
-| 새싹 | 작은 잎이 달린 배 모양의 몸 |
-| 쌍둥이 | 크기가 다른 두 덩어리와 두 얼굴 |
-| 꼬불 | 길게 이어져 안쪽으로 말리는 몸과 꼬리 |
+| 기존 스케치 8종 | 기본, 빵빵, 날개, 쌩쌩, 멍한, 삐죽, 뿔, 꼬마 |
+| 신체·자연 외형 8종 | 지느러미, 등껍질, 꼬리, 수정, 복슬, 새싹, 꽃, 리본 |
+| 테마·장비 8종 | 천사, 악마, 왕관, 마법사, 해적, 우주, 헤드폰, 안경 |
+| 생활·상징 8종 | 목도리, 배낭, 잠옷, 우비, 겨울, 별, 달, 하트 |
 
-색은 옅은 파스텔로 구분하고 흰 반사선을 더했습니다. 평소에는 불꽃을 표시하지 않으며, 터치와 드문 하품에만 잠깐 불을 뿜습니다. 하품 때 별도의 동그란 입을 만들지 않습니다.
+총 32종입니다. 색은 추가 요소에만 옅은 파스텔로 적용하며 기본 몸은 밝은 스케치 톤을 유지합니다. 평소에는 불꽃이 없으며 터치와 드문 하품에만 잠깐 불을 뿜습니다. 하품에 별도의 동그란 입을 만들지 않습니다.
 
-형태 코드는 `windows/Character/SlimeForms.cs`, 이름·ID·이동 속도는 `MonsterVariants.cs`에서 수정합니다. 얼굴과 불꽃 위치는 같은 배치 변환을 사용합니다.
+## 팀에서 수정하는 위치
 
-![새 상몬 형태의 코드 렌더링 예시](../previews/windows-slime-forms.gif)
+- `windows/Character/MonsterPainter.cs`: 공통 몸, 얼굴, 포즈와 불꽃
+- `windows/Character/MonsterAdditions.cs`: 추가 외형의 뒤/앞 레이어
+- `windows/Character/MonsterVariants.cs`: 32종 이름, 저장 ID와 이동 속도
+
+새 외형을 수정할 때 원형의 몸 경로나 눈·입 좌표를 바꾸지 않고 뒤/앞 레이어를 편집합니다. 투명 창 가장자리와 양쪽 방향의 움직임, 눈과 발 사이 빈 공간은 테스트에서 확인합니다. 일기 선택 메뉴와 바탕화면 우클릭 메뉴는 같은 버전 목록을 사용합니다.
+
+기존 첫 8종의 저장 ID와 순서는 유지합니다. 잠시 제공했던 슬라임 형태의 ID `droplet/puddle/pill/cube/cloud/twin`은 `fin/shell/tailed/crystal/furry/flower`로 읽고 다음 저장부터 새 ID로 보관합니다. `sprout/ribbon`은 같은 ID로 수정된 상몬 외형을 사용합니다. 일기 내용은 유지합니다.
+
+## 참고 자료
+
+2026-10-08에 [Slime Rancher 공식 미디어](https://www.slimerancher.com/media/), [Minecraft 공식 Slime 소개](https://www.minecraft.net/en-us/article/slime), [Pikepicture의 Slime Character Set](https://designbundles.net/pikepicture/3942363-slime-character-set-cartoon-vector-illustration)을 살펴봤습니다. 여러 캐릭터를 구분하는 부속 요소와 움직임을 참고하며, 상몬의 몸과 얼굴은 사용자가 제공한 원래 스케치를 기준으로 합니다. 외부 게임 이미지를 앱에 넣지 않고 C# 벡터 경로로 외형을 그립니다.
+
+![상몬 1–16번](../previews/windows-variants-first.gif)
+
+![상몬 17–32번](../previews/windows-variants-second.gif)

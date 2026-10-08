@@ -255,6 +255,13 @@ namespace MyDay.Windows.UI
             var menu=pet.ContextMenuStrip.Items.OfType<ToolStripMenuItem>().First(item=>item.Text=="캐릭터 버전");
             ((ToolStripMenuItem)menu.DropDownItems[(int)MonsterVariant.Mini]).PerformClick();
             if(characterChoice.SelectedIndex!=(int)MonsterVariant.Mini || avatar.Variant!=MonsterVariant.Mini) throw new Exception("Desktop variant menu did not update diary");
+            foreach(var variant in MonsterVariants.All) {
+                characterChoice.SelectedIndex=(int)variant;
+                if(avatar.Variant!=variant || pet.Variant!=variant) throw new Exception("Diary choice missed "+variant);
+                ((ToolStripMenuItem)menu.DropDownItems[(int)variant]).PerformClick();
+                if(characterChoice.SelectedIndex!=(int)variant || avatar.Variant!=variant) throw new Exception("Desktop menu missed "+variant);
+            }
+            characterChoice.SelectedIndex=(int)MonsterVariant.Mini;
             if(!FlushSave() || store.Load().CharacterStyle!="mini") throw new Exception("Variant did not save");
             characterChoice.SelectedIndex=(int)MonsterVariant.Winged;
             ChangeDate(date.AddDays(1)); ChangeDate(date.AddDays(-1));
