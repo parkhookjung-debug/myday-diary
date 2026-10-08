@@ -204,6 +204,7 @@ namespace MyDay.Windows.UI
             try { store.Save(book); dirty=false; status.Text="저장됨 · "+DateTime.Now.ToString("HH:mm"); status.ForeColor=Design.Accent; return true; }
             catch(Exception ex)
             {
+                if(testMode) throw new IOException("Native smoke-test save failed.",ex);
                 status.Text="저장 실패 · 다시 시도 필요"; status.ForeColor=Color.Firebrick;
                 MessageBox.Show(this,"기록을 저장하지 못했어요. 창을 닫기 전에 디스크 공간과 폴더 권한을 확인해주세요.\n\n"+ex.Message,"저장 오류",MessageBoxButtons.OK,MessageBoxIcon.Error); return false;
             }

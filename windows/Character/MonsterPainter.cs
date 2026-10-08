@@ -50,7 +50,7 @@ namespace MyDay.Windows.Character
         public static readonly Color Mouth = Color.FromArgb(246, 241, 232);
         public static readonly Color Fire = Color.FromArgb(255, 215, 154);
         public static readonly Color Core = Color.FromArgb(255, 247, 219);
-        private sealed class Shape : IDisposable
+        internal sealed class Shape : IDisposable
         {
             public readonly GraphicsPath Path = new GraphicsPath();
             private PointF current;
@@ -63,7 +63,7 @@ namespace MyDay.Windows.Character
             public Shape Close() { Path.CloseFigure(); return this; }
             public void Dispose() { Path.Dispose(); }
         }
-        private static void Fill(Graphics g, Shape shape, Color color, bool outline = true)
+        internal static void Fill(Graphics g, Shape shape, Color color, bool outline = true)
         {
             using (var brush = new SolidBrush(color)) g.FillPath(brush, shape.Path);
             if (outline) using (var pen = new Pen(Ink, 5.5f) { StartCap = LineCap.Round, EndCap = LineCap.Round, LineJoin = LineJoin.Round }) g.DrawPath(pen, shape.Path);
@@ -92,7 +92,9 @@ namespace MyDay.Windows.Character
             g.ScaleTransform(pose.WidthScale*(variant==MonsterVariant.Speedy?1.05f:1),pose.BodyScale*(variant==MonsterVariant.Speedy?.9f:1)); g.TranslateTransform(-275, -730);
             DrawBehind(g,pose,variant);
             float l = pose.Toe, r = -pose.Toe;
-            if(variant==MonsterVariant.Puffy) {
+            if(SlimeForms.DrawBody(g,pose,variant)) {
+                // Each form has its own outline, but the face remains recognizable as Sangmon.
+            } else if(variant==MonsterVariant.Puffy) {
                 using(var body=new Shape().M(215,513).C(219,482,231,451,248,439).C(261,433,268,455,275,491)
                     .C(281,466,288,430,307,433).C(326,435,337,469,342,498).C(425,500,509,566,507,647)
                     .C(507,725,441,770,355,776).C(271,788,194,763,165,721).C(142,682,156,654,180,636)
@@ -116,6 +118,7 @@ namespace MyDay.Windows.Character
                 .C(196,767+l,177,761+l,170,749+l).C(154,732,169,702,180,679).L(205,632)
                 .C(181,637,150,627,133,612).C(112,598,113,582,120,568).C(137,542,165,519,190,515).Q(207,511,215,513).Close()) Fill(g, body, Body);
             }
+            var faceSave=g.Save(); SlimeForms.PlaceFace(g,variant);
             using (var mouth = new Shape().M(120,586).Q(154,567,185,561).C(205,557,222,565,227,579)
                 .C(232,593,220,614,209,625).Q(168,643,133,611).Q(123,601,120,586).Close()) Fill(g, mouth, Mouth, false);
             using (var lip = new Shape().M(120,586).Q(154,567,185,561).C(205,557,222,565,227,579)
@@ -146,9 +149,11 @@ namespace MyDay.Windows.Character
                 }
             }
             DrawDetails(g,variant);
+            g.Restore(faceSave);
             g.Restore(bodySave);
             if (!pose.Held && pose.FireStrength>.01f)
             {
+                SlimeForms.PlaceFace(g,variant);
                 float size = .42f + pose.FireStrength*(.47f + pose.Pulse*.13f);
                 g.TranslateTransform(136,636); g.ScaleTransform(size,size); g.RotateTransform((pose.Pulse-.5f)*7); g.TranslateTransform(-136,-636);
                 using (var stream = new Shape().M(121,607).Q(103,611,106,624).L(133,639).Q(129,620,121,607).Close()) Fill(g,stream,Fire,false);

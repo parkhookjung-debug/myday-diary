@@ -46,7 +46,11 @@ namespace MyDay.Windows
                 using(var stream=new MemoryStream(Encoding.UTF8.GetBytes("{\"Version\":1,\"Days\":[]}"))) Check(DiaryStore.Read(stream).CharacterStyle=="original","Older diary without variant field loads with original character");
                 book.CharacterStyle="future-skin"; DiaryStore.Validate(book);
                 Check(book.CharacterStyle=="original" && book.Days.Count==2,"Unknown imported variant falls back without losing dates");
-                Check(MonsterVariants.All.Select(MonsterVariants.Id).Distinct().Count()==8 && MonsterVariants.All.All(v=>MonsterVariants.FromId(MonsterVariants.Id(v))==v),"Eight variant IDs are distinct and round-trip");
+                Check(MonsterVariants.All.Select(MonsterVariants.Id).Distinct().Count()==16 && MonsterVariants.All.All(v=>MonsterVariants.FromId(MonsterVariants.Id(v))==v),"Sixteen variant IDs are distinct and round-trip");
+                Check(MonsterVariants.All.Take(8).Select(MonsterVariants.Id).SequenceEqual(new[] {"original","puffy","winged","speedy","dazed","spiky","horned","mini"}),"Original eight saved IDs retain their values and order");
+                bool allSaved=true;
+                foreach(var variant in MonsterVariants.All) { book.CharacterStyle=MonsterVariants.Id(variant); store.Save(book); allSaved&=store.Load().CharacterStyle==MonsterVariants.Id(variant); }
+                Check(allSaved,"Every character form survives JSON saving and reloading");
                 File.WriteAllText(store.FilePath,"broken JSON",Encoding.UTF8); rejected=false; try { store.Load(); } catch(Exception) { rejected=true; }
                 Check(rejected && File.ReadAllText(store.FilePath)=="broken JSON","Damaged diary is not silently replaced");
                 var held=MonsterPose.At(.2,true,true,true); Check(held.Held && !held.Happy && !held.Closed && held.Toe==0,"Dragging takes priority over fire and walking");
@@ -116,8 +120,16 @@ namespace MyDay.Windows
                         variantFits&=frameFits;
                     }
                 }
-                Check(fingerprints.Count==8,"All eight variants render visibly distinct silhouettes or expressions");
+                Check(fingerprints.Count==MonsterVariants.All.Length,"All character forms render distinct images");
                 Check(variantFits,"Variants fit transparent window when facing either direction: "+failingVariant);
+                var silhouettes=new System.Collections.Generic.HashSet<string>();
+                foreach(var variant in MonsterVariants.All.Skip(8)) using(var image=new Bitmap(240,220)) {
+                    using(var g=Graphics.FromImage(image)) MonsterPainter.Draw(g,new Rectangle(16,22,208,176),MonsterPose.ForActivity(.2,PetActivity.Rest,.2,0,0),true,variant);
+                    var mask=new byte[240*220];
+                    for(int y=0;y<220;y++) for(int x=0;x<240;x++) mask[y*240+x]=(byte)(image.GetPixel(x,y).A>120?1:0);
+                    silhouettes.Add(Convert.ToBase64String(mask));
+                }
+                Check(silhouettes.Count==8,"Eight new forms differ by silhouette rather than palette alone");
                 bool quiet=true;
                 foreach(var activity in new[] { PetActivity.Rest,PetActivity.Walk,PetActivity.Hop,PetActivity.Look,PetActivity.Sleep,PetActivity.Hover,PetActivity.Drag })
                     for(int i=0;i<30;i++) quiet&=MonsterPose.ForActivity(i*.1,activity,i*.1,0,0).FireStrength==0;
@@ -153,10 +165,12 @@ namespace MyDay.Windows
             var store=new DiaryStore(Path.Combine(directory,"isolated-data"));
             using(var form=new DiaryWindow(store,new DiaryBook(),true))
             {
+                Console.WriteLine("Smoke: preparing isolated diary window.");
                 form.StartPosition=FormStartPosition.Manual; form.Location=new Point(-30000,-30000);
                 form.StartOnDesktop(); if(form.Visible) throw new Exception("Diary opened at desktop startup");
-                form.OpenDiary(); Application.DoEvents();
+                form.OpenDiary(); Console.WriteLine("Smoke: opened diary."); Application.DoEvents();
                 form.SmokeTest(Path.Combine(directory,"windows-example.png")); form.Close();
+                Console.WriteLine("Smoke: input, selection, reload and rendering passed.");
                 if(form.Visible || form.IsDisposed) throw new Exception("Close should hide and keep the session alive");
                 form.OpenDiary(); if(!form.Visible) throw new Exception("Diary did not reopen");
                 form.ExitApp(); if(!form.IsDisposed) throw new Exception("Explicit exit did not dispose diary");
@@ -206,21 +220,22 @@ namespace MyDay.Windows
             }
             Console.WriteLine("Rendered 80 native animation frames.");
         }
-        public static void VariantPreview(string directory)
+        public static void VariantPreview(string directory,bool newFormsOnly=false)
         {
             Directory.CreateDirectory(directory);
+            var variants=newFormsOnly?MonsterVariants.All.Skip(8).ToArray():MonsterVariants.All;
             using(var font=new Font("맑은 고딕",14,FontStyle.Bold,GraphicsUnit.Pixel))
             using(var text=new SolidBrush(Color.FromArgb(70,85,65)))
             for(int frame=0;frame<80;frame++) {
                 double time=frame*.05;
-                using(var image=new Bitmap(960,580)) {
+                using(var image=new Bitmap(960,((variants.Length+3)/4)*290)) {
                     using(var g=Graphics.FromImage(image)) {
                         g.Clear(Color.FromArgb(243,246,238));
-                        foreach(var variant in MonsterVariants.All) {
-                            int index=(int)variant,x=index%4*240,y=index/4*290;
+                        for(int index=0;index<variants.Length;index++) {
+                            var variant=variants[index]; int x=index%4*240,y=index/4*290;
                             using(var panel=new SolidBrush(Color.White))
                             using(var rounded=Design.Rounded(new RectangleF(x+8,y+8,224,274),16)) g.FillPath(panel,rounded);
-                            var activity=variant==MonsterVariant.Dazed?PetActivity.Rest:variant==MonsterVariant.Spiky?PetActivity.Look:variant==MonsterVariant.Puffy || variant==MonsterVariant.Mini?PetActivity.Hop:PetActivity.Walk;
+                            var activity=variant==MonsterVariant.Dazed?PetActivity.Rest:variant==MonsterVariant.Spiky?PetActivity.Look:variant==MonsterVariant.Puffy || variant==MonsterVariant.Mini || variant==MonsterVariant.Droplet || variant==MonsterVariant.Cloud?PetActivity.Hop:PetActivity.Walk;
                             MonsterPainter.Draw(g,new Rectangle(x+16,y+52,208,176),MonsterPose.ForActivity(time,activity,time,0,0),true,variant);
                             string label=MonsterVariants.Name(variant); float width=g.MeasureString(label,font).Width;
                             g.DrawString(label,font,text,x+120-width/2,y+253);
@@ -229,7 +244,7 @@ namespace MyDay.Windows
                     image.Save(Path.Combine(directory,frame.ToString("D3")+".png"),System.Drawing.Imaging.ImageFormat.Png);
                 }
             }
-            Console.WriteLine("Rendered eight variants in 80 animation frames.");
+            Console.WriteLine("Rendered "+variants.Length+" variants in 80 animation frames.");
         }
     }
 }

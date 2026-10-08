@@ -38,10 +38,10 @@ namespace MyDay.Windows.Character
         public DesktopPet(Action openDiary)
         {
             this.openDiary = openDiary;
-            Text = "MyDay 불꽃 몬스터"; FormBorderStyle = FormBorderStyle.None;
+            Text = "MyDay 상몬"; FormBorderStyle = FormBorderStyle.None;
             ShowInTaskbar = false; TopMost = true; Size = new Size(240, 220);
             StartPosition = FormStartPosition.Manual; AutoScaleMode = AutoScaleMode.None;
-            AccessibleName = "바탕화면 불꽃 몬스터. 한 번 클릭하면 일기를 열고 끌어서 이동합니다.";
+            AccessibleName = "바탕화면 상몬. 한 번 클릭하면 일기를 열고 끌어서 이동합니다.";
             var area = Screen.PrimaryScreen.WorkingArea;
             Location = new Point(area.Right - Width - 42, area.Bottom - Height - 30);
             x = Left; y = Top;
@@ -111,7 +111,7 @@ namespace MyDay.Windows.Character
             var proximity = new Rectangle(Left-16,Top-16,Width+32,Height+32);
             bool hover=proximity.Contains(Cursor.Position) || ContextMenuStrip.Visible;
             var motion=behavior.Step(delta,roaming,gesture.Active,hover);
-            float speed=variant==MonsterVariant.Speedy?1.6f:variant==MonsterVariant.Puffy?.8f:variant==MonsterVariant.Winged?1.15f:1;
+            float speed=MonsterVariants.SpeedFactor(variant);
             motion=new PointF(motion.X*speed,motion.Y*speed);
             if (!gesture.Active)
             {

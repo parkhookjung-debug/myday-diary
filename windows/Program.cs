@@ -21,6 +21,7 @@ namespace MyDay.Windows
             SetProcessDPIAware(); Application.EnableVisualStyles(); Application.SetCompatibleTextRenderingDefault(false);
             if(args.Length==2 && args[0]=="--smoke-test")
             {
+                Application.SetUnhandledExceptionMode(UnhandledExceptionMode.ThrowException);
                 try { Tests.Smoke(Path.GetFullPath(args[1])); return 0; } catch(Exception ex) { Console.Error.WriteLine(ex); return 1; }
             }
             if(args.Length==2 && args[0]=="--character-preview")
@@ -30,6 +31,10 @@ namespace MyDay.Windows
             if(args.Length==2 && args[0]=="--variant-preview")
             {
                 try { Tests.VariantPreview(Path.GetFullPath(args[1])); return 0; } catch(Exception ex) { Console.Error.WriteLine(ex); return 1; }
+            }
+            if(args.Length==2 && args[0]=="--slime-preview")
+            {
+                try { Tests.VariantPreview(Path.GetFullPath(args[1]),true); return 0; } catch(Exception ex) { Console.Error.WriteLine(ex); return 1; }
             }
             bool created;
             // One writer per Windows user prevents two windows overwriting each other's diary.
