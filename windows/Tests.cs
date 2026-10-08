@@ -54,6 +54,12 @@ namespace MyDay.Windows
                     for(int y=0;y<a.Height;y++) for(int x=0;x<a.Width;x++) { if(a.GetPixel(x,y)!=b.GetPixel(x,y)) different++; if(a.GetPixel(x,y).A>0) opaque++; }
                     Check(a.GetPixel(0,0).A==0 && opaque>1000 && different>500,"Monster keeps transparent margins and distinct fire reaction");
                 }
+                var gesture=new PetGesture(); gesture.Press(new Point(100,100));
+                Check(gesture.Release(new Point(102,100)) && !gesture.Active,"Small pointer movement opens diary as a click");
+                gesture.Press(new Point(100,100)); gesture.Move(new Point(125,120)); gesture.Move(new Point(100,100));
+                Check(!gesture.Release(new Point(100,100)),"Dragging back to the start does not open diary");
+                gesture.Press(new Point(100,100)); gesture.Cancel();
+                Check(!gesture.Release(new Point(100,100)),"Cancelled capture does not open diary");
                 Console.WriteLine("Passed "+passed+" tests.");
             }
             finally
@@ -69,8 +75,19 @@ namespace MyDay.Windows
             var store=new DiaryStore(Path.Combine(directory,"isolated-data"));
             using(var form=new DiaryWindow(store,new DiaryBook(),true))
             {
-                form.StartPosition=FormStartPosition.Manual; form.Location=new Point(-30000,-30000); form.Show(); Application.DoEvents();
+                form.StartPosition=FormStartPosition.Manual; form.Location=new Point(-30000,-30000);
+                form.StartOnDesktop(); if(form.Visible) throw new Exception("Diary opened at desktop startup");
+                form.OpenDiary(); Application.DoEvents();
                 form.SmokeTest(Path.Combine(directory,"windows-example.png")); form.Close();
+                if(form.Visible || form.IsDisposed) throw new Exception("Close should hide and keep the session alive");
+                form.OpenDiary(); if(!form.Visible) throw new Exception("Diary did not reopen");
+                form.ExitApp(); if(!form.IsDisposed) throw new Exception("Explicit exit did not dispose diary");
+            }
+            using(var unopened=new DiaryWindow(store,store.Load(),true))
+            {
+                bool closed=false; unopened.FormClosed+=delegate { closed=true; };
+                unopened.StartOnDesktop(); unopened.ExitApp();
+                if(!closed || !unopened.IsDisposed) throw new Exception("Exit before first diary open did not close the session");
             }
             using(var pet=new DesktopPet(delegate {}))
             using(var frame=pet.MakeFrame(.2,true))
@@ -80,7 +97,7 @@ namespace MyDay.Windows
                 if(frame.GetPixel(0,0).A!=0) throw new Exception("Pet transparency failed");
                 frame.Save(Path.Combine(directory,"windows-pet.png"),System.Drawing.Imaging.ImageFormat.Png);
             }
-            File.WriteAllText(Path.Combine(directory,"smoke-result.txt"),"PASS: native form; input; check; reorder; date navigation; mood and theme; small-window layout; disk reload; layered window; transparent pet",Encoding.UTF8);
+            File.WriteAllText(Path.Combine(directory,"smoke-result.txt"),"PASS: desktop-only startup; open; close-to-hide; reopen; explicit exit before/after first open; input; check; reorder; date navigation; mood and theme; small-window layout; disk reload; layered window; transparent pet",Encoding.UTF8);
             Console.WriteLine("Native Windows smoke test passed.");
         }
     }

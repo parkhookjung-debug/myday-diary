@@ -14,7 +14,7 @@ namespace MyDay.Windows.UI
         private DiaryBook book;
         private DiaryEntry entry;
         private DateTime date = DateTime.Today;
-        private bool dirty, binding;
+        private bool dirty, binding, exitRequested;
         private readonly Timer saveTimer = new Timer { Interval = 350 };
         private readonly FlowLayoutPanel board = new FlowLayoutPanel { Dock=DockStyle.Fill, AutoScroll=true, WrapContents=true, Padding=Design.Pad(0,4,0,16) };
         private readonly Label status = Design.Label("내 컴퓨터에 자동 저장", 9);
@@ -83,12 +83,24 @@ namespace MyDay.Windows.UI
             tray=new NotifyIcon { Icon=SystemIcons.Application, Text="MyDay · 일기와 불꽃 몬스터", Visible=!testMode };
             var trayMenu=new ContextMenuStrip(); trayMenu.Items.Add("일기 열기",null,delegate { OpenDiary(); });
             trayMenu.Items.Add("캐릭터 표시 / 숨기기",null,delegate { TogglePet(); });
-            trayMenu.Items.Add("모두 종료",null,delegate { Close(); }); tray.ContextMenuStrip=trayMenu;
+            trayMenu.Items.Add("모두 종료",null,delegate { ExitApp(); }); tray.ContextMenuStrip=trayMenu;
             tray.DoubleClick+=delegate { OpenDiary(); };
             avatar.Fired+=delegate { if (pet!=null) pet.Fire(); };
-            FormClosing+=delegate(object sender,FormClosingEventArgs e) { if(!FlushSave()) e.Cancel=true; };
+            FormClosing+=delegate(object sender,FormClosingEventArgs e) {
+                if(!FlushSave()) { e.Cancel=true; return; }
+                if(!exitRequested && e.CloseReason==CloseReason.UserClosing) { e.Cancel=true; Hide(); }
+            };
             LoadDate();
-            Shown+=delegate { if(!testMode) { EnsurePet(); pet.Show(); } };
+        }
+        public void StartOnDesktop()
+        {
+            // Keep a hidden window handle so tray Exit raises FormClosed even before the first click.
+            if(!IsHandleCreated) CreateHandle();
+            EnsurePet(); if(!testMode) pet.Show(); petToggle.Text="캐릭터 숨기기";
+        }
+        public void ExitApp()
+        {
+            exitRequested=true; Close(); if(!IsDisposed) exitRequested=false;
         }
         private void EnsurePet()
         {

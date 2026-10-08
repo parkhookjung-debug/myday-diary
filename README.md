@@ -7,7 +7,7 @@
 Kotlin + Jetpack Compose로 구현했습니다.
 
 **Windows 노트북 버전**도 추가했습니다. [Windows 실행·개발 안내](windows/README.md)를 참고하세요.
-`windows/실행.cmd`를 더블클릭하면 일기 앱과 움직이는 불꽃 몬스터가 열립니다.
+`windows/실행.cmd`를 더블클릭하면 불꽃 몬스터가 바탕화면에서 움직이고, 캐릭터를 한 번 클릭하면 일기 창이 열립니다.
 빌드 후에는 `windows/bin/MyDay.exe`를 직접 실행할 수 있습니다.
 PC 기록은 해당 Windows 계정에 저장하며 Android와 자동 동기화하지 않습니다.
 

@@ -32,7 +32,8 @@ namespace MyDay.Windows
                 {
                     var directory=Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),"MyDay","Windows");
                     var store=new DiaryStore(directory);
-                    Application.Run(new DiaryWindow(store,store.Load())); return 0;
+                    using(var session=new DiarySession(store,store.Load())) Application.Run(session);
+                    return 0;
                 }
                 catch(Exception ex)
                 {
@@ -40,6 +41,22 @@ namespace MyDay.Windows
                 }
                 finally { mutex.ReleaseMutex(); }
             }
+        }
+    }
+
+    internal sealed class DiarySession : ApplicationContext
+    {
+        private readonly DiaryWindow window;
+        public DiarySession(DiaryStore store,DiaryBook book)
+        {
+            window=new DiaryWindow(store,book);
+            window.FormClosed+=delegate { ExitThread(); };
+            window.StartOnDesktop();
+        }
+        protected override void Dispose(bool disposing)
+        {
+            if(disposing) window.Dispose();
+            base.Dispose(disposing);
         }
     }
 }
