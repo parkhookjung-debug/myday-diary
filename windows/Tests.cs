@@ -60,6 +60,38 @@ namespace MyDay.Windows
                 Check(!gesture.Release(new Point(100,100)),"Dragging back to the start does not open diary");
                 gesture.Press(new Point(100,100)); gesture.Cancel();
                 Check(!gesture.Release(new Point(100,100)),"Cancelled capture does not open diary");
+                var life=new PetBehavior(17); var motion=life.Step(.05,true,false,true);
+                Check(life.Activity==PetActivity.Hover && motion==PointF.Empty,"Mouse proximity stops travel for a reliable click");
+                life.Fire(); life.Step(.05,true,false,true);
+                Check(life.Activity==PetActivity.Fire,"Explicit fire remains visible while hovered");
+                life.Step(.05,true,true,true);
+                Check(life.Activity==PetActivity.Drag && life.Step(.05,true,true,false)==PointF.Empty,"Dragging overrides roaming and fire");
+                life.Step(.05,false,false,false);
+                Check(life.Activity==PetActivity.Rest && life.Step(.05,false,false,false)==PointF.Empty,"Movement switch pauses travel");
+                life.Land(); life.Step(.05,false,false,false);
+                Check(life.Activity==PetActivity.Hop,"Drop triggers a landing bounce even when roaming is paused");
+                var replay=new PetBehavior(22); var replay2=new PetBehavior(22); bool bounded=true, same=true;
+                var activities=new System.Collections.Generic.HashSet<PetActivity>();
+                for(int i=0;i<3600;i++) {
+                    var a=replay.Step(.033,true,false,false); var b=replay2.Step(.033,true,false,false);
+                    activities.Add(replay.Activity); same&=a==b;
+                    bounded&=Math.Abs(replay.VelocityX)<=52 && Math.Abs(replay.VelocityY)<=25;
+                }
+                Check(bounded && same && activities.Contains(PetActivity.Look) && activities.Contains(PetActivity.Sleep) && activities.Contains(PetActivity.Walk),"Seeded behavior varies activity and keeps velocity bounded");
+                var bounce=new PetBehavior(1); bounce.Step(.1,true,false,false); float speed=bounce.VelocityX; bounce.Bounce(true,false);
+                Check(bounce.VelocityX==-speed && !bounce.FacingLeft,"Wall reaction reverses motion and facing");
+                var jump=MonsterPose.ForActivity(.325,PetActivity.Hop,.325,0,0);
+                var ground=MonsterPose.ForActivity(0,PetActivity.Hop,0,0,0);
+                Check(jump.Bob<ground.Bob-8 && jump.WidthScale>ground.WidthScale && !jump.Closed,"Jump has lift and stretch distinct from landing");
+                Check(MonsterPose.ForActivity(4,PetActivity.Sleep,1,0,0).Closed && MonsterPose.ForActivity(4,PetActivity.Drag,1,0,0).EyeScale>1,"Sleeping and held expressions stay distinct");
+                bool fits=true;
+                foreach(var activity in new[] { PetActivity.Walk,PetActivity.Hop,PetActivity.Look,PetActivity.Fire,PetActivity.Drag,PetActivity.Sleep })
+                for(int i=0;i<24;i++) using(var image=new Bitmap(240,220)) {
+                    using(var g=Graphics.FromImage(image)) MonsterPainter.Draw(g,new Rectangle(16,22,208,176),MonsterPose.ForActivity(i*.075,activity,i*.075,1,-1),true);
+                    for(int x=0;x<image.Width;x++) fits&=image.GetPixel(x,0).A==0 && image.GetPixel(x,image.Height-1).A==0;
+                    for(int y=0;y<image.Height;y++) fits&=image.GetPixel(0,y).A==0 && image.GetPixel(image.Width-1,y).A==0;
+                }
+                Check(fits,"Animated poses remain inside the transparent desktop window");
                 Console.WriteLine("Passed "+passed+" tests.");
             }
             finally
@@ -99,6 +131,33 @@ namespace MyDay.Windows
             }
             File.WriteAllText(Path.Combine(directory,"smoke-result.txt"),"PASS: desktop-only startup; open; close-to-hide; reopen; explicit exit before/after first open; input; check; reorder; date navigation; mood and theme; small-window layout; disk reload; layered window; transparent pet",Encoding.UTF8);
             Console.WriteLine("Native Windows smoke test passed.");
+        }
+        public static void Preview(string directory)
+        {
+            Directory.CreateDirectory(directory);
+            var activities=new[] { PetActivity.Walk,PetActivity.Hop,PetActivity.Look,PetActivity.Fire };
+            var labels=new[] { "몸을 흔들며 걷기","통통 뛰기","두리번거리기","불꽃과 작은 불티" };
+            using(var font=new Font("맑은 고딕",15,FontStyle.Bold,GraphicsUnit.Pixel))
+            using(var text=new SolidBrush(Color.FromArgb(70,85,65)))
+            for(int frame=0;frame<80;frame++) {
+                double time=frame*.05;
+                using(var image=new Bitmap(720,580)) {
+                    using(var g=Graphics.FromImage(image)) {
+                        g.Clear(Color.FromArgb(243,246,238));
+                        for(int i=0;i<activities.Length;i++) {
+                            int x=i%2*360,y=i/2*290;
+                            using(var panel=new SolidBrush(Color.White))
+                            using(var rounded=Design.Rounded(new RectangleF(x+10,y+10,340,270),18)) g.FillPath(panel,rounded);
+                            double age=activities[i]==PetActivity.Fire?time%2:time;
+                            var activity=activities[i]==PetActivity.Fire && age>=1.8?PetActivity.Rest:activities[i];
+                            MonsterPainter.Draw(g,new Rectangle(x+50,y+62,260,180),MonsterPose.ForActivity(time,activity,age,0,0),true);
+                            g.DrawString(labels[i],font,text,x+98,y+255);
+                        }
+                    }
+                    image.Save(Path.Combine(directory,frame.ToString("D3")+".png"),System.Drawing.Imaging.ImageFormat.Png);
+                }
+            }
+            Console.WriteLine("Rendered 80 native animation frames.");
         }
     }
 }

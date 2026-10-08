@@ -16,17 +16,17 @@ namespace MyDay.Windows.Character
         private readonly Action openDiary;
         private bool roaming = true;
         private readonly PetGesture gesture = new PetGesture();
-        private readonly Random random = new Random();
+        private readonly PetBehavior behavior = new PetBehavior(Environment.TickCount);
         private Point windowStart;
-        private float x, y, vx = -1.1f, vy = .25f;
-        private double happyUntil, lastFrame, nextTurn = 5;
+        private float x, y;
+        private double lastFrame;
         public bool Roaming { get { return roaming; } }
         public event EventHandler PetHidden;
         public DesktopPet(Action openDiary)
         {
             this.openDiary = openDiary;
             Text = "MyDay 불꽃 몬스터"; FormBorderStyle = FormBorderStyle.None;
-            ShowInTaskbar = false; TopMost = true; Size = new Size(210, 180);
+            ShowInTaskbar = false; TopMost = true; Size = new Size(240, 220);
             StartPosition = FormStartPosition.Manual; AutoScaleMode = AutoScaleMode.None;
             AccessibleName = "바탕화면 불꽃 몬스터. 한 번 클릭하면 일기를 열고 끌어서 이동합니다.";
             var area = Screen.PrimaryScreen.WorkingArea;
@@ -39,6 +39,7 @@ namespace MyDay.Windows.Character
             var top = new ToolStripMenuItem("다른 창 위에 표시") { Checked = true, CheckOnClick = true };
             top.CheckedChanged += delegate { TopMost = top.Checked; }; menu.Items.Add(top);
             menu.Items.Add("불 뿜기", null, delegate { Fire(); });
+            menu.Items.Add("통통 뛰기", null, delegate { behavior.Hop(); });
             menu.Items.Add("캐릭터 숨기기", null, delegate { Hide(); if (PetHidden != null) PetHidden(this, EventArgs.Empty); });
             ContextMenuStrip = menu;
             timer.Tick += delegate { Advance(); };
@@ -50,7 +51,7 @@ namespace MyDay.Windows.Character
         {
             get { var value = base.CreateParams; value.ExStyle |= 0x80000 | 0x80 | 0x8000000; return value; }
         }
-        public void Fire() { happyUntil = clock.Elapsed.TotalSeconds + 1.8; if (Visible) RenderFrame(); }
+        public void Fire() { behavior.Fire(); behavior.Step(0,roaming,false,false); if (Visible) RenderFrame(); }
         private void OnPetDown(object sender, MouseEventArgs e)
         {
             if (e.Button != MouseButtons.Left) return;
@@ -70,6 +71,7 @@ namespace MyDay.Windows.Character
             bool click = gesture.Release(Cursor.Position);
             Capture = false; ClampToScreen();
             if (click) openDiary();
+            else behavior.Land();
         }
         protected override void OnMouseCaptureChanged(EventArgs e)
         {
@@ -86,18 +88,16 @@ namespace MyDay.Windows.Character
         private void Advance()
         {
             double now = clock.Elapsed.TotalSeconds;
-            float delta = (float)Math.Min(.1, now - lastFrame) * 30; lastFrame = now;
-            if (roaming && !gesture.Active && now >= happyUntil && !ContextMenuStrip.Visible)
+            double delta = Math.Min(.1, now - lastFrame); lastFrame = now;
+            var proximity = new Rectangle(Left-16,Top-16,Width+32,Height+32);
+            bool hover=proximity.Contains(Cursor.Position) || ContextMenuStrip.Visible;
+            var motion=behavior.Step(delta,roaming,gesture.Active,hover);
+            if (!gesture.Active)
             {
-                if (now >= nextTurn) {
-                    double angle = random.NextDouble() * Math.PI * 2;
-                    vx = (float)Math.Cos(angle) * 1.1f; vy = (float)Math.Sin(angle) * .7f;
-                    nextTurn = now + 4 + random.NextDouble() * 4;
-                }
                 var area = Screen.FromPoint(new Point(Left + Width / 2, Top + Height / 2)).WorkingArea;
-                x += vx * delta; y += vy * delta;
-                if (x <= area.Left || x >= area.Right - Width) vx = -vx;
-                if (y <= area.Top || y >= area.Bottom - Height) vy = -vy;
+                x += motion.X; y += motion.Y;
+                behavior.Bounce(x<=area.Left && motion.X<0 || x>=area.Right-Width && motion.X>0,
+                    y<=area.Top && motion.Y<0 || y>=area.Bottom-Height && motion.Y>0);
                 ClampToScreen();
             }
             RenderFrame();
@@ -108,14 +108,19 @@ namespace MyDay.Windows.Character
             using (var g = Graphics.FromImage(bitmap))
             {
                 g.Clear(Color.Transparent);
-                MonsterPainter.Draw(g, new Rectangle(6, 8, Width - 12, Height - 16), MonsterPose.At(seconds, roaming, gesture.Active && gesture.Moved, happy), vx < 0);
+                Point pointer=Cursor.Position;
+                float lookX=(pointer.X-(Left+Width/2f))/Width*(behavior.FacingLeft?1:-1);
+                float lookY=(pointer.Y-(Top+Height/2f))/Height;
+                PetActivity activity=gesture.Active && gesture.Moved?PetActivity.Drag:happy?PetActivity.Fire:behavior.Activity;
+                double age=activity==behavior.Activity?behavior.Age:Math.Min(seconds,.9);
+                MonsterPainter.Draw(g, new Rectangle(16, 22, Width - 32, Height - 44), MonsterPose.ForActivity(seconds,activity,age,lookX,lookY), behavior.FacingLeft);
             }
             return bitmap;
         }
         private void RenderFrame()
         {
             if (!IsHandleCreated) return;
-            using (var bitmap = MakeFrame(clock.Elapsed.TotalSeconds, clock.Elapsed.TotalSeconds < happyUntil)) LayeredWindow.Update(Handle, bitmap, Location);
+            using (var bitmap = MakeFrame(clock.Elapsed.TotalSeconds, behavior.Activity==PetActivity.Fire)) LayeredWindow.Update(Handle, bitmap, Location);
         }
         protected override void Dispose(bool disposing)
         {

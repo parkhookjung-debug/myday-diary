@@ -10,7 +10,7 @@ namespace MyDay.Windows.UI
     {
         private readonly Timer timer = new Timer { Interval = 50 };
         private readonly Stopwatch clock = Stopwatch.StartNew();
-        private double happyUntil;
+        private double happyUntil, happyStarted;
         public event EventHandler Fired;
         public MonsterView()
         {
@@ -21,11 +21,13 @@ namespace MyDay.Windows.UI
             HandleCreated += delegate { if (Visible) timer.Start(); };
             Click += delegate { Fire(); if (Fired != null) Fired(this, EventArgs.Empty); };
         }
-        public void Fire() { happyUntil = clock.Elapsed.TotalSeconds + 1.8; Invalidate(); }
+        public void Fire() { happyStarted=clock.Elapsed.TotalSeconds; happyUntil=happyStarted + 1.8; Invalidate(); }
         protected override void OnPaint(PaintEventArgs e)
         {
             base.OnPaint(e);
-            MonsterPainter.Draw(e.Graphics, ClientRectangle, MonsterPose.At(clock.Elapsed.TotalSeconds, false, false, clock.Elapsed.TotalSeconds < happyUntil), true);
+            double now=clock.Elapsed.TotalSeconds;
+            var activity=now<happyUntil?PetActivity.Fire:PetActivity.Rest;
+            MonsterPainter.Draw(e.Graphics, ClientRectangle, MonsterPose.ForActivity(now,activity,now<happyUntil?now-happyStarted:now,0,0), true);
         }
         protected override void Dispose(bool disposing) { if (disposing) timer.Dispose(); base.Dispose(disposing); }
     }

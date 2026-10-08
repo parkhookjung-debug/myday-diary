@@ -23,6 +23,10 @@ namespace MyDay.Windows
             {
                 try { Tests.Smoke(Path.GetFullPath(args[1])); return 0; } catch(Exception ex) { Console.Error.WriteLine(ex); return 1; }
             }
+            if(args.Length==2 && args[0]=="--character-preview")
+            {
+                try { Tests.Preview(Path.GetFullPath(args[1])); return 0; } catch(Exception ex) { Console.Error.WriteLine(ex); return 1; }
+            }
             bool created;
             // One writer per Windows user prevents two windows overwriting each other's diary.
             using(var mutex=new Mutex(true,"Local\\MyDay.Windows."+System.Security.Principal.WindowsIdentity.GetCurrent().User.Value,out created))
