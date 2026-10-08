@@ -261,11 +261,19 @@ namespace MyDay.Windows.UI
                 ((ToolStripMenuItem)menu.DropDownItems[(int)variant]).PerformClick();
                 if(characterChoice.SelectedIndex!=(int)variant || avatar.Variant!=variant) throw new Exception("Desktop menu missed "+variant);
             }
+            var games=pet.ContextMenuStrip.Items.OfType<ToolStripMenuItem>().First(item=>item.Text=="게임 스타일");
+            var gameVariants=MonsterVariants.All.Where(GameSkins.IsGame).ToArray();
+            if(games.DropDownItems.Count!=gameVariants.Length) throw new Exception("Game style shortcut count is wrong");
+            for(int i=0;i<gameVariants.Length;i++) {
+                ((ToolStripMenuItem)games.DropDownItems[i]).PerformClick();
+                if(avatar.Variant!=gameVariants[i] || characterChoice.SelectedIndex!=(int)gameVariants[i]) throw new Exception("Game shortcut did not update diary");
+                if(games.DropDownItems.OfType<ToolStripMenuItem>().Count(item=>item.Checked)!=1) throw new Exception("Game style checkmarks are out of sync");
+            }
             characterChoice.SelectedIndex=(int)MonsterVariant.Mini;
             if(!FlushSave() || store.Load().CharacterStyle!="mini") throw new Exception("Variant did not save");
-            characterChoice.SelectedIndex=(int)MonsterVariant.Winged;
+            characterChoice.SelectedIndex=(int)MonsterVariant.Frost;
             ChangeDate(date.AddDays(1)); ChangeDate(date.AddDays(-1));
-            if(characterChoice.SelectedIndex!=(int)MonsterVariant.Winged) throw new Exception("Date change reset global variant");
+            if(characterChoice.SelectedIndex!=(int)MonsterVariant.Frost) throw new Exception("Date change reset global variant");
             var original=Size; Size=MinimumSize; PerformLayout(); ArrangeCards();
             foreach(var card in board.Controls.OfType<BlockCard>())
                 if(card.Width>board.ClientSize.Width || card.Editor.Width<=0 || card.Editor.Height<=0) throw new Exception("Small window layout overflow");

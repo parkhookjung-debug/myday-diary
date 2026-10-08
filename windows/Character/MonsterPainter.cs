@@ -92,6 +92,7 @@ namespace MyDay.Windows.Character
             g.ScaleTransform(pose.WidthScale*(variant==MonsterVariant.Speedy?1.05f:1),pose.BodyScale*(variant==MonsterVariant.Speedy?.9f:1)); g.TranslateTransform(-275, -730);
             DrawBehind(g,pose,variant);
             MonsterAdditions.DrawBehind(g,pose,variant);
+            GameSkins.DrawBehind(g,pose,variant);
             float l = pose.Toe, r = -pose.Toe;
             if(variant==MonsterVariant.Puffy) {
                 using(var body=new Shape().M(215,513).C(219,482,231,451,248,439).C(261,433,268,455,275,491)
@@ -115,11 +116,13 @@ namespace MyDay.Windows.Character
                 .Q(494,745+r,483,752+r).Q(473,758+r,461,747+r).C(438,718,409,679,381,668)
                 .C(357,654,334,672,318,684).C(287,708,260,742,238,765+l).C(225,783+l,213,778+l,214,755+l)
                 .C(196,767+l,177,761+l,170,749+l).C(154,732,169,702,180,679).L(205,632)
-                .C(181,637,150,627,133,612).C(112,598,113,582,120,568).C(137,542,165,519,190,515).Q(207,511,215,513).Close()) Fill(g, body, Body);
+                .C(181,637,150,627,133,612).C(112,598,113,582,120,568).C(137,542,165,519,190,515).Q(207,511,215,513).Close()) {
+                    if(!GameSkins.PaintBody(g,body,pose,variant)) Fill(g,body,Body);
+                }
             }
             MonsterAdditions.DrawFront(g,pose,variant);
             using (var mouth = new Shape().M(120,586).Q(154,567,185,561).C(205,557,222,565,227,579)
-                .C(232,593,220,614,209,625).Q(168,643,133,611).Q(123,601,120,586).Close()) Fill(g, mouth, Mouth, false);
+                .C(232,593,220,614,209,625).Q(168,643,133,611).Q(123,601,120,586).Close()) Fill(g, mouth, GameSkins.IsGame(variant)?GameSkins.Light(variant):Mouth, false);
             using (var lip = new Shape().M(120,586).Q(154,567,185,561).C(205,557,222,565,227,579)
                 .C(232,593,220,614,209,625).M(185,629).Q(148,630,124,602))
             using (var pen = new Pen(Ink, 5.5f) { StartCap = LineCap.Round, EndCap = LineCap.Round }) g.DrawPath(pen, lip.Path);

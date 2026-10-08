@@ -46,7 +46,7 @@ namespace MyDay.Windows
                 using(var stream=new MemoryStream(Encoding.UTF8.GetBytes("{\"Version\":1,\"Days\":[]}"))) Check(DiaryStore.Read(stream).CharacterStyle=="original","Older diary without variant field loads with original character");
                 book.CharacterStyle="future-skin"; DiaryStore.Validate(book);
                 Check(book.CharacterStyle=="original" && book.Days.Count==2,"Unknown imported variant falls back without losing dates");
-                Check(MonsterVariants.All.Select(MonsterVariants.Id).Distinct().Count()==48 && MonsterVariants.All.All(v=>MonsterVariants.FromId(MonsterVariants.Id(v))==v),"Forty-eight variant IDs are distinct and round-trip");
+                Check(MonsterVariants.All.Select(MonsterVariants.Id).Distinct().Count()==56 && MonsterVariants.All.All(v=>MonsterVariants.FromId(MonsterVariants.Id(v))==v),"Fifty-six variant IDs are distinct and round-trip");
                 Check(MonsterVariants.All.Take(8).Select(MonsterVariants.Id).SequenceEqual(new[] {"original","puffy","winged","speedy","dazed","spiky","horned","mini"}),"Original eight saved IDs retain their values and order");
                 var oldForms=new[] {"droplet","puddle","pill","cube","cloud","twin"};
                 var corrected=new[] {"fin","shell","tailed","crystal","furry","flower"};
@@ -136,7 +136,16 @@ namespace MyDay.Windows
                     identity&=sample(246,476).R<100 && sample(305,476).R<100;
                     identity&=sample(350,730).A==0;
                 }
-                Check(identity,"All 40 additions retain raised eyes, original pupils and the open arch between the feet");
+                Check(identity,"All 48 appearances retain raised eyes, original pupils and the open arch between the feet");
+                bool materials=true;
+                var colors=new System.Collections.Generic.HashSet<int>();
+                foreach(var variant in MonsterVariants.All.Where(GameSkins.IsGame)) using(var image=new Bitmap(240,220)) {
+                    using(var g=Graphics.FromImage(image)) MonsterPainter.Draw(g,new Rectangle(16,22,208,176),MonsterPose.ForActivity(0,PetActivity.Rest,0,0,0),true,variant);
+                    var material=image.GetPixel(145,105);
+                    materials&=material.A==255 && material.R+material.G+material.B<680;
+                    colors.Add(material.ToArgb());
+                }
+                Check(materials && colors.Count==8,"Eight RPG styles use distinct body materials rather than accessory-only recoloring");
                 bool quiet=true;
                 foreach(var activity in new[] { PetActivity.Rest,PetActivity.Walk,PetActivity.Hop,PetActivity.Look,PetActivity.Sleep,PetActivity.Hover,PetActivity.Drag })
                     for(int i=0;i<30;i++) quiet&=MonsterPose.ForActivity(i*.1,activity,i*.1,0,0).FireStrength==0;
@@ -227,7 +236,7 @@ namespace MyDay.Windows
             }
             Console.WriteLine("Rendered 80 native animation frames.");
         }
-        public static void VariantPreview(string directory,int start=0,int count=48)
+        public static void VariantPreview(string directory,int start=0,int count=56,bool gameCards=false)
         {
             Directory.CreateDirectory(directory);
             var variants=MonsterVariants.All.Skip(start).Take(count).ToArray();
@@ -236,14 +245,15 @@ namespace MyDay.Windows
                 double time=frame*.05;
                 using(var image=new Bitmap(960,((variants.Length+3)/4)*290)) {
                     using(var g=Graphics.FromImage(image)) {
-                        g.Clear(Color.FromArgb(243,246,238));
+                        g.Clear(gameCards?Color.FromArgb(15,22,37):Color.FromArgb(243,246,238));
                         for(int index=0;index<variants.Length;index++) {
                             var variant=variants[index]; int x=index%4*240,y=index/4*290;
-                            using(var panel=new SolidBrush(Color.White))
+                            using(var panel=new SolidBrush(gameCards?Color.FromArgb(29,40,61):Color.White))
                             using(var rounded=Design.Rounded(new RectangleF(x+8,y+8,224,274),16)) g.FillPath(panel,rounded);
+                            if(gameCards) using(var pen=new Pen(GameSkins.Tone(variant),3)) g.DrawLine(pen,x+28,y+35,x+212,y+35);
                             var activity=variant==MonsterVariant.Dazed?PetActivity.Rest:variant==MonsterVariant.Spiky?PetActivity.Look:variant==MonsterVariant.Puffy || variant==MonsterVariant.Mini || variant==MonsterVariant.Angel?PetActivity.Hop:PetActivity.Walk;
                             MonsterPainter.Draw(g,new Rectangle(x+16,y+52,208,176),MonsterPose.ForActivity(time,activity,time,0,0),true,variant);
-                            TextRenderer.DrawText(g,MonsterVariants.Name(variant),font,new Rectangle(x+8,y+247,224,28),Color.FromArgb(70,85,65),
+                            TextRenderer.DrawText(g,MonsterVariants.Name(variant),font,new Rectangle(x+8,y+247,224,28),gameCards?Color.FromArgb(231,238,249):Color.FromArgb(70,85,65),
                                 TextFormatFlags.HorizontalCenter|TextFormatFlags.VerticalCenter|TextFormatFlags.NoPadding|TextFormatFlags.NoPrefix);
                         }
                     }

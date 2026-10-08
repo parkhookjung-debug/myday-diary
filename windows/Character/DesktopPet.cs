@@ -53,6 +53,13 @@ namespace MyDay.Windows.Character
                 option.Click+=delegate { Variant=choice; }; variantItems[(int)item]=option; versions.DropDownItems.Add(option);
             }
             menu.Items.Add(versions);
+            var games=new ToolStripMenuItem("게임 스타일");
+            foreach(var item in MonsterVariants.All) if(GameSkins.IsGame(item)) {
+                var choice=item; var option=new ToolStripMenuItem(MonsterVariants.Name(item)) { Checked=item==variant };
+                option.Click+=delegate { Variant=choice; }; games.DropDownItems.Add(option);
+                VariantChanged+=delegate { option.Checked=variant==choice; };
+            }
+            menu.Items.Add(games);
             var roam = new ToolStripMenuItem("자유롭게 움직이기") { Checked = true, CheckOnClick = true };
             roam.CheckedChanged += delegate { roaming = roam.Checked; }; menu.Items.Add(roam);
             var top = new ToolStripMenuItem("다른 창 위에 표시") { Checked = true, CheckOnClick = true };

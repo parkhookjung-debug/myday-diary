@@ -34,7 +34,11 @@ namespace MyDay.Windows
             }
             if(args.Length==2 && args[0]=="--appearance-preview")
             {
-                try { Tests.VariantPreview(Path.GetFullPath(args[1]),8,40); return 0; } catch(Exception ex) { Console.Error.WriteLine(ex); return 1; }
+                try { Tests.VariantPreview(Path.GetFullPath(args[1]),8,48); return 0; } catch(Exception ex) { Console.Error.WriteLine(ex); return 1; }
+            }
+            if(args.Length==2 && args[0]=="--game-preview")
+            {
+                try { Tests.VariantPreview(Path.GetFullPath(args[1]),48,8,true); return 0; } catch(Exception ex) { Console.Error.WriteLine(ex); return 1; }
             }
             if(args.Length==2 && (args[0]=="--variants-first" || args[0]=="--variants-second" || args[0]=="--variants-third"))
             {
