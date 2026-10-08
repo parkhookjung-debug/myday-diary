@@ -41,6 +41,12 @@ namespace MyDay.Windows
                 Check(rejected,"Invalid import date rejected"); book.Days.Remove("bad-date");
                 var export=Path.Combine(directory,"export.json"); store.Export(export,book);
                 using(var stream=File.OpenRead(export)) Check(DiaryStore.Read(stream).Days.Count==2,"Backup export is readable");
+                book.CharacterStyle="winged"; store.Save(book);
+                Check(store.Load().CharacterStyle=="winged" && store.Load().Days["2026-10-08"].Blocks[0].Text==entry.Blocks[0].Text,"Selected variant survives reload without changing diary text");
+                using(var stream=new MemoryStream(Encoding.UTF8.GetBytes("{\"Version\":1,\"Days\":[]}"))) Check(DiaryStore.Read(stream).CharacterStyle=="original","Older diary without variant field loads with original character");
+                book.CharacterStyle="future-skin"; DiaryStore.Validate(book);
+                Check(book.CharacterStyle=="original" && book.Days.Count==2,"Unknown imported variant falls back without losing dates");
+                Check(MonsterVariants.All.Select(MonsterVariants.Id).Distinct().Count()==8 && MonsterVariants.All.All(v=>MonsterVariants.FromId(MonsterVariants.Id(v))==v),"Eight variant IDs are distinct and round-trip");
                 File.WriteAllText(store.FilePath,"broken JSON",Encoding.UTF8); rejected=false; try { store.Load(); } catch(Exception) { rejected=true; }
                 Check(rejected && File.ReadAllText(store.FilePath)=="broken JSON","Damaged diary is not silently replaced");
                 var held=MonsterPose.At(.2,true,true,true); Check(held.Held && !held.Happy && !held.Closed && held.Toe==0,"Dragging takes priority over fire and walking");
@@ -92,6 +98,26 @@ namespace MyDay.Windows
                     for(int y=0;y<image.Height;y++) fits&=image.GetPixel(0,y).A==0 && image.GetPixel(image.Width-1,y).A==0;
                 }
                 Check(fits,"Animated poses remain inside the transparent desktop window");
+                bool variantFits=true; string failingVariant="";
+                var fingerprints=new System.Collections.Generic.HashSet<string>();
+                foreach(var variant in MonsterVariants.All) {
+                    using(var image=new Bitmap(240,220)) {
+                        using(var g=Graphics.FromImage(image)) MonsterPainter.Draw(g,new Rectangle(16,22,208,176),MonsterPose.ForActivity(.2,PetActivity.Rest,.2,0,0),true,variant);
+                        using(var buffer=new MemoryStream()) { image.Save(buffer,System.Drawing.Imaging.ImageFormat.Png); fingerprints.Add(Convert.ToBase64String(buffer.ToArray())); }
+                    }
+                    foreach(bool left in new[] { true,false })
+                    foreach(var activity in new[] { PetActivity.Walk,PetActivity.Hop,PetActivity.Drag,PetActivity.Fire,PetActivity.Yawn })
+                    for(int i=0;i<16;i++) using(var image=new Bitmap(240,220)) {
+                        using(var g=Graphics.FromImage(image)) MonsterPainter.Draw(g,new Rectangle(16,22,208,176),MonsterPose.ForActivity(i*.11,activity,i*.11,1,-1),left,variant);
+                        bool frameFits=true;
+                        for(int x=0;x<image.Width;x++) frameFits&=image.GetPixel(x,0).A==0 && image.GetPixel(x,image.Height-1).A==0;
+                        for(int y=0;y<image.Height;y++) frameFits&=image.GetPixel(0,y).A==0 && image.GetPixel(image.Width-1,y).A==0;
+                        if(!frameFits && failingVariant=="") failingVariant=variant+" "+activity+" "+i;
+                        variantFits&=frameFits;
+                    }
+                }
+                Check(fingerprints.Count==8,"All eight variants render visibly distinct silhouettes or expressions");
+                Check(variantFits,"Variants fit transparent window when facing either direction: "+failingVariant);
                 bool quiet=true;
                 foreach(var activity in new[] { PetActivity.Rest,PetActivity.Walk,PetActivity.Hop,PetActivity.Look,PetActivity.Sleep,PetActivity.Hover,PetActivity.Drag })
                     for(int i=0;i<30;i++) quiet&=MonsterPose.ForActivity(i*.1,activity,i*.1,0,0).FireStrength==0;
@@ -179,6 +205,31 @@ namespace MyDay.Windows
                 }
             }
             Console.WriteLine("Rendered 80 native animation frames.");
+        }
+        public static void VariantPreview(string directory)
+        {
+            Directory.CreateDirectory(directory);
+            using(var font=new Font("맑은 고딕",14,FontStyle.Bold,GraphicsUnit.Pixel))
+            using(var text=new SolidBrush(Color.FromArgb(70,85,65)))
+            for(int frame=0;frame<80;frame++) {
+                double time=frame*.05;
+                using(var image=new Bitmap(960,580)) {
+                    using(var g=Graphics.FromImage(image)) {
+                        g.Clear(Color.FromArgb(243,246,238));
+                        foreach(var variant in MonsterVariants.All) {
+                            int index=(int)variant,x=index%4*240,y=index/4*290;
+                            using(var panel=new SolidBrush(Color.White))
+                            using(var rounded=Design.Rounded(new RectangleF(x+8,y+8,224,274),16)) g.FillPath(panel,rounded);
+                            var activity=variant==MonsterVariant.Dazed?PetActivity.Rest:variant==MonsterVariant.Spiky?PetActivity.Look:variant==MonsterVariant.Puffy || variant==MonsterVariant.Mini?PetActivity.Hop:PetActivity.Walk;
+                            MonsterPainter.Draw(g,new Rectangle(x+16,y+52,208,176),MonsterPose.ForActivity(time,activity,time,0,0),true,variant);
+                            string label=MonsterVariants.Name(variant); float width=g.MeasureString(label,font).Width;
+                            g.DrawString(label,font,text,x+120-width/2,y+253);
+                        }
+                    }
+                    image.Save(Path.Combine(directory,frame.ToString("D3")+".png"),System.Drawing.Imaging.ImageFormat.Png);
+                }
+            }
+            Console.WriteLine("Rendered eight variants in 80 animation frames.");
         }
     }
 }

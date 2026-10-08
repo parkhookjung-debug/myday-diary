@@ -70,6 +70,10 @@ namespace MyDay.Windows.Character
         }
         public static void Draw(Graphics g, Rectangle area, MonsterPose pose, bool facingLeft)
         {
+            Draw(g,area,pose,facingLeft,MonsterVariant.Original);
+        }
+        public static void Draw(Graphics g, Rectangle area, MonsterPose pose, bool facingLeft,MonsterVariant variant)
+        {
             var save = g.Save();
             g.SmoothingMode = SmoothingMode.AntiAlias;
             float scale = Math.Min(area.Width / 555f, area.Height / 430f);
@@ -79,9 +83,31 @@ namespace MyDay.Windows.Character
             g.TranslateTransform(area.X + area.Width / 2f, area.Y + area.Height / 2f + pose.Bob * scale * 5.8f);
             g.ScaleTransform(facingLeft ? scale : -scale, scale);
             g.TranslateTransform(-275, -615);
+            if(variant==MonsterVariant.Winged || variant==MonsterVariant.Mini) {
+                float shrink=variant==MonsterVariant.Winged?.86f:.82f;
+                g.TranslateTransform(275,650); g.ScaleTransform(shrink,shrink); g.TranslateTransform(-275,-650);
+            }
             var bodySave = g.Save();
-            g.TranslateTransform(275, 730); g.RotateTransform(pose.Tilt); g.ScaleTransform(pose.WidthScale, pose.BodyScale); g.TranslateTransform(-275, -730);
+            g.TranslateTransform(275, 730); g.RotateTransform(pose.Tilt+(variant==MonsterVariant.Speedy?-8:0));
+            g.ScaleTransform(pose.WidthScale*(variant==MonsterVariant.Speedy?1.05f:1),pose.BodyScale*(variant==MonsterVariant.Speedy?.9f:1)); g.TranslateTransform(-275, -730);
+            DrawBehind(g,pose,variant);
             float l = pose.Toe, r = -pose.Toe;
+            if(variant==MonsterVariant.Puffy) {
+                using(var body=new Shape().M(215,513).C(219,482,231,451,248,439).C(261,433,268,455,275,491)
+                    .C(281,466,288,430,307,433).C(326,435,337,469,342,498).C(425,500,509,566,507,647)
+                    .C(507,725,441,770,355,776).C(271,788,194,763,165,721).C(142,682,156,654,180,636)
+                    .C(150,635,122,613,116,590).C(112,560,158,520,190,515).Q(207,511,215,513).Close()) Fill(g,body,Body);
+                using(var fold=new Shape().M(377,641).Q(415,623,429,653).M(468,607).Q(483,623,475,642))
+                using(var pen=new Pen(Ink,5.5f) { StartCap=LineCap.Round,EndCap=LineCap.Round }) g.DrawPath(pen,fold.Path);
+            } else if(variant==MonsterVariant.Mini) {
+                using(var body=new Shape().M(215,513).C(219,482,231,451,248,439).C(261,433,268,455,275,491)
+                    .C(281,466,288,430,307,433).C(326,435,337,469,342,498).C(384,488,427,516,458,553)
+                    .C(494,590,504,646,493,701).Q(488,743+r,467,751+r).Q(451,754+r,448,725+r)
+                    .Q(436,752+r,420,748+r).C(407,736,413,687,385,685).C(359,679,338,702,318,737)
+                    .Q(301,764+l,287,753+l).Q(272,760+l,268,734+l).Q(257,755+l,244,745+l)
+                    .C(215,725,217,673,205,632).C(181,637,150,627,133,612).C(112,598,113,582,120,568)
+                    .C(137,542,165,519,190,515).Q(207,511,215,513).Close()) Fill(g,body,Body);
+            } else {
             using (var body = new Shape().M(215,513).C(219,482,231,451,248,439).C(261,433,268,455,275,491)
                 .C(281,466,288,430,307,433).C(326,435,337,469,342,498).C(383,500,405,516,425,535)
                 .C(474,576,511,641,518,697).C(523,721,519,736+r,514,744+r).Q(505,746+r,490,731+r)
@@ -89,11 +115,16 @@ namespace MyDay.Windows.Character
                 .C(357,654,334,672,318,684).C(287,708,260,742,238,765+l).C(225,783+l,213,778+l,214,755+l)
                 .C(196,767+l,177,761+l,170,749+l).C(154,732,169,702,180,679).L(205,632)
                 .C(181,637,150,627,133,612).C(112,598,113,582,120,568).C(137,542,165,519,190,515).Q(207,511,215,513).Close()) Fill(g, body, Body);
+            }
             using (var mouth = new Shape().M(120,586).Q(154,567,185,561).C(205,557,222,565,227,579)
                 .C(232,593,220,614,209,625).Q(168,643,133,611).Q(123,601,120,586).Close()) Fill(g, mouth, Mouth, false);
             using (var lip = new Shape().M(120,586).Q(154,567,185,561).C(205,557,222,565,227,579)
                 .C(232,593,220,614,209,625).M(185,629).Q(148,630,124,602))
             using (var pen = new Pen(Ink, 5.5f) { StartCap = LineCap.Round, EndCap = LineCap.Round }) g.DrawPath(pen, lip.Path);
+            if(variant==MonsterVariant.Dazed) {
+                using(var tongue=new Shape().M(181,623).Q(178,644,190,648).Q(204,648,198,628))
+                using(var pen=new Pen(Ink,5.5f) { StartCap=LineCap.Round,EndCap=LineCap.Round }) g.DrawPath(pen,tongue.Path);
+            }
             if (pose.Closed)
             {
                 using (var eyes = new Shape().M(235,480).Q(245,489,256,478).M(295,478).Q(306,488,316,475))
@@ -102,8 +133,11 @@ namespace MyDay.Windows.Character
             else foreach (float x in new float[] { 246, 305 })
             {
                 var eye = g.Save(); g.TranslateTransform(x+pose.LookX*5,476+pose.LookY*4); g.RotateTransform(18);
-                using (var brush = new SolidBrush(Ink)) g.FillEllipse(brush,-9,-17*pose.EyeScale,18,32*pose.EyeScale);
-                using (var shine = new SolidBrush(Color.FromArgb(245,Body))) g.FillEllipse(shine,-5,-11,4,6);
+                using (var brush = new SolidBrush(Ink)) {
+                    if(variant==MonsterVariant.Dazed) g.FillEllipse(brush,-4,-4,8,9);
+                    else g.FillEllipse(brush,-9,-17*pose.EyeScale,18,32*pose.EyeScale);
+                }
+                if(variant!=MonsterVariant.Dazed) using (var shine = new SolidBrush(Color.FromArgb(245,Body))) g.FillEllipse(shine,-5,-11,4,6);
                 g.Restore(eye);
             }
             if(pose.Curious || pose.Happy) {
@@ -111,6 +145,7 @@ namespace MyDay.Windows.Character
                     g.FillEllipse(blush,226,509,22,11); g.FillEllipse(blush,310,509,22,11);
                 }
             }
+            DrawDetails(g,variant);
             g.Restore(bodySave);
             if (!pose.Held && pose.FireStrength>.01f)
             {
@@ -140,6 +175,46 @@ namespace MyDay.Windows.Character
                     float rise=(pose.Phase*.25f)%1;
                     g.DrawString("z",font,brush,area.X+area.Width*.72f,area.Y+area.Height*(.12f-rise*.05f));
                     g.DrawString("z",font,brush,area.X+area.Width*.8f,area.Y+area.Height*(.04f-rise*.05f));
+                }
+            }
+        }
+        private static void DrawBehind(Graphics g,MonsterPose pose,MonsterVariant variant)
+        {
+            if(variant==MonsterVariant.Winged) {
+                float flap=(float)Math.Sin(pose.Phase*Math.PI*2)*11;
+                var saved=g.Save(); g.TranslateTransform(245,575); g.RotateTransform(flap); g.TranslateTransform(-245,-575);
+                using(var wing=new Shape().M(250,560).C(193,524,123,453,78,438).Q(108,477,101,528)
+                    .Q(139,511,163,553).Q(190,555,204,609).L(265,605).Close()) Fill(g,wing,Body);
+                using(var rib=new Shape().M(250,580).Q(169,519,94,468))
+                using(var pen=new Pen(Ink,3.5f)) g.DrawPath(pen,rib.Path); g.Restore(saved);
+                saved=g.Save(); g.TranslateTransform(340,575); g.RotateTransform(-flap); g.TranslateTransform(-340,-575);
+                using(var wing=new Shape().M(329,562).C(378,512,401,425,427,405).Q(449,455,488,482)
+                    .Q(451,484,461,524).Q(415,516,398,562).L(355,610).Close()) Fill(g,wing,Body);
+                using(var rib=new Shape().M(343,571).Q(412,493,427,429))
+                using(var pen=new Pen(Ink,3.5f)) g.DrawPath(pen,rib.Path); g.Restore(saved);
+            }
+            if(variant==MonsterVariant.Speedy) {
+                float shift=(float)Math.Sin(pose.Phase*12)*5;
+                using(var pen=new Pen(Ink,4) { StartCap=LineCap.Round,EndCap=LineCap.Round }) {
+                    g.DrawLine(pen,465,559,536+shift,568); g.DrawLine(pen,490,600,558+shift,610); g.DrawLine(pen,509,644,565+shift,653);
+                }
+            }
+        }
+        private static void DrawDetails(Graphics g,MonsterVariant variant)
+        {
+            using(var pen=new Pen(Ink,4) { StartCap=LineCap.Round,EndCap=LineCap.Round }) {
+                if(variant==MonsterVariant.Spiky) {
+                    g.DrawLine(pen,220,483,206,472); g.DrawLine(pen,234,456,222,443); g.DrawLine(pen,312,442,321,428);
+                    g.DrawLine(pen,374,510,380,494); g.DrawLine(pen,394,518,403,502); g.DrawLine(pen,456,570,472,562);
+                    g.DrawLine(pen,481,604,499,600); g.DrawLine(pen,511,683,527,684); g.DrawLine(pen,507,706,523,711);
+                    g.DrawLine(pen,277,533,292,526); g.DrawLine(pen,282,544,297,536);
+                    using(var quiver=new Shape().M(130,577).Q(145,587,157,576).Q(169,584,178,574)) g.DrawPath(pen,quiver.Path);
+                }
+                if(variant==MonsterVariant.Horned) {
+                    using(var horn=new Shape().M(345,506).Q(379,471,417,455).Q(416,490,363,519).Close()) Fill(g,horn,Ink);
+                    using(var horn=new Shape().M(382,551).Q(403,522,441,515).Q(439,545,398,562).Close()) Fill(g,horn,Ink);
+                    g.DrawLine(pen,232,461,257,473); g.DrawLine(pen,295,472,318,460);
+                    using(var shine=new SolidBrush(Body)) { g.FillEllipse(shine,391,475,6,7); g.FillEllipse(shine,417,533,6,7); }
                 }
             }
         }

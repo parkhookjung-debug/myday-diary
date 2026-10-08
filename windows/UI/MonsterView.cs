@@ -12,6 +12,8 @@ namespace MyDay.Windows.UI
         private readonly Stopwatch clock = Stopwatch.StartNew();
         private double happyUntil, happyStarted;
         public event EventHandler Fired;
+        private MonsterVariant variant;
+        public MonsterVariant Variant { get { return variant; } set { variant=value; Invalidate(); } }
         public MonsterView()
         {
             DoubleBuffered = true; BackColor = Color.White; Cursor = Cursors.Hand;
@@ -27,7 +29,7 @@ namespace MyDay.Windows.UI
             base.OnPaint(e);
             double now=clock.Elapsed.TotalSeconds;
             var activity=now<happyUntil?PetActivity.Fire:PetActivity.Rest;
-            MonsterPainter.Draw(e.Graphics, ClientRectangle, MonsterPose.ForActivity(now,activity,now<happyUntil?now-happyStarted:now,0,0), true);
+            MonsterPainter.Draw(e.Graphics, ClientRectangle, MonsterPose.ForActivity(now,activity,now<happyUntil?now-happyStarted:now,0,0), true,variant);
         }
         protected override void Dispose(bool disposing) { if (disposing) timer.Dispose(); base.Dispose(disposing); }
     }

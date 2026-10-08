@@ -23,6 +23,7 @@ namespace MyDay.Windows.UI
         private readonly DateTimePicker picker = new DateTimePicker { Format=DateTimePickerFormat.Custom, CustomFormat="yyyy. MM. dd", Width=Design.P(135) };
         private readonly ChoiceButton theme = Design.Choice(92);
         private readonly ChoiceButton mood = Design.Choice(108);
+        private readonly ChoiceButton characterChoice=Design.Choice(160);
         private readonly Button petToggle = Design.Button("캐릭터 숨기기");
         private readonly Panel content = new Panel { Dock=DockStyle.Fill, Padding=Design.Pad(30,24,28,12) };
         private readonly MonsterView avatar = new MonsterView();
@@ -46,9 +47,12 @@ namespace MyDay.Windows.UI
             var note=Design.Label("작은 기록이 모여\n나만의 하루가 돼요.",10); note.ForeColor=Design.Muted; note.Location=Design.Point(26,194); side.Controls.Add(note);
             avatar.Location=Design.Point(10,272); avatar.Size=Design.Size(186,155); side.Controls.Add(avatar);
             var petHint=Design.Label("눌러서 불꽃 인사하기",9); petHint.Location=Design.Point(34,430); petHint.ForeColor=Design.Muted; side.Controls.Add(petHint);
-            petToggle.Location=Design.Point(24,474); petToggle.Width=Design.P(160); petToggle.Click+=delegate { TogglePet(); }; side.Controls.Add(petToggle);
-            var hide=Design.Button("일기 창 숨기기"); hide.Location=Design.Point(24,520); hide.Width=Design.P(160); hide.Click+=delegate { if (FlushSave()) Hide(); }; side.Controls.Add(hide);
-            var bottom = new FlowLayoutPanel { Location=Design.Point(24,600), Width=Design.P(160), Height=Design.P(148), FlowDirection=FlowDirection.TopDown, WrapContents=false };
+            characterChoice.Location=Design.Point(24,466); characterChoice.AccessibleName="캐릭터 버전";
+            characterChoice.Items.AddRange(MonsterVariants.All.Select(v=>(object)MonsterVariants.Name(v)));
+            characterChoice.SelectedIndexChanged+=delegate { if(!binding) SelectVariant((MonsterVariant)characterChoice.SelectedIndex); }; side.Controls.Add(characterChoice);
+            petToggle.Location=Design.Point(24,518); petToggle.Width=Design.P(160); petToggle.Click+=delegate { TogglePet(); }; side.Controls.Add(petToggle);
+            var hide=Design.Button("일기 창 숨기기"); hide.Location=Design.Point(24,562); hide.Width=Design.P(160); hide.Click+=delegate { if (FlushSave()) Hide(); }; side.Controls.Add(hide);
+            var bottom = new FlowLayoutPanel { Location=Design.Point(24,636), Width=Design.P(160), Height=Design.P(148), FlowDirection=FlowDirection.TopDown, WrapContents=false };
             var export=Design.Button("기록 백업"); export.Width=Design.P(160); export.Margin=Design.Pad(0,0,0,8); export.Click+=delegate { ExportBook(); };
             var import=Design.Button("백업 가져오기"); import.Width=Design.P(160); import.Margin=Design.Pad(0,0,0,12); import.Click+=delegate { ImportBook(); };
             status.MaximumSize=Design.Size(160,0); status.ForeColor=Design.Muted;
@@ -106,9 +110,23 @@ namespace MyDay.Windows.UI
         {
             if(pet!=null && !pet.IsDisposed) return;
             pet=new DesktopPet(OpenDiary);
+            pet.Variant=MonsterVariants.FromId(book.CharacterStyle);
+            pet.VariantChanged+=delegate { if(!binding) SelectVariant(pet.Variant); };
             pet.PetHidden+=delegate { petToggle.Text="캐릭터 띄우기"; };
         }
         public void OpenDiary() { Show(); if(WindowState==FormWindowState.Minimized) WindowState=FormWindowState.Normal; Activate(); }
+        public void SelectVariant(MonsterVariant variant)
+        {
+            book.CharacterStyle=MonsterVariants.Id(variant); ApplyVariant(); QueueBookSave();
+        }
+        private void ApplyVariant()
+        {
+            bool previous=binding; binding=true;
+            var variant=MonsterVariants.FromId(book.CharacterStyle);
+            characterChoice.SelectedIndex=(int)variant; avatar.Variant=variant;
+            if(pet!=null) pet.Variant=variant;
+            binding=previous;
+        }
         private void TogglePet()
         {
             EnsurePet(); if(pet.Visible) { pet.Hide(); petToggle.Text="캐릭터 띄우기"; }
@@ -126,7 +144,7 @@ namespace MyDay.Windows.UI
             binding=true; picker.Value=date;
             dayTitle.Text=date.ToString("M월 d일, dddd",new System.Globalization.CultureInfo("ko-KR"));
             mood.SelectedIndex=Math.Max(0,mood.Items.IndexOf(entry.Mood)); theme.SelectedIndex=entry.Theme;
-            binding=false; ApplyTheme(); RenderCards();
+            binding=false; ApplyTheme(); ApplyVariant(); RenderCards();
         }
         private void ApplyTheme() { BackColor=Design.Backgrounds[entry.Theme]; content.BackColor=BackColor; board.BackColor=BackColor; }
         private void RenderCards()
@@ -168,7 +186,11 @@ namespace MyDay.Windows.UI
         }
         private void QueueSave()
         {
-            book.Days[DiaryStore.Key(date)]=entry; dirty=true; status.Text="저장 중…"; status.ForeColor=Design.Muted;
+            book.Days[DiaryStore.Key(date)]=entry; QueueBookSave();
+        }
+        private void QueueBookSave()
+        {
+            dirty=true; status.Text="저장 중…"; status.ForeColor=Design.Muted;
             saveTimer.Stop(); saveTimer.Start(); UpdateSummary();
         }
         private void UpdateSummary()
@@ -207,6 +229,7 @@ namespace MyDay.Windows.UI
                     var conflicts=incoming.Days.Keys.Count(book.Days.ContainsKey);
                     if(MessageBox.Show(this,incoming.Days.Count+"일의 기록을 가져올까요?\n같은 날짜의 기록 "+conflicts+"개는 백업 내용으로 바뀝니다. 기존 파일은 diary.json.bak으로 남습니다.","백업 가져오기",MessageBoxButtons.YesNo,MessageBoxIcon.Question)!=DialogResult.Yes) return;
                     var merged=new DiaryBook(); foreach(var pair in book.Days) merged.Days[pair.Key]=pair.Value;
+                    merged.CharacterStyle=incoming.CharacterStyle;
                     foreach(var pair in incoming.Days) merged.Days[pair.Key]=pair.Value;
                     store.Save(merged); book=merged; dirty=false; LoadDate(); status.Text="가져오기 완료";
                 }
@@ -226,6 +249,15 @@ namespace MyDay.Windows.UI
             if(!entry.Blocks.First(b=>b.Id==id).Text.Contains("윈도우")) throw new Exception("Date navigation lost content");
             if(!store.Load().Days[DiaryStore.Key(date)].Blocks.Any(b=>b.Checked)) throw new Exception("Check did not persist");
             if(entry.Mood!="속상해요" || entry.Theme!=1 || mood.SelectedIndex!=3 || theme.SelectedIndex!=1) throw new Exception("Appearance did not persist");
+            characterChoice.SelectedIndex=(int)MonsterVariant.Winged;
+            if(avatar.Variant!=MonsterVariant.Winged || pet==null || pet.Variant!=MonsterVariant.Winged) throw new Exception("Diary variant choice did not update desktop pet");
+            var menu=pet.ContextMenuStrip.Items.OfType<ToolStripMenuItem>().First(item=>item.Text=="캐릭터 버전");
+            ((ToolStripMenuItem)menu.DropDownItems[(int)MonsterVariant.Mini]).PerformClick();
+            if(characterChoice.SelectedIndex!=(int)MonsterVariant.Mini || avatar.Variant!=MonsterVariant.Mini) throw new Exception("Desktop variant menu did not update diary");
+            if(!FlushSave() || store.Load().CharacterStyle!="mini") throw new Exception("Variant did not save");
+            characterChoice.SelectedIndex=(int)MonsterVariant.Winged;
+            ChangeDate(date.AddDays(1)); ChangeDate(date.AddDays(-1));
+            if(characterChoice.SelectedIndex!=(int)MonsterVariant.Winged) throw new Exception("Date change reset global variant");
             var original=Size; Size=MinimumSize; PerformLayout(); ArrangeCards();
             foreach(var card in board.Controls.OfType<BlockCard>())
                 if(card.Width>board.ClientSize.Width || card.Editor.Width<=0 || card.Editor.Height<=0) throw new Exception("Small window layout overflow");

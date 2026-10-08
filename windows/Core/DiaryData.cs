@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Runtime.Serialization;
 using System.Runtime.Serialization.Json;
+using MyDay.Windows.Character;
 
 namespace MyDay.Windows.Core
 {
@@ -48,6 +49,7 @@ namespace MyDay.Windows.Core
     {
         [DataMember] public int Version = 1;
         [DataMember] public Dictionary<string, DiaryEntry> Days = new Dictionary<string, DiaryEntry>();
+        [DataMember(EmitDefaultValue=false)] public string CharacterStyle="original";
     }
 
     public sealed class DiaryStore
@@ -70,6 +72,7 @@ namespace MyDay.Windows.Core
             if (book == null || book.Version != 1 || book.Days == null)
                 throw new InvalidDataException("지원하지 않는 기록 파일입니다.");
             if (book.Days.Count > 50000) throw new InvalidDataException("기록 파일이 너무 큽니다.");
+            book.CharacterStyle=MonsterVariants.Id(MonsterVariants.FromId(book.CharacterStyle));
             foreach (var pair in book.Days)
             {
                 DateTime date;

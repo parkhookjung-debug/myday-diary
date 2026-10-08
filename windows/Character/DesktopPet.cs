@@ -20,6 +20,19 @@ namespace MyDay.Windows.Character
         private Point windowStart;
         private float x, y;
         private double lastFrame;
+        private MonsterVariant variant;
+        private readonly ToolStripMenuItem[] variantItems=new ToolStripMenuItem[MonsterVariants.All.Length];
+        public event EventHandler VariantChanged;
+        public MonsterVariant Variant {
+            get { return variant; }
+            set {
+                if(variant==value) return;
+                variant=value;
+                foreach(var item in MonsterVariants.All) variantItems[(int)item].Checked=item==value;
+                if(Visible) RenderFrame();
+                if(VariantChanged!=null) VariantChanged(this,EventArgs.Empty);
+            }
+        }
         public bool Roaming { get { return roaming; } }
         public event EventHandler PetHidden;
         public DesktopPet(Action openDiary)
@@ -34,6 +47,12 @@ namespace MyDay.Windows.Character
             x = Left; y = Top;
             var menu = new ContextMenuStrip();
             menu.Items.Add("일기 열기", null, delegate { openDiary(); });
+            var versions=new ToolStripMenuItem("캐릭터 버전");
+            foreach(var item in MonsterVariants.All) {
+                var choice=item; var option=new ToolStripMenuItem(MonsterVariants.Name(item)) { Checked=item==variant };
+                option.Click+=delegate { Variant=choice; }; variantItems[(int)item]=option; versions.DropDownItems.Add(option);
+            }
+            menu.Items.Add(versions);
             var roam = new ToolStripMenuItem("자유롭게 움직이기") { Checked = true, CheckOnClick = true };
             roam.CheckedChanged += delegate { roaming = roam.Checked; }; menu.Items.Add(roam);
             var top = new ToolStripMenuItem("다른 창 위에 표시") { Checked = true, CheckOnClick = true };
@@ -92,6 +111,8 @@ namespace MyDay.Windows.Character
             var proximity = new Rectangle(Left-16,Top-16,Width+32,Height+32);
             bool hover=proximity.Contains(Cursor.Position) || ContextMenuStrip.Visible;
             var motion=behavior.Step(delta,roaming,gesture.Active,hover);
+            float speed=variant==MonsterVariant.Speedy?1.6f:variant==MonsterVariant.Puffy?.8f:variant==MonsterVariant.Winged?1.15f:1;
+            motion=new PointF(motion.X*speed,motion.Y*speed);
             if (!gesture.Active)
             {
                 var area = Screen.FromPoint(new Point(Left + Width / 2, Top + Height / 2)).WorkingArea;
@@ -113,7 +134,7 @@ namespace MyDay.Windows.Character
                 float lookY=(pointer.Y-(Top+Height/2f))/Height;
                 PetActivity activity=gesture.Active && gesture.Moved?PetActivity.Drag:happy?PetActivity.Fire:behavior.Activity;
                 double age=activity==behavior.Activity?behavior.Age:Math.Min(seconds,.9);
-                MonsterPainter.Draw(g, new Rectangle(16, 22, Width - 32, Height - 44), MonsterPose.ForActivity(seconds,activity,age,lookX,lookY), behavior.FacingLeft);
+                MonsterPainter.Draw(g, new Rectangle(16, 22, Width - 32, Height - 44), MonsterPose.ForActivity(seconds,activity,age,lookX,lookY), behavior.FacingLeft,variant);
             }
             return bitmap;
         }
