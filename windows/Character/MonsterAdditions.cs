@@ -68,6 +68,73 @@ namespace MyDay.Windows.Character
                 case MonsterVariant.Moon:
                     using(var cape=new Outline().M(365,539).Q(482,556,548,715).Q(498,754,449,723).L(355,611).Close()) Fill(g,cape,Purple);
                     break;
+                case MonsterVariant.Cat:
+                    Ear(g,190,505,185,432,224,477,Pink);
+                    Ear(g,337,500,367,435,378,523,Pink); break;
+                case MonsterVariant.Rabbit:
+                    using(var ear=new Outline().M(195,503).C(174,456,180,398,197,398).C(217,398,226,461,225,488).Close()) Fill(g,ear,White);
+                    using(var ear=new Outline().M(337,506).C(330,461,351+wave,397,367+wave,402)
+                        .C(391+wave,410,376,482,369,520).Close()) Fill(g,ear,White);
+                    Line(g,new Outline().M(197,419).Q(195,461,210,478).M(365+wave,424).Q(352,461,354,490),8,Pink); break;
+                case MonsterVariant.Fox:
+                    Ear(g,190,505,180,430,226,482,Gold); Ear(g,337,501,375,434,380,523,Gold);
+                    using(var tail=new Outline().M(481,681).C(530,693,558,659,565,619+wave).Q(593,658,575,689)
+                        .Q(557,729,501,731).Close()) Fill(g,tail,Gold);
+                    using(var tip=new Outline().M(557,646+wave).L(565,619+wave).Q(581,639,582,660)
+                        .L(570,657).L(568,671).L(558,661).Close()) Fill(g,tip,White); break;
+                case MonsterVariant.Puppy:
+                    using(var ear=new Outline().M(214,489).Q(164,456,143,493).Q(121,532,144,550)
+                        .Q(174,559,227,522).Close()) Fill(g,ear,Gold);
+                    using(var ear=new Outline().M(350,495).Q(414,464,449,515).Q(501,572,482,600)
+                        .Q(450,611,399,549).Close()) Fill(g,ear,Gold); break;
+                case MonsterVariant.Bear:
+                    Dot(g,207,477,27,White); Dot(g,356,483,27,White);
+                    Dot(g,207,477,14,Pink); Dot(g,356,483,14,Pink); break;
+                case MonsterVariant.Ram:
+                    Dot(g,195,481,34,Gold); Dot(g,374,484,39,Gold);
+                    Line(g,new Outline().M(176,480).C(176,452,216,454,214,481).Q(210,501,194,485)
+                        .M(395,484).C(395,452,351,455,354,484).Q(360,505,374,489),4); break;
+                case MonsterVariant.Deer:
+                    Line(g,new Outline().M(205,498).Q(194,451,183,412).M(195,452).L(161,443).L(153,420)
+                        .M(187,430).L(205,415).L(207,398).M(346,497).Q(361,455,375,412)
+                        .M(361,453).L(392,448).L(408,423).M(371,429).L(355,414).L(355,400),7,Gold); break;
+                case MonsterVariant.Dragon:
+                    using(var wing=new Outline().M(407,595).L(443,474+wave).L(512,524+wave)
+                        .Q(474,530,484,566).Q(446,560,456,610).Close()) Fill(g,wing,Green);
+                    using(var tail=new Outline().M(486,685).Q(537,708,568,674+wave).L(583,642+wave)
+                        .Q(594,707,517,728).Close()) Fill(g,tail,Green);
+                    Line(g,new Outline().M(424,580).L(449,496+wave).L(492,529+wave),4); break;
+                case MonsterVariant.Butterfly:
+                    using(var wing=new Outline().M(432,612).C(424,500,489,434,526,481)
+                        .C(558,519,520,564,492,581).C(568,557,578,639,536,666).Q(492,693,432,612).Close()) Fill(g,wing,Purple);
+                    using(var wing=new Outline().M(213,582).C(146,470,86,468,111,540).Q(129,563,157,575)
+                        .Q(100,575,119,621).Q(156,668,213,582).Close()) Fill(g,wing,Pink);
+                    Line(g,new Outline().M(459,600).Q(482,535,517,500).M(473,616).Q(518,609,544,634),4); break;
+                case MonsterVariant.Shark:
+                    using(var fin=new Outline().M(391,548).Q(430,476,478,460).Q(464,505,484,583).Close()) Fill(g,fin,Blue);
+                    using(var tail=new Outline().M(488,675).L(542,666).L(566,624+wave).L(565,665)
+                        .L(589,684+wave).L(549,695).L(495,709).Close()) Fill(g,tail,Blue); break;
+                case MonsterVariant.Peacock:
+                    using(var fan=new Outline().M(445,664).C(405,580,402,494,444,480)
+                        .Q(475,451,488,499).Q(527,470,536,526).Q(578,518,563,566)
+                        .Q(598,597,553,615).Q(563,657,521,654).Close()) Fill(g,fan,Green);
+                    Line(g,new Outline().M(466,625).L(447,504).M(475,626).L(486,521).M(490,637).L(530,549).M(503,641).L(550,594),3);
+                    Dot(g,448,509,12,Blue); Dot(g,486,524,12,Blue); Dot(g,530,549,12,Blue); Dot(g,548,593,11,Blue); break;
+                case MonsterVariant.Turtle:
+                    using(var shell=new Outline().M(356,542).C(426,518,496,573,506,639)
+                        .Q(516,684,477,695).L(384,630).Close()) Fill(g,shell,Green); break;
+                case MonsterVariant.Octopus:
+                    using(var tentacles=new Outline().M(477,585).C(501,544,538,528+wave,549,557+wave)
+                        .Q(559,586,538,588).Q(527,584,535,568).Q(505,564,501,606)
+                        .C(544,594,580,615,571,642).Q(557,670,544,650).Q(542,644,557,637)
+                        .Q(533,621,502,637).C(556,667,568,710+wave,539,724+wave)
+                        .Q(514,732,516,713).Q(520,705,533,710).Q(535,684,490,674).Close()) Fill(g,tentacles,Pink); break;
+                case MonsterVariant.Cactus:
+                    using(var stem=new Outline().M(412,579).L(416,498).Q(429,470,443,499).L(442,530)
+                        .Q(468,530,466,506).Q(466,489,479,490).Q(504,525,480,548)
+                        .L(440,550).L(438,597).Close()) Fill(g,stem,Green);
+                    Line(g,new Outline().M(428,503).L(428,569).M(418,513).L(407,507).M(442,521).L(452,512)
+                        .M(479,535).L(491,543).M(420,554).L(410,559),3); break;
             }
         }
 
@@ -161,9 +228,62 @@ namespace MyDay.Windows.Character
                 case MonsterVariant.Heart:
                     Line(g,new Outline().M(370,512).Q(393+wave,490,399+wave,467),4);
                     Heart(g,401+wave,446,27); Heart(g,425,590,19); break;
+                case MonsterVariant.Cat:
+                    Line(g,new Outline().M(212,534).L(190,529).M(215,545).L(193,547)
+                        .M(337,537).L(358,530).M(338,547).L(359,548),3); break;
+                case MonsterVariant.Fox:
+                    Line(g,new Outline().M(385,569).L(398,561).L(398,575),3); break;
+                case MonsterVariant.Puppy:
+                    Dot(g,421,582,14,Gold); break;
+                case MonsterVariant.Ram:
+                    Line(g,new Outline().M(359,540).Q(372,526,383,543).Q(398,534,403,553)
+                        .M(404,564).Q(417,550,428,568).Q(440,560,446,579),4); break;
+                case MonsterVariant.Deer:
+                    Dot(g,403,572,5,Gold); Dot(g,424,590,5,Gold); Dot(g,437,613,5,Gold); break;
+                case MonsterVariant.Dragon:
+                    using(var ridge=new Outline().M(365,515).L(382,484).L(390,531).L(413,512).L(416,553)
+                        .L(442,540).L(439,576).Close()) Fill(g,ridge,Gold); break;
+                case MonsterVariant.Butterfly:
+                    Line(g,new Outline().M(360,512).Q(364,480,380,470).M(371,515).Q(390,492,406,493),3);
+                    Dot(g,381,469,4,Purple); Dot(g,407,493,4,Pink); break;
+                case MonsterVariant.Axolotl:
+                    Gills(g,190,530,-1.3f,wave); Gills(g,365,525,1.3f,wave);
+                    Dot(g,225,520,5,Pink); Dot(g,319,520,5,Pink); break;
+                case MonsterVariant.Shark:
+                    Line(g,new Outline().M(387,565).L(379,585).M(402,571).L(394,590).M(416,579).L(409,597),4); break;
+                case MonsterVariant.Peacock:
+                    Line(g,new Outline().M(364,512).L(367,470).M(364,500).L(384,478),3);
+                    Dot(g,367,469,7,Blue); Dot(g,385,478,7,Green); break;
+                case MonsterVariant.Turtle:
+                    using(var plate=new Outline().M(387,554).L(416,553).L(439,578).L(429,609).L(397,607).L(381,578).Close()) Fill(g,plate,Green);
+                    Line(g,new Outline().M(439,578).L(470,582).L(488,608).L(477,640).L(449,636).L(429,609)
+                        .M(449,636).L(443,657).M(397,607).L(393,625),4); break;
+                case MonsterVariant.Octopus:
+                    Dot(g,518,580,3,White); Dot(g,536,637,3,White); Dot(g,524,690,3,White); break;
+                case MonsterVariant.Robot:
+                    Line(g,new Outline().M(362,513).L(368,464),5); Dot(g,370,450,13,Blue);
+                    using(var plate=new Outline().M(388,557).L(438,570).L(426,616).L(378,599).Close()) Fill(g,plate,Blue);
+                    Dot(g,400,580,4,Gold); Dot(g,417,585,4,Pink);
+                    Line(g,new Outline().M(392,597).L(419,605),3); break;
+                case MonsterVariant.Cactus:
+                    Flower(g,435,486,17); break;
             }
         }
 
+        private static void Ear(Graphics g,float x,float y,float tipX,float tipY,float xx,float yy,Color inner)
+        {
+            using(var ear=new Outline().M(x,y).L(tipX,tipY).L(xx,yy).Close()) Fill(g,ear,White);
+            using(var ear=new Outline().M(x+(xx-x)*.2f,y-10).L(tipX+(xx-tipX)*.18f,tipY+21)
+                .L(xx-(xx-x)*.2f,yy-10).Close()) Fill(g,ear,inner);
+        }
+        private static void Gills(Graphics g,float x,float y,float direction,float wave)
+        {
+            using(var frill=new Outline().M(x,y).Q(x+direction*31,y-45-wave,x+direction*51,y-36-wave)
+                .Q(x+direction*52,y-22,x+direction*28,y-13).Q(x+direction*63,y-14,x+direction*64,y+4)
+                .Q(x+direction*58,y+25,x+direction*31,y+13).Q(x+direction*49,y+43+wave,x+direction*33,y+51+wave)
+                .Q(x+direction*13,y+37,x,y).Close()) Fill(g,frill,Pink);
+            Line(g,new Outline().M(x,y).L(x+direction*41,y-28).M(x,y).L(x+direction*50,y+3).M(x,y).L(x+direction*29,y+36),3);
+        }
         private static void FeatherWing(Graphics g,MonsterPose pose,float x,float y,float xx,float yy,Color color)
         {
             float flutter=(float)Math.Sin(pose.Phase*5)*6;

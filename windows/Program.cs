@@ -34,11 +34,11 @@ namespace MyDay.Windows
             }
             if(args.Length==2 && args[0]=="--appearance-preview")
             {
-                try { Tests.VariantPreview(Path.GetFullPath(args[1]),8,24); return 0; } catch(Exception ex) { Console.Error.WriteLine(ex); return 1; }
+                try { Tests.VariantPreview(Path.GetFullPath(args[1]),8,40); return 0; } catch(Exception ex) { Console.Error.WriteLine(ex); return 1; }
             }
-            if(args.Length==2 && (args[0]=="--variants-first" || args[0]=="--variants-second"))
+            if(args.Length==2 && (args[0]=="--variants-first" || args[0]=="--variants-second" || args[0]=="--variants-third"))
             {
-                try { Tests.VariantPreview(Path.GetFullPath(args[1]),args[0]=="--variants-first"?0:16,16); return 0; } catch(Exception ex) { Console.Error.WriteLine(ex); return 1; }
+                try { Tests.VariantPreview(Path.GetFullPath(args[1]),args[0]=="--variants-first"?0:args[0]=="--variants-second"?16:32,16); return 0; } catch(Exception ex) { Console.Error.WriteLine(ex); return 1; }
             }
             bool created;
             // One writer per Windows user prevents two windows overwriting each other's diary.

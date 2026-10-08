@@ -46,7 +46,7 @@ namespace MyDay.Windows
                 using(var stream=new MemoryStream(Encoding.UTF8.GetBytes("{\"Version\":1,\"Days\":[]}"))) Check(DiaryStore.Read(stream).CharacterStyle=="original","Older diary without variant field loads with original character");
                 book.CharacterStyle="future-skin"; DiaryStore.Validate(book);
                 Check(book.CharacterStyle=="original" && book.Days.Count==2,"Unknown imported variant falls back without losing dates");
-                Check(MonsterVariants.All.Select(MonsterVariants.Id).Distinct().Count()==32 && MonsterVariants.All.All(v=>MonsterVariants.FromId(MonsterVariants.Id(v))==v),"Thirty-two variant IDs are distinct and round-trip");
+                Check(MonsterVariants.All.Select(MonsterVariants.Id).Distinct().Count()==48 && MonsterVariants.All.All(v=>MonsterVariants.FromId(MonsterVariants.Id(v))==v),"Forty-eight variant IDs are distinct and round-trip");
                 Check(MonsterVariants.All.Take(8).Select(MonsterVariants.Id).SequenceEqual(new[] {"original","puffy","winged","speedy","dazed","spiky","horned","mini"}),"Original eight saved IDs retain their values and order");
                 var oldForms=new[] {"droplet","puddle","pill","cube","cloud","twin"};
                 var corrected=new[] {"fin","shell","tailed","crystal","furry","flower"};
@@ -136,7 +136,7 @@ namespace MyDay.Windows
                     identity&=sample(246,476).R<100 && sample(305,476).R<100;
                     identity&=sample(350,730).A==0;
                 }
-                Check(identity,"All 24 additions retain raised eyes, original pupils and the open arch between the feet");
+                Check(identity,"All 40 additions retain raised eyes, original pupils and the open arch between the feet");
                 bool quiet=true;
                 foreach(var activity in new[] { PetActivity.Rest,PetActivity.Walk,PetActivity.Hop,PetActivity.Look,PetActivity.Sleep,PetActivity.Hover,PetActivity.Drag })
                     for(int i=0;i<30;i++) quiet&=MonsterPose.ForActivity(i*.1,activity,i*.1,0,0).FireStrength==0;
@@ -227,7 +227,7 @@ namespace MyDay.Windows
             }
             Console.WriteLine("Rendered 80 native animation frames.");
         }
-        public static void VariantPreview(string directory,int start=0,int count=32)
+        public static void VariantPreview(string directory,int start=0,int count=48)
         {
             Directory.CreateDirectory(directory);
             var variants=MonsterVariants.All.Skip(start).Take(count).ToArray();
