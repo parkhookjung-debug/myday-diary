@@ -233,8 +233,15 @@ namespace MyDay.Windows.UI
             board.CancelPlacement();
             bool untouched=!book.Days.ContainsKey(DiaryStore.Key(date)) && entry.LayoutMode=="cards" && entry.Blocks.Count==1 &&
                 entry.Blocks[0].Text.Length==0 && entry.Blocks[0].Title==DiaryTemplates.All[0].Sections[0].Title && entry.Blocks[0].Width==0;
-            if(!DiaryTemplates.Append(entry,template)) { MessageBox.Show(this,"블록은 한 날짜에 최대 200개까지 추가할 수 있어요."); return; }
+            bool fresh=untouched || entry.Blocks.Count==0;
+            if(!DiaryTemplates.Append(entry,template,board.LogicalWidth)) { MessageBox.Show(this,"블록은 한 날짜에 최대 200개까지 추가할 수 있어요."); return; }
             if(untouched) entry.Blocks.RemoveAt(0);
+            if(fresh) {
+                entry.LayoutMode="free";
+                var positions=JournalLayouts.Arrange(template.Layout,entry.Blocks.Count,board.LogicalWidth);
+                for(int i=0;i<entry.Blocks.Count;i++) DiaryLayout.SetBounds(entry.Blocks[i],positions[i]);
+                bool wasBinding=binding; binding=true; layoutChoice.SelectedIndex=1; binding=wasBinding; RefreshLayoutControls();
+            }
             entry.PageStyle=template.Style;
             bool previous=binding; binding=true; pageStyle.SelectedIndex=entry.PageStyle=="paper"?0:entry.PageStyle=="dots"?2:1; binding=previous;
             QueueSave(); RenderCards();
@@ -469,6 +476,17 @@ namespace MyDay.Windows.UI
             DiaryLayout.SetBounds(entry.Blocks[2],new Rectangle(492,46,300,220));
             RenderCards(); QueueSave(); FlushSave(); board.AutoScrollPosition=Point.Empty; PerformLayout(); Update();
             using(var image=new Bitmap(Width,Height)) { DrawToBitmap(image,new Rectangle(Point.Empty,Size)); image.Save(Path.Combine(Path.GetDirectoryName(destination),"windows-reflection.png"),System.Drawing.Imaging.ImageFormat.Png); }
+            ChangeDate(date.AddDays(1));
+            var cornell=DiaryTemplates.All.First(t=>t.Id=="cornell-notes"); ApplyTemplate(cornell);
+            var preset=JournalLayouts.Arrange(cornell.Layout,3,board.LogicalWidth);
+            if(entry.LayoutMode!="free" || entry.PageStyle!="dots" || !entry.Blocks.Select(DiaryLayout.Bounds).SequenceEqual(preset)) throw new Exception("Fresh template did not apply its previewed layout");
+            entry.Blocks[0].Text="핵심 개념은 무엇일까?\r\n다른 사례에도 적용할 수 있을까?";
+            entry.Blocks[1].Text="오늘 배운 내용을 내 말로 설명해본다.\r\n\r\n정의와 예시를 연결하니 이해하기 쉬웠다.";
+            entry.Blocks[2].Text="질문하고, 설명하고, 짧게 요약하기.\r\n헷갈린 개념은 예제를 바꿔 다시 확인해보자.";
+            RenderCards(); QueueSave(); FlushSave(); ChangeDate(date.AddDays(1)); ChangeDate(date.AddDays(-1));
+            if(entry.PageStyle!="dots" || !entry.Blocks.Select(DiaryLayout.Bounds).SequenceEqual(preset)) throw new Exception("Preset layout did not persist independently for its date");
+            board.AutoScrollPosition=Point.Empty; PerformLayout(); Update();
+            using(var image=new Bitmap(Width,Height)) { DrawToBitmap(image,new Rectangle(Point.Empty,Size)); image.Save(Path.Combine(Path.GetDirectoryName(destination),"windows-cornell.png"),System.Drawing.Imaging.ImageFormat.Png); }
         }
         protected override void Dispose(bool disposing)
         {

@@ -10,13 +10,14 @@ Windows 10/11과 .NET Framework 4.8 이상을 사용합니다.
 캐릭터를 한 번 클릭하면 일기 창이 열립니다.
 빌드 후에는 `bin/MyDay.exe`만 더블클릭해도 실행할 수 있습니다.
 GitHub CI의 Windows artifact에서도 실행 파일을 받을 수 있습니다.
-[다운로드용 Windows ZIP](https://github.com/parkhookjung-debug/myday-diary/releases/tag/v0.3.3-preview)은 압축을 풀고 `MyDay.exe`를 실행합니다.
+[다운로드용 Windows ZIP](https://github.com/parkhookjung-debug/myday-diary/releases/tag/v0.3.4-preview)은 압축을 풀고 `MyDay.exe`를 실행합니다.
 
 ## 기능
 
 - DM 스타일 기록함: 날짜별 목록·본문 미리보기·현재 날짜 강조, 목록 클릭으로 기록 이동
 - 아이보리 종이와 청록색 포인트, 날짜 표지, 노트·카드·도트 표면. [디자인 변경 안내](../docs/WINDOWS-DESIGN.md)
-- [일기 형식 6종](../docs/JOURNAL-FORMATS.md): 자유 일기·하루 회고·감사 일기·질문 일기·불렛 저널·상몬에게 편지. 미리보기를 보고 추가하며 기존 글·체크·배치를 보존
+- [일기 형식 100종](../docs/JOURNAL-FORMATS.md): 10개 분야·검색·대략적인 작성 시간·질문과 배치 미리보기. [전체 100종 목록과 참고 자료](../docs/JOURNAL-CATALOG.md)
+- 긴 글·질문 카드·본문+메모·타임라인·편지·플래너·코넬 노트·비교형 8종 배치. 빈 페이지에 적용하며 기존 자유 배치에는 원래 블록을 보존해 아래에 추가
 - 날짜별 글 일기, 할 일, 습관 체크, 감정 기록
 - 블록 추가, 순서 이동, 너비 변경, 삭제 확인
 - 자유 배치: 제목을 잡아 드래그 이동, 오른쪽 아래 ↘로 크기 조절, 날짜별 위치·크기 저장
@@ -56,6 +57,9 @@ Android 기록과 자동 동기화하지 않습니다. 사진·영상·시작 �
 | 날짜 표지 | `UI/JournalCover.cs` |
 | 형식 선택·미리보기 | `UI/TemplateGallery.cs` |
 | 형식의 블록 제목·질문·구성 | `Core/DiaryTemplates.cs` |
+| 분야별 형식 데이터·참고 링크 | `Core/Templates/` |
+| 8종 배치 알고리즘 | `Core/JournalLayouts.cs` |
+| 목록과 배치 그림 | `UI/TemplateOption.cs` |
 | 자유 캔버스·드래그·리사이즈 핸들 | `UI/DiaryBoard.cs` |
 | 일기 블록 UI | `UI/BlockCard.cs` |
 | 기록 모델·검증·저장·백업 | `Core/DiaryData.cs` |

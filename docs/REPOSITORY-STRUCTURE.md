@@ -55,7 +55,7 @@ Android 표의 Java 경로는 `app/src/main/java/com/myday/diary/` 기준입니�
 
 GitHub Releases에 플랫폼별로 배포합니다.
 
-- Windows: `MyDay-Windows-v0.3.3-preview.zip`에 `MyDay.exe`, 실행 안내, 라이선스
+- Windows: `MyDay-Windows-v0.3.4-preview.zip`에 `MyDay.exe`, 실행 안내, 라이선스
 - Android: `MyDay-Android-v0.3.0-preview.apk` 개발용 debug 빌드
 - GitHub에서 자동 제공하는 Source code ZIP/TAR: 같은 태그의 전체 소스
 
@@ -66,7 +66,8 @@ GitHub Releases에 플랫폼별로 배포합니다.
 - [Android 실행과 기능](ANDROID.md)
 - [Windows 실행과 개발](../windows/README.md)
 - [Windows 디자인 수정](WINDOWS-DESIGN.md)
-- [일기장 형식 6종](JOURNAL-FORMATS.md)
+- [일기장 형식 100종 사용](JOURNAL-FORMATS.md)
+- [100종 전체 목록·참고 자료](JOURNAL-CATALOG.md)
 - [Android 디자인 수정](DESIGN.md)
 - [상몬 외형·게임 스타일](SANGMON-DESIGN.md)
 - [일기 자유 배치](FREE-LAYOUT.md)

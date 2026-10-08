@@ -17,7 +17,7 @@ MIT 라이선스의 오픈소스 프로젝트입니다. 5명이 UI·저장·캐�
 | Windows 10/11 | 소스의 `windows/실행.cmd`를 더블클릭하거나 배포 ZIP에서 `MyDay.exe` 실행 | [Windows 실행·개발 안내](windows/README.md) |
 | Android 8 이상 | Android Studio에서 저장소 루트를 열고 `app` 실행 또는 배포 APK 설치 | [Android 실행·기능 안내](docs/ANDROID.md) |
 
-Windows의 종이 디자인·일기 형식 6종·자유 배치를 포함한 ZIP은 [v0.3.3-preview](https://github.com/parkhookjung-debug/myday-diary/releases/tag/v0.3.3-preview), Android APK는 [v0.3.0-preview](https://github.com/parkhookjung-debug/myday-diary/releases/tag/v0.3.0-preview)에서 받습니다. APK는 개발용 debug 빌드입니다.
+Windows의 일기 형식 100종·8종 배치·검색·자유 배치를 포함한 ZIP은 [v0.3.4-preview](https://github.com/parkhookjung-debug/myday-diary/releases/tag/v0.3.4-preview), Android APK는 [v0.3.0-preview](https://github.com/parkhookjung-debug/myday-diary/releases/tag/v0.3.0-preview)에서 받습니다. APK는 개발용 debug 빌드입니다.
 
 ```sh
 git clone https://github.com/parkhookjung-debug/myday-diary.git
@@ -46,7 +46,8 @@ Windows 소스 실행에는 .NET Framework 4.8 이상이 필요합니다. Androi
 ## Windows와 상몬
 
 - 날짜별 기록·본문 미리보기, 아이보리 종이와 청록색 포인트. [Windows 디자인 수정 안내](docs/WINDOWS-DESIGN.md)
-- [일기 형식 6종](docs/JOURNAL-FORMATS.md): 자유 일기·하루 회고·감사 일기·질문 일기·불렛 저널·상몬에게 편지, 미리보기 선택과 날짜별 저장
+- [일기 형식 100종](docs/JOURNAL-FORMATS.md): 10개 분야별 10종, 제목·질문·배치 이름 검색, 질문·배치 미리보기와 날짜별 저장. [전체 목록·참고 출처](docs/JOURNAL-CATALOG.md)
+- 긴 글·질문 카드·본문+메모·타임라인·편지·플래너·코넬 노트·비교형 등 8종 배치
 - 날짜별 일기·할 일·습관·감정, 블록 순서·너비 변경, 자동 저장과 JSON 백업
 - [자유 배치](docs/FREE-LAYOUT.md): 블록 제목을 드래그해서 이동하고 모서리로 크기를 조절하며 날짜별 위치·크기를 저장
 - 바탕화면 이동·클릭으로 일기 열기·드래그·숨기기·다시 표시

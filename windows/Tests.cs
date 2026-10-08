@@ -76,7 +76,25 @@ namespace MyDay.Windows
                 }
                 var templateStore=new DiaryStore(Path.Combine(directory,"templates")); templateStore.Save(templateBook); var templateReload=templateStore.Load();
                 foreach(var pair in templateBook.Days) templatesSaved&=pair.Value.PageStyle==templateReload.Days[pair.Key].PageStyle && pair.Value.Blocks.Select(b=>b.Title+"|"+b.Prompt+"|"+b.Text).SequenceEqual(templateReload.Days[pair.Key].Blocks.Select(b=>b.Title+"|"+b.Prompt+"|"+b.Text));
-                Check(templatesSaved,"All six journal formats preserve titles, prompts and paper styles through storage");
+                Check(templatesSaved,"All one hundred journal formats preserve titles, prompts and paper styles through storage");
+                Check(DiaryTemplates.All.Length==100 && DiaryTemplates.All.Select(t=>t.Id).Distinct().Count()==100 && DiaryTemplates.All.Select(t=>t.Name).Distinct().Count()==100,"Exactly 100 distinct format IDs and names");
+                Check(TemplateCatalog.Categories.All(c=>DiaryTemplates.All.Count(t=>t.Category==c)==10),"Each of ten categories has ten formats");
+                Check(DiaryTemplates.All.Take(6).Select(t=>t.Id).SequenceEqual(new[] {"free","reflection","gratitude","questions","bullet","letter"}),"Original six formats retain their identity and order");
+                Check(DiaryTemplates.All.All(t=>TemplateCatalog.ReferenceIds.Contains(t.Reference) && JournalLayouts.Ids.Contains(t.Layout) && t.Minutes>0 && t.Sections.Length>0 && t.Sections.Length<=6),"Every format has a verified source family, usable layout and bounded section count");
+                Check(DiaryTemplates.All.Select(t=>string.Join("|",t.Sections.Select(s=>s.Kind+":"+s.Title+":"+s.Prompt))).Distinct().Count()==100,"All format question and block combinations are distinct");
+                Check(DiaryTemplates.Find(null," 코넬 ").Any(t=>t.Id=="cornell-notes") && DiaryTemplates.Find("learning","코넬").All(t=>t.Category=="learning") && DiaryTemplates.Find("daily","코넬").Length==0 && DiaryTemplates.Find(null,"missing-test-format").Length==0,"Search trims queries, combines category and metadata, and handles no results");
+                bool layoutsFit=true;
+                foreach(var t in DiaryTemplates.All) foreach(int width in new[] {500,900}) {
+                    var rectangles=JournalLayouts.Arrange(t.Layout,t.Sections.Length,width);
+                    layoutsFit&=rectangles.Count==t.Sections.Length;
+                    for(int i=0;i<rectangles.Count;i++) {
+                        var r=rectangles[i]; layoutsFit&=r.X>=0 && r.Y>=0 && r.Width>=DiaryLayout.MinWidth && r.Height>=DiaryLayout.MinHeight && r.Height<=DiaryLayout.MaxHeight && r.Right<=width-24;
+                        for(int j=0;j<i;j++) layoutsFit&=!r.IntersectsWith(rectangles[j]);
+                    }
+                }
+                Check(layoutsFit,"Every format layout fits wide and narrow canvases without overlapping blocks");
+                var catalogPath=Path.Combine(directory,"catalog.md"); TemplateCatalog.WriteCatalog(catalogPath);
+                Check(File.ReadAllLines(catalogPath).Count(line=>line.StartsWith("| ") && char.IsDigit(line[2]))==100,"Documentation exports all hundred catalog entries");
                 var full=DiaryEntry.Empty(); for(int i=0;i<199;i++) full.Blocks.Add(DiaryBlock.Create("text"));
                 Check(!DiaryTemplates.Append(full,DiaryTemplates.All[1]) && full.Blocks.Count==199,"Over-limit template inserts no partial sections");
                 var blank=DiaryTemplates.NewPage(); Check(blank.Blocks.Count==1 && blank.Blocks[0].Wide && blank.Blocks[0].Text=="" && blank.PageStyle=="paper","New diary starts with a spacious empty writing page");

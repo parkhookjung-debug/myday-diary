@@ -1,6 +1,6 @@
 # Windows 일기 디자인
 
-날짜별 기록 목록과 넓은 작성 공간에 아이보리 종이·차분한 청록색을 적용했습니다. 날짜 표지, 작은 상몬 프로필, 둥근 일기 블록을 사용합니다. 왼쪽 기록함을 클릭해 날짜를 바꾸고, 아래쪽 버튼으로 블록을 추가합니다. **일기 형식**에서는 6종의 미리보기를 선택합니다.
+날짜별 기록 목록과 넓은 작성 공간에 아이보리 종이·차분한 청록색을 적용했습니다. 날짜 표지, 작은 상몬 프로필, 둥근 일기 블록을 사용합니다. 왼쪽 기록함을 클릭해 날짜를 바꾸고, 아래쪽 버튼으로 블록을 추가합니다. **일기 형식**에서 100종을 검색·분야별로 탐색하고 질문과 배치를 미리봅니다.
 
 | 바꾸려는 내용 | 파일 |
 | --- | --- |
@@ -11,7 +11,10 @@
 | 블록 제목·본문·체크·편집 도구 | `windows/UI/BlockCard.cs` |
 | 자유 배치와 드래그 입력 | `windows/UI/DiaryBoard.cs` |
 | 형식 선택·미리보기 화면 | `windows/UI/TemplateGallery.cs` |
-| 6종 형식의 제목·질문·블록 구성 | `windows/Core/DiaryTemplates.cs` |
+| 기존 형식·검색·추가 | `windows/Core/DiaryTemplates.cs` |
+| 분야별 제목·질문·출처 | `windows/Core/Templates/` |
+| 형식별 8종 배치 | `windows/Core/JournalLayouts.cs` |
+| 형식 행과 배치 그림 | `windows/UI/TemplateOption.cs` |
 
 색상은 `Design.Ink`, `Muted`, `Accent`, `Soft`, `Tint`, `Paper`, `Backgrounds`에서 바꿉니다. 배경은 아이보리·화이트·미스트, 블록 표면은 노트·카드·도트를 고릅니다. 노트와 도트의 표시가 본문 옆 여백에 나타납니다. 본문은 기존 Windows 텍스트 입력 컨트롤입니다. 간격·크기는 `Design.P/Point/Size/Pad`로 Windows 배율에 맞춥니다.
 

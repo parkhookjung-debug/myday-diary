@@ -14,6 +14,9 @@ namespace MyDay.Windows
         [STAThread]
         private static int Main(string[] args)
         {
+            if(args.Length==2 && args[0]=="--template-catalog") {
+                try { TemplateCatalog.WriteCatalog(Path.GetFullPath(args[1])); return 0; } catch(Exception ex) { Console.Error.WriteLine(ex); return 1; }
+            }
             if(args.Length>0 && args[0]=="--self-test")
             {
                 try { Tests.Run(); return 0; } catch(Exception ex) { Console.Error.WriteLine(ex); return 1; }

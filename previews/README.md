@@ -12,7 +12,10 @@
 | --- | --- |
 | `windows/windows-example.png` | 실제 Windows UI에 격리된 예시 기록을 넣은 화면 |
 | `windows/windows-free-layout.png` | 블록을 자유롭게 옮기고 크기를 조절하는 편집 화면 |
-| `windows/windows-journal-templates.png` | 일기 형식 6종의 선택·미리보기 화면 |
+| `windows/windows-journal-templates.png` | 일기 형식 100종의 분류·검색·미리보기 화면 |
+| `windows/windows-template-learning.png` | 학습 분야 10종 |
+| `windows/windows-template-search.png` | 코넬 학습 형식 검색 |
+| `windows/windows-cornell.png` | 실제 코넬 배치로 작성한 예시 |
 | `windows/windows-reflection.png` | 하루 회고 형식으로 작성한 일기 예시 |
 | `windows/windows-pet.png` | 초기 투명 바탕화면 캐릭터 예시 |
 | `windows/windows-lively.gif` | 캐릭터 포즈·생동감 있는 동작 예시 |
