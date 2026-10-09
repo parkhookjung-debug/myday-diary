@@ -60,6 +60,7 @@ namespace MyDay.Windows.Core
         [DataMember] public int Version = 1;
         [DataMember] public Dictionary<string, DiaryEntry> Days = new Dictionary<string, DiaryEntry>();
         [DataMember(EmitDefaultValue=false)] public string CharacterStyle="original";
+        [DataMember(EmitDefaultValue=false)] public List<SavedLayout> Layouts=new List<SavedLayout>();
     }
 
     public sealed class DiaryStore
@@ -81,10 +82,12 @@ namespace MyDay.Windows.Core
         }
         public static void Validate(DiaryBook book)
         {
-            if (book == null || book.Version != 1 || book.Days == null)
+            if (book == null || book.Version != 1 && book.Version != 2 || book.Days == null)
                 throw new InvalidDataException("지원하지 않는 기록 파일입니다.");
             if (book.Days.Count > 50000) throw new InvalidDataException("기록 파일이 너무 큽니다.");
             book.CharacterStyle=MonsterVariants.Id(MonsterVariants.FromId(book.CharacterStyle));
+            if(book.Layouts==null) book.Layouts=new List<SavedLayout>();
+            SavedLayouts.Validate(book.Layouts);
             long photoCharacters=0;
             foreach (var pair in book.Days)
             {
@@ -100,7 +103,7 @@ namespace MyDay.Windows.Core
                 foreach (var block in entry.Blocks)
                 {
                     if (block == null || String.IsNullOrWhiteSpace(block.Id) || !ids.Add(block.Id) ||
-                        !new[] { "text", "todo", "habit", "emotion", "photo" }.Contains(block.Kind) || block.Text == null || block.Text.Length > 100000)
+                        !new[] { "text", "todo", "habit", "emotion", "photo", "photo-slot" }.Contains(block.Kind) || block.Text == null || block.Text.Length > 100000)
                         throw new InvalidDataException("일기 블록 형식이 올바르지 않습니다.");
                     photoCharacters+=block.Photo==null?0:block.Photo.Length;
                     if(photoCharacters>DiaryPhoto.MaxBookCharacters) throw new InvalidDataException("전체 사진 저장 공간이 가득 찼어요. 백업 후 사용하지 않는 사진 블록을 정리해주세요.");
@@ -118,6 +121,7 @@ namespace MyDay.Windows.Core
         public void Save(DiaryBook book)
         {
             Validate(book);
+            if(book.Layouts.Count>0 || book.Days.Values.Any(e=>e.Blocks.Any(b=>b.Kind=="photo-slot"))) book.Version=2;
             var directory = Path.GetDirectoryName(FilePath);
             Directory.CreateDirectory(directory);
             var pending = FilePath + "." + Guid.NewGuid().ToString("N") + ".tmp";
@@ -140,6 +144,7 @@ namespace MyDay.Windows.Core
             using (var buffer = new MemoryStream())
             {
                 Validate(book);
+                if(book.Layouts.Count>0 || book.Days.Values.Any(e=>e.Blocks.Any(b=>b.Kind=="photo-slot"))) book.Version=2;
                 new DataContractJsonSerializer(typeof(DiaryBook)).WriteObject(buffer, book);
                 CheckSize(buffer.Length);
                 File.WriteAllBytes(destination, buffer.ToArray());

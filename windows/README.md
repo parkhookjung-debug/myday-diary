@@ -10,7 +10,7 @@ Windows 10/11과 .NET Framework 4.8 이상을 사용합니다.
 캐릭터를 한 번 클릭하면 일기 창이 열립니다.
 빌드 후에는 `bin/MyDay.exe`만 더블클릭해도 실행할 수 있습니다.
 GitHub CI의 Windows artifact에서도 실행 파일을 받을 수 있습니다.
-[다운로드용 Windows ZIP](https://github.com/parkhookjung-debug/myday-diary/releases/tag/v0.3.6-preview)은 압축을 풀고 `MyDay.exe`를 실행합니다.
+[다운로드용 Windows ZIP](https://github.com/parkhookjung-debug/myday-diary/releases/tag/v0.3.7-preview)은 압축을 풀고 `MyDay.exe`를 실행합니다.
 
 ## 기능
 
@@ -23,6 +23,7 @@ GitHub CI의 Windows artifact에서도 실행 파일을 받을 수 있습니다.
 - [사진 첨부](../docs/PHOTOS.md): 아래 **＋ 사진**으로 추가, 설명 입력, 사진 교체, 자유 배치·크기 조절, 사진을 포함한 JSON 백업·복원
 - 블록 추가, 순서 이동, 너비 변경, 삭제 확인
 - 자유 배치: 제목을 잡아 드래그 이동, 오른쪽 아래 ↘로 크기 조절, 날짜별 위치·크기 저장
+- [내 레이아웃](../docs/MY-LAYOUTS.md): **내 레이아웃 → 현재 배치 저장**으로 이름 붙여 보관, 다른 날짜에 불러오기, 배치 미리보기·이름 검색·이름 변경·삭제, JSON 백업에 포함
 - 배경 테마 3종과 오늘의 마음 기록
 - 입력 후 자동 저장, 날짜 이동·종료 전 저장 확인
 - JSON 백업과 가져오기 (같은 날짜는 확인 후 교체)
@@ -47,6 +48,7 @@ Android 기록과 자동 동기화하지 않습니다. 영상·시작 시 자동
 
 `%LOCALAPPDATA%/MyDay/Windows/diary.json`에 보관합니다. 프로그램 폴더를 옮겨도 같은 Windows 계정의 기록을 유지합니다.
 이전 저장본은 `diary.json.bak`에 남습니다. 기록을 수정하거나 PC를 옮기기 전 **기록 백업**으로 별도 파일을 보관하세요.
+내 레이아웃이나 빈 사진 자리를 저장한 기록은 버전 2 형식이며 v0.3.7-preview 이상에서 엽니다. 기존 버전 1 기록·백업도 읽습니다.
 손상된 기록을 읽지 못하면 앱이 오류를 표시하고 종료하며 빈 기록으로 덮어쓰지 않습니다.
 
 ## 팀 디자인·기능 수정
@@ -59,6 +61,9 @@ Android 기록과 자동 동기화하지 않습니다. 영상·시작 시 자동
 | 달력·검색·결과 창 | `UI/JournalBrowser.cs`, `UI/MonthCalendar.cs` |
 | 달력 날짜·본문 검색·미리보기 | `Core/DiaryBrowse.cs` |
 | 달력·검색 단위 검증 | `BrowseTests.cs` |
+| 내 레이아웃 모델·검증·적용·병합 | `Core/SavedLayouts.cs` |
+| 내 레이아웃 목록·검색·관리·미리보기 | `UI/MyLayoutsWindow.cs`, `UI/LayoutNameDialog.cs`, `UI/SavedLayoutDiagram.cs` |
+| 내 레이아웃 저장·재사용 검증 | `SavedLayoutTests.cs` |
 | 날짜 표지 | `UI/JournalCover.cs` |
 | 형식 선택·미리보기 | `UI/TemplateGallery.cs` |
 | 형식의 블록 제목·질문·구성 | `Core/DiaryTemplates.cs` |
@@ -110,6 +115,7 @@ if ($process.ExitCode -ne 0) { throw 'Tests failed' }
 자동 테스트는 실제 기록과 분리된 임시 폴더에서 저장 보존·날짜 분리·백업·손상 파일 처리·애니메이션을 확인합니다.
 사진 테스트는 원본 삭제 후 백업 복원, EXIF 회전·축소·투명 영역, 손상된 사진으로 기존 기록을 덮어쓰지 않는 처리, 사진 용량 제한을 확인합니다.
 달력·검색 테스트는 윤년과 연도 경계·날짜 범위, 사진 표시·모든 날짜의 본문/사진 설명 검색·긴 글 미리보기·재로드·기록 보존을 확인합니다. 네이티브 검증은 월 이동·검색 지우기·결과 없음·121일의 결과 페이지 이동·작은 창·저장 후 결과/빈 날짜 열기·취소를 확인합니다.
+내 레이아웃 검증은 본문·사진·체크 제외, 기존 날짜 보존과 새 날짜 독립성, 자동/자유 배치 재사용, 버전 2 저장·백업·이전 기록 읽기, 이름 변경·충돌·병합·삭제·용량/좌표 거부를 확인합니다. 네이티브 검증은 이름 입력·미리보기·검색·관리·작은 창·기존/새 날짜 적용·파일 잠금 시 목록 복구·사진 자리 채우기를 확인합니다.
 `--smoke-test <출력 폴더>`는 격리된 예시 데이터로 입력·체크·순서 이동·날짜 이동·재로드와 네이티브 투명 창을 확인하고 PNG를 만듭니다.
 다중 모니터·고배율 DPI·절전 복귀·우클릭 메뉴·드래그는 실제 사용 환경에서도 확인해주세요.
 

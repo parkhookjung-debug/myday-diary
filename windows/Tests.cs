@@ -50,6 +50,7 @@ namespace MyDay.Windows
                 }
                 RunPhotoTests(directory);
                 RunBrowseTests(directory);
+                RunSavedLayoutTests(directory);
                 var layout=DiaryEntry.FirstPage(); layout.Blocks[0].Text="이동해도 그대로"; layout.Blocks[1].Checked=true;
                 var originalIds=layout.Blocks.Select(b=>b.Id).ToArray(); DiaryLayout.EnableFree(layout,800);
                 Check(layout.LayoutMode=="free" && layout.Blocks.Select(b=>b.Id).SequenceEqual(originalIds) && layout.Blocks[0].Text=="이동해도 그대로" && layout.Blocks[1].Checked,"Entering free placement retains block IDs, text and checks");
@@ -239,7 +240,16 @@ namespace MyDay.Windows
         public static void Smoke(string directory)
         {
             Directory.CreateDirectory(directory);
-            var store=new DiaryStore(Path.Combine(directory,"isolated-data-"+Guid.NewGuid().ToString("N")));
+            string data=Path.Combine(Path.GetTempPath(),"myday-smoke-"+Guid.NewGuid().ToString("N"));
+            try { SmokeWithStore(directory,new DiaryStore(data)); }
+            finally {
+                string tempRoot=Path.GetFullPath(Path.GetTempPath()).TrimEnd(Path.DirectorySeparatorChar)+Path.DirectorySeparatorChar;
+                string resolved=Path.GetFullPath(data);
+                if(resolved.StartsWith(tempRoot,StringComparison.OrdinalIgnoreCase) && Path.GetFileName(resolved).StartsWith("myday-smoke-",StringComparison.Ordinal) && Directory.Exists(resolved)) Directory.Delete(resolved,true);
+            }
+        }
+        private static void SmokeWithStore(string directory,DiaryStore store)
+        {
             var fixture=new DiaryBook(); fixture.Days[DiaryStore.Key(DateTime.Today)]=DiaryEntry.FirstPage();
             using(var form=new DiaryWindow(store,fixture,true))
             {

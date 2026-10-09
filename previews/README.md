@@ -14,6 +14,8 @@
 | `windows/windows-photos.png` | 사진·설명과 글 블록을 자유롭게 배치한 실제 Windows UI (풍경은 검증용 생성 이미지) |
 | `windows/windows-calendar.png` | 월간 달력·기록한 날·사진 있는 날·이달의 기록 목록 |
 | `windows/windows-diary-search.png` | 사진 설명을 전체 날짜에서 검색한 실제 Windows UI |
+| `windows/windows-my-layouts.png` | 직접 저장한 레이아웃 목록·검색·관리와 실제 배치 미리보기 |
+| `windows/windows-saved-layout-applied.png` | 새 날짜에 저장한 레이아웃을 빈 사진 자리·글 칸으로 불러온 화면 |
 | `windows/windows-free-layout.png` | 블록을 자유롭게 옮기고 크기를 조절하는 편집 화면 |
 | `windows/windows-journal-templates.png` | 일기 형식 100종의 분류·검색·미리보기 화면 |
 | `windows/windows-template-learning.png` | 학습 분야 10종 |

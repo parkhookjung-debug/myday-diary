@@ -18,9 +18,10 @@ namespace MyDay.Windows.UI
         private bool dirty, binding, exitRequested,editingLayout;
         private readonly Timer saveTimer = new Timer { Interval = 350 };
         private readonly DiaryBoard board;
-        private readonly ChoiceButton layoutChoice=Design.Choice(92);
+        private readonly ChoiceButton layoutChoice=Design.Choice(86);
         private readonly ChoiceButton pageStyle=Design.Choice(86);
         private readonly Button templates=Design.Button("일기 형식",true);
+        private readonly Button myLayouts=Design.Button("내 레이아웃");
         private readonly Button browse=Design.Button("달력 · 일기 검색");
         private readonly Button editLayout=Design.Button("배치 편집"),arrangeLayout=Design.Button("자동 정리");
         private readonly Label layoutHint=Design.Label("",9);
@@ -112,10 +113,11 @@ namespace MyDay.Windows.UI
             };
             arrangeLayout.Click+=delegate { board.CancelPlacement(); DiaryLayout.ArrangeFree(entry,board.LogicalWidth); QueueSave(); ArrangeCards(); };
             layoutHint.ForeColor=Design.Muted; layoutHint.Font=Design.Font(8); layoutHint.Margin=Design.Pad(2,9,0,0);
-            editLayout.Width=Design.P(84); arrangeLayout.Width=Design.P(84); templates.Width=Design.P(92);
+            editLayout.Width=Design.P(72); arrangeLayout.Width=Design.P(72); templates.Width=Design.P(84); myLayouts.Width=Design.P(92);
             templates.Click+=delegate { using(var gallery=new TemplateGallery()) if(gallery.ShowDialog(this)==DialogResult.OK) ApplyTemplate(gallery.SelectedTemplate); };
-            layoutBar.Controls.AddRange(new Control[] {layoutLabel,layoutChoice,editLayout,arrangeLayout,templates,layoutHint}); grid.Controls.Add(layoutBar,0,2);
-            layoutBar.Resize+=delegate { layoutHint.Visible=layoutBar.ClientSize.Width>=Design.P(640); };
+            myLayouts.Click+=delegate { ManageLayouts(); };
+            layoutBar.Controls.AddRange(new Control[] {layoutLabel,layoutChoice,editLayout,arrangeLayout,templates,myLayouts,layoutHint}); grid.Controls.Add(layoutBar,0,2);
+            layoutBar.Resize+=delegate { layoutHint.Visible=layoutBar.ClientSize.Width>=Design.P(740); };
             var toolbar=new FlowLayoutPanel { Dock=DockStyle.Fill, WrapContents=false, Padding=Design.Pad(0,14,0,0) };
             string[] kinds={"text","todo","habit","emotion","photo"}; string[] names={"＋ 글 일기","＋ 할 일","＋ 습관","＋ 감정","＋ 사진"};
             for(int i=0;i<kinds.Length;i++) { string kind=kinds[i]; var add=Design.Button(names[i],i==0); add.Width=Design.P(88); add.Click+=delegate { if(kind=="photo") SelectPhoto(null); else AddBlock(kind); }; toolbar.Controls.Add(add); }
@@ -189,6 +191,35 @@ namespace MyDay.Windows.UI
                 if(browser.ShowDialog(this)==DialogResult.OK && browser.SelectedDate.HasValue) ChangeDate(browser.SelectedDate.Value);
             }
         }
+        private void ManageLayouts(Action<MyLayoutsWindow> shown=null)
+        {
+            board.CancelPlacement(); if(!FlushSave()) return;
+            using(var window=new MyLayoutsWindow(book,SaveCurrentLayout,delegate(SavedLayout layout,string name) { CommitLayouts(SavedLayouts.Rename(book.Layouts,layout.Id,name)); },
+                delegate(SavedLayout layout) { CommitLayouts(book.Layouts.Where(l=>l.Id!=layout.Id).ToList()); })) {
+                if(testMode) { window.StartPosition=FormStartPosition.Manual; window.Location=new Point(-30000,-30000); }
+                if(shown!=null) window.Shown+=delegate { window.BeginInvoke((MethodInvoker)delegate { shown(window); }); };
+                if(window.ShowDialog(this)==DialogResult.OK && window.SelectedLayout!=null)
+                    try { ApplySavedLayout(window.SelectedLayout); } catch(Exception ex) { if(testMode) throw; MessageBox.Show(this,"배치를 불러오지 못했어요.\n"+ex.Message); }
+            }
+        }
+        private SavedLayout SaveCurrentLayout(string name)
+        {
+            var saved=SavedLayouts.Capture(entry,name,board.LogicalWidth); CommitLayouts(SavedLayouts.Add(book.Layouts,saved)); return saved;
+        }
+        private void CommitLayouts(System.Collections.Generic.List<SavedLayout> layouts)
+        {
+            SavedLayouts.Validate(layouts); var previous=book.Layouts; int version=book.Version; book.Layouts=layouts;
+            try { store.Save(book); status.Text="레이아웃 저장됨"; status.ForeColor=Design.Accent; }
+            catch { book.Layouts=previous; book.Version=version; throw; }
+        }
+        private void ApplySavedLayout(SavedLayout layout)
+        {
+            board.CancelPlacement(); var previousIds=entry.Blocks.Select(b=>b.Id).ToArray(); SavedLayouts.Apply(entry,layout); editingLayout=false;
+            bool previous=binding; binding=true;
+            theme.SelectedIndex=entry.Theme; pageStyle.SelectedIndex=entry.PageStyle=="paper"?0:entry.PageStyle=="dots"?2:1; layoutChoice.SelectedIndex=entry.LayoutMode=="free"?1:0;
+            binding=previous; RefreshLayoutControls(); ApplyTheme(); QueueSave(); RenderCards();
+            var added=board.Controls.OfType<BlockCard>().First(c=>!previousIds.Contains(c.Block.Id)); board.ScrollControlIntoView(added); added.Editor.Focus();
+        }
         private void LoadDate()
         {
             if(!book.Days.TryGetValue(DiaryStore.Key(date),out entry)) entry=DiaryTemplates.NewPage();
@@ -261,7 +292,7 @@ namespace MyDay.Windows.UI
             if(total>DiaryPhoto.MaxBookCharacters) throw new InvalidDataException("전체 사진 저장 공간이 가득 찼어요. 백업 후 사용하지 않는 사진 블록을 정리해주세요.");
             var block=existing??candidate;
             if(existing==null) { entry.Blocks.Add(block); if(entry.LayoutMode=="free") DiaryLayout.PlaceNew(entry,block); }
-            else { existing.Photo=candidate.Photo; existing.ValidatedPhoto=candidate.ValidatedPhoto; }
+            else { existing.Kind="photo"; existing.Photo=candidate.Photo; existing.ValidatedPhoto=candidate.ValidatedPhoto; }
             QueueSave(); RenderCards();
             var card=board.Controls.OfType<BlockCard>().First(c=>c.Block==block); board.ScrollControlIntoView(card); if(!editingLayout) card.Editor.Focus();
             return block;
@@ -375,9 +406,11 @@ namespace MyDay.Windows.UI
                     DiaryBook incoming;
                     using(var stream=File.OpenRead(dialog.FileName)) incoming=DiaryStore.Read(stream);
                     var conflicts=incoming.Days.Keys.Count(book.Days.ContainsKey);
-                    if(MessageBox.Show(this,incoming.Days.Count+"일의 기록을 가져올까요?\n같은 날짜의 기록 "+conflicts+"개는 백업 내용으로 바뀝니다. 기존 파일은 diary.json.bak으로 남습니다.","백업 가져오기",MessageBoxButtons.YesNo,MessageBoxIcon.Question)!=DialogResult.Yes) return;
+                    var layouts=SavedLayouts.Merge(book.Layouts,incoming.Layouts);
+                    if(MessageBox.Show(this,incoming.Days.Count+"일의 기록과 내 레이아웃 "+incoming.Layouts.Count+"개를 가져올까요?\n같은 날짜의 기록 "+conflicts+"개와 같은 ID의 레이아웃은 백업 내용으로 바뀝니다. 이름이 겹치면 번호를 붙입니다. 기존 파일은 diary.json.bak으로 남습니다.","백업 가져오기",MessageBoxButtons.YesNo,MessageBoxIcon.Question)!=DialogResult.Yes) return;
                     var merged=new DiaryBook(); foreach(var pair in book.Days) merged.Days[pair.Key]=pair.Value;
                     merged.CharacterStyle=incoming.CharacterStyle;
+                    merged.Layouts=layouts; merged.Version=Math.Max(book.Version,incoming.Version);
                     foreach(var pair in incoming.Days) merged.Days[pair.Key]=pair.Value;
                     store.Save(merged); book=merged; dirty=false; LoadDate(); status.Text="가져오기 완료";
                 }
@@ -572,6 +605,31 @@ namespace MyDay.Windows.UI
             if(date!=photoDate || !entry.Blocks.Any(b=>b.Kind=="photo" && b.Photo==savedPhoto)) throw new Exception("Calendar navigation lost the photo diary");
             BrowseDiary(delegate(JournalBrowser browser) { browser.DialogResult=DialogResult.Cancel; browser.Close(); });
             if(date!=photoDate) throw new Exception("Closing browser changed the selected diary");
+            string layoutId=null; var originalBlocks=entry.Blocks.Select(b=>b.Id).ToArray();
+            ManageLayouts(delegate(MyLayoutsWindow window) { layoutId=window.VerifyAndRender(Path.GetDirectoryName(destination)); });
+            if(entry.Blocks.Count!=4 || !entry.Blocks.Take(2).Select(b=>b.Id).SequenceEqual(originalBlocks) || !entry.Blocks.Any(b=>b.Photo==savedPhoto) ||
+                store.Load().Layouts.Count!=3 || !entry.Blocks.Skip(2).All(b=>b.Text=="")) throw new Exception("Applying to an existing day lost data or layouts did not persist");
+            var oldLayouts=book.Layouts; int oldVersion=book.Version; bool blocked=false;
+            using(var locked=new FileStream(store.FilePath,FileMode.Open,FileAccess.Read,FileShare.Read)) {
+                try { SaveCurrentLayout("저장 실패 테스트"); } catch(IOException) { blocked=true; }
+            }
+            if(!blocked || book.Layouts!=oldLayouts || book.Version!=oldVersion) throw new Exception("Save failure changed the in-memory layout collection");
+            ChangeDate(photoDate.AddDays(1));
+            ManageLayouts(delegate(MyLayoutsWindow window) { window.ApplyForTest(layoutId); });
+            var savedLayout=book.Layouts.First(l=>l.Id==layoutId);
+            if(entry.Blocks.Count!=2 || entry.Blocks.Any(b=>b.Text!="" || b.Checked || b.Photo!=null) || !entry.Blocks.Select(DiaryLayout.Bounds).SequenceEqual(savedLayout.Blocks.Select(b=>b.Bounds))) throw new Exception("Fresh page did not restore empty, exact saved layout");
+            var slot=entry.Blocks.First(b=>b.Kind=="photo-slot"); var slotCard=board.Controls.OfType<BlockCard>().First(c=>c.Block==slot);
+            if(slotCard.Photo==null || slotCard.ReplacePhoto.Text!="사진 선택") throw new Exception("Photo slot lacks an image picker");
+            QueueSave(); FlushSave(); board.AutoScrollPosition=Point.Empty; PerformLayout(); Update();
+            using(var image=new Bitmap(Width,Height)) { DrawToBitmap(image,new Rectangle(Point.Empty,Size)); image.Save(Path.Combine(Path.GetDirectoryName(destination),"windows-saved-layout-applied.png"),System.Drawing.Imaging.ImageFormat.Png); }
+            slotCard.Editor.Text="새 날짜의 사진 설명"; var slotBounds=DiaryLayout.Bounds(slot);
+            try { SetPhotoFromFile(bad,slot); throw new Exception("Invalid photo was accepted into slot"); } catch(InvalidDataException) { }
+            if(slot.Kind!="photo-slot" || slot.Photo!=null || slot.Text!="새 날짜의 사진 설명") throw new Exception("Invalid photo changed the empty slot");
+            Tests.WritePhotoFixture(fixture); SetPhotoFromFile(fixture,slot); File.Delete(fixture); QueueSave(); FlushSave();
+            ChangeDate(date.AddDays(1)); ChangeDate(date.AddDays(-1)); slot=entry.Blocks.First(b=>b.Kind=="photo");
+            if(slot.Text!="새 날짜의 사진 설명" || DiaryLayout.Bounds(slot)!=slotBounds || slot.Photo==null || !DiaryBrowse.HasPhoto(entry)) throw new Exception("Filling a photo slot lost caption, placement or calendar marker");
+            Size=MinimumSize; PerformLayout(); Application.DoEvents();
+            if(myLayouts.Right>myLayouts.Parent.ClientSize.Width || !myLayouts.Visible) throw new Exception("My layouts action clipped at minimum diary width"); Size=fullSize;
         }
         private static System.Collections.Generic.IEnumerable<Control> AllControls(Control parent)
         {

@@ -20,6 +20,10 @@ namespace MyDay.Windows.UI
         protected override void OnPaint(PaintEventArgs e)
         {
             base.OnPaint(e);
+            if(string.IsNullOrEmpty(data)) {
+                TextRenderer.DrawText(e.Graphics,"사진을 넣어 이 순간을 채워보세요",Design.Font(9),ClientRectangle,Design.Muted,TextFormatFlags.HorizontalCenter|TextFormatFlags.VerticalCenter|TextFormatFlags.WordBreak);
+                return;
+            }
             if(photo==null) {
                 using(var full=DiaryPhoto.Decode(data)) {
                     double thumbnailScale=Math.Min(1,800.0/Math.Max(full.Width,full.Height));

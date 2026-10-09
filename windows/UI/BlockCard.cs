@@ -24,9 +24,10 @@ namespace MyDay.Windows.UI
             Block = block; Height = Design.P(DiaryLayout.DefaultHeight(block));
             Pattern=pageStyle;
             Fill = block.Kind == "emotion" ? Design.Tint : pageStyle=="paper"?Design.Paper:Color.White;
-            string name = block.Kind == "photo" ? "사진 기록" : block.Kind == "text" ? "오늘의 일기" : block.Kind == "todo" ? "할 일" : block.Kind == "habit" ? "습관 체크" : "감정처리반";
+            bool isPhoto=block.Kind=="photo" || block.Kind=="photo-slot";
+            string name = isPhoto ? "사진 기록" : block.Kind == "text" ? "오늘의 일기" : block.Kind == "todo" ? "할 일" : block.Kind == "habit" ? "습관 체크" : "감정처리반";
             if(!string.IsNullOrWhiteSpace(block.Title)) name=block.Title;
-            caption = block.Kind == "photo" ? "PHOTO MOMENT" : block.Kind == "text" ? "DAILY JOURNAL" : block.Kind == "todo" ? "TO-DO LIST" : block.Kind == "habit" ? "HABIT TRACKER" : "DEAR SANGMON";
+            caption = isPhoto ? "PHOTO MOMENT" : block.Kind == "text" ? "DAILY JOURNAL" : block.Kind == "todo" ? "TO-DO LIST" : block.Kind == "habit" ? "HABIT TRACKER" : "DEAR SANGMON";
             DragHandle.Location=Design.Point(8,12); DragHandle.Height=Design.P(56); DragHandle.BackColor=Fill; Controls.Add(DragHandle);
             title = Design.Label(name, 11, true); title.Location = Design.Point(14,4); title.AutoSize=false; title.Height=Design.P(24); title.AutoEllipsis=true; DragHandle.Controls.Add(title);
             hint = Design.Label(caption, 8); hint.ForeColor = Design.Muted; hint.Location = Design.Point(14,29); DragHandle.Controls.Add(hint);
@@ -42,15 +43,15 @@ namespace MyDay.Windows.UI
                 MaxLength=100000, Text=block.Text, AccessibleName=name+" 내용", Location=Design.Point(24,78),
                 Anchor=AnchorStyles.Top|AnchorStyles.Bottom|AnchorStyles.Left|AnchorStyles.Right };
             Controls.Add(Editor);
-            if(block.Kind=="photo") {
+            if(isPhoto) {
                 Photo=new PhotoView(block.Photo); Controls.Add(Photo);
-                ReplacePhoto=Design.Button("사진 바꾸기"); ReplacePhoto.Size=Design.Size(90,25);
-                ReplacePhoto.AccessibleName="첨부 사진 바꾸기"; ReplacePhoto.Anchor=AnchorStyles.Left|AnchorStyles.Bottom;
+                ReplacePhoto=Design.Button(block.Kind=="photo-slot"?"사진 선택":"사진 바꾸기"); ReplacePhoto.Size=Design.Size(90,25);
+                ReplacePhoto.AccessibleName=block.Kind=="photo-slot"?"빈 사진 자리에 사진 선택":"첨부 사진 바꾸기"; ReplacePhoto.Anchor=AnchorStyles.Left|AnchorStyles.Bottom;
                 ReplacePhoto.Location=new Point(Design.P(24),Height-Design.P(38));
                 ReplacePhoto.Click+=delegate { if(replacePhoto!=null) replacePhoto(); }; Controls.Add(ReplacePhoto);
                 Editor.ScrollBars=ScrollBars.None;
             }
-            placeholder=Design.Label(block.Kind=="photo"?"이 순간을 한 줄로 남겨보세요.":string.IsNullOrWhiteSpace(block.Prompt)?"오늘의 이야기를 여기에 남겨보세요.":block.Prompt,10);
+            placeholder=Design.Label(isPhoto?"이 순간을 한 줄로 남겨보세요.":string.IsNullOrWhiteSpace(block.Prompt)?"오늘의 이야기를 여기에 남겨보세요.":block.Prompt,10);
             placeholder.AutoSize=false; placeholder.ForeColor=Design.Muted; placeholder.BackColor=Fill;
             placeholder.Visible=string.IsNullOrEmpty(Editor.Text); placeholder.Click+=delegate { Editor.Focus(); }; Controls.Add(placeholder);
             Editor.GotFocus+=delegate { placeholder.Visible=false; };
@@ -62,7 +63,7 @@ namespace MyDay.Windows.UI
                     Location=new Point(Design.P(24),Height-Design.P(43)), Anchor=AnchorStyles.Left|AnchorStyles.Bottom };
                 Check.CheckedChanged += delegate { block.Checked=Check.Checked; changed(); }; Controls.Add(Check);
             }
-            else if(block.Kind!="photo")
+            else if(!isPhoto)
             {
                 var footer = Design.Label(block.Kind=="emotion"?"나만 볼 수 있는 감정 기록":"나에게 · 자동 저장",8);
                 footer.ForeColor=Design.Muted; footer.Location=new Point(Design.P(24),Height-Design.P(33)); footer.Anchor=AnchorStyles.Left|AnchorStyles.Bottom; Controls.Add(footer);

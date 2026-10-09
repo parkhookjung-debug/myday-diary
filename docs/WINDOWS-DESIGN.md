@@ -10,6 +10,8 @@
 | 날짜 행·선택 강조·본문 미리보기 | `windows/UI/HistoryRow.cs` |
 | 달력·검색 창·검색칸·결과 목록 | `windows/UI/JournalBrowser.cs` |
 | 월간 달력·기록/사진 표시 | `windows/UI/MonthCalendar.cs` |
+| 내 레이아웃 목록·이름·관리 | `windows/UI/MyLayoutsWindow.cs`, `windows/UI/LayoutNameDialog.cs` |
+| 저장한 실제 좌표 기반 배치 미리보기 | `windows/UI/SavedLayoutDiagram.cs` |
 | 블록 제목·본문·체크·편집 도구 | `windows/UI/BlockCard.cs` |
 | 자유 배치와 드래그 입력 | `windows/UI/DiaryBoard.cs` |
 | 형식 선택·미리보기 화면 | `windows/UI/TemplateGallery.cs` |
@@ -25,6 +27,8 @@
 [달력 · 일기 검색](CALENDAR-SEARCH.md)은 왼쪽 버튼이나 Ctrl+F로 엽니다. 달력과 검색 결과를 나란히 배치하고 기록한 날·사진 있는 날을 표시합니다. 검색어가 없으면 현재 달의 목록, 입력하면 전체 날짜의 본문과 사진 설명을 최신순으로 표시합니다. 결과는 페이지당 50일이며 일치하는 부분을 짧게 미리봅니다. 작은 창에서는 결과 폭과 달력 높이를 조정합니다.
 
 기존 저장본은 원래 블록 구성과 자유 배치를 유지합니다. 새로운 날짜는 큰 글 일기 한 칸으로 시작하며, [일기 형식 사용 안내](JOURNAL-FORMATS.md)에 따라 질문·회고·편지 형식을 추가할 수 있습니다.
+
+[내 레이아웃](MY-LAYOUTS.md)에서는 직접 꾸민 블록·배경·종이 스타일을 저장하고 미리봅니다. 기본 100종 형식과 별도 목록으로 관리하며 사진 자리는 옅은 청록색, 글 블록은 종이색으로 표시합니다. 일기 내용과 실제 사진은 새 날짜에 복사하지 않습니다.
 
 참고: [Day One 템플릿](https://dayoneapp.com/features/journal-templates/)의 형식 선택, [Diarium](https://diariumapp.com/en)의 날짜 중심 화면, [Notion Daily Journal](https://www.notion.com/templates/daily-journal)의 여백과 섹션 구성을 살펴봤습니다. 화면 구성·질문·장식은 프로젝트에 맞춰 직접 작성했으며 외부 로고·이미지·템플릿 파일은 포함하지 않았습니다.
 
