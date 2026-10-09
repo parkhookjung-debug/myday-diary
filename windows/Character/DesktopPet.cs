@@ -21,12 +21,22 @@ namespace MyDay.Windows.Character
         private float x, y;
         private double lastFrame;
         private MonsterVariant variant;
+        private Func<MonsterVariant,bool> canUse;
+        public void SetAvailability(Func<MonsterVariant,bool> predicate)
+        {
+            canUse=predicate;
+            foreach(var v in MonsterVariants.All) {
+                bool enabled=canUse==null || canUse(v);
+                variantItems[(int)v].Enabled=enabled;
+                variantItems[(int)v].Text=MonsterVariants.Name(v)+(enabled?"":" · Lv."+SangmonGrowth.RequiredLevel(v));
+            }
+        }
         private readonly ToolStripMenuItem[] variantItems=new ToolStripMenuItem[MonsterVariants.All.Length];
         public event EventHandler VariantChanged;
         public MonsterVariant Variant {
             get { return variant; }
             set {
-                if(variant==value) return;
+                if(variant==value || canUse!=null && !canUse(value)) return;
                 variant=value;
                 foreach(var item in MonsterVariants.All) variantItems[(int)item].Checked=item==value;
                 if(Visible) RenderFrame();
@@ -35,7 +45,7 @@ namespace MyDay.Windows.Character
         }
         public bool Roaming { get { return roaming; } }
         public event EventHandler PetHidden;
-        public DesktopPet(Action openDiary)
+        public DesktopPet(Action openDiary,Action openGrowth=null)
         {
             this.openDiary = openDiary;
             Text = "MyDay 상몬"; FormBorderStyle = FormBorderStyle.None;
@@ -47,6 +57,7 @@ namespace MyDay.Windows.Character
             x = Left; y = Top;
             var menu = new ContextMenuStrip();
             menu.Items.Add("일기 열기", null, delegate { openDiary(); });
+            if(openGrowth!=null) menu.Items.Add("상몬 성장",null,delegate { openGrowth(); });
             var versions=new ToolStripMenuItem("캐릭터 버전");
             foreach(var item in MonsterVariants.All) {
                 var choice=item; var option=new ToolStripMenuItem(MonsterVariants.Name(item)) { Checked=item==variant };
@@ -78,6 +89,7 @@ namespace MyDay.Windows.Character
             get { var value = base.CreateParams; value.ExStyle |= 0x80000 | 0x80 | 0x8000000; return value; }
         }
         public void Fire() { behavior.Fire(); behavior.Step(0,roaming,false,false); if (Visible) RenderFrame(); }
+        public void Celebrate() { behavior.Hop(); if(Visible) RenderFrame(); }
         private void OnPetDown(object sender, MouseEventArgs e)
         {
             if (e.Button != MouseButtons.Left) return;

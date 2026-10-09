@@ -61,6 +61,7 @@ namespace MyDay.Windows.Core
         [DataMember] public Dictionary<string, DiaryEntry> Days = new Dictionary<string, DiaryEntry>();
         [DataMember(EmitDefaultValue=false)] public string CharacterStyle="original";
         [DataMember(EmitDefaultValue=false)] public List<SavedLayout> Layouts=new List<SavedLayout>();
+        [DataMember(EmitDefaultValue=false)] public SangmonProgress Progress;
     }
 
     public sealed class DiaryStore
@@ -82,10 +83,12 @@ namespace MyDay.Windows.Core
         }
         public static void Validate(DiaryBook book)
         {
-            if (book == null || book.Version != 1 && book.Version != 2 || book.Days == null)
+            if (book == null || book.Version != 1 && book.Version != 2 && book.Version != 3 || book.Days == null)
                 throw new InvalidDataException("지원하지 않는 기록 파일입니다.");
             if (book.Days.Count > 50000) throw new InvalidDataException("기록 파일이 너무 큽니다.");
             book.CharacterStyle=MonsterVariants.Id(MonsterVariants.FromId(book.CharacterStyle));
+            SangmonGrowth.Validate(book.Progress);
+            if(!SangmonGrowth.CanUse(book.Progress,MonsterVariants.FromId(book.CharacterStyle))) book.CharacterStyle="original";
             if(book.Layouts==null) book.Layouts=new List<SavedLayout>();
             SavedLayouts.Validate(book.Layouts);
             long photoCharacters=0;
@@ -121,7 +124,7 @@ namespace MyDay.Windows.Core
         public void Save(DiaryBook book)
         {
             Validate(book);
-            if(book.Layouts.Count>0 || book.Days.Values.Any(e=>e.Blocks.Any(b=>b.Kind=="photo-slot"))) book.Version=2;
+            UpgradeVersion(book);
             var directory = Path.GetDirectoryName(FilePath);
             Directory.CreateDirectory(directory);
             var pending = FilePath + "." + Guid.NewGuid().ToString("N") + ".tmp";
@@ -144,13 +147,18 @@ namespace MyDay.Windows.Core
             using (var buffer = new MemoryStream())
             {
                 Validate(book);
-                if(book.Layouts.Count>0 || book.Days.Values.Any(e=>e.Blocks.Any(b=>b.Kind=="photo-slot"))) book.Version=2;
+                UpgradeVersion(book);
                 new DataContractJsonSerializer(typeof(DiaryBook)).WriteObject(buffer, book);
                 CheckSize(buffer.Length);
                 File.WriteAllBytes(destination, buffer.ToArray());
             }
         }
         public static string Key(DateTime date) { return date.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture); }
+        private static void UpgradeVersion(DiaryBook book)
+        {
+            if(book.Progress!=null) book.Version=3;
+            else if(book.Version<2 && (book.Layouts.Count>0 || book.Days.Values.Any(e=>e.Blocks.Any(b=>b.Kind=="photo-slot")))) book.Version=2;
+        }
         private static void CheckSize(long size)
         {
             if(size>MaxFileBytes) throw new InvalidDataException("기록 파일은 128MB까지 저장·가져올 수 있습니다. 백업 후 오래된 기록을 정리해주세요.");

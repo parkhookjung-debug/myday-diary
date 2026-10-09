@@ -43,3 +43,5 @@
 ![형식 선택 미리보기](../previews/windows/windows-journal-templates.png)
 
 ![자유 배치 편집](../previews/windows/windows-free-layout.png)
+
+[상몬 성장](SANGMON-GROWTH.md) 화면은 `windows/UI/GrowthWindow.cs`에서 수정합니다. 레벨·경험치·다음 보상과 8종 카드를 표시하며 작은 창에서는 목록을 스크롤합니다. 의상 그림은 `windows/Character/RewardSkins.cs`, 지급 규칙은 `windows/Core/SangmonGrowth.cs`에서 바꿉니다.

@@ -28,7 +28,9 @@
 | `windows/windows-variants-second.gif` | 상몬 17–32번 |
 | `windows/windows-variants-third.gif` | 상몬 33–48번 |
 | `windows/windows-game-styles.gif` | RPG 속성 8종 |
-| `windows/windows-variants.gif` | 전체 56종 |
+| `windows/windows-variants.gif` | 기존 자유 선택 56종 |
+| `windows/windows-sangmon-growth.png` | 레벨·경험치·다음 보상·8종 장착 화면 |
+| `windows/windows-growth-rewards.gif` | 추가 성장 보상 8종 |
 
 캐릭터 GIF는 실제 앱 렌더러로 그렸습니다. 바탕화면에서 돌아다니는 위치 이동 대신 포즈와 재질 움직임을 보여줍니다. 실제 사용자 일기와 원본 참고 사진은 포함하지 않습니다.
 
@@ -36,7 +38,7 @@
 
 ## Windows GIF 다시 만들기
 
-앱은 `--game-preview`, `--variants-first`, `--variants-second`, `--variants-third`, `--variant-preview`로 번호가 붙은 PNG 프레임을 생성합니다. 이를 GIF로 묶는 선택 개발 도구는 `tools/package-preview.py`입니다. 이 도구에만 Python과 Pillow가 필요하며 앱 실행에는 필요하지 않습니다.
+앱은 `--game-preview`, `--growth-preview`, `--variants-first`, `--variants-second`, `--variants-third`, `--variant-preview`로 번호가 붙은 PNG 프레임을 생성합니다. 이를 GIF로 묶는 선택 개발 도구는 `tools/package-preview.py`입니다. 이 도구에만 Python과 Pillow가 필요하며 앱 실행에는 필요하지 않습니다.
 
 ```powershell
 ./windows/build.ps1
@@ -47,3 +49,9 @@ python tools/package-preview.py .bootstrap/game-frames previews/windows/windows-
 ```
 
 명령은 저장소 루트에서 실행합니다. `.bootstrap/`의 중간 프레임은 커밋하지 않고 최종 GIF를 해당 플랫폼 폴더에 넣습니다.
+
+## 상몬 성장
+
+- [성장 화면](windows/windows-sangmon-growth.png): 실제 Windows 창을 격리된 기록으로 검증한 예시
+- [성장 보상 8종](windows/windows-growth-rewards.gif): 새 의상을 네이티브 캐릭터 렌더러로 움직인 예시
+- 기존 56종 미리보기는 기존 외형을 보여주며, 새 8종은 성장 보상 미리보기에서 확인합니다.

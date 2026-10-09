@@ -43,6 +43,10 @@ namespace MyDay.Windows
             {
                 try { Tests.VariantPreview(Path.GetFullPath(args[1]),48,8,true); return 0; } catch(Exception ex) { Console.Error.WriteLine(ex); return 1; }
             }
+            if(args.Length==2 && args[0]=="--growth-preview")
+            {
+                try { Tests.VariantPreview(Path.GetFullPath(args[1]),56,8); return 0; } catch(Exception ex) { Console.Error.WriteLine(ex); return 1; }
+            }
             if(args.Length==2 && (args[0]=="--variants-first" || args[0]=="--variants-second" || args[0]=="--variants-third"))
             {
                 try { Tests.VariantPreview(Path.GetFullPath(args[1]),args[0]=="--variants-first"?0:args[0]=="--variants-second"?16:32,16); return 0; } catch(Exception ex) { Console.Error.WriteLine(ex); return 1; }

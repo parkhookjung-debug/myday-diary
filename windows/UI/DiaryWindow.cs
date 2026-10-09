@@ -8,14 +8,15 @@ using MyDay.Windows.Character;
 
 namespace MyDay.Windows.UI
 {
-    public sealed class DiaryWindow : Form
+    public sealed partial class DiaryWindow : Form
     {
         private readonly DiaryStore store;
         private DiaryBook book;
         private DiaryEntry entry;
+        private System.Collections.Generic.List<DiaryBlock> savedRecord;
         private DateTime date = DateTime.Today;
         private int historyPage;
-        private bool dirty, binding, exitRequested,editingLayout;
+        private bool dirty, entryDirty, binding, exitRequested,editingLayout;
         private readonly Timer saveTimer = new Timer { Interval = 350 };
         private readonly DiaryBoard board;
         private readonly ChoiceButton layoutChoice=Design.Choice(86);
@@ -23,6 +24,7 @@ namespace MyDay.Windows.UI
         private readonly Button templates=Design.Button("일기 형식",true);
         private readonly Button myLayouts=Design.Button("내 레이아웃");
         private readonly Button browse=Design.Button("달력 · 일기 검색");
+        private readonly Button growth=Design.Button("상몬 성장");
         private readonly Button editLayout=Design.Button("배치 편집"),arrangeLayout=Design.Button("자동 정리");
         private readonly Label layoutHint=Design.Label("",9);
         private readonly Label status = Design.Label("내 컴퓨터에 자동 저장", 9);
@@ -61,18 +63,21 @@ namespace MyDay.Windows.UI
             newDay.Click+=delegate { ChangeDate(DateTime.Today); }; sideHeader.Controls.Add(newDay);
             browse.Location=Design.Point(24,140); browse.Size=Design.Size(212,30); browse.AccessibleName="달력과 일기 검색 열기"; browse.Click+=delegate { BrowseDiary(); }; sideHeader.Controls.Add(browse);
             var historyTitle=Design.Label("기록함",9,true); historyTitle.Location=Design.Point(26,182); sideHeader.Controls.Add(historyTitle);
-            var companion=new Panel { Dock=DockStyle.Bottom, Height=Design.P(220), BackColor=Color.White };
+            var companion=new Panel { Dock=DockStyle.Bottom, Height=Design.P(252), BackColor=Color.White };
             var sideLine=new Panel { BackColor=Design.Soft, Dock=DockStyle.Top, Height=1 }; companion.Controls.Add(sideLine);
             avatar.Location=Design.Point(16,16); avatar.Size=Design.Size(64,58); companion.Controls.Add(avatar);
             var petHint=Design.Label("내 친구 상몬",10,true); petHint.Location=Design.Point(88,20); companion.Controls.Add(petHint);
             characterChoice.Location=Design.Point(88,46); characterChoice.Width=Design.P(148); characterChoice.AccessibleName="캐릭터 버전";
             characterChoice.Items.AddRange(MonsterVariants.All.Select(v=>(object)MonsterVariants.Name(v)));
+            characterChoice.ItemEnabled=i=>SangmonGrowth.CanUse(book.Progress,(MonsterVariant)i);
+            characterChoice.ItemLabel=i=>MonsterVariants.Name((MonsterVariant)i)+(characterChoice.ItemEnabled(i)?"":" · Lv."+SangmonGrowth.RequiredLevel((MonsterVariant)i));
             characterChoice.SelectedIndexChanged+=delegate { if(!binding) SelectVariant((MonsterVariant)characterChoice.SelectedIndex); }; companion.Controls.Add(characterChoice);
-            petToggle.Location=Design.Point(24,88); petToggle.Width=Design.P(103); petToggle.Font=Design.Font(8); petToggle.Click+=delegate { TogglePet(); }; companion.Controls.Add(petToggle);
-            var hide=Design.Button("창 숨기기"); hide.Location=Design.Point(133,88); hide.Width=Design.P(103); hide.Click+=delegate { if (FlushSave()) Hide(); }; companion.Controls.Add(hide);
-            var export=Design.Button("기록 백업"); export.Location=Design.Point(24,130); export.Width=Design.P(103); export.Click+=delegate { ExportBook(); }; companion.Controls.Add(export);
-            var import=Design.Button("가져오기"); import.Location=Design.Point(133,130); import.Width=Design.P(103); import.Click+=delegate { ImportBook(); }; companion.Controls.Add(import);
-            status.MaximumSize=Design.Size(216,0); status.Font=Design.Font(8); status.ForeColor=Design.Muted; status.Location=Design.Point(26,180); companion.Controls.Add(status);
+            growth.Location=Design.Point(24,86); growth.Size=Design.Size(212,28); growth.Font=Design.Font(8); growth.AccessibleName="상몬 성장과 보상 외형 보기"; growth.Click+=delegate { OpenGrowth(); }; companion.Controls.Add(growth);
+            petToggle.Location=Design.Point(24,124); petToggle.Width=Design.P(103); petToggle.Font=Design.Font(8); petToggle.Click+=delegate { TogglePet(); }; companion.Controls.Add(petToggle);
+            var hide=Design.Button("창 숨기기"); hide.Location=Design.Point(133,124); hide.Width=Design.P(103); hide.Click+=delegate { if (FlushSave()) Hide(); }; companion.Controls.Add(hide);
+            var export=Design.Button("기록 백업"); export.Location=Design.Point(24,166); export.Width=Design.P(103); export.Click+=delegate { ExportBook(); }; companion.Controls.Add(export);
+            var import=Design.Button("가져오기"); import.Location=Design.Point(133,166); import.Width=Design.P(103); import.Click+=delegate { ImportBook(); }; companion.Controls.Add(import);
+            status.MaximumSize=Design.Size(216,0); status.Font=Design.Font(8); status.ForeColor=Design.Muted; status.Location=Design.Point(26,214); companion.Controls.Add(status);
             side.Controls.Add(history); side.Controls.Add(sideHeader); side.Controls.Add(companion);
             var divider=new Panel { Dock=DockStyle.Right, Width=1, BackColor=Design.Soft }; side.Controls.Add(divider);
             var grid=new TableLayoutPanel { Dock=DockStyle.Fill, ColumnCount=1, RowCount=5, Margin=Design.Pad(0), BackColor=Color.Transparent };
@@ -129,6 +134,7 @@ namespace MyDay.Windows.UI
             tray=new NotifyIcon { Icon=SystemIcons.Application, Text="MyDay · 일기와 불꽃 몬스터", Visible=!testMode };
             var trayMenu=new ContextMenuStrip(); trayMenu.Items.Add("일기 열기",null,delegate { OpenDiary(); });
             trayMenu.Items.Add("캐릭터 표시 / 숨기기",null,delegate { TogglePet(); });
+            trayMenu.Items.Add("상몬 성장",null,delegate { OpenGrowth(); });
             trayMenu.Items.Add("모두 종료",null,delegate { ExitApp(); }); tray.ContextMenuStrip=trayMenu;
             tray.DoubleClick+=delegate { OpenDiary(); };
             avatar.Fired+=delegate { if (pet!=null) pet.Fire(); };
@@ -137,7 +143,7 @@ namespace MyDay.Windows.UI
                 if(!FlushSave()) { e.Cancel=true; return; }
                 if(!exitRequested && e.CloseReason==CloseReason.UserClosing) { e.Cancel=true; Hide(); }
             };
-            LoadDate();
+            LoadDate(); UpdateGrowth();
         }
         public void StartOnDesktop()
         {
@@ -152,7 +158,8 @@ namespace MyDay.Windows.UI
         private void EnsurePet()
         {
             if(pet!=null && !pet.IsDisposed) return;
-            pet=new DesktopPet(OpenDiary);
+            pet=new DesktopPet(OpenDiary,delegate { OpenGrowth(); });
+            pet.SetAvailability(v=>SangmonGrowth.CanUse(book.Progress,v));
             pet.Variant=MonsterVariants.FromId(book.CharacterStyle);
             pet.VariantChanged+=delegate { if(!binding) SelectVariant(pet.Variant); };
             pet.PetHidden+=delegate { petToggle.Text="캐릭터 띄우기"; };
@@ -160,6 +167,7 @@ namespace MyDay.Windows.UI
         public void OpenDiary() { Show(); if(WindowState==FormWindowState.Minimized) WindowState=FormWindowState.Normal; Activate(); }
         public void SelectVariant(MonsterVariant variant)
         {
+            if(!SangmonGrowth.CanUse(book.Progress,variant)) { ApplyVariant(); return; }
             book.CharacterStyle=MonsterVariants.Id(variant); ApplyVariant(); QueueBookSave();
         }
         private void ApplyVariant()
@@ -223,6 +231,7 @@ namespace MyDay.Windows.UI
         private void LoadDate()
         {
             if(!book.Days.TryGetValue(DiaryStore.Key(date),out entry)) entry=DiaryTemplates.NewPage();
+            savedRecord=SangmonGrowth.CaptureRecord(entry); entryDirty=false;
             editingLayout=false;
             if(entry.LayoutMode=="free") DiaryLayout.EnableFree(entry,board.LogicalWidth);
             binding=true; picker.Value=date;
@@ -330,7 +339,7 @@ namespace MyDay.Windows.UI
         }
         private void QueueSave()
         {
-            book.Days[DiaryStore.Key(date)]=entry; QueueBookSave();
+            entryDirty=!SangmonGrowth.SameRecord(savedRecord,entry); book.Days[DiaryStore.Key(date)]=entry; QueueBookSave();
         }
         private void QueueBookSave()
         {
@@ -344,10 +353,23 @@ namespace MyDay.Windows.UI
         }
         public bool FlushSave()
         {
+            return FlushSaveAt(DateTime.Today);
+        }
+        private bool FlushSaveAt(DateTime actualDay)
+        {
             saveTimer.Stop(); if(!dirty) return true;
-            try { store.Save(book); dirty=false; status.Text="저장됨 · "+DateTime.Now.ToString("HH:mm"); status.ForeColor=Design.Accent; RefreshHistory(); return true; }
+            var previous=book.Progress; int previousVersion=book.Version,previousLevel=SangmonGrowth.Level(previous);
+            if(entryDirty) book.Progress=SangmonGrowth.Award(previous,entry,actualDay);
+            bool awarded=!ReferenceEquals(previous,book.Progress);
+            try {
+                store.Save(book); dirty=false; entryDirty=false; savedRecord=SangmonGrowth.CaptureRecord(entry); UpdateGrowth();
+                status.Text=awarded?"저장됨 · 상몬 +10 XP":"저장됨 · "+DateTime.Now.ToString("HH:mm");
+                if(SangmonGrowth.Level(book.Progress)>previousLevel) { status.Text="저장됨 · Lv."+SangmonGrowth.Level(book.Progress)+" 달성!"; if(pet!=null) pet.Celebrate(); }
+                status.ForeColor=Design.Accent; RefreshHistory(); return true;
+            }
             catch(Exception ex)
             {
+                book.Progress=previous; book.Version=previousVersion;
                 if(testMode) throw new IOException("Native smoke-test save failed.",ex);
                 status.Text="저장 실패 · 다시 시도 필요"; status.ForeColor=Color.Firebrick;
                 MessageBox.Show(this,"기록을 저장하지 못했어요. 창을 닫기 전에 디스크 공간과 폴더 권한을 확인해주세요.\n\n"+ex.Message,"저장 오류",MessageBoxButtons.OK,MessageBoxIcon.Error); return false;
@@ -410,9 +432,10 @@ namespace MyDay.Windows.UI
                     if(MessageBox.Show(this,incoming.Days.Count+"일의 기록과 내 레이아웃 "+incoming.Layouts.Count+"개를 가져올까요?\n같은 날짜의 기록 "+conflicts+"개와 같은 ID의 레이아웃은 백업 내용으로 바뀝니다. 이름이 겹치면 번호를 붙입니다. 기존 파일은 diary.json.bak으로 남습니다.","백업 가져오기",MessageBoxButtons.YesNo,MessageBoxIcon.Question)!=DialogResult.Yes) return;
                     var merged=new DiaryBook(); foreach(var pair in book.Days) merged.Days[pair.Key]=pair.Value;
                     merged.CharacterStyle=incoming.CharacterStyle;
+                    merged.Progress=SangmonGrowth.Merge(book.Progress,incoming.Progress);
                     merged.Layouts=layouts; merged.Version=Math.Max(book.Version,incoming.Version);
                     foreach(var pair in incoming.Days) merged.Days[pair.Key]=pair.Value;
-                    store.Save(merged); book=merged; dirty=false; LoadDate(); status.Text="가져오기 완료";
+                    store.Save(merged); book=merged; dirty=false; entryDirty=false; UpdateGrowth(); LoadDate(); status.Text="가져오기 완료";
                 }
                 catch(Exception ex) { MessageBox.Show(this,"기록을 가져오지 못했어요.\n"+ex.Message,"가져오기 오류",MessageBoxButtons.OK,MessageBoxIcon.Error); }
             }
@@ -438,7 +461,7 @@ namespace MyDay.Windows.UI
             var menu=pet.ContextMenuStrip.Items.OfType<ToolStripMenuItem>().First(item=>item.Text=="캐릭터 버전");
             ((ToolStripMenuItem)menu.DropDownItems[(int)MonsterVariant.Mini]).PerformClick();
             if(characterChoice.SelectedIndex!=(int)MonsterVariant.Mini || avatar.Variant!=MonsterVariant.Mini) throw new Exception("Desktop variant menu did not update diary");
-            foreach(var variant in MonsterVariants.All) {
+            foreach(var variant in MonsterVariants.All.Take(56)) {
                 characterChoice.SelectedIndex=(int)variant;
                 if(avatar.Variant!=variant || pet.Variant!=variant) throw new Exception("Diary choice missed "+variant);
                 ((ToolStripMenuItem)menu.DropDownItems[(int)variant]).PerformClick();

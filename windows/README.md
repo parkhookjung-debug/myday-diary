@@ -10,7 +10,7 @@ Windows 10/11과 .NET Framework 4.8 이상을 사용합니다.
 캐릭터를 한 번 클릭하면 일기 창이 열립니다.
 빌드 후에는 `bin/MyDay.exe`만 더블클릭해도 실행할 수 있습니다.
 GitHub CI의 Windows artifact에서도 실행 파일을 받을 수 있습니다.
-[다운로드용 Windows ZIP](https://github.com/parkhookjung-debug/myday-diary/releases/tag/v0.3.7-preview)은 압축을 풀고 `MyDay.exe`를 실행합니다.
+[다운로드용 Windows ZIP](https://github.com/parkhookjung-debug/myday-diary/releases/tag/v0.3.8-preview)은 압축을 풀고 `MyDay.exe`를 실행합니다.
 
 ## 기능
 
@@ -32,7 +32,7 @@ GitHub CI의 Windows artifact에서도 실행 파일을 받을 수 있습니다.
 - 마우스가 가까이 오면 멈춰 바라보고, 드래그 후 내려놓으면 가볍게 통통 튀는 반응
 - 평소에는 불꽃이 없고, 클릭하거나 내려놓으면 약 0.7초만 불을 뿜습니다. 가끔 하품하며 약 0.35초 동안 작은 불꽃이 나오고, 자동 하품은 최소 30초 간격입니다.
 - 상몬 48종: 기존 스케치 8종과, 기본 몸·두 눈이 솟은 머리·옆입·발 사이 아치를 유지하며 외형을 덧붙인 40종을 제공합니다. 자연·테마·장비 외형에 고양이·토끼·여우·강아지·곰·양·사슴·용·나비·아홀로틀·상어·공작·거북·문어·로봇·선인장 16종을 추가했습니다. 전체 목록은 [상몬 외형 디자인](../docs/SANGMON-DESIGN.md)에서 확인할 수 있습니다.
-- 게임 스타일 8종: 화염·빙결·전격·맹독·그림자·암석·해류·비전. 원래 상몬 몸과 얼굴에 선명한 색, 단계가 나뉜 명암, 재질 문양과 움직이는 속성 효과를 적용합니다. 기존 외형과 합쳐 총 56종입니다. 캐릭터 우클릭 → **게임 스타일**에서 바로 선택할 수 있습니다.
+- 게임 스타일 8종: 화염·빙결·전격·맹독·그림자·암석·해류·비전. 원래 상몬 몸과 얼굴에 선명한 색, 단계가 나뉜 명암, 재질 문양과 움직이는 속성 효과를 적용합니다. 기존 외형과 합쳐 자유롭게 고르는 56종입니다. 캐릭터 우클릭 → **게임 스타일**에서 바로 선택할 수 있습니다.
 - 캐릭터 우클릭: 일기 열기, 이동 켜기/끄기, 다른 창 위에 표시, 불 뿜기, 숨기기
 - 알림 영역 아이콘: 일기 열기, 캐릭터 표시/숨기기, 모두 종료
 
@@ -44,11 +44,13 @@ GitHub CI의 Windows artifact에서도 실행 파일을 받을 수 있습니다.
 이 버전의 캐릭터는 Windows 위에 뜨는 투명 창입니다. Windows 배경화면을 교체하지 않습니다.
 Android 기록과 자동 동기화하지 않습니다. 영상·시작 시 자동 실행은 아직 추가하지 않았습니다.
 
+[상몬 성장](../docs/SANGMON-GROWTH.md): 왼쪽 **성장 보기** 또는 상몬 우클릭 → **상몬 성장**에서 경험치와 다음 보상을 확인합니다. 실제 기록일에 하루 +10 XP, 50 XP마다 레벨 업하며 추가 보상 8종을 해금·장착합니다. 총 64종이고 기존 56종은 계속 자유롭게 선택합니다.
+
 ## 기록 위치
 
 `%LOCALAPPDATA%/MyDay/Windows/diary.json`에 보관합니다. 프로그램 폴더를 옮겨도 같은 Windows 계정의 기록을 유지합니다.
 이전 저장본은 `diary.json.bak`에 남습니다. 기록을 수정하거나 PC를 옮기기 전 **기록 백업**으로 별도 파일을 보관하세요.
-내 레이아웃이나 빈 사진 자리를 저장한 기록은 버전 2 형식이며 v0.3.7-preview 이상에서 엽니다. 기존 버전 1 기록·백업도 읽습니다.
+내 레이아웃이나 빈 사진 자리만 저장한 기록은 버전 2 형식(v0.3.7-preview 이상)입니다. 성장 기록을 저장하면 버전 3 형식이며 v0.3.8-preview 이상에서 엽니다. 기존 버전 1·2 기록과 백업도 읽습니다.
 손상된 기록을 읽지 못하면 앱이 오류를 표시하고 종료하며 빈 기록으로 덮어쓰지 않습니다.
 
 ## 팀 디자인·기능 수정
@@ -64,6 +66,8 @@ Android 기록과 자동 동기화하지 않습니다. 영상·시작 시 자동
 | 내 레이아웃 모델·검증·적용·병합 | `Core/SavedLayouts.cs` |
 | 내 레이아웃 목록·검색·관리·미리보기 | `UI/MyLayoutsWindow.cs`, `UI/LayoutNameDialog.cs`, `UI/SavedLayoutDiagram.cs` |
 | 내 레이아웃 저장·재사용 검증 | `SavedLayoutTests.cs` |
+| 상몬 성장·레벨·보상·병합 | `Core/SangmonGrowth.cs`, `UI/GrowthWindow.cs`, `UI/DiaryWindow.Growth.cs` |
+| 성장 보상 의상·검증 | `Character/RewardSkins.cs`, `GrowthTests.cs` |
 | 날짜 표지 | `UI/JournalCover.cs` |
 | 형식 선택·미리보기 | `UI/TemplateGallery.cs` |
 | 형식의 블록 제목·질문·구성 | `Core/DiaryTemplates.cs` |
@@ -120,3 +124,5 @@ if ($process.ExitCode -ne 0) { throw 'Tests failed' }
 다중 모니터·고배율 DPI·절전 복귀·우클릭 메뉴·드래그는 실제 사용 환경에서도 확인해주세요.
 
 기반 기술: [Microsoft Windows Forms](https://learn.microsoft.com/en-us/dotnet/desktop/winforms/overview/), [UpdateLayeredWindow](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-updatelayeredwindow).
+
+성장 검증은 하루 한 번 지급·빈 기록 제외·실제 입력과 배치 변경의 구분·레벨별 해금·기존 외형 유지·버전 3 저장·백업 합치기·중복/잘못된 날짜 거부를 확인합니다. 네이티브 창에서는 잠긴 메뉴·성장 카드·8종 장착·파일 잠금 시 경험치 복구·재시도·작은 창을 확인합니다.

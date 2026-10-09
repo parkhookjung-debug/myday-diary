@@ -84,6 +84,8 @@ namespace MyDay.Windows.UI
     public sealed class ChoiceButton : RoundedButton
     {
         public readonly List<object> Items = new List<object>();
+        public System.Func<int,bool> ItemEnabled;
+        public System.Func<int,string> ItemLabel;
         private int selected = -1;
         public event System.EventHandler SelectedIndexChanged;
         public object SelectedItem { get { return selected < 0 ? null : Items[selected]; } }
@@ -105,7 +107,7 @@ namespace MyDay.Windows.UI
                 var menu = new ContextMenuStrip();
                 for (int i = 0; i < Items.Count; i++) {
                     int index = i;
-                    var item = new ToolStripMenuItem(Items[i].ToString()) { Checked = selected == i };
+                    var item = new ToolStripMenuItem(ItemLabel==null?Items[i].ToString():ItemLabel(i)) { Checked = selected == i, Enabled=ItemEnabled==null || ItemEnabled(i) };
                     item.Click += delegate { SelectedIndex = index; }; menu.Items.Add(item);
                 }
                 menu.Closed += delegate { menu.Dispose(); }; menu.Show(this, new Point(0, Height));

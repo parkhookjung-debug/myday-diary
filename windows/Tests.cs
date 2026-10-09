@@ -51,6 +51,7 @@ namespace MyDay.Windows
                 RunPhotoTests(directory);
                 RunBrowseTests(directory);
                 RunSavedLayoutTests(directory);
+                RunGrowthTests(directory);
                 var layout=DiaryEntry.FirstPage(); layout.Blocks[0].Text="이동해도 그대로"; layout.Blocks[1].Checked=true;
                 var originalIds=layout.Blocks.Select(b=>b.Id).ToArray(); DiaryLayout.EnableFree(layout,800);
                 Check(layout.LayoutMode=="free" && layout.Blocks.Select(b=>b.Id).SequenceEqual(originalIds) && layout.Blocks[0].Text=="이동해도 그대로" && layout.Blocks[1].Checked,"Entering free placement retains block IDs, text and checks");
@@ -108,7 +109,7 @@ namespace MyDay.Windows
                 Check(invalidEntry.PageStyle=="plain" && invalidEntry.Blocks[0].Title=="제목","Unknown paper style falls back without losing custom title");
                 book.CharacterStyle="future-skin"; DiaryStore.Validate(book);
                 Check(book.CharacterStyle=="original" && book.Days.Count==2,"Unknown imported variant falls back without losing dates");
-                Check(MonsterVariants.All.Select(MonsterVariants.Id).Distinct().Count()==56 && MonsterVariants.All.All(v=>MonsterVariants.FromId(MonsterVariants.Id(v))==v),"Fifty-six variant IDs are distinct and round-trip");
+                Check(MonsterVariants.All.Select(MonsterVariants.Id).Distinct().Count()==64 && MonsterVariants.All.All(v=>MonsterVariants.FromId(MonsterVariants.Id(v))==v),"Sixty-four variant IDs are distinct and round-trip");
                 Check(MonsterVariants.All.Take(8).Select(MonsterVariants.Id).SequenceEqual(new[] {"original","puffy","winged","speedy","dazed","spiky","horned","mini"}),"Original eight saved IDs retain their values and order");
                 var oldForms=new[] {"droplet","puddle","pill","cube","cloud","twin"};
                 var corrected=new[] {"fin","shell","tailed","crystal","furry","flower"};
@@ -116,6 +117,7 @@ namespace MyDay.Windows
                 for(int i=0;i<oldForms.Length;i++) { book.CharacterStyle=oldForms[i]; DiaryStore.Validate(book); legacyForms&=book.CharacterStyle==corrected[i] && book.Days.Count==2; }
                 Check(legacyForms,"Earlier slime choices migrate to corrected appearances without losing diary entries");
                 bool allSaved=true;
+                book.Progress=new SangmonProgress {AwardedDays=Enumerable.Range(0,45).Select(i=>DiaryStore.Key(new DateTime(2026,1,1).AddDays(i))).ToList()};
                 foreach(var variant in MonsterVariants.All) { book.CharacterStyle=MonsterVariants.Id(variant); store.Save(book); allSaved&=store.Load().CharacterStyle==MonsterVariants.Id(variant); }
                 Check(allSaved,"Every character form survives JSON saving and reloading");
                 File.WriteAllText(store.FilePath,"broken JSON",Encoding.UTF8); rejected=false; try { store.Load(); } catch(Exception) { rejected=true; }
@@ -198,7 +200,7 @@ namespace MyDay.Windows
                     identity&=sample(246,476).R<100 && sample(305,476).R<100;
                     identity&=sample(350,730).A==0;
                 }
-                Check(identity,"All 48 appearances retain raised eyes, original pupils and the open arch between the feet");
+                Check(identity,"All added appearances retain raised eyes, original pupils and the open arch between the feet");
                 bool materials=true;
                 var colors=new System.Collections.Generic.HashSet<int>();
                 foreach(var variant in MonsterVariants.All.Where(GameSkins.IsGame)) using(var image=new Bitmap(240,220)) {
@@ -257,7 +259,7 @@ namespace MyDay.Windows
                 form.StartPosition=FormStartPosition.Manual; form.Location=new Point(-30000,-30000);
                 form.StartOnDesktop(); if(form.Visible) throw new Exception("Diary opened at desktop startup");
                 form.OpenDiary(); Console.WriteLine("Smoke: opened diary."); Application.DoEvents();
-                form.SmokeTest(Path.Combine(directory,"windows-example.png")); form.Close();
+                form.SmokeTest(Path.Combine(directory,"windows-example.png")); form.VerifyGrowthForTest(directory); form.Close();
                 Console.WriteLine("Smoke: input, selection, reload and rendering passed.");
                 if(form.Visible || form.IsDisposed) throw new Exception("Close should hide and keep the session alive");
                 form.OpenDiary(); if(!form.Visible) throw new Exception("Diary did not reopen");

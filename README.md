@@ -17,7 +17,7 @@ MIT 라이선스의 오픈소스 프로젝트입니다. 5명이 UI·저장·캐�
 | Windows 10/11 | 소스의 `windows/실행.cmd`를 더블클릭하거나 배포 ZIP에서 `MyDay.exe` 실행 | [Windows 실행·개발 안내](windows/README.md) |
 | Android 8 이상 | Android Studio에서 저장소 루트를 열고 `app` 실행 또는 배포 APK 설치 | [Android 실행·기능 안내](docs/ANDROID.md) |
 
-Windows의 내 레이아웃 저장·월간 달력·본문/사진 설명 검색·사진 첨부·일기 형식 100종·자유 배치를 포함한 ZIP은 [v0.3.7-preview](https://github.com/parkhookjung-debug/myday-diary/releases/tag/v0.3.7-preview), Android APK는 [v0.3.0-preview](https://github.com/parkhookjung-debug/myday-diary/releases/tag/v0.3.0-preview)에서 받습니다. APK는 개발용 debug 빌드입니다.
+Windows의 상몬 성장·내 레이아웃 저장·월간 달력·본문/사진 설명 검색·사진 첨부·일기 형식 100종·자유 배치를 포함한 ZIP은 [v0.3.8-preview](https://github.com/parkhookjung-debug/myday-diary/releases/tag/v0.3.8-preview), Android APK는 [v0.3.0-preview](https://github.com/parkhookjung-debug/myday-diary/releases/tag/v0.3.0-preview)에서 받습니다. APK는 개발용 debug 빌드입니다.
 
 ```sh
 git clone https://github.com/parkhookjung-debug/myday-diary.git
@@ -54,7 +54,8 @@ Windows 소스 실행에는 .NET Framework 4.8 이상이 필요합니다. Androi
 - [자유 배치](docs/FREE-LAYOUT.md): 블록 제목을 드래그해서 이동하고 모서리로 크기를 조절하며 날짜별 위치·크기를 저장
 - [내 레이아웃](docs/MY-LAYOUTS.md): 직접 꾸민 구성을 이름 붙여 저장·미리보기·검색·이름 변경·삭제하고 다른 날짜에 빈 블록과 사진 자리로 재사용. 백업에 함께 보관
 - 바탕화면 이동·클릭으로 일기 열기·드래그·숨기기·다시 표시
-- 기존 외형 48종과 RPG 속성 스타일 8종: 총 56종
+- 기존 외형 48종과 RPG 속성 스타일 8종은 자유 선택, 성장 보상 8종을 더해 총 64종
+- [상몬 성장](docs/SANGMON-GROWTH.md): 실제 기록일마다 +10 XP, 50 XP마다 레벨 업, 보상 외형 미리보기·해금·장착, 백업에 성장 기록 포함
 - 화염·빙결·전격·맹독·그림자·암석·해류·비전은 몸 색·명암·재질·효과로 구분
 - 불 뿜기는 터치와 드문 하품에만 잠깐 표시
 
@@ -68,11 +69,13 @@ Windows 소스 실행에는 .NET Framework 4.8 이상이 필요합니다. Androi
 
 ![내 레이아웃 저장과 재사용](previews/windows/windows-my-layouts.png)
 
+![상몬 성장과 보상 외형](previews/windows/windows-sangmon-growth.png)
+
 ![게임 스타일 상몬](previews/windows/windows-game-styles.gif)
 
 ## Android
 
-날짜별 일기·블록 편집·자동 저장, 홈 화면 위젯, 움직이는 캐릭터 라이브 배경화면을 제공합니다. Android의 캐릭터 구성과 동작은 Windows와 다르며, Windows의 56종 외형을 Android에 모두 적용한 상태는 아닙니다.
+날짜별 일기·블록 편집·자동 저장, 홈 화면 위젯, 움직이는 캐릭터 라이브 배경화면을 제공합니다. Android의 캐릭터 구성과 동작은 Windows와 다르며, Windows의 64종 외형과 성장 기능을 Android에 모두 적용한 상태는 아닙니다.
 
 ![Android 캐릭터 동작 예시](previews/android/monster-motion.gif)
 
