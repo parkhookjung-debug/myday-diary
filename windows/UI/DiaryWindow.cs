@@ -112,9 +112,10 @@ namespace MyDay.Windows.UI
             layoutBar.Controls.AddRange(new Control[] {layoutLabel,layoutChoice,editLayout,arrangeLayout,templates,layoutHint}); grid.Controls.Add(layoutBar,0,2);
             layoutBar.Resize+=delegate { layoutHint.Visible=layoutBar.ClientSize.Width>=Design.P(640); };
             var toolbar=new FlowLayoutPanel { Dock=DockStyle.Fill, WrapContents=false, Padding=Design.Pad(0,14,0,0) };
-            string[] kinds={"text","todo","habit","emotion"}; string[] names={"＋ 글 일기","＋ 할 일","＋ 습관","＋ 감정 기록"};
-            for(int i=0;i<kinds.Length;i++) { string kind=kinds[i]; var add=Design.Button(names[i],i==0); add.Width=Design.P(100); add.Click+=delegate { AddBlock(kind); }; toolbar.Controls.Add(add); }
+            string[] kinds={"text","todo","habit","emotion","photo"}; string[] names={"＋ 글 일기","＋ 할 일","＋ 습관","＋ 감정","＋ 사진"};
+            for(int i=0;i<kinds.Length;i++) { string kind=kinds[i]; var add=Design.Button(names[i],i==0); add.Width=Design.P(88); add.Click+=delegate { if(kind=="photo") SelectPhoto(null); else AddBlock(kind); }; toolbar.Controls.Add(add); }
             summary.Margin=Design.Pad(4,9,0,0); summary.ForeColor=Design.Muted; toolbar.Controls.Add(summary); grid.Controls.Add(toolbar,0,4);
+            toolbar.Resize+=delegate { summary.Visible=toolbar.ClientSize.Width>=Design.P(630); };
             grid.Controls.Add(board,0,3); content.Controls.Add(grid); Controls.Add(content); Controls.Add(side);
             board.SizeChanged+=delegate { ArrangeCards(); };
             saveTimer.Tick+=delegate { FlushSave(); };
@@ -210,10 +211,10 @@ namespace MyDay.Windows.UI
             foreach(var block in entry.Blocks)
             {
                 var item=block;
-                var card=new BlockCard(item,QueueSave,delegate(int step) { MoveBlock(item,step); },delegate { RemoveBlock(item); },delegate { item.Wide=!item.Wide; QueueSave(); RenderCards(); },entry.PageStyle);
+                var card=new BlockCard(item,QueueSave,delegate(int step) { MoveBlock(item,step); },delegate { RemoveBlock(item); },delegate { item.Wide=!item.Wide; QueueSave(); RenderCards(); },entry.PageStyle,delegate { SelectPhoto(item); });
                 card.SetEditing(editingLayout,entry.LayoutMode=="free"); board.AddCard(card);
             }
-            if(entry.Blocks.Count==0) { var empty=Design.Label("빈 페이지예요. 위에서 원하는 블록을 추가해보세요.",11); empty.Margin=Design.Pad(20); board.Controls.Add(empty); }
+            if(entry.Blocks.Count==0) { var empty=Design.Label("빈 페이지예요. 아래에서 원하는 블록을 추가해보세요.",11); empty.Margin=Design.Pad(20); board.Controls.Add(empty); }
             board.ResumeLayout(false); ArrangeCards(); UpdateSummary();
         }
         private void ArrangeCards()
@@ -222,11 +223,34 @@ namespace MyDay.Windows.UI
         }
         public void AddBlock(string kind)
         {
+            if(kind=="photo") { SelectPhoto(null); return; }
             if(entry.Blocks.Count>=200) { MessageBox.Show(this,"한 날짜에는 최대 200개 블록을 넣을 수 있어요."); return; }
             var block=DiaryBlock.Create(kind); entry.Blocks.Add(block);
             if(entry.LayoutMode=="free") DiaryLayout.PlaceNew(entry,block);
             QueueSave(); RenderCards();
             var last=board.Controls.OfType<BlockCard>().First(c=>c.Block==block); board.ScrollControlIntoView(last); if(!editingLayout) last.Editor.Focus();
+        }
+        private void SelectPhoto(DiaryBlock existing)
+        {
+            using(var dialog=new OpenFileDialog { Title=existing==null?"일기에 사진 추가":"사진 바꾸기",Filter="사진 (*.jpg;*.jpeg;*.png;*.bmp;*.gif)|*.jpg;*.jpeg;*.png;*.bmp;*.gif",CheckFileExists=true }) {
+                if(dialog.ShowDialog(this)!=DialogResult.OK) return;
+                try { SetPhotoFromFile(dialog.FileName,existing); }
+                catch(Exception ex) { MessageBox.Show(this,"사진을 추가하지 못했어요.\n"+ex.Message,"사진 추가",MessageBoxButtons.OK,MessageBoxIcon.Error); }
+            }
+        }
+        private DiaryBlock SetPhotoFromFile(string path,DiaryBlock existing=null)
+        {
+            if(existing==null && entry.Blocks.Count>=200) throw new InvalidDataException("한 날짜에는 최대 200개 블록을 넣을 수 있어요.");
+            var candidate=DiaryBlock.Create("photo"); candidate.Photo=DiaryPhoto.FromFile(path); DiaryPhoto.Validate(candidate);
+            long total=book.Days.Where(p=>p.Key!=DiaryStore.Key(date)).Sum(p=>p.Value.Blocks.Sum(b=>b.Photo==null?0L:b.Photo.Length))+
+                entry.Blocks.Where(b=>b!=existing).Sum(b=>b.Photo==null?0L:b.Photo.Length)+candidate.Photo.Length;
+            if(total>DiaryPhoto.MaxBookCharacters) throw new InvalidDataException("전체 사진 저장 공간이 가득 찼어요. 백업 후 사용하지 않는 사진 블록을 정리해주세요.");
+            var block=existing??candidate;
+            if(existing==null) { entry.Blocks.Add(block); if(entry.LayoutMode=="free") DiaryLayout.PlaceNew(entry,block); }
+            else { existing.Photo=candidate.Photo; existing.ValidatedPhoto=candidate.ValidatedPhoto; }
+            QueueSave(); RenderCards();
+            var card=board.Controls.OfType<BlockCard>().First(c=>c.Block==block); board.ScrollControlIntoView(card); if(!editingLayout) card.Editor.Focus();
+            return block;
         }
         private void ApplyTemplate(JournalTemplate template)
         {
@@ -334,7 +358,7 @@ namespace MyDay.Windows.UI
                 try
                 {
                     DiaryBook incoming;
-                    using(var stream=File.OpenRead(dialog.FileName)) { if(stream.Length>50*1024*1024) throw new InvalidDataException("파일이 너무 큽니다."); incoming=DiaryStore.Read(stream); }
+                    using(var stream=File.OpenRead(dialog.FileName)) incoming=DiaryStore.Read(stream);
                     var conflicts=incoming.Days.Keys.Count(book.Days.ContainsKey);
                     if(MessageBox.Show(this,incoming.Days.Count+"일의 기록을 가져올까요?\n같은 날짜의 기록 "+conflicts+"개는 백업 내용으로 바뀝니다. 기존 파일은 diary.json.bak으로 남습니다.","백업 가져오기",MessageBoxButtons.YesNo,MessageBoxIcon.Question)!=DialogResult.Yes) return;
                     var merged=new DiaryBook(); foreach(var pair in book.Days) merged.Days[pair.Key]=pair.Value;
@@ -487,6 +511,44 @@ namespace MyDay.Windows.UI
             if(entry.PageStyle!="dots" || !entry.Blocks.Select(DiaryLayout.Bounds).SequenceEqual(preset)) throw new Exception("Preset layout did not persist independently for its date");
             board.AutoScrollPosition=Point.Empty; PerformLayout(); Update();
             using(var image=new Bitmap(Width,Height)) { DrawToBitmap(image,new Rectangle(Point.Empty,Size)); image.Save(Path.Combine(Path.GetDirectoryName(destination),"windows-cornell.png"),System.Drawing.Imaging.ImageFormat.Png); }
+            ChangeDate(date.AddDays(1));
+            string fixture=Path.Combine(Path.GetDirectoryName(destination),"sample-photo.png"); Tests.WritePhotoFixture(fixture);
+            var photo=SetPhotoFromFile(fixture); var photoCard=board.Controls.OfType<BlockCard>().First(c=>c.Block==photo);
+            photoCard.Editor.Text="오늘의 산책. 잠깐 멈춰서 바라본 풍경.";
+            SelectLayout(true); DiaryLayout.SetBounds(photo,new Rectangle(18,12,450,420));
+            var note=entry.Blocks.First(b=>b.Kind=="text"); note.Title="사진 속 하루"; note.Text="기억하고 싶은 순간을 사진으로 남겼다.\r\n\r\n사진도 자유롭게 배치하고, 아래에 짧은 이야기를 적을 수 있다.";
+            DiaryLayout.SetBounds(note,new Rectangle(530,34,300,270)); RenderCards();
+            photoCard=board.Controls.OfType<BlockCard>().First(c=>c.Block==photo);
+            editLayout.PerformClick(); var photoStart=photoCard.DragHandle.PointToScreen(Design.Point(10,10));
+            photoCard.DragHandle.DragForTest(photoStart,new Point(photoStart.X+Design.P(20),photoStart.Y+Design.P(15)),false);
+            photoStart=photoCard.ResizeHandle.PointToScreen(Design.Point(5,5));
+            photoCard.ResizeHandle.DragForTest(photoStart,new Point(photoStart.X+Design.P(20),photoStart.Y+Design.P(20)),false); editLayout.PerformClick();
+            if(DiaryLayout.Bounds(photo)!=new Rectangle(38,27,470,440)) throw new Exception("Photo drag or resize failed");
+            var photoBounds=DiaryLayout.Bounds(photo); string caption=photo.Text;
+            SetPhotoFromFile(fixture,photo);
+            if(photo.Text!=caption || DiaryLayout.Bounds(photo)!=photoBounds || entry.Blocks.Count!=2) throw new Exception("Replacing photo lost caption, geometry or duplicated block");
+            string bad=Path.Combine(Path.GetDirectoryName(destination),"bad-photo.png"); File.WriteAllText(bad,"invalid"); string retainedPhoto=photo.Photo;
+            try { SetPhotoFromFile(bad,photo); throw new Exception("Invalid image accepted"); } catch(InvalidDataException) { }
+            if(photo.Photo!=retainedPhoto) throw new Exception("Invalid replacement changed existing photo");
+            try { SetPhotoFromFile(bad); throw new Exception("Invalid image accepted"); } catch(InvalidDataException) { }
+            if(entry.Blocks.Count!=2) throw new Exception("Invalid image added an empty block");
+            QueueSave(); FlushSave(); File.Delete(fixture);
+            ChangeDate(date.AddDays(1)); ChangeDate(date.AddDays(-1));
+            photo=entry.Blocks.First(b=>b.Kind=="photo"); photoCard=board.Controls.OfType<BlockCard>().First(c=>c.Block==photo);
+            if(photo.Text!=caption || DiaryLayout.Bounds(photo)!=photoBounds || photoCard.Photo==null || !photoCard.ReplacePhoto.Enabled) throw new Exception("Photo date navigation lost data or preview");
+            board.AutoScrollPosition=Point.Empty; PerformLayout(); Update();
+            using(var image=new Bitmap(Width,Height)) { DrawToBitmap(image,new Rectangle(Point.Empty,Size)); image.Save(Path.Combine(Path.GetDirectoryName(destination),"windows-photos.png"),System.Drawing.Imaging.ImageFormat.Png); }
+            Size fullSize=Size; Size=MinimumSize; PerformLayout(); Application.DoEvents();
+            var photoButton=AllControls(this).OfType<Button>().First(b=>b.Text=="＋ 사진");
+            if(photoButton.Right>photoButton.Parent.ClientSize.Width || !photoButton.Visible) throw new Exception("Photo action clipped at minimum window width");
+            DiaryLayout.SetBounds(photo,new Rectangle(12,12,300,180)); RenderCards(); photoCard=board.Controls.OfType<BlockCard>().First(c=>c.Block==photo);
+            if(photoCard.Photo.Bottom>=photoCard.Editor.Top || photoCard.Editor.Bottom>photoCard.ReplacePhoto.Top) throw new Exception("Small photo card overlaps caption or action");
+            using(var image=new Bitmap(Width,Height)) { DrawToBitmap(image,new Rectangle(Point.Empty,Size)); image.Save(Path.Combine(Path.GetDirectoryName(destination),"windows-photos-compact.png"),System.Drawing.Imaging.ImageFormat.Png); }
+            DiaryLayout.SetBounds(photo,photoBounds); Size=fullSize; RenderCards(); QueueSave(); FlushSave();
+        }
+        private static System.Collections.Generic.IEnumerable<Control> AllControls(Control parent)
+        {
+            foreach(Control child in parent.Controls) { yield return child; foreach(var nested in AllControls(child)) yield return nested; }
         }
         protected override void Dispose(bool disposing)
         {

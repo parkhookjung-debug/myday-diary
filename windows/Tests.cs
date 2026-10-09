@@ -10,7 +10,7 @@ using MyDay.Windows.UI;
 
 namespace MyDay.Windows
 {
-    internal static class Tests
+    internal static partial class Tests
     {
         private static int passed;
         private static void Check(bool value,string name)
@@ -48,6 +48,7 @@ namespace MyDay.Windows
                     var legacy=DiaryStore.Read(stream).Days["2026-10-08"];
                     Check(legacy.LayoutMode=="cards" && legacy.PageStyle=="plain" && legacy.Blocks[0].Title==null && legacy.Blocks[0].Width==0 && legacy.Blocks[0].Text=="기존 글","Older diary loads without template or placement fields or losing text");
                 }
+                RunPhotoTests(directory);
                 var layout=DiaryEntry.FirstPage(); layout.Blocks[0].Text="이동해도 그대로"; layout.Blocks[1].Checked=true;
                 var originalIds=layout.Blocks.Select(b=>b.Id).ToArray(); DiaryLayout.EnableFree(layout,800);
                 Check(layout.LayoutMode=="free" && layout.Blocks.Select(b=>b.Id).SequenceEqual(originalIds) && layout.Blocks[0].Text=="이동해도 그대로" && layout.Blocks[1].Checked,"Entering free placement retains block IDs, text and checks");

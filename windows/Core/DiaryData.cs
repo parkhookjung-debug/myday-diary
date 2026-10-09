@@ -19,6 +19,8 @@ namespace MyDay.Windows.Core
         [DataMember] public bool Wide;
         [DataMember(EmitDefaultValue=false)] public string Title;
         [DataMember(EmitDefaultValue=false)] public string Prompt;
+        [DataMember(EmitDefaultValue=false)] public string Photo;
+        internal string ValidatedPhoto;
         [DataMember(EmitDefaultValue=false)] public int X;
         [DataMember(EmitDefaultValue=false)] public int Y;
         [DataMember(EmitDefaultValue=false)] public int Width;
@@ -62,6 +64,7 @@ namespace MyDay.Windows.Core
 
     public sealed class DiaryStore
     {
+        public const long MaxFileBytes=128L*1024*1024;
         public readonly string FilePath;
         public DiaryStore(string directory) { FilePath = Path.Combine(directory, "diary.json"); }
         public DiaryBook Load()
@@ -71,6 +74,7 @@ namespace MyDay.Windows.Core
         }
         public static DiaryBook Read(Stream stream)
         {
+            if(stream.CanSeek) CheckSize(stream.Length);
             var result = (DiaryBook)new DataContractJsonSerializer(typeof(DiaryBook)).ReadObject(stream);
             Validate(result);
             return result;
@@ -81,6 +85,7 @@ namespace MyDay.Windows.Core
                 throw new InvalidDataException("지원하지 않는 기록 파일입니다.");
             if (book.Days.Count > 50000) throw new InvalidDataException("기록 파일이 너무 큽니다.");
             book.CharacterStyle=MonsterVariants.Id(MonsterVariants.FromId(book.CharacterStyle));
+            long photoCharacters=0;
             foreach (var pair in book.Days)
             {
                 DateTime date;
@@ -95,8 +100,11 @@ namespace MyDay.Windows.Core
                 foreach (var block in entry.Blocks)
                 {
                     if (block == null || String.IsNullOrWhiteSpace(block.Id) || !ids.Add(block.Id) ||
-                        !new[] { "text", "todo", "habit", "emotion" }.Contains(block.Kind) || block.Text == null || block.Text.Length > 100000)
+                        !new[] { "text", "todo", "habit", "emotion", "photo" }.Contains(block.Kind) || block.Text == null || block.Text.Length > 100000)
                         throw new InvalidDataException("일기 블록 형식이 올바르지 않습니다.");
+                    photoCharacters+=block.Photo==null?0:block.Photo.Length;
+                    if(photoCharacters>DiaryPhoto.MaxBookCharacters) throw new InvalidDataException("전체 사진 저장 공간이 가득 찼어요. 백업 후 사용하지 않는 사진 블록을 정리해주세요.");
+                    DiaryPhoto.Validate(block);
                     if(block.Title!=null && block.Title.Length>80 || block.Prompt!=null && block.Prompt.Length>300)
                         throw new InvalidDataException("일기 제목이나 질문이 너무 깁니다.");
                     if(block.X<0 || block.Y<0 || block.X>DiaryLayout.MaxPosition || block.Y>DiaryLayout.MaxPosition ||
@@ -118,6 +126,7 @@ namespace MyDay.Windows.Core
                 using (var stream = new FileStream(pending, FileMode.CreateNew, FileAccess.Write, FileShare.None))
                 {
                     new DataContractJsonSerializer(typeof(DiaryBook)).WriteObject(stream, book);
+                    CheckSize(stream.Position);
                     stream.Flush(true);
                 }
                 if (File.Exists(FilePath)) File.Replace(pending, FilePath, FilePath + ".bak", true);
@@ -132,9 +141,14 @@ namespace MyDay.Windows.Core
             {
                 Validate(book);
                 new DataContractJsonSerializer(typeof(DiaryBook)).WriteObject(buffer, book);
+                CheckSize(buffer.Length);
                 File.WriteAllBytes(destination, buffer.ToArray());
             }
         }
         public static string Key(DateTime date) { return date.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture); }
+        private static void CheckSize(long size)
+        {
+            if(size>MaxFileBytes) throw new InvalidDataException("기록 파일은 128MB까지 저장·가져올 수 있습니다. 백업 후 오래된 기록을 정리해주세요.");
+        }
     }
 }

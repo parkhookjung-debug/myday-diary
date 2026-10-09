@@ -11,6 +11,7 @@
 | 파일 | 내용 |
 | --- | --- |
 | `windows/windows-example.png` | 실제 Windows UI에 격리된 예시 기록을 넣은 화면 |
+| `windows/windows-photos.png` | 사진·설명과 글 블록을 자유롭게 배치한 실제 Windows UI (풍경은 검증용 생성 이미지) |
 | `windows/windows-free-layout.png` | 블록을 자유롭게 옮기고 크기를 조절하는 편집 화면 |
 | `windows/windows-journal-templates.png` | 일기 형식 100종의 분류·검색·미리보기 화면 |
 | `windows/windows-template-learning.png` | 학습 분야 10종 |
