@@ -11,10 +11,11 @@ namespace MyDay.Windows.UI
         private readonly DateTime date;
         private readonly string preview;
         private readonly bool selected;
+        private readonly bool hasPhoto;
         private bool hover;
-        public HistoryRow(DateTime date,string preview,bool selected)
+        public HistoryRow(DateTime date,string preview,bool selected,bool hasPhoto=false)
         {
-            this.date=date; this.preview=preview; this.selected=selected;
+            this.date=date; this.preview=preview; this.selected=selected; this.hasPhoto=hasPhoto;
             AccessibleName=date.ToString("yyyy년 M월 d일")+" 일기";
             Size=Design.Size(232,78); Margin=Design.Pad(0,0,0,4);
             Cursor=Cursors.Hand; TabStop=true; FlatStyle=FlatStyle.Flat;
@@ -31,7 +32,8 @@ namespace MyDay.Windows.UI
             using(var brush=new SolidBrush(selected?Design.Accent:Design.Soft)) g.FillEllipse(brush,circle);
             TextRenderer.DrawText(g,date.Day.ToString(),Design.Font(11,true),circle,selected?Color.White:Design.Muted,TextFormatFlags.HorizontalCenter|TextFormatFlags.VerticalCenter);
             string title=date==DateTime.Today?"오늘의 기록":date.ToString("M월 d일, dddd",new System.Globalization.CultureInfo("ko-KR"));
-            TextRenderer.DrawText(g,title,Design.Font(10,true),new Rectangle(Design.P(64),Design.P(17),Width-Design.P(76),Design.P(24)),Design.Ink,TextFormatFlags.EndEllipsis|TextFormatFlags.SingleLine);
+            TextRenderer.DrawText(g,title,Design.Font(10,true),new Rectangle(Design.P(64),Design.P(17),Width-Design.P(hasPhoto?108:76),Design.P(24)),Design.Ink,TextFormatFlags.EndEllipsis|TextFormatFlags.SingleLine);
+            if(hasPhoto) TextRenderer.DrawText(g,"사진",Design.Font(8),new Rectangle(Width-Design.P(42),Design.P(18),Design.P(32),Design.P(22)),Design.Accent,TextFormatFlags.HorizontalCenter|TextFormatFlags.VerticalCenter);
             TextRenderer.DrawText(g,preview,Design.Font(9),new Rectangle(Design.P(64),Design.P(43),Width-Design.P(76),Design.P(23)),Design.Muted,TextFormatFlags.EndEllipsis|TextFormatFlags.SingleLine);
             if(Focused && ShowFocusCues) ControlPaint.DrawFocusRectangle(g,Rectangle.Inflate(ClientRectangle,-Design.P(5),-Design.P(5)));
         }

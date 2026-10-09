@@ -21,6 +21,7 @@ namespace MyDay.Windows.UI
         private readonly ChoiceButton layoutChoice=Design.Choice(92);
         private readonly ChoiceButton pageStyle=Design.Choice(86);
         private readonly Button templates=Design.Button("일기 형식",true);
+        private readonly Button browse=Design.Button("달력 · 일기 검색");
         private readonly Button editLayout=Design.Button("배치 편집"),arrangeLayout=Design.Button("자동 정리");
         private readonly Label layoutHint=Design.Label("",9);
         private readonly Label status = Design.Label("내 컴퓨터에 자동 저장", 9);
@@ -47,14 +48,18 @@ namespace MyDay.Windows.UI
             MinimumSize=new Size(Math.Min(Design.P(860),work.Width-32),Math.Min(Design.P(570),work.Height-32));
             StartPosition=FormStartPosition.CenterScreen; Font=Design.Font(10); ForeColor=Design.Ink;
             AutoScaleMode=AutoScaleMode.None; DoubleBuffered=true;
-            KeyPreview=true; KeyDown+=delegate(object sender,KeyEventArgs e) { if(editingLayout && e.KeyCode==Keys.Escape) { board.CancelPlacement(); e.Handled=true; } };
+            KeyPreview=true; KeyDown+=delegate(object sender,KeyEventArgs e) {
+                if(editingLayout && e.KeyCode==Keys.Escape) { board.CancelPlacement(); e.Handled=true; }
+                if(e.Control && e.KeyCode==Keys.F) { e.Handled=true; e.SuppressKeyPress=true; BeginInvoke((MethodInvoker)delegate { BrowseDiary(); }); }
+            };
             var side = new Panel { Dock=DockStyle.Left, Width=Design.P(260), BackColor=Color.White };
-            var sideHeader=new Panel { Dock=DockStyle.Top, Height=Design.P(158), BackColor=Color.White };
+            var sideHeader=new Panel { Dock=DockStyle.Top, Height=Design.P(204), BackColor=Color.White };
             var brand=Design.Label("myday",20,true); brand.Location=Design.Point(24,20); sideHeader.Controls.Add(brand);
             var tagline=Design.Label("나의 작은 일기장",9); tagline.ForeColor=Design.Muted; tagline.Location=Design.Point(25,64); sideHeader.Controls.Add(tagline);
             var newDay=Design.Button("＋ 오늘 기록하기",true); newDay.Location=Design.Point(24,96); newDay.Width=Design.P(212);
             newDay.Click+=delegate { ChangeDate(DateTime.Today); }; sideHeader.Controls.Add(newDay);
-            var historyTitle=Design.Label("기록함",9,true); historyTitle.Location=Design.Point(26,140); sideHeader.Controls.Add(historyTitle);
+            browse.Location=Design.Point(24,140); browse.Size=Design.Size(212,30); browse.AccessibleName="달력과 일기 검색 열기"; browse.Click+=delegate { BrowseDiary(); }; sideHeader.Controls.Add(browse);
+            var historyTitle=Design.Label("기록함",9,true); historyTitle.Location=Design.Point(26,182); sideHeader.Controls.Add(historyTitle);
             var companion=new Panel { Dock=DockStyle.Bottom, Height=Design.P(220), BackColor=Color.White };
             var sideLine=new Panel { BackColor=Design.Soft, Dock=DockStyle.Top, Height=1 }; companion.Controls.Add(sideLine);
             avatar.Location=Design.Point(16,16); avatar.Size=Design.Size(64,58); companion.Controls.Add(avatar);
@@ -174,6 +179,15 @@ namespace MyDay.Windows.UI
             board.CancelPlacement();
             if(!FlushSave()) { binding=true; picker.Value=date; binding=false; return; }
             date=target.Date; LoadDate();
+        }
+        private void BrowseDiary(Action<JournalBrowser> shown=null)
+        {
+            board.CancelPlacement(); if(!FlushSave()) return;
+            using(var browser=new JournalBrowser(book,date,picker.MinDate,picker.MaxDate)) {
+                if(testMode) { browser.StartPosition=FormStartPosition.Manual; browser.Location=new Point(-30000,-30000); }
+                if(shown!=null) browser.Shown+=delegate { browser.BeginInvoke((MethodInvoker)delegate { shown(browser); }); };
+                if(browser.ShowDialog(this)==DialogResult.OK && browser.SelectedDate.HasValue) ChangeDate(browser.SelectedDate.Value);
+            }
         }
         private void LoadDate()
         {
@@ -326,7 +340,8 @@ namespace MyDay.Windows.UI
                     preview=text==null?"기록 "+saved.Blocks.Count+"개":text.Text.Substring(0,Math.Min(120,text.Text.Length)).Replace("\r"," ").Replace("\n"," ");
                 }
                 var target=value;
-                var row=new HistoryRow(target,preview,target==date); row.Click+=delegate { ChangeDate(target); };
+                DiaryEntry historyEntry;
+                var row=new HistoryRow(target,preview,target==date,book.Days.TryGetValue(DiaryStore.Key(target),out historyEntry) && DiaryBrowse.HasPhoto(historyEntry)); row.Click+=delegate { ChangeDate(target); };
                 history.Controls.Add(row);
             }
             if(dates.Count>60) {
@@ -545,6 +560,18 @@ namespace MyDay.Windows.UI
             if(photoCard.Photo.Bottom>=photoCard.Editor.Top || photoCard.Editor.Bottom>photoCard.ReplacePhoto.Top) throw new Exception("Small photo card overlaps caption or action");
             using(var image=new Bitmap(Width,Height)) { DrawToBitmap(image,new Rectangle(Point.Empty,Size)); image.Save(Path.Combine(Path.GetDirectoryName(destination),"windows-photos-compact.png"),System.Drawing.Imaging.ImageFormat.Png); }
             DiaryLayout.SetBounds(photo,photoBounds); Size=fullSize; RenderCards(); QueueSave(); FlushSave();
+            var photoDate=date; var savedPhoto=photo.Photo;
+            photoCard=board.Controls.OfType<BlockCard>().First(c=>c.Block==photo);
+            photoCard.Editor.Text="바닷가를 걷던 하루. 잠깐 멈춰서 바라본 풍경.";
+            BrowseDiary(delegate(JournalBrowser browser) { browser.VerifyAndRender(Path.GetDirectoryName(destination),photoDate); });
+            if(date!=photoDate || entry.Blocks.First(b=>b.Kind=="photo").Photo!=savedPhoto || DiaryLayout.Bounds(entry.Blocks.First(b=>b.Kind=="photo"))!=photoBounds ||
+                !store.Load().Days[DiaryStore.Key(date)].Blocks.Any(b=>b.Text.Contains("바닷가"))) throw new Exception("Opening browser did not save pending text or retained the wrong diary");
+            BrowseDiary(delegate(JournalBrowser browser) { browser.SelectDayForTest(photoDate.AddDays(1)); });
+            if(date!=photoDate.AddDays(1) || book.Days.ContainsKey(DiaryStore.Key(date))) throw new Exception("Opening an empty day unexpectedly stored a record");
+            BrowseDiary(delegate(JournalBrowser browser) { browser.SelectDayForTest(photoDate); });
+            if(date!=photoDate || !entry.Blocks.Any(b=>b.Kind=="photo" && b.Photo==savedPhoto)) throw new Exception("Calendar navigation lost the photo diary");
+            BrowseDiary(delegate(JournalBrowser browser) { browser.DialogResult=DialogResult.Cancel; browser.Close(); });
+            if(date!=photoDate) throw new Exception("Closing browser changed the selected diary");
         }
         private static System.Collections.Generic.IEnumerable<Control> AllControls(Control parent)
         {

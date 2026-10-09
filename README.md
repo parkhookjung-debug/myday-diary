@@ -17,7 +17,7 @@ MIT 라이선스의 오픈소스 프로젝트입니다. 5명이 UI·저장·캐�
 | Windows 10/11 | 소스의 `windows/실행.cmd`를 더블클릭하거나 배포 ZIP에서 `MyDay.exe` 실행 | [Windows 실행·개발 안내](windows/README.md) |
 | Android 8 이상 | Android Studio에서 저장소 루트를 열고 `app` 실행 또는 배포 APK 설치 | [Android 실행·기능 안내](docs/ANDROID.md) |
 
-Windows의 사진 첨부·일기 형식 100종·8종 배치·검색·자유 배치를 포함한 ZIP은 [v0.3.5-preview](https://github.com/parkhookjung-debug/myday-diary/releases/tag/v0.3.5-preview), Android APK는 [v0.3.0-preview](https://github.com/parkhookjung-debug/myday-diary/releases/tag/v0.3.0-preview)에서 받습니다. APK는 개발용 debug 빌드입니다.
+Windows의 월간 달력·본문/사진 설명 검색·사진 첨부·일기 형식 100종·자유 배치를 포함한 ZIP은 [v0.3.6-preview](https://github.com/parkhookjung-debug/myday-diary/releases/tag/v0.3.6-preview), Android APK는 [v0.3.0-preview](https://github.com/parkhookjung-debug/myday-diary/releases/tag/v0.3.0-preview)에서 받습니다. APK는 개발용 debug 빌드입니다.
 
 ```sh
 git clone https://github.com/parkhookjung-debug/myday-diary.git
@@ -46,6 +46,7 @@ Windows 소스 실행에는 .NET Framework 4.8 이상이 필요합니다. Androi
 ## Windows와 상몬
 
 - 날짜별 기록·본문 미리보기, 아이보리 종이와 청록색 포인트. [Windows 디자인 수정 안내](docs/WINDOWS-DESIGN.md)
+- [월간 달력·일기 검색](docs/CALENDAR-SEARCH.md): 기록한 날·사진 있는 날 표시, 본문과 사진 설명 검색, 결과 클릭으로 일기 열기. 왼쪽 버튼 또는 Ctrl+F로 실행
 - [일기 형식 100종](docs/JOURNAL-FORMATS.md): 10개 분야별 10종, 제목·질문·배치 이름 검색, 질문·배치 미리보기와 날짜별 저장. [전체 목록·참고 출처](docs/JOURNAL-CATALOG.md)
 - 긴 글·질문 카드·본문+메모·타임라인·편지·플래너·코넬 노트·비교형 등 8종 배치
 - 날짜별 일기·할 일·습관·감정, 블록 순서·너비 변경, 자동 저장과 JSON 백업
@@ -62,6 +63,8 @@ Windows 소스 실행에는 .NET Framework 4.8 이상이 필요합니다. Androi
 
 ![사진을 추가한 Windows 일기](previews/windows/windows-photos.png)
 
+![달력과 일기 검색](previews/windows/windows-calendar.png)
+
 ![게임 스타일 상몬](previews/windows/windows-game-styles.gif)
 
 ## Android
@@ -77,6 +80,6 @@ Windows 소스 실행에는 .NET Framework 4.8 이상이 필요합니다. Androi
 - [Android 디자인 수정](docs/DESIGN.md)
 - [상몬 디자인·게임 스타일 수정](docs/SANGMON-DESIGN.md)
 
-Android CI는 APK 빌드·Lint·단위 테스트를, Windows CI는 C# 빌드·저장·사진·캐릭터 테스트를 실행합니다. Windows의 자동 테스트는 76개이며 네이티브 화면 흐름은 격리된 예시 데이터로 별도 확인했습니다. 갤럭시 실기기, 여러 모니터·DPI·절전 복귀 확인은 추가 검증 대상입니다.
+Android CI는 APK 빌드·Lint·단위 테스트를, Windows CI는 C# 빌드·저장·사진·달력·검색·캐릭터 테스트를 실행합니다. Windows의 자동 테스트는 91개이며 네이티브 화면 흐름은 격리된 예시 데이터로 별도 확인했습니다. 갤럭시 실기기, 여러 모니터·DPI·절전 복귀 확인은 추가 검증 대상입니다.
 
 일기는 각 기기에 저장합니다. 사진 첨부는 Windows에서 지원합니다. Android와 Windows 사이의 자동 동기화, Android 사진 첨부, 영상 첨부, AI 감정 대화는 후속 기능입니다.

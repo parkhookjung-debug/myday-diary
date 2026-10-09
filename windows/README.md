@@ -10,11 +10,12 @@ Windows 10/11과 .NET Framework 4.8 이상을 사용합니다.
 캐릭터를 한 번 클릭하면 일기 창이 열립니다.
 빌드 후에는 `bin/MyDay.exe`만 더블클릭해도 실행할 수 있습니다.
 GitHub CI의 Windows artifact에서도 실행 파일을 받을 수 있습니다.
-[다운로드용 Windows ZIP](https://github.com/parkhookjung-debug/myday-diary/releases/tag/v0.3.5-preview)은 압축을 풀고 `MyDay.exe`를 실행합니다.
+[다운로드용 Windows ZIP](https://github.com/parkhookjung-debug/myday-diary/releases/tag/v0.3.6-preview)은 압축을 풀고 `MyDay.exe`를 실행합니다.
 
 ## 기능
 
 - DM 스타일 기록함: 날짜별 목록·본문 미리보기·현재 날짜 강조, 목록 클릭으로 기록 이동
+- [월간 달력·일기 검색](../docs/CALENDAR-SEARCH.md): 왼쪽 **달력 · 일기 검색** 또는 Ctrl+F로 열기, 저장한 날짜·사진 있는 날 표시, 본문·사진 설명 전체 검색, 날짜·결과 클릭으로 일기 열기
 - 아이보리 종이와 청록색 포인트, 날짜 표지, 노트·카드·도트 표면. [디자인 변경 안내](../docs/WINDOWS-DESIGN.md)
 - [일기 형식 100종](../docs/JOURNAL-FORMATS.md): 10개 분야·검색·대략적인 작성 시간·질문과 배치 미리보기. [전체 100종 목록과 참고 자료](../docs/JOURNAL-CATALOG.md)
 - 긴 글·질문 카드·본문+메모·타임라인·편지·플래너·코넬 노트·비교형 8종 배치. 빈 페이지에 적용하며 기존 자유 배치에는 원래 블록을 보존해 아래에 추가
@@ -55,6 +56,9 @@ Android 기록과 자동 동기화하지 않습니다. 영상·시작 시 자동
 | 색상·글꼴·버튼·카드 | `UI/Design.cs` |
 | 일기 창 배치·날짜·연결 | `UI/DiaryWindow.cs` |
 | 날짜별 기록 목록의 표시 | `UI/HistoryRow.cs` |
+| 달력·검색·결과 창 | `UI/JournalBrowser.cs`, `UI/MonthCalendar.cs` |
+| 달력 날짜·본문 검색·미리보기 | `Core/DiaryBrowse.cs` |
+| 달력·검색 단위 검증 | `BrowseTests.cs` |
 | 날짜 표지 | `UI/JournalCover.cs` |
 | 형식 선택·미리보기 | `UI/TemplateGallery.cs` |
 | 형식의 블록 제목·질문·구성 | `Core/DiaryTemplates.cs` |
@@ -105,6 +109,7 @@ if ($process.ExitCode -ne 0) { throw 'Tests failed' }
 
 자동 테스트는 실제 기록과 분리된 임시 폴더에서 저장 보존·날짜 분리·백업·손상 파일 처리·애니메이션을 확인합니다.
 사진 테스트는 원본 삭제 후 백업 복원, EXIF 회전·축소·투명 영역, 손상된 사진으로 기존 기록을 덮어쓰지 않는 처리, 사진 용량 제한을 확인합니다.
+달력·검색 테스트는 윤년과 연도 경계·날짜 범위, 사진 표시·모든 날짜의 본문/사진 설명 검색·긴 글 미리보기·재로드·기록 보존을 확인합니다. 네이티브 검증은 월 이동·검색 지우기·결과 없음·121일의 결과 페이지 이동·작은 창·저장 후 결과/빈 날짜 열기·취소를 확인합니다.
 `--smoke-test <출력 폴더>`는 격리된 예시 데이터로 입력·체크·순서 이동·날짜 이동·재로드와 네이티브 투명 창을 확인하고 PNG를 만듭니다.
 다중 모니터·고배율 DPI·절전 복귀·우클릭 메뉴·드래그는 실제 사용 환경에서도 확인해주세요.
 

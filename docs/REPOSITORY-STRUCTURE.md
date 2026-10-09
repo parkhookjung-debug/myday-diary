@@ -22,6 +22,7 @@ myday-diary/
 │   ├── Program.cs             시작·세션·테스트 명령 연결
 │   ├── Tests.cs               저장·캐릭터·네이티브 검증
 │   ├── PhotoTests.cs          사진 보존·변환·백업·손상 검증
+│   ├── BrowseTests.cs         달력 날짜·사진 표시·본문 검색 검증
 │   ├── build.ps1              .NET Framework 빌드
 │   └── 실행.cmd               소스에서 빌드 후 실행
 ├── docs/                      실행·디자인·협업 문서
@@ -45,6 +46,7 @@ myday-diary/
 | 자유 배치·크기 조절 | 현재 Windows에 적용 | `Core/DiaryLayout.cs`, `UI/DiaryBoard.cs` |
 | 기록·저장 | `data/`, `diary/` | `Core/DiaryData.cs` |
 | 사진 첨부 | 현재 Windows에 적용 | `Core/DiaryPhoto.cs`, `UI/PhotoView.cs`, `UI/BlockCard.cs` |
+| 달력·일기 검색 | 현재 Windows에 적용 | `Core/DiaryBrowse.cs`, `UI/JournalBrowser.cs`, `UI/MonthCalendar.cs` |
 | 캐릭터 그림 | `ui/character/` | `Character/MonsterPainter.cs`, `MonsterAdditions.cs` |
 | 게임 속성 재질 | 현재 Windows에 적용 | `Character/GameSkins.cs` |
 | 움직임 | `ui/character/CharacterAnimation.kt` | `Character/PetBehavior.cs` |
@@ -57,7 +59,7 @@ Android 표의 Java 경로는 `app/src/main/java/com/myday/diary/` 기준입니�
 
 GitHub Releases에 플랫폼별로 배포합니다.
 
-- Windows: `MyDay-Windows-v0.3.5-preview.zip`에 `MyDay.exe`, 실행 안내, 사진 안내, 100종 목록, 라이선스
+- Windows: `MyDay-Windows-v0.3.6-preview.zip`에 `MyDay.exe`, 실행 안내, 달력·검색 안내, 사진 안내, 100종 목록, 라이선스
 - Android: `MyDay-Android-v0.3.0-preview.apk` 개발용 debug 빌드
 - GitHub에서 자동 제공하는 Source code ZIP/TAR: 같은 태그의 전체 소스
 
@@ -74,5 +76,6 @@ GitHub Releases에 플랫폼별로 배포합니다.
 - [상몬 외형·게임 스타일](SANGMON-DESIGN.md)
 - [일기 자유 배치](FREE-LAYOUT.md)
 - [사진 첨부·저장·백업](PHOTOS.md)
+- [월간 달력·일기 검색](CALENDAR-SEARCH.md)
 - [5명 팀 역할](TEAM.md)
 - [미리보기 설명](../previews/README.md)
