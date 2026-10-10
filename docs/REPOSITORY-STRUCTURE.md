@@ -42,6 +42,15 @@ myday-diary/
 
 ## 기능별 수정 위치
 
+[기능 → 실제 파일 → 수정할 부분을 찾는 가이드](EDITING-GUIDE.md)에서 모든 파일을 클릭해서 열 수 있습니다. 각 폴더의 첫 화면에도 안내를 붙였습니다.
+
+- [Windows 화면](../windows/UI/README.md)
+- [Windows 기능·저장](../windows/Core/README.md)
+- [상몬·아이템 그림과 동작](../windows/Character/README.md)
+- [분야별 일기 형식](../windows/Core/Templates/README.md)
+- [Android 코드](../app/src/main/java/com/myday/diary/README.md)
+- [문서 목록](README.md)
+
 | 원하는 작업 | Android | Windows |
 | --- | --- | --- |
 | 색·글꼴·간격 | `ui/design/`, `res/values/` | `UI/Design.cs` |

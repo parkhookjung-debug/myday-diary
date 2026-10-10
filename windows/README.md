@@ -3,6 +3,12 @@
 Windows에서 실행하는 C# / Windows Forms 일기 앱과 투명한 바탕화면 캐릭터입니다.
 Android 프로젝트와 별도 폴더에서 개발하며 외부 패키지, 브라우저, Node.js가 필요하지 않습니다.
 
+## 수정할 파일 찾기
+
+[전체 기능별 수정 가이드](../docs/EDITING-GUIDE.md) · [화면/UI](UI/README.md) · [기능·저장/Core](Core/README.md) · [상몬·아이템/Character](Character/README.md) · [분야별 일기 형식](Core/Templates/README.md)
+
+파일 이름을 클릭해서 바로 코드로 이동합니다. 색만 바꾸려면 `UI/Design.cs`, 아이템 그림은 `Character/ItemPainter.cs`, 이름·설명은 `Core/SangmonItems.cs`부터 수정합니다.
+
 ## 실행
 
 Windows 10/11과 .NET Framework 4.8 이상을 사용합니다.
@@ -10,7 +16,7 @@ Windows 10/11과 .NET Framework 4.8 이상을 사용합니다.
 캐릭터를 한 번 클릭하면 일기 창이 열립니다.
 빌드 후에는 `bin/MyDay.exe`만 더블클릭해도 실행할 수 있습니다.
 GitHub CI의 Windows artifact에서도 실행 파일을 받을 수 있습니다.
-[다운로드용 Windows ZIP 및 EXE](https://github.com/parkhookjung-debug/myday-diary/releases/tag/v0.3.9-preview)은 압축을 풀고 `MyDay.exe`를 실행합니다.
+[EXE 직접 다운로드](https://github.com/parkhookjung-debug/myday-diary/releases/download/v0.3.9-preview/MyDay.exe)는 다운로드한 파일을 실행합니다. [전체 ZIP과 안내서](https://github.com/parkhookjung-debug/myday-diary/releases/tag/v0.3.9-preview)는 압축을 풀고 `MyDay.exe`를 실행합니다.
 
 ## 기능
 
@@ -59,40 +65,40 @@ Android 기록과 자동 동기화하지 않습니다. 영상·시작 시 자동
 
 | 영역 | 파일 |
 | --- | --- |
-| 색상·글꼴·버튼·카드 | `UI/Design.cs` |
-| 일기 창 배치·날짜·연결 | `UI/DiaryWindow.cs` |
-| 날짜별 기록 목록의 표시 | `UI/HistoryRow.cs` |
-| 달력·검색·결과 창 | `UI/JournalBrowser.cs`, `UI/MonthCalendar.cs` |
-| 달력 날짜·본문 검색·미리보기 | `Core/DiaryBrowse.cs` |
-| 달력·검색 단위 검증 | `BrowseTests.cs` |
-| 내 레이아웃 모델·검증·적용·병합 | `Core/SavedLayouts.cs` |
-| 내 레이아웃 목록·검색·관리·미리보기 | `UI/MyLayoutsWindow.cs`, `UI/LayoutNameDialog.cs`, `UI/SavedLayoutDiagram.cs` |
-| 내 레이아웃 저장·재사용 검증 | `SavedLayoutTests.cs` |
-| 상몬 성장·레벨·보상·병합 | `Core/SangmonGrowth.cs`, `UI/GrowthWindow.cs`, `UI/DiaryWindow.Growth.cs` |
-| 성장 보상 의상·검증 | `Character/RewardSkins.cs`, `GrowthTests.cs` |
-| 아이템 모델·장착·백업 | `Core/SangmonItems.cs`, `UI/DiaryWindow.Items.cs` |
-| 아이템 그림·장비함·미리보기 | `Character/ItemPainter.cs`, `UI/EquipmentWindow.cs`, `UI/ItemView.cs` |
-| 장비 저장·슬롯·그림 경계 검증 | `ItemTests.cs` |
-| 날짜 표지 | `UI/JournalCover.cs` |
-| 형식 선택·미리보기 | `UI/TemplateGallery.cs` |
-| 형식의 블록 제목·질문·구성 | `Core/DiaryTemplates.cs` |
-| 분야별 형식 데이터·참고 링크 | `Core/Templates/` |
-| 8종 배치 알고리즘 | `Core/JournalLayouts.cs` |
-| 목록과 배치 그림 | `UI/TemplateOption.cs` |
-| 자유 캔버스·드래그·리사이즈 핸들 | `UI/DiaryBoard.cs` |
-| 일기 블록 UI | `UI/BlockCard.cs` |
-| 사진 미리보기 | `UI/PhotoView.cs` |
-| 사진 입력·회전·압축·검증 | `Core/DiaryPhoto.cs` |
-| 사진 백업·손상·용량 테스트 | `PhotoTests.cs` |
-| 기록 모델·검증·저장·백업 | `Core/DiaryData.cs` |
-| 논리 좌표·자동 정렬·크기 범위 | `Core/DiaryLayout.cs` |
-| 스케치 캐릭터 그림·포즈 | `Character/MonsterPainter.cs` |
-| 캐릭터 버전 ID·이름 | `Character/MonsterVariants.cs` |
-| 원형을 유지하는 추가 외형·장식 | `Character/MonsterAdditions.cs` |
-| RPG 속성 색상·명암·재질·효과 | `Character/GameSkins.cs` |
-| 행동 전환·가속·반응 | `Character/PetBehavior.cs` |
-| 바탕화면 이동·드래그·투명 창 | `Character/DesktopPet.cs` |
-| 앱 안의 캐릭터 | `UI/MonsterView.cs` |
+| 색상·글꼴·버튼·카드 | [Design.cs](UI/Design.cs) |
+| 일기 창 배치·날짜·연결 | [DiaryWindow.cs](UI/DiaryWindow.cs) |
+| 날짜별 기록 목록의 표시 | [HistoryRow.cs](UI/HistoryRow.cs) |
+| 달력·검색·결과 창 | [JournalBrowser.cs](UI/JournalBrowser.cs), [MonthCalendar.cs](UI/MonthCalendar.cs) |
+| 달력 날짜·본문 검색·미리보기 | [DiaryBrowse.cs](Core/DiaryBrowse.cs) |
+| 달력·검색 단위 검증 | [BrowseTests.cs](BrowseTests.cs) |
+| 내 레이아웃 모델·검증·적용·병합 | [SavedLayouts.cs](Core/SavedLayouts.cs) |
+| 내 레이아웃 목록·검색·관리·미리보기 | [MyLayoutsWindow.cs](UI/MyLayoutsWindow.cs), [LayoutNameDialog.cs](UI/LayoutNameDialog.cs), [SavedLayoutDiagram.cs](UI/SavedLayoutDiagram.cs) |
+| 내 레이아웃 저장·재사용 검증 | [SavedLayoutTests.cs](SavedLayoutTests.cs) |
+| 상몬 성장·레벨·보상·병합 | [SangmonGrowth.cs](Core/SangmonGrowth.cs), [GrowthWindow.cs](UI/GrowthWindow.cs), [DiaryWindow.Growth.cs](UI/DiaryWindow.Growth.cs) |
+| 성장 보상 의상·검증 | [RewardSkins.cs](Character/RewardSkins.cs), [GrowthTests.cs](GrowthTests.cs) |
+| 아이템 모델·장착·백업 | [SangmonItems.cs](Core/SangmonItems.cs), [DiaryWindow.Items.cs](UI/DiaryWindow.Items.cs) |
+| 아이템 그림·장비함·미리보기 | [ItemPainter.cs](Character/ItemPainter.cs), [EquipmentWindow.cs](UI/EquipmentWindow.cs), [ItemView.cs](UI/ItemView.cs) |
+| 장비 저장·슬롯·그림 경계 검증 | [ItemTests.cs](ItemTests.cs) |
+| 날짜 표지 | [JournalCover.cs](UI/JournalCover.cs) |
+| 형식 선택·미리보기 | [TemplateGallery.cs](UI/TemplateGallery.cs) |
+| 형식의 블록 제목·질문·구성 | [DiaryTemplates.cs](Core/DiaryTemplates.cs) |
+| 분야별 형식 데이터·참고 링크 | [Templates](Core/Templates/) |
+| 8종 배치 알고리즘 | [JournalLayouts.cs](Core/JournalLayouts.cs) |
+| 목록과 배치 그림 | [TemplateOption.cs](UI/TemplateOption.cs) |
+| 자유 캔버스·드래그·리사이즈 핸들 | [DiaryBoard.cs](UI/DiaryBoard.cs) |
+| 일기 블록 UI | [BlockCard.cs](UI/BlockCard.cs) |
+| 사진 미리보기 | [PhotoView.cs](UI/PhotoView.cs) |
+| 사진 입력·회전·압축·검증 | [DiaryPhoto.cs](Core/DiaryPhoto.cs) |
+| 사진 백업·손상·용량 테스트 | [PhotoTests.cs](PhotoTests.cs) |
+| 기록 모델·검증·저장·백업 | [DiaryData.cs](Core/DiaryData.cs) |
+| 논리 좌표·자동 정렬·크기 범위 | [DiaryLayout.cs](Core/DiaryLayout.cs) |
+| 스케치 캐릭터 그림·포즈 | [MonsterPainter.cs](Character/MonsterPainter.cs) |
+| 캐릭터 버전 ID·이름 | [MonsterVariants.cs](Character/MonsterVariants.cs) |
+| 원형을 유지하는 추가 외형·장식 | [MonsterAdditions.cs](Character/MonsterAdditions.cs) |
+| RPG 속성 색상·명암·재질·효과 | [GameSkins.cs](Character/GameSkins.cs) |
+| 행동 전환·가속·반응 | [PetBehavior.cs](Character/PetBehavior.cs) |
+| 바탕화면 이동·드래그·투명 창 | [DesktopPet.cs](Character/DesktopPet.cs) |
+| 앱 안의 캐릭터 | [MonsterView.cs](UI/MonsterView.cs) |
 
 캐릭터는 Android 버전과 같은 스케치 좌표를 사용하지만 플랫폼별 렌더링 코드로 관리합니다. 생동감 있는 추가 행동은 현재 Windows 버전에 적용했습니다.
 

@@ -4,91 +4,81 @@
 [![Windows CI](https://github.com/parkhookjung-debug/myday-diary/actions/workflows/windows.yml/badge.svg)](https://github.com/parkhookjung-debug/myday-diary/actions/workflows/windows.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 
-갤럭시와 Windows에서 사용하는 커스터마이즈 일기 앱입니다. 글·할 일·습관·감정을 기록하고 나만의 레이아웃을 구성합니다. Windows에서는 상몬이 바탕화면을 돌아다니며, 한 번 클릭하면 일기 창을 엽니다.
+갤럭시·Windows용 커스터마이즈 일기 앱입니다. Windows에서는 일기 블록을 자유롭게 배치하고, 바탕화면을 돌아다니는 상몬을 키우며 검과 마법 보주를 장착합니다. MIT 라이선스로 공개하며 5명이 화면·저장·캐릭터·통합·검증을 나눠 개발합니다.
 
-MIT 라이선스의 오픈소스 프로젝트입니다. 5명이 UI·저장·캐릭터·통합·검증을 나눠 작업할 수 있도록 기능과 디자인 파일을 분리했습니다.
+**코드를 수정하려면 [기능별 수정 가이드](docs/EDITING-GUIDE.md)를 먼저 열어주세요. 파일 이름을 클릭하면 해당 코드로 바로 이동합니다.**
 
-현재 최신 통합 작업은 [codex/windows-app 브랜치](https://github.com/parkhookjung-debug/myday-diary/tree/codex/windows-app)와 [통합 PR #7](https://github.com/parkhookjung-debug/myday-diary/pull/7)에 있습니다. `main` 반영에는 팀원 1명의 리뷰 승인이 필요합니다.
+현재 최신 통합 소스는 [codex/windows-app 브랜치](https://github.com/parkhookjung-debug/myday-diary/tree/codex/windows-app)에 있습니다. GitHub **Code → 브랜치 선택 → codex/windows-app**으로 이동하면 아래 파일이 보입니다. [통합 PR #7](https://github.com/parkhookjung-debug/myday-diary/pull/7)의 `main` 반영에는 팀원 리뷰 승인 1개가 필요합니다.
 
-## 실행하기
+## 실행 파일 받기
 
-| 플랫폼 | 실행 방법 | 자세한 안내 |
+| 사용할 환경 | 다운로드 | 실행·개발 안내 |
 | --- | --- | --- |
-| Windows 10/11 | 소스의 `windows/실행.cmd`를 더블클릭하거나 배포 ZIP에서 `MyDay.exe` 실행 | [Windows 실행·개발 안내](windows/README.md) |
-| Android 8 이상 | Android Studio에서 저장소 루트를 열고 `app` 실행 또는 배포 APK 설치 | [Android 실행·기능 안내](docs/ANDROID.md) |
+| Windows 10/11 | [MyDay.exe 바로 받기](https://github.com/parkhookjung-debug/myday-diary/releases/download/v0.3.9-preview/MyDay.exe) · [전체 ZIP과 안내서](https://github.com/parkhookjung-debug/myday-diary/releases/tag/v0.3.9-preview) | [Windows 안내](windows/README.md) |
+| 갤럭시 / Android 8 이상 | [Android APK 받기](https://github.com/parkhookjung-debug/myday-diary/releases/tag/v0.3.0-preview) (개발용 debug) | [Android 안내](docs/ANDROID.md) |
+| macOS | 현재 macOS 실행 파일은 제공하지 않습니다. | Windows EXE는 Windows에서 실행합니다. |
 
-Windows의 아이템 장비함·상몬 성장·내 레이아웃 저장·월간 달력·본문/사진 설명 검색·사진 첨부·일기 형식 100종·자유 배치를 포함한 ZIP은 [v0.3.9-preview](https://github.com/parkhookjung-debug/myday-diary/releases/tag/v0.3.9-preview), Android APK는 [v0.3.0-preview](https://github.com/parkhookjung-debug/myday-diary/releases/tag/v0.3.0-preview)에서 받습니다. APK는 개발용 debug 빌드입니다.
+GitHub 저장소 오른쪽 **Releases → 해당 버전 → Assets**에서도 받습니다. Windows는 .NET Framework 4.8 이상에서 사용하며, 이전 앱이 실행 중이면 알림 영역 MyDay → **모두 종료** 후 새 EXE를 실행합니다. 현재 Windows 배포는 v0.3.9-preview입니다.
+
+## 이 기능을 바꾸려면 여기부터
+
+| 하고 싶은 수정 | 먼저 열 파일 | 자세한 안내 |
+| --- | --- | --- |
+| 전체 색·글꼴·버튼 모양 | [windows/UI/Design.cs](windows/UI/Design.cs) | [Windows 디자인](docs/WINDOWS-DESIGN.md) |
+| 일기 창·메뉴·버튼 위치 | [windows/UI/DiaryWindow.cs](windows/UI/DiaryWindow.cs) | [화면 폴더 안내](windows/UI/README.md) |
+| 글·할 일·감정·사진 카드 모양 | [windows/UI/BlockCard.cs](windows/UI/BlockCard.cs) | [화면 폴더 안내](windows/UI/README.md) |
+| 일기 형식의 이름·질문 | [windows/Core/Templates/README.md](windows/Core/Templates/README.md) | [100종 형식 목록](docs/JOURNAL-CATALOG.md) |
+| 사진 입력·압축·회전 | [windows/Core/DiaryPhoto.cs](windows/Core/DiaryPhoto.cs) | [사진 안내](docs/PHOTOS.md) |
+| 일기 데이터·저장·백업 | [windows/Core/DiaryData.cs](windows/Core/DiaryData.cs) | [기능·저장 폴더 안내](windows/Core/README.md) |
+| 상몬 몸·눈·입 그림 | [windows/Character/MonsterPainter.cs](windows/Character/MonsterPainter.cs) | [상몬 그림 폴더 안내](windows/Character/README.md) |
+| 상몬 걷기·쉬기·하품 | [windows/Character/PetBehavior.cs](windows/Character/PetBehavior.cs) | [상몬 디자인](docs/SANGMON-DESIGN.md) |
+| 경험치·레벨·보상 조건 | [windows/Core/SangmonGrowth.cs](windows/Core/SangmonGrowth.cs) | [성장 안내](docs/SANGMON-GROWTH.md) |
+| 검·보주 이름·속성·설명 | [windows/Core/SangmonItems.cs](windows/Core/SangmonItems.cs) | [아이템 안내](docs/SANGMON-ITEMS.md) |
+| 검·보주 모양·빛나는 효과 | [windows/Character/ItemPainter.cs](windows/Character/ItemPainter.cs) | [아이템 안내](docs/SANGMON-ITEMS.md) |
+| 장비함 디자인·장착 버튼 | [windows/UI/EquipmentWindow.cs](windows/UI/EquipmentWindow.cs) | [아이템 안내](docs/SANGMON-ITEMS.md) |
+| 갤럭시 화면·위젯·배경화면 | [Android 코드 안내](app/src/main/java/com/myday/diary/README.md) | [Android 디자인](docs/DESIGN.md) |
+
+블록 드래그·달력·검색·내 레이아웃·캐릭터 의상 등 나머지 기능도 [전체 수정 가이드](docs/EDITING-GUIDE.md)에서 찾습니다. **화면(UI) / 기능·저장(Core) / 그림·동작(Character)**으로 나눠 수정합니다. 각 폴더에 들어가면 README가 수정 위치를 설명합니다.
+
+## 처음 개발에 참여한다면
 
 ```sh
 git clone https://github.com/parkhookjung-debug/myday-diary.git
 cd myday-diary
-# 통합 PR이 main에 반영되기 전에는 최신 작업 브랜치를 사용합니다.
 git switch codex/windows-app
 ```
 
-Windows 소스 실행에는 .NET Framework 4.8 이상이 필요합니다. Android 개발에는 JDK 17 이상과 Android SDK 35가 필요합니다.
+1. [기능별 수정 가이드](docs/EDITING-GUIDE.md)에서 바꿀 파일을 고릅니다.
+2. [공동 작업 안내](CONTRIBUTING.md)를 따라 별도 브랜치에서 수정합니다.
+3. 해당 플랫폼을 다시 빌드하고 동작을 확인한 뒤 PR을 올립니다.
 
-## 파일 찾기
+Windows는 C# / Windows Forms이며 [windows/build.ps1](windows/build.ps1)로 빌드합니다. 코드 수정 뒤에는 다시 빌드해야 변경이 EXE에 반영됩니다. Android는 Kotlin / Jetpack Compose이며 Android Studio, JDK 17 이상, Android SDK 35를 사용합니다.
 
-| 폴더 | 내용 |
+[폴더 구조](docs/REPOSITORY-STRUCTURE.md) · [문서 목록](docs/README.md) · [5명 역할·공동 작업자](docs/TEAM.md) · [미리보기 목록](previews/README.md)
+
+## 현재 기능
+
+| 플랫폼 | 구현한 기능 |
 | --- | --- |
-| `app/` | Android 화면·저장·위젯·라이브 배경화면·테스트 |
-| `windows/Core/` | Windows 일기 모델·저장·클릭/드래그 구분 |
-| `windows/UI/` | Windows 일기 화면·블록·디자인 |
-| `windows/Character/` | 상몬 그림·외형·게임 스타일·움직임·투명 창 |
-| `docs/` | 플랫폼 실행 안내·디자인 기준·팀 역할·저장소 구조 |
-| `previews/android/` | Android 및 초기 화면의 PNG·GIF·HTML 예시 |
-| `previews/windows/` | Windows 화면·상몬·게임 스타일 PNG·GIF |
-| `.github/` | 플랫폼별 자동 검사·이슈와 PR 양식 |
+| Windows | 날짜별 글·할 일·습관·감정·사진, 자유 배치, 내 레이아웃 저장·재사용, 일기 형식 100종, 월간 달력·본문/사진 설명 검색, 자동 저장·JSON 백업 |
+| Windows 상몬 | 바탕화면 이동·클릭으로 일기 열기·숨기기/재표시, 외형 64종, 하루 경험치·성장 보상, 검·보주 12종의 두 슬롯 장착 |
+| Android | 날짜별 블록 일기·자동 저장, 홈 위젯, 움직이는 캐릭터 라이브 배경화면 |
 
-전체 구조와 기능별 수정 파일은 [파일·폴더 안내](docs/REPOSITORY-STRUCTURE.md), 자료 설명은 [미리보기 안내](previews/README.md)에 정리했습니다.
+Windows의 사진·자유 배치·성장·장비 기능은 현재 Android에 구현하지 않았습니다. 각 기기에 기록을 저장하며 플랫폼 사이의 자동 동기화는 없습니다. 영상 첨부와 AI 감정 대화는 후속 기능입니다.
 
-## Windows와 상몬
+<details>
+<summary>실제 화면과 아이템 예시 보기</summary>
 
-- 날짜별 기록·본문 미리보기, 아이보리 종이와 청록색 포인트. [Windows 디자인 수정 안내](docs/WINDOWS-DESIGN.md)
-- [월간 달력·일기 검색](docs/CALENDAR-SEARCH.md): 기록한 날·사진 있는 날 표시, 본문과 사진 설명 검색, 결과 클릭으로 일기 열기. 왼쪽 버튼 또는 Ctrl+F로 실행
-- [일기 형식 100종](docs/JOURNAL-FORMATS.md): 10개 분야별 10종, 제목·질문·배치 이름 검색, 질문·배치 미리보기와 날짜별 저장. [전체 목록·참고 출처](docs/JOURNAL-CATALOG.md)
-- 긴 글·질문 카드·본문+메모·타임라인·편지·플래너·코넬 노트·비교형 등 8종 배치
-- 날짜별 일기·할 일·습관·감정, 블록 순서·너비 변경, 자동 저장과 JSON 백업
-- [사진 첨부](docs/PHOTOS.md): 사진과 설명·날짜별 자유 배치, 사진 교체, 사진을 포함하는 JSON 백업·복원
-- [자유 배치](docs/FREE-LAYOUT.md): 블록 제목을 드래그해서 이동하고 모서리로 크기를 조절하며 날짜별 위치·크기를 저장
-- [내 레이아웃](docs/MY-LAYOUTS.md): 직접 꾸민 구성을 이름 붙여 저장·미리보기·검색·이름 변경·삭제하고 다른 날짜에 빈 블록과 사진 자리로 재사용. 백업에 함께 보관
-- 바탕화면 이동·클릭으로 일기 열기·드래그·숨기기·다시 표시
-- 기존 외형 48종과 RPG 속성 스타일 8종은 자유 선택, 성장 보상 8종을 더해 총 64종
-- [상몬 성장](docs/SANGMON-GROWTH.md): 실제 기록일마다 +10 XP, 50 XP마다 레벨 업, 보상 외형 미리보기·해금·장착, 백업에 성장 기록 포함
-- 화염·빙결·전격·맹독·그림자·암석·해류·비전은 몸 색·명암·재질·효과로 구분
-- [아이템 장비함](docs/SANGMON-ITEMS.md): 속성별 검 6종·보주 6종, 두 슬롯 장착·각각 해제·날짜와 외형 간 유지·저장·백업
-- 불 뿜기는 터치와 드문 하품에만 잠깐 표시
-
-캐릭터를 숨긴 뒤에는 알림 영역 MyDay 아이콘을 더블클릭해 일기를 열고 왼쪽 표시 버튼을 사용합니다. 캐릭터 우클릭의 **게임 스타일**에서 RPG 외형을 바로 고를 수 있습니다.
+예시는 격리된 기록으로 만든 Windows 창과 코드로 렌더링한 아이템입니다. [더 많은 화면·움직임 예시](previews/README.md)
 
 ![Windows 일기 예시](previews/windows/windows-example.png)
 
-![사진을 추가한 Windows 일기](previews/windows/windows-photos.png)
-
-![달력과 일기 검색](previews/windows/windows-calendar.png)
-
-![내 레이아웃 저장과 재사용](previews/windows/windows-my-layouts.png)
-
-![상몬 성장과 보상 외형](previews/windows/windows-sangmon-growth.png)
-
 ![상몬 아이템 12종](previews/windows/windows-item-catalog.png)
 
-![게임 스타일 상몬](previews/windows/windows-game-styles.gif)
+</details>
 
-## Android
+## 검증과 저장 호환성
 
-날짜별 일기·블록 편집·자동 저장, 홈 화면 위젯, 움직이는 캐릭터 라이브 배경화면을 제공합니다. Android의 캐릭터 구성과 동작은 Windows와 다르며, Windows의 64종 외형과 성장 기능을 Android에 모두 적용한 상태는 아닙니다.
+Android CI는 빌드·Lint·단위 테스트를, Windows CI는 빌드·저장·레이아웃·사진·검색·성장·장비·캐릭터 렌더링 검사를 실행합니다. v0.3.9-preview의 Windows 자동 검사는 162개이며 배포 EXE의 네이티브 화면도 격리된 기록으로 확인했습니다. 갤럭시 실기기, 여러 모니터·DPI·절전 복귀는 추가 검증 대상입니다.
 
-![Android 캐릭터 동작 예시](previews/android/monster-motion.gif)
-
-## 공동 작업
-
-- [개발 참여·PR·검증](CONTRIBUTING.md)
-- [5명 팀 역할과 담당 파일](docs/TEAM.md)
-- [Android 디자인 수정](docs/DESIGN.md)
-- [상몬 디자인·게임 스타일 수정](docs/SANGMON-DESIGN.md)
-
-Android CI는 APK 빌드·Lint·단위 테스트를, Windows CI는 C# 빌드·저장·레이아웃·사진·달력·검색·캐릭터 테스트를 실행합니다. Windows의 자동 테스트는 114개이며 네이티브 화면 흐름은 격리된 예시 데이터로 별도 확인했습니다. 갤럭시 실기기, 여러 모니터·DPI·절전 복귀 확인은 추가 검증 대상입니다.
-
-일기는 각 기기에 저장합니다. 사진 첨부는 Windows에서 지원합니다. Android와 Windows 사이의 자동 동기화, Android 사진 첨부, 영상 첨부, AI 감정 대화는 후속 기능입니다.
+장비를 저장한 기록은 버전 4이며 v0.3.9-preview 이상으로 열어주세요. 이전 버전 1·2·3 기록과 백업은 읽고 보존합니다. 자세한 기준은 [Windows 기록·빌드 안내](windows/README.md)에 있습니다.
