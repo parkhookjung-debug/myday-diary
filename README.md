@@ -1,5 +1,49 @@
 # 마이데이 (MyDay)
 
+## 맥·윈도우 공통 웹 앱 실행
+
+`previews/myday-example.html`의 디자인과 기능을 실제 웹 앱으로 옮긴 버전은 **`web/`**에 있습니다.
+맥과 윈도우에서 같은 HTML·CSS·JavaScript 코드를 사용합니다. 기존 미리보기 파일은 예시로 보관합니다.
+
+1. Python 3를 설치합니다. 윈도우에서는 설치 시 **Add Python to PATH**를 선택합니다.
+2. 프로젝트 폴더에서 운영체제에 맞는 명령을 실행합니다.
+
+   **맥 터미널**
+   ```sh
+   ./web/start-mac.command
+   ```
+
+   **윈도우 PowerShell**
+   ```powershell
+   .\web\start-windows.bat
+   ```
+
+3. 브라우저가 자동으로 열립니다. 열리지 않으면 `http://127.0.0.1:8765`로 접속하세요.
+4. 사용하는 동안 터미널을 열어 두고, 종료할 때 `Ctrl+C`를 누릅니다.
+
+Python이 실행되는 컴퓨터 내부에서만 접속하도록 설정되어 있습니다.
+서버는 정적 파일만 제공하며 기록을 수집하거나 전송하지 않습니다.
+`index.html`을 직접 더블 클릭하는 대신 위 실행 방법을 사용하세요.
+
+### 웹 앱 기능과 기록 보관
+
+- 날짜 선택과 이전·다음 날짜 이동
+- 글 일기·할 일·습관·감정 블록 추가, 입력, 순서 변경, 삭제 확인
+- 날짜별 배경 테마와 캐릭터 선택
+- 브라우저 자동 저장, 저장 실패 시 재시도와 날짜 이동 방지
+- JSON 백업 다운로드와 복원: 맥과 윈도우 사이에서 같은 기록을 옮길 수 있습니다.
+- 작은 화면과 PC 화면에 맞는 반응형 구성
+
+기록은 **현재 브라우저의 localStorage**에 저장됩니다. 같은 주소와 같은 브라우저 프로필로 접속하세요.
+브라우저 데이터 삭제나 시크릿 모드 종료 시 기록이 사라질 수 있으므로 백업 파일을 보관하세요.
+복원하면 모든 날짜의 기록이 백업 내용으로 교체됩니다. 계정과 자동 동기화는 제공하지 않습니다.
+다른 탭이 기록을 변경하면 편집을 멈추고 새로고침을 안내합니다.
+Android 및 SwiftUI 버전의 저장 파일과는 별도입니다. Android 위젯과 라이브 배경화면은 웹 기능에 포함되지 않습니다.
+
+팀원은 같은 저장소의 `web/` 파일을 수정하고 PR로 합치면 됩니다.
+별도의 맥 전용 웹 코드를 유지할 필요가 없습니다. 브라우저·운영체제에 따라 글꼴, 이모지, 날짜 입력 UI는 조금 다를 수 있습니다.
+
+
 [![Android CI](https://github.com/parkhookjung-debug/myday-diary/actions/workflows/android.yml/badge.svg)](https://github.com/parkhookjung-debug/myday-diary/actions/workflows/android.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 
