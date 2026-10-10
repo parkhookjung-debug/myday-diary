@@ -1,5 +1,7 @@
 .gradle/
 .kotlin/
+.build/
+__pycache__/
 .idea/
 **/build/
 local.properties
@@ -14,3 +16,6 @@ local.properties
 keystore.properties
 .env
 .env.*
+
+# macOS Finder metadata.
+.DS_Store

@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>마이데이 · 나의 하루</title>
+  <meta name="description" content="작은 순간을 모아 나만의 하루를 기록하는 일기">
+  <link rel="stylesheet" href="desktop.css"><script src="app.js" defer></script>
+</head>
+<body>
+<div id="myday-example">
+  <div class="md-phone">
+    <aside class="sidebar" aria-label="날짜와 기록 관리">
+      <a class="brand" href="./"><span class="brand-icon">✳</span><span>my day<small>나를 위한 작은 기록</small></span></a>
+      <div class="nav-label">MY SPACE</div>
+      <div class="nav-current"><span>▤</span> 나의 다이어리 <span class="nav-dot"></span></div>
+      <section class="calendar-card" aria-label="날짜 탐색">
+        <div class="calendar-heading"><strong id="calendar-month"></strong><div><button type="button" id="month-prev" aria-label="이전 달">‹</button><button type="button" id="month-next" aria-label="다음 달">›</button></div></div>
+        <div class="weekdays" aria-hidden="true"><span>일</span><span>월</span><span>화</span><span>수</span><span>목</span><span>금</span><span>토</span></div>
+        <div id="calendar-days" class="calendar-days"></div>
+        <button type="button" id="today" class="today-button">오늘로 돌아가기 ↗</button>
+      </section>
+      <section class="md-backup"><div class="nav-label">MY RECORDS</div><h2>소중한 하루 보관하기</h2>
+        <p>작은 기록도 오래 남을 수 있도록.<br>가끔 백업 파일을 보관해 주세요.</p>
+        <button type="button" id="export">↓ 백업 다운로드</button><button type="button" id="import">↥ 백업 복원</button>
+        <input id="backup-file" type="file" accept="application/json,.json" hidden>
+      </section>
+      <div class="sidebar-footer"><span>✿</span> 오늘의 나를, 다정하게.</div>
+    </aside>
+    <main id="diary">
+      <header class="page-header"><span class="eyebrow">A LITTLE SPACE FOR YOUR DAY</span><span class="header-tag">나만의 다이어리</span></header>
+      <section class="intro"><p class="intro-date" id="date-heading"></p><h1>오늘은 어떤 하루였나요<span>?</span></h1><p class="md-sub">완벽하지 않아도 괜찮아요. 나의 속도로, 한 줄씩 남겨 보세요.</p></section>
+      <div class="diary-toolbar"><div class="md-date"><button type="button" data-day="-1" aria-label="이전 날짜">‹</button><input type="date" aria-label="일기 날짜"><button type="button" data-day="1" aria-label="다음 날짜">›</button></div><div class="md-caption" role="status">기록 불러오는 중…</div></div>
+      <div class="md-live" role="status" aria-live="polite"></div><button type="button" id="retry" hidden>다시 저장</button>
+      <div class="section-heading"><h2>나의 하루 조각들</h2><span id="block-count">0개의 기록</span></div>
+      <div class="md-blocks"></div>
+      <button type="button" class="md-add" aria-expanded="false" aria-controls="block-picker"><span>＋</span> 새로운 하루 조각 추가하기</button>
+      <section class="md-picker" id="block-picker" hidden aria-label="블록 선택"><h2>어떤 이야기를 남길까요?</h2><div class="picker-grid"><button type="button" data-add="text">✍ 글 일기</button><button type="button" data-add="todo">☑ 할 일</button><button type="button" data-add="habit">🌱 습관 체크</button><button type="button" data-add="emotion">🐰 감정처리반</button></div></section>
+      <p class="md-note">내 마음을 적는 것만으로도 충분해요. 감정처리반은 AI 대화 없이 기록을 보관하는 공간입니다.</p>
+    </main>
+    <aside class="rightbar" aria-label="분위기와 완료 현황">
+      <section class="friend-card"><span class="eyebrow">YOUR LITTLE FRIEND</span><div class="friend-scene"><span class="spark spark-one">✦</span><span id="friend-character">🐰</span><span class="spark spark-two">✧</span><span class="friend-shadow"></span></div><h2>오늘도 네 편이야</h2><p>많이 해내지 않아도 괜찮아.<br>여기까지 온 너를 응원해!</p><span class="friend-label">함께하는 작은 친구</span></section>
+      <section class="progress-card"><h2>차곡차곡, 오늘의 실천</h2><div class="progress-row"><span>☑ 할 일</span><strong id="todo-count">0 / 0</strong></div><progress id="todo-progress" value="0" max="1" aria-label="할 일 완료율"></progress><div class="progress-row"><span>🌱 습관</span><strong id="habit-count">0 / 0</strong></div><progress id="habit-progress" value="0" max="1" aria-label="습관 완료율"></progress><p>작은 체크 하나도 소중한 한 걸음.</p></section>
+      <section class="md-settings" aria-label="오늘의 분위기"><h2>오늘의 분위기</h2><p>오늘의 나와 어울리는 색과 친구</p><div class="setting-label">배경 테마</div><div class="md-options"><button type="button" data-theme="0" aria-pressed="true"><i class="swatch cream"></i>크림</button><button type="button" data-theme="1" aria-pressed="false"><i class="swatch forest"></i>숲</button><button type="button" data-theme="2" aria-pressed="false"><i class="swatch lavender"></i>라벤더</button></div><div class="setting-label">함께할 친구</div><div class="md-options characters"><button type="button" data-character="🐰" aria-label="토끼" aria-pressed="true">🐰</button><button type="button" data-character="🐱" aria-label="고양이" aria-pressed="false">🐱</button><button type="button" data-character="🐻" aria-label="곰" aria-pressed="false">🐻</button></div></section>
+      <div class="right-footer">EVERY LITTLE MOMENT MATTERS<br><span>나의 모든 하루는 소중하니까.</span></div>
+    </aside>
+  </div>
+</div>
+</body></html>
