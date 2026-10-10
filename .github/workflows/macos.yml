@@ -1,0 +1,64 @@
+name: macOS and Windows compatibility
+
+on:
+  push:
+    branches: [main]
+    paths: ['macos/**', '.github/workflows/macos.yml']
+  pull_request:
+    branches: [main]
+    paths: ['macos/**', '.github/workflows/macos.yml']
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: macos-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  macos:
+    runs-on: macos-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          persist-credentials: false
+      - name: Build app and verify templates, persistence and compatibility
+        run: ./macos/build.command
+      - name: Export synthetic interop fixture
+        run: MYDAY_COMPAT_EXPORT="$PWD/macos/build/mac-to-windows.json" macos/build/MyDay.app/Contents/MacOS/MyDay --self-test
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: myday-macos
+          path: |
+            macos/build/*.zip
+            macos/build/mac-to-windows.json
+          retention-days: 7
+  windows-contract:
+    needs: macos
+    runs-on: windows-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          persist-credentials: false
+      - name: Check out the exact v0.3.9-preview Windows source
+        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          repository: parkhookjung-debug/myday-diary
+          ref: 9abf375745369fc9a45e0d5e918e0e8a8fb9c26b
+          path: windows-reference
+          persist-credentials: false
+      - uses: actions/download-artifact@v4
+        with:
+          name: myday-macos
+          path: interop
+      - name: Validate Mac export with the original Windows app code
+        shell: pwsh
+        run: ./macos/verification/check-windows.ps1 -WindowsSource ./windows-reference/windows -MacExport ./interop/mac-to-windows.json -Output ./interop/windows-roundtrip.json
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: myday-windows-roundtrip
+          path: interop/windows-roundtrip.json
+          retention-days: 7
