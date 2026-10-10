@@ -109,15 +109,37 @@ struct TemplateDiagram: View {
         GeometryReader { geometry in
             let positions = DiaryLayout.preset(template.layout, count: template.sections.count, width: 800)
             let height = positions.map(\.bottom).max() ?? 1
-            let scale = min(geometry.size.width / 800, geometry.size.height / CGFloat(height + 12))
+            let scale: CGFloat = min(geometry.size.width / CGFloat(800), geometry.size.height / CGFloat(height + 12))
             ZStack(alignment: .topLeading) {
-                ForEach(Array(positions.enumerated()), id: \.offset) { index, rect in
-                    RoundedRectangle(cornerRadius: 8).fill(Color.brown.opacity(0.12))
-                        .overlay(Text(template.sections[index].title).font(.system(size: max(10, 15 * scale))).lineLimit(2).padding(5))
-                        .frame(width: CGFloat(rect.width) * scale, height: CGFloat(rect.height) * scale)
-                        .offset(x: CGFloat(rect.x) * scale, y: CGFloat(rect.y) * scale)
+                ForEach(positions.indices, id: \.self) { index in
+                    TemplateDiagramSection(title: template.sections[index].title, rect: positions[index], scale: scale)
                 }
             }
         }
+    }
+}
+
+private struct TemplateDiagramSection: View {
+    let title: String
+    let rect: BlockRect
+    let scale: CGFloat
+
+    var body: some View {
+        let width: CGFloat = CGFloat(rect.width) * scale
+        let height: CGFloat = CGFloat(rect.height) * scale
+        let x: CGFloat = CGFloat(rect.x) * scale
+        let y: CGFloat = CGFloat(rect.y) * scale
+        let fontSize: CGFloat = max(CGFloat(10), CGFloat(15) * scale)
+
+        RoundedRectangle(cornerRadius: 8)
+            .fill(Color.brown.opacity(0.12))
+            .overlay {
+                Text(title)
+                    .font(.system(size: fontSize))
+                    .lineLimit(2)
+                    .padding(5)
+            }
+            .frame(width: width, height: height)
+            .offset(x: x, y: y)
     }
 }
