@@ -55,3 +55,10 @@ python tools/package-preview.py .bootstrap/game-frames previews/windows/windows-
 - [성장 화면](windows/windows-sangmon-growth.png): 실제 Windows 창을 격리된 기록으로 검증한 예시
 - [성장 보상 8종](windows/windows-growth-rewards.gif): 새 의상을 네이티브 캐릭터 렌더러로 움직인 예시
 - 기존 56종 미리보기는 기존 외형을 보여주며, 새 8종은 성장 보상 미리보기에서 확인합니다.
+
+## 상몬 아이템
+
+- [아이템 12종](windows/windows-item-catalog.png): 실제 벡터 렌더러의 검 6종·보주 6종
+- [움직이는 아이템](windows/windows-items.gif): 빛과 잔광이 변하는 예시
+- [장비함](windows/windows-items.png), [보주 선택](windows/windows-item-orbs.png): 격리된 실제 Windows 창
+- `--item-preview`로 프레임을 생성하고 기존 `tools/package-preview.py`로 묶습니다.

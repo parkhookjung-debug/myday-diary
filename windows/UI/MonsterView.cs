@@ -3,6 +3,7 @@ using System.Diagnostics;
 using System.Drawing;
 using System.Windows.Forms;
 using MyDay.Windows.Character;
+using MyDay.Windows.Core;
 
 namespace MyDay.Windows.UI
 {
@@ -13,6 +14,8 @@ namespace MyDay.Windows.UI
         private double happyUntil, happyStarted;
         public event EventHandler Fired;
         private MonsterVariant variant;
+        private SangmonEquipment equipment;
+        public SangmonEquipment Equipment {get{return SangmonItems.Copy(equipment);}set{equipment=SangmonItems.Copy(value);Invalidate();}}
         public MonsterVariant Variant { get { return variant; } set { variant=value; Invalidate(); } }
         public MonsterView()
         {
@@ -29,7 +32,7 @@ namespace MyDay.Windows.UI
             base.OnPaint(e);
             double now=clock.Elapsed.TotalSeconds;
             var activity=now<happyUntil?PetActivity.Fire:PetActivity.Rest;
-            MonsterPainter.Draw(e.Graphics, ClientRectangle, MonsterPose.ForActivity(now,activity,now<happyUntil?now-happyStarted:now,0,0), true,variant);
+            MonsterPainter.Draw(e.Graphics, ClientRectangle, MonsterPose.ForActivity(now,activity,now<happyUntil?now-happyStarted:now,0,0), true,variant,equipment);
         }
         protected override void Dispose(bool disposing) { if (disposing) timer.Dispose(); base.Dispose(disposing); }
     }

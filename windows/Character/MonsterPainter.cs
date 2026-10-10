@@ -1,6 +1,7 @@
 using System;
 using System.Drawing;
 using System.Drawing.Drawing2D;
+using MyDay.Windows.Core;
 
 namespace MyDay.Windows.Character
 {
@@ -73,6 +74,10 @@ namespace MyDay.Windows.Character
             Draw(g,area,pose,facingLeft,MonsterVariant.Original);
         }
         public static void Draw(Graphics g, Rectangle area, MonsterPose pose, bool facingLeft,MonsterVariant variant)
+        {
+            Draw(g,area,pose,facingLeft,variant,null);
+        }
+        public static void Draw(Graphics g, Rectangle area, MonsterPose pose, bool facingLeft,MonsterVariant variant,SangmonEquipment equipment)
         {
             var save = g.Save();
             g.SmoothingMode = SmoothingMode.AntiAlias;
@@ -154,6 +159,7 @@ namespace MyDay.Windows.Character
             }
             DrawDetails(g,variant);
             g.Restore(bodySave);
+            ItemPainter.DrawEquipped(g,pose,equipment);
             if (!pose.Held && pose.FireStrength>.01f)
             {
                 float size = .42f + pose.FireStrength*(.47f + pose.Pulse*.13f);

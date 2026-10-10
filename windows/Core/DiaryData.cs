@@ -62,6 +62,7 @@ namespace MyDay.Windows.Core
         [DataMember(EmitDefaultValue=false)] public string CharacterStyle="original";
         [DataMember(EmitDefaultValue=false)] public List<SavedLayout> Layouts=new List<SavedLayout>();
         [DataMember(EmitDefaultValue=false)] public SangmonProgress Progress;
+        [DataMember(EmitDefaultValue=false)] public SangmonEquipment Equipment;
     }
 
     public sealed class DiaryStore
@@ -83,11 +84,12 @@ namespace MyDay.Windows.Core
         }
         public static void Validate(DiaryBook book)
         {
-            if (book == null || book.Version != 1 && book.Version != 2 && book.Version != 3 || book.Days == null)
+            if (book == null || book.Version != 1 && book.Version != 2 && book.Version != 3 && book.Version != 4 || book.Days == null)
                 throw new InvalidDataException("지원하지 않는 기록 파일입니다.");
             if (book.Days.Count > 50000) throw new InvalidDataException("기록 파일이 너무 큽니다.");
             book.CharacterStyle=MonsterVariants.Id(MonsterVariants.FromId(book.CharacterStyle));
             SangmonGrowth.Validate(book.Progress);
+            SangmonItems.Validate(book.Equipment);
             if(!SangmonGrowth.CanUse(book.Progress,MonsterVariants.FromId(book.CharacterStyle))) book.CharacterStyle="original";
             if(book.Layouts==null) book.Layouts=new List<SavedLayout>();
             SavedLayouts.Validate(book.Layouts);
@@ -156,7 +158,8 @@ namespace MyDay.Windows.Core
         public static string Key(DateTime date) { return date.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture); }
         private static void UpgradeVersion(DiaryBook book)
         {
-            if(book.Progress!=null) book.Version=3;
+            if(book.Equipment!=null) book.Version=4;
+            else if(book.Progress!=null && book.Version<3) book.Version=3;
             else if(book.Version<2 && (book.Layouts.Count>0 || book.Days.Values.Any(e=>e.Blocks.Any(b=>b.Kind=="photo-slot")))) book.Version=2;
         }
         private static void CheckSize(long size)

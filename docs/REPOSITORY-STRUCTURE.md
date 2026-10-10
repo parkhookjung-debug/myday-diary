@@ -23,6 +23,7 @@ myday-diary/
 │   ├── Tests.cs               저장·캐릭터·네이티브 검증
 │   ├── PhotoTests.cs          사진 보존·변환·백업·손상 검증
 │   ├── BrowseTests.cs         달력 날짜·사진 표시·본문 검색 검증
+│   ├── ItemTests.cs           아이템 슬롯·저장·모든 조합 경계 검증
 │   ├── GrowthTests.cs         상몬 성장·해금·버전 3·백업 검증
 │   ├── SavedLayoutTests.cs    내 레이아웃 저장·재사용·보존 검증
 │   ├── build.ps1              .NET Framework 빌드
@@ -51,6 +52,8 @@ myday-diary/
 | 달력·일기 검색 | 현재 Windows에 적용 | `Core/DiaryBrowse.cs`, `UI/JournalBrowser.cs`, `UI/MonthCalendar.cs` |
 | 내 레이아웃 저장·재사용 | 현재 Windows에 적용 | `Core/SavedLayouts.cs`, `UI/MyLayoutsWindow.cs`, `UI/SavedLayoutDiagram.cs` |
 | 캐릭터 그림 | `ui/character/` | `Character/MonsterPainter.cs`, `MonsterAdditions.cs` |
+| 아이템 장비함 | 현재 Windows에 적용 | `Core/SangmonItems.cs`, `UI/EquipmentWindow.cs`, `UI/DiaryWindow.Items.cs` |
+| 아이템 그림·광채 | 현재 Windows에 적용 | `Character/ItemPainter.cs`, `UI/ItemView.cs` |
 | 상몬 성장·해금 | 현재 Windows에 적용 | `Core/SangmonGrowth.cs`, `UI/GrowthWindow.cs`, `UI/DiaryWindow.Growth.cs` |
 | 성장 보상 의상 | 현재 Windows에 적용 | `Character/RewardSkins.cs` |
 | 게임 속성 재질 | 현재 Windows에 적용 | `Character/GameSkins.cs` |
@@ -64,7 +67,7 @@ Android 표의 Java 경로는 `app/src/main/java/com/myday/diary/` 기준입니�
 
 GitHub Releases에 플랫폼별로 배포합니다.
 
-- Windows: `MyDay-Windows-v0.3.8-preview.zip`에 `MyDay.exe`, 실행 안내, 상몬 성장·내 레이아웃·달력/검색·사진 안내, 100종 목록, 라이선스
+- Windows: `MyDay-Windows-v0.3.9-preview.zip`에 `MyDay.exe`, 실행 안내, 아이템·상몬 성장·내 레이아웃·달력/검색·사진 안내, 100종 목록, 라이선스
 - Android: `MyDay-Android-v0.3.0-preview.apk` 개발용 debug 빌드
 - GitHub에서 자동 제공하는 Source code ZIP/TAR: 같은 태그의 전체 소스
 
@@ -84,5 +87,6 @@ GitHub Releases에 플랫폼별로 배포합니다.
 - [월간 달력·일기 검색](CALENDAR-SEARCH.md)
 - [내 레이아웃 저장·재사용](MY-LAYOUTS.md)
 - [상몬 성장·보상 외형](SANGMON-GROWTH.md)
+- [상몬 아이템·장착](SANGMON-ITEMS.md)
 - [5명 팀 역할](TEAM.md)
 - [미리보기 설명](../previews/README.md)

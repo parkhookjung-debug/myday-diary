@@ -22,7 +22,7 @@ namespace MyDay.Windows.UI
             ClientSize=new Size(Math.Min(Design.P(960),work.Width-64),Math.Min(Design.P(720),work.Height-80));
             MinimumSize=Design.Size(700,520);
             var hero=new CardPanel {Dock=DockStyle.Top,Height=Design.P(184),Fill=Design.Paper};
-            var avatar=new MonsterView {Location=Design.Point(24,20),Size=Design.Size(160,140),Variant=MonsterVariants.FromId(book.CharacterStyle),BackColor=hero.Fill}; hero.Controls.Add(avatar);
+            var avatar=new MonsterView {Location=Design.Point(24,20),Size=Design.Size(160,140),Variant=MonsterVariants.FromId(book.CharacterStyle),Equipment=book.Equipment,BackColor=hero.Fill}; hero.Controls.Add(avatar);
             var eyebrow=Design.Label("SANGMON · GROWTH JOURNAL",8,true); eyebrow.ForeColor=Design.Accent; eyebrow.Location=Design.Point(204,19); hero.Controls.Add(eyebrow);
             var title=Design.Label("Lv."+SangmonGrowth.Level(book.Progress)+"  함께 쌓아가는 하루",20,true); title.Location=Design.Point(202,42); hero.Controls.Add(title);
             int xp=SangmonGrowth.XP(book.Progress), days=xp/SangmonGrowth.DailyXP;

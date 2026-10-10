@@ -10,7 +10,7 @@ Windows 10/11과 .NET Framework 4.8 이상을 사용합니다.
 캐릭터를 한 번 클릭하면 일기 창이 열립니다.
 빌드 후에는 `bin/MyDay.exe`만 더블클릭해도 실행할 수 있습니다.
 GitHub CI의 Windows artifact에서도 실행 파일을 받을 수 있습니다.
-[다운로드용 Windows ZIP](https://github.com/parkhookjung-debug/myday-diary/releases/tag/v0.3.8-preview)은 압축을 풀고 `MyDay.exe`를 실행합니다.
+[다운로드용 Windows ZIP 및 EXE](https://github.com/parkhookjung-debug/myday-diary/releases/tag/v0.3.9-preview)은 압축을 풀고 `MyDay.exe`를 실행합니다.
 
 ## 기능
 
@@ -44,13 +44,15 @@ GitHub CI의 Windows artifact에서도 실행 파일을 받을 수 있습니다.
 이 버전의 캐릭터는 Windows 위에 뜨는 투명 창입니다. Windows 배경화면을 교체하지 않습니다.
 Android 기록과 자동 동기화하지 않습니다. 영상·시작 시 자동 실행은 아직 추가하지 않았습니다.
 
-[상몬 성장](../docs/SANGMON-GROWTH.md): 왼쪽 **성장 보기** 또는 상몬 우클릭 → **상몬 성장**에서 경험치와 다음 보상을 확인합니다. 실제 기록일에 하루 +10 XP, 50 XP마다 레벨 업하며 추가 보상 8종을 해금·장착합니다. 총 64종이고 기존 56종은 계속 자유롭게 선택합니다.
+[상몬 성장](../docs/SANGMON-GROWTH.md): 왼쪽 **성장** 또는 상몬 우클릭 → **상몬 성장**에서 경험치와 다음 보상을 확인합니다. 실제 기록일에 하루 +10 XP, 50 XP마다 레벨 업하며 추가 보상 8종을 해금·장착합니다. 총 64종이고 기존 56종은 계속 자유롭게 선택합니다.
+
+[아이템 장비함](../docs/SANGMON-ITEMS.md): 왼쪽 **아이템** 또는 상몬 우클릭 → **아이템 장착**에서 검 6종·마법 보주 6종을 선택합니다. 모두 바로 장착하고 두 슬롯을 함께 쓰거나 각각 해제합니다. 일기와 바탕화면에 함께 적용하고 저장·백업에 포함합니다.
 
 ## 기록 위치
 
 `%LOCALAPPDATA%/MyDay/Windows/diary.json`에 보관합니다. 프로그램 폴더를 옮겨도 같은 Windows 계정의 기록을 유지합니다.
 이전 저장본은 `diary.json.bak`에 남습니다. 기록을 수정하거나 PC를 옮기기 전 **기록 백업**으로 별도 파일을 보관하세요.
-내 레이아웃이나 빈 사진 자리만 저장한 기록은 버전 2 형식(v0.3.7-preview 이상)입니다. 성장 기록을 저장하면 버전 3 형식이며 v0.3.8-preview 이상에서 엽니다. 기존 버전 1·2 기록과 백업도 읽습니다.
+내 레이아웃이나 빈 사진 자리만 저장한 기록은 버전 2 형식(v0.3.7-preview 이상)입니다. 성장 기록을 저장하면 버전 3 형식이며 v0.3.8-preview 이상에서 엽니다. 기존 버전 1·2 기록과 백업도 읽습니다. 아이템 장비를 저장한 기록은 버전 4이며 v0.3.9-preview 이상으로 열어주세요. 버전 3의 성장 기록도 읽고 보존합니다.
 손상된 기록을 읽지 못하면 앱이 오류를 표시하고 종료하며 빈 기록으로 덮어쓰지 않습니다.
 
 ## 팀 디자인·기능 수정
@@ -68,6 +70,9 @@ Android 기록과 자동 동기화하지 않습니다. 영상·시작 시 자동
 | 내 레이아웃 저장·재사용 검증 | `SavedLayoutTests.cs` |
 | 상몬 성장·레벨·보상·병합 | `Core/SangmonGrowth.cs`, `UI/GrowthWindow.cs`, `UI/DiaryWindow.Growth.cs` |
 | 성장 보상 의상·검증 | `Character/RewardSkins.cs`, `GrowthTests.cs` |
+| 아이템 모델·장착·백업 | `Core/SangmonItems.cs`, `UI/DiaryWindow.Items.cs` |
+| 아이템 그림·장비함·미리보기 | `Character/ItemPainter.cs`, `UI/EquipmentWindow.cs`, `UI/ItemView.cs` |
+| 장비 저장·슬롯·그림 경계 검증 | `ItemTests.cs` |
 | 날짜 표지 | `UI/JournalCover.cs` |
 | 형식 선택·미리보기 | `UI/TemplateGallery.cs` |
 | 형식의 블록 제목·질문·구성 | `Core/DiaryTemplates.cs` |
@@ -126,3 +131,5 @@ if ($process.ExitCode -ne 0) { throw 'Tests failed' }
 기반 기술: [Microsoft Windows Forms](https://learn.microsoft.com/en-us/dotnet/desktop/winforms/overview/), [UpdateLayeredWindow](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-updatelayeredwindow).
 
 성장 검증은 하루 한 번 지급·빈 기록 제외·실제 입력과 배치 변경의 구분·레벨별 해금·기존 외형 유지·버전 3 저장·백업 합치기·중복/잘못된 날짜 거부를 확인합니다. 네이티브 창에서는 잠긴 메뉴·성장 카드·8종 장착·파일 잠금 시 경험치 복구·재시도·작은 창을 확인합니다.
+
+아이템 검증은 12종 저장·두 슬롯 독립성·해제·옛 백업 유지·버전 4 저장과 이전 기록 호환·잘못된 장비 복구·모든 검/보주 조합의 투명 창 경계를 확인합니다. 네이티브 장비함에서는 분류·12종 장착·해제·경험치 미지급·파일 잠금 시 복구·작은 창·날짜 전환·백업을 검증합니다.

@@ -12,7 +12,7 @@ namespace MyDay.Windows.UI
     {
         private void UpdateGrowth()
         {
-            growth.Text="성장 보기 · Lv."+SangmonGrowth.Level(book.Progress)+" · "+(SangmonGrowth.XP(book.Progress)%50)+"/50 XP";
+            growth.Text="성장 · Lv."+SangmonGrowth.Level(book.Progress)+" · "+(SangmonGrowth.XP(book.Progress)%50)+"/50";
             if(pet!=null) pet.SetAvailability(v=>SangmonGrowth.CanUse(book.Progress,v));
         }
         private void OpenGrowth()

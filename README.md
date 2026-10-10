@@ -17,7 +17,7 @@ MIT 라이선스의 오픈소스 프로젝트입니다. 5명이 UI·저장·캐�
 | Windows 10/11 | 소스의 `windows/실행.cmd`를 더블클릭하거나 배포 ZIP에서 `MyDay.exe` 실행 | [Windows 실행·개발 안내](windows/README.md) |
 | Android 8 이상 | Android Studio에서 저장소 루트를 열고 `app` 실행 또는 배포 APK 설치 | [Android 실행·기능 안내](docs/ANDROID.md) |
 
-Windows의 상몬 성장·내 레이아웃 저장·월간 달력·본문/사진 설명 검색·사진 첨부·일기 형식 100종·자유 배치를 포함한 ZIP은 [v0.3.8-preview](https://github.com/parkhookjung-debug/myday-diary/releases/tag/v0.3.8-preview), Android APK는 [v0.3.0-preview](https://github.com/parkhookjung-debug/myday-diary/releases/tag/v0.3.0-preview)에서 받습니다. APK는 개발용 debug 빌드입니다.
+Windows의 아이템 장비함·상몬 성장·내 레이아웃 저장·월간 달력·본문/사진 설명 검색·사진 첨부·일기 형식 100종·자유 배치를 포함한 ZIP은 [v0.3.9-preview](https://github.com/parkhookjung-debug/myday-diary/releases/tag/v0.3.9-preview), Android APK는 [v0.3.0-preview](https://github.com/parkhookjung-debug/myday-diary/releases/tag/v0.3.0-preview)에서 받습니다. APK는 개발용 debug 빌드입니다.
 
 ```sh
 git clone https://github.com/parkhookjung-debug/myday-diary.git
@@ -57,6 +57,7 @@ Windows 소스 실행에는 .NET Framework 4.8 이상이 필요합니다. Androi
 - 기존 외형 48종과 RPG 속성 스타일 8종은 자유 선택, 성장 보상 8종을 더해 총 64종
 - [상몬 성장](docs/SANGMON-GROWTH.md): 실제 기록일마다 +10 XP, 50 XP마다 레벨 업, 보상 외형 미리보기·해금·장착, 백업에 성장 기록 포함
 - 화염·빙결·전격·맹독·그림자·암석·해류·비전은 몸 색·명암·재질·효과로 구분
+- [아이템 장비함](docs/SANGMON-ITEMS.md): 속성별 검 6종·보주 6종, 두 슬롯 장착·각각 해제·날짜와 외형 간 유지·저장·백업
 - 불 뿜기는 터치와 드문 하품에만 잠깐 표시
 
 캐릭터를 숨긴 뒤에는 알림 영역 MyDay 아이콘을 더블클릭해 일기를 열고 왼쪽 표시 버튼을 사용합니다. 캐릭터 우클릭의 **게임 스타일**에서 RPG 외형을 바로 고를 수 있습니다.
@@ -70,6 +71,8 @@ Windows 소스 실행에는 .NET Framework 4.8 이상이 필요합니다. Androi
 ![내 레이아웃 저장과 재사용](previews/windows/windows-my-layouts.png)
 
 ![상몬 성장과 보상 외형](previews/windows/windows-sangmon-growth.png)
+
+![상몬 아이템 12종](previews/windows/windows-item-catalog.png)
 
 ![게임 스타일 상몬](previews/windows/windows-game-styles.gif)
 

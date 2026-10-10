@@ -60,6 +60,7 @@ namespace MyDay.Windows.UI
     public class RoundedButton : Button
     {
         private bool hover;
+        public Color? HoverFill;
         public RoundedButton() { SetStyle(ControlStyles.UserPaint | ControlStyles.AllPaintingInWmPaint | ControlStyles.OptimizedDoubleBuffer, true); }
         protected override void OnMouseEnter(System.EventArgs e) { hover=true; Invalidate(); base.OnMouseEnter(e); }
         protected override void OnMouseLeave(System.EventArgs e) { hover=false; Invalidate(); base.OnMouseLeave(e); }
@@ -69,7 +70,7 @@ namespace MyDay.Windows.UI
             while(surface!=null && surface.BackColor.A<255) surface=surface.Parent;
             e.Graphics.Clear(surface==null?Color.White:surface.BackColor);
             e.Graphics.SmoothingMode=SmoothingMode.AntiAlias;
-            Color fill=hover && Enabled ? (BackColor==Design.Accent ? Color.FromArgb(29,78,66) : Design.Tint) : BackColor;
+            Color fill=hover && Enabled ? (HoverFill ?? (BackColor==Design.Accent ? Color.FromArgb(29,78,66) : Design.Tint)) : BackColor;
             using(var path=Design.Rounded(new RectangleF(1,1,Width-3,Height-3),Design.P(10)))
             using(var brush=new SolidBrush(fill))
             using(var pen=new Pen(FlatAppearance.BorderColor)) {

@@ -21,6 +21,8 @@ namespace MyDay.Windows.Character
         private float x, y;
         private double lastFrame;
         private MonsterVariant variant;
+        private SangmonEquipment equipment;
+        public SangmonEquipment Equipment {get{return SangmonItems.Copy(equipment);}set{equipment=SangmonItems.Copy(value);if(Visible)RenderFrame();}}
         private Func<MonsterVariant,bool> canUse;
         public void SetAvailability(Func<MonsterVariant,bool> predicate)
         {
@@ -45,7 +47,7 @@ namespace MyDay.Windows.Character
         }
         public bool Roaming { get { return roaming; } }
         public event EventHandler PetHidden;
-        public DesktopPet(Action openDiary,Action openGrowth=null)
+        public DesktopPet(Action openDiary,Action openGrowth=null,Action openItems=null)
         {
             this.openDiary = openDiary;
             Text = "MyDay 상몬"; FormBorderStyle = FormBorderStyle.None;
@@ -58,6 +60,7 @@ namespace MyDay.Windows.Character
             var menu = new ContextMenuStrip();
             menu.Items.Add("일기 열기", null, delegate { openDiary(); });
             if(openGrowth!=null) menu.Items.Add("상몬 성장",null,delegate { openGrowth(); });
+            if(openItems!=null) menu.Items.Add("아이템 장착",null,delegate { openItems(); });
             var versions=new ToolStripMenuItem("캐릭터 버전");
             foreach(var item in MonsterVariants.All) {
                 var choice=item; var option=new ToolStripMenuItem(MonsterVariants.Name(item)) { Checked=item==variant };
@@ -153,7 +156,7 @@ namespace MyDay.Windows.Character
                 float lookY=(pointer.Y-(Top+Height/2f))/Height;
                 PetActivity activity=gesture.Active && gesture.Moved?PetActivity.Drag:happy?PetActivity.Fire:behavior.Activity;
                 double age=activity==behavior.Activity?behavior.Age:Math.Min(seconds,.9);
-                MonsterPainter.Draw(g, new Rectangle(16, 22, Width - 32, Height - 44), MonsterPose.ForActivity(seconds,activity,age,lookX,lookY), behavior.FacingLeft,variant);
+                MonsterPainter.Draw(g, new Rectangle(16, 22, Width - 32, Height - 44), MonsterPose.ForActivity(seconds,activity,age,lookX,lookY), behavior.FacingLeft,variant,equipment);
             }
             return bitmap;
         }

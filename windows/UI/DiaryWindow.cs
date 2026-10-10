@@ -25,6 +25,7 @@ namespace MyDay.Windows.UI
         private readonly Button myLayouts=Design.Button("내 레이아웃");
         private readonly Button browse=Design.Button("달력 · 일기 검색");
         private readonly Button growth=Design.Button("상몬 성장");
+        private readonly Button items=Design.Button("아이템");
         private readonly Button editLayout=Design.Button("배치 편집"),arrangeLayout=Design.Button("자동 정리");
         private readonly Label layoutHint=Design.Label("",9);
         private readonly Label status = Design.Label("내 컴퓨터에 자동 저장", 9);
@@ -72,7 +73,8 @@ namespace MyDay.Windows.UI
             characterChoice.ItemEnabled=i=>SangmonGrowth.CanUse(book.Progress,(MonsterVariant)i);
             characterChoice.ItemLabel=i=>MonsterVariants.Name((MonsterVariant)i)+(characterChoice.ItemEnabled(i)?"":" · Lv."+SangmonGrowth.RequiredLevel((MonsterVariant)i));
             characterChoice.SelectedIndexChanged+=delegate { if(!binding) SelectVariant((MonsterVariant)characterChoice.SelectedIndex); }; companion.Controls.Add(characterChoice);
-            growth.Location=Design.Point(24,86); growth.Size=Design.Size(212,28); growth.Font=Design.Font(8); growth.AccessibleName="상몬 성장과 보상 외형 보기"; growth.Click+=delegate { OpenGrowth(); }; companion.Controls.Add(growth);
+            growth.Location=Design.Point(24,86); growth.Size=Design.Size(140,28); growth.Font=Design.Font(8); growth.AccessibleName="상몬 성장과 보상 외형 보기"; growth.Click+=delegate { OpenGrowth(); }; companion.Controls.Add(growth);
+            items.Location=Design.Point(172,86); items.Size=Design.Size(64,28); items.Font=Design.Font(8); items.AccessibleName="상몬 아이템 장착 열기"; items.Click+=delegate { OpenItems(); }; companion.Controls.Add(items);
             petToggle.Location=Design.Point(24,124); petToggle.Width=Design.P(103); petToggle.Font=Design.Font(8); petToggle.Click+=delegate { TogglePet(); }; companion.Controls.Add(petToggle);
             var hide=Design.Button("창 숨기기"); hide.Location=Design.Point(133,124); hide.Width=Design.P(103); hide.Click+=delegate { if (FlushSave()) Hide(); }; companion.Controls.Add(hide);
             var export=Design.Button("기록 백업"); export.Location=Design.Point(24,166); export.Width=Design.P(103); export.Click+=delegate { ExportBook(); }; companion.Controls.Add(export);
@@ -135,6 +137,7 @@ namespace MyDay.Windows.UI
             var trayMenu=new ContextMenuStrip(); trayMenu.Items.Add("일기 열기",null,delegate { OpenDiary(); });
             trayMenu.Items.Add("캐릭터 표시 / 숨기기",null,delegate { TogglePet(); });
             trayMenu.Items.Add("상몬 성장",null,delegate { OpenGrowth(); });
+            trayMenu.Items.Add("아이템 장착",null,delegate { OpenItems(); });
             trayMenu.Items.Add("모두 종료",null,delegate { ExitApp(); }); tray.ContextMenuStrip=trayMenu;
             tray.DoubleClick+=delegate { OpenDiary(); };
             avatar.Fired+=delegate { if (pet!=null) pet.Fire(); };
@@ -158,9 +161,10 @@ namespace MyDay.Windows.UI
         private void EnsurePet()
         {
             if(pet!=null && !pet.IsDisposed) return;
-            pet=new DesktopPet(OpenDiary,delegate { OpenGrowth(); });
+            pet=new DesktopPet(OpenDiary,delegate { OpenGrowth(); },delegate { OpenItems(); });
             pet.SetAvailability(v=>SangmonGrowth.CanUse(book.Progress,v));
             pet.Variant=MonsterVariants.FromId(book.CharacterStyle);
+            pet.Equipment=book.Equipment;
             pet.VariantChanged+=delegate { if(!binding) SelectVariant(pet.Variant); };
             pet.PetHidden+=delegate { petToggle.Text="캐릭터 띄우기"; };
         }
@@ -175,6 +179,7 @@ namespace MyDay.Windows.UI
             bool previous=binding; binding=true;
             var variant=MonsterVariants.FromId(book.CharacterStyle);
             characterChoice.SelectedIndex=(int)variant; avatar.Variant=variant;
+            ApplyEquipment();
             if(pet!=null) pet.Variant=variant;
             binding=previous;
         }
@@ -433,6 +438,7 @@ namespace MyDay.Windows.UI
                     var merged=new DiaryBook(); foreach(var pair in book.Days) merged.Days[pair.Key]=pair.Value;
                     merged.CharacterStyle=incoming.CharacterStyle;
                     merged.Progress=SangmonGrowth.Merge(book.Progress,incoming.Progress);
+                    merged.Equipment=SangmonItems.Import(book.Equipment,incoming.Equipment);
                     merged.Layouts=layouts; merged.Version=Math.Max(book.Version,incoming.Version);
                     foreach(var pair in incoming.Days) merged.Days[pair.Key]=pair.Value;
                     store.Save(merged); book=merged; dirty=false; entryDirty=false; UpdateGrowth(); LoadDate(); status.Text="가져오기 완료";
