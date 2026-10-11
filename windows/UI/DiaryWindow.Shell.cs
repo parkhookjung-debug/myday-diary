@@ -102,7 +102,14 @@ namespace MyDay.Windows.UI
         {
             var original=Size; var originalDate=date;
             Size=Design.Size(1360,860); ArrangeShell();
-            if(companionRail.Parent!=this || content.Right>companionRail.Left || companionRail.Right>ClientSize.Width) throw new Exception("Wide shell overlaps the companion column");
+            // A hosted/noninteractive desktop may cap a requested window at its screen width.
+            // Validate the layout chosen for the actual client size, not the requested size.
+            bool actualWide=ClientSize.Width>=Design.P(1120);
+            Console.WriteLine("Smoke: requested wide client="+ClientSize+", three columns="+actualWide);
+            if(actualWide) {
+                if(companionRail.Parent!=this || content.Right>companionRail.Left || companionRail.Right>ClientSize.Width)
+                    throw new Exception("Wide shell overlaps: content="+content.Bounds+", companion="+companionRail.Bounds+", client="+ClientSize);
+            } else if(companionRail.Parent!=sidebarFlow) throw new Exception("Screen-capped window lost its compact companion rail");
             Size=MinimumSize; ArrangeShell();
             if(companionRail.Parent!=sidebarFlow || !sidebarFlow.AutoScroll || content.Width<Design.P(400)) throw new Exception("Compact shell lost accessible companion controls");
             Size=original; ArrangeShell();
