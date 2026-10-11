@@ -14,11 +14,11 @@
 
 | 사용할 환경 | 다운로드 | 실행·개발 안내 |
 | --- | --- | --- |
-| Windows 10/11 | [MyDay.exe 바로 받기](https://github.com/parkhookjung-debug/myday-diary/releases/download/v0.3.9-preview/MyDay.exe) · [전체 ZIP과 안내서](https://github.com/parkhookjung-debug/myday-diary/releases/tag/v0.3.9-preview) | [Windows 안내](windows/README.md) |
+| Windows 10/11 | [MyDay.exe 바로 받기](https://github.com/parkhookjung-debug/myday-diary/releases/download/v0.3.10-preview/MyDay.exe) · [전체 ZIP과 안내서](https://github.com/parkhookjung-debug/myday-diary/releases/tag/v0.3.10-preview) | [Windows 안내](windows/README.md) |
 | 갤럭시 / Android 8 이상 | [Android APK 받기](https://github.com/parkhookjung-debug/myday-diary/releases/tag/v0.3.0-preview) (개발용 debug) | [Android 안내](docs/ANDROID.md) |
 | macOS | 현재 macOS 실행 파일은 제공하지 않습니다. | Windows EXE는 Windows에서 실행합니다. |
 
-GitHub 저장소 오른쪽 **Releases → 해당 버전 → Assets**에서도 받습니다. Windows는 .NET Framework 4.8 이상에서 사용하며, 이전 앱이 실행 중이면 알림 영역 MyDay → **모두 종료** 후 새 EXE를 실행합니다. 현재 Windows 배포는 v0.3.9-preview입니다.
+GitHub 저장소 오른쪽 **Releases → 해당 버전 → Assets**에서도 받습니다. Windows는 .NET Framework 4.8 이상에서 사용하며, 이전 앱이 실행 중이면 알림 영역 MyDay → **모두 종료** 후 새 EXE를 실행합니다. 현재 Windows 배포는 v0.3.10-preview입니다.
 
 ## 이 기능을 바꾸려면 여기부터
 
@@ -26,6 +26,7 @@ GitHub 저장소 오른쪽 **Releases → 해당 버전 → Assets**에서도 �
 | --- | --- | --- |
 | 전체 색·글꼴·버튼 모양 | [windows/UI/Design.cs](windows/UI/Design.cs) | [Windows 디자인](docs/WINDOWS-DESIGN.md) |
 | 일기 창·메뉴·버튼 위치 | [windows/UI/DiaryWindow.cs](windows/UI/DiaryWindow.cs) | [화면 폴더 안내](windows/UI/README.md) |
+| 달력·상몬·완료 현황·3단 배치 | [windows/UI/DiaryWindow.Shell.cs](windows/UI/DiaryWindow.Shell.cs) | [Windows 디자인](docs/WINDOWS-DESIGN.md) |
 | 글·할 일·감정·사진 카드 모양 | [windows/UI/BlockCard.cs](windows/UI/BlockCard.cs) | [화면 폴더 안내](windows/UI/README.md) |
 | 일기 형식의 이름·질문 | [windows/Core/Templates/README.md](windows/Core/Templates/README.md) | [100종 형식 목록](docs/JOURNAL-CATALOG.md) |
 | 사진 입력·압축·회전 | [windows/Core/DiaryPhoto.cs](windows/Core/DiaryPhoto.cs) | [사진 안내](docs/PHOTOS.md) |
@@ -58,6 +59,8 @@ Windows는 C# / Windows Forms이며 [windows/build.ps1](windows/build.ps1)로 �
 
 ## 현재 기능
 
+Windows v0.3.10-preview는 팀의 웹 디자인을 네이티브 앱에 적용했습니다. 달력·일기·상몬 3단 구성, 크림·숲·라벤더 테마, 완료 현황을 제공합니다. [디자인과 수정 파일](docs/WINDOWS-DESIGN.md)
+
 | 플랫폼 | 구현한 기능 |
 | --- | --- |
 | Windows | 날짜별 글·할 일·습관·감정·사진, 자유 배치, 내 레이아웃 저장·재사용, 일기 형식 100종, 월간 달력·본문/사진 설명 검색, 자동 저장·JSON 백업 |
@@ -79,6 +82,6 @@ Windows의 사진·자유 배치·성장·장비 기능은 현재 Android에 구
 
 ## 검증과 저장 호환성
 
-Android CI는 빌드·Lint·단위 테스트를, Windows CI는 빌드·저장·레이아웃·사진·검색·성장·장비·캐릭터 렌더링 검사를 실행합니다. v0.3.9-preview의 Windows 자동 검사는 162개이며 배포 EXE의 네이티브 화면도 격리된 기록으로 확인했습니다. 갤럭시 실기기, 여러 모니터·DPI·절전 복귀는 추가 검증 대상입니다.
+Android CI는 빌드·Lint·단위 테스트를, Windows CI는 빌드·저장·레이아웃·사진·검색·성장·장비·캐릭터 렌더링 검사 162개와 네이티브 화면 검사를 실행합니다. 화면 검사는 격리된 기록으로 3단·작은 창 전환, 달력·테마·완료 현황과 기존 일기 기능을 확인합니다. 갤럭시 실기기, 여러 모니터·DPI·절전 복귀는 추가 검증 대상입니다.
 
 장비를 저장한 기록은 버전 4이며 v0.3.9-preview 이상으로 열어주세요. 이전 버전 1·2·3 기록과 백업은 읽고 보존합니다. 자세한 기준은 [Windows 기록·빌드 안내](windows/README.md)에 있습니다.

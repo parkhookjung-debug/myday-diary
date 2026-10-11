@@ -48,7 +48,7 @@ namespace MyDay.Windows.UI
             board=new DiaryBoard(QueueSave) { Dock=DockStyle.Fill };
             Text="MyDay · 나의 작은 일기장";
             var work=Screen.PrimaryScreen.WorkingArea;
-            Size=new Size(Math.Min(Design.P(1220),work.Width-32),Math.Min(Design.P(860),work.Height-32));
+            Size=new Size(Math.Min(Design.P(1360),work.Width-32),Math.Min(Design.P(860),work.Height-32));
             MinimumSize=new Size(Math.Min(Design.P(860),work.Width-32),Math.Min(Design.P(570),work.Height-32));
             StartPosition=FormStartPosition.CenterScreen; Font=Design.Font(10); ForeColor=Design.Ink;
             AutoScaleMode=AutoScaleMode.None; DoubleBuffered=true;
@@ -56,41 +56,17 @@ namespace MyDay.Windows.UI
                 if(editingLayout && e.KeyCode==Keys.Escape) { board.CancelPlacement(); e.Handled=true; }
                 if(e.Control && e.KeyCode==Keys.F) { e.Handled=true; e.SuppressKeyPress=true; BeginInvoke((MethodInvoker)delegate { BrowseDiary(); }); }
             };
-            var side = new Panel { Dock=DockStyle.Left, Width=Design.P(260), BackColor=Color.White };
-            var sideHeader=new Panel { Dock=DockStyle.Top, Height=Design.P(204), BackColor=Color.White };
-            var brand=Design.Label("myday",20,true); brand.Location=Design.Point(24,20); sideHeader.Controls.Add(brand);
-            var tagline=Design.Label("나의 작은 일기장",9); tagline.ForeColor=Design.Muted; tagline.Location=Design.Point(25,64); sideHeader.Controls.Add(tagline);
-            var newDay=Design.Button("＋ 오늘 기록하기",true); newDay.Location=Design.Point(24,96); newDay.Width=Design.P(212);
-            newDay.Click+=delegate { ChangeDate(DateTime.Today); }; sideHeader.Controls.Add(newDay);
-            browse.Location=Design.Point(24,140); browse.Size=Design.Size(212,30); browse.AccessibleName="달력과 일기 검색 열기"; browse.Click+=delegate { BrowseDiary(); }; sideHeader.Controls.Add(browse);
-            var historyTitle=Design.Label("기록함",9,true); historyTitle.Location=Design.Point(26,182); sideHeader.Controls.Add(historyTitle);
-            var companion=new Panel { Dock=DockStyle.Bottom, Height=Design.P(252), BackColor=Color.White };
-            var sideLine=new Panel { BackColor=Design.Soft, Dock=DockStyle.Top, Height=1 }; companion.Controls.Add(sideLine);
-            avatar.Location=Design.Point(16,16); avatar.Size=Design.Size(64,58); companion.Controls.Add(avatar);
-            var petHint=Design.Label("내 친구 상몬",10,true); petHint.Location=Design.Point(88,20); companion.Controls.Add(petHint);
-            characterChoice.Location=Design.Point(88,46); characterChoice.Width=Design.P(148); characterChoice.AccessibleName="캐릭터 버전";
-            characterChoice.Items.AddRange(MonsterVariants.All.Select(v=>(object)MonsterVariants.Name(v)));
-            characterChoice.ItemEnabled=i=>SangmonGrowth.CanUse(book.Progress,(MonsterVariant)i);
-            characterChoice.ItemLabel=i=>MonsterVariants.Name((MonsterVariant)i)+(characterChoice.ItemEnabled(i)?"":" · Lv."+SangmonGrowth.RequiredLevel((MonsterVariant)i));
-            characterChoice.SelectedIndexChanged+=delegate { if(!binding) SelectVariant((MonsterVariant)characterChoice.SelectedIndex); }; companion.Controls.Add(characterChoice);
-            growth.Location=Design.Point(24,86); growth.Size=Design.Size(140,28); growth.Font=Design.Font(8); growth.AccessibleName="상몬 성장과 보상 외형 보기"; growth.Click+=delegate { OpenGrowth(); }; companion.Controls.Add(growth);
-            items.Location=Design.Point(172,86); items.Size=Design.Size(64,28); items.Font=Design.Font(8); items.AccessibleName="상몬 아이템 장착 열기"; items.Click+=delegate { OpenItems(); }; companion.Controls.Add(items);
-            petToggle.Location=Design.Point(24,124); petToggle.Width=Design.P(103); petToggle.Font=Design.Font(8); petToggle.Click+=delegate { TogglePet(); }; companion.Controls.Add(petToggle);
-            var hide=Design.Button("창 숨기기"); hide.Location=Design.Point(133,124); hide.Width=Design.P(103); hide.Click+=delegate { if (FlushSave()) Hide(); }; companion.Controls.Add(hide);
-            var export=Design.Button("기록 백업"); export.Location=Design.Point(24,166); export.Width=Design.P(103); export.Click+=delegate { ExportBook(); }; companion.Controls.Add(export);
-            var import=Design.Button("가져오기"); import.Location=Design.Point(133,166); import.Width=Design.P(103); import.Click+=delegate { ImportBook(); }; companion.Controls.Add(import);
-            status.MaximumSize=Design.Size(216,0); status.Font=Design.Font(8); status.ForeColor=Design.Muted; status.Location=Design.Point(26,214); companion.Controls.Add(status);
-            side.Controls.Add(history); side.Controls.Add(sideHeader); side.Controls.Add(companion);
-            var divider=new Panel { Dock=DockStyle.Right, Width=1, BackColor=Design.Soft }; side.Controls.Add(divider);
+            var side=BuildSidebar();
+            var companion=BuildCompanionRail();
             var grid=new TableLayoutPanel { Dock=DockStyle.Fill, ColumnCount=1, RowCount=5, Margin=Design.Pad(0), BackColor=Color.Transparent };
-            grid.RowStyles.Add(new RowStyle(SizeType.Absolute,Design.P(126))); grid.RowStyles.Add(new RowStyle(SizeType.Absolute,Design.P(44)));
-            grid.RowStyles.Add(new RowStyle(SizeType.Absolute,Design.P(48)));
-            grid.RowStyles.Add(new RowStyle(SizeType.Percent,100)); grid.RowStyles.Add(new RowStyle(SizeType.Absolute,Design.P(62)));
-            var header=new JournalCover { Dock=DockStyle.Fill, Margin=Design.Pad(0,0,0,12) }; dayTitle.Location=Design.Point(24,34); header.Controls.Add(dayTitle);
-            var eyebrow=Design.Label("MY PERSONAL JOURNAL",8,true); eyebrow.ForeColor=Design.Accent; eyebrow.Location=Design.Point(25,14); header.Controls.Add(eyebrow);
-            var subtitle=Design.Label("조용히 쌓이는, 나만의 시간",9); subtitle.ForeColor=Design.Muted; subtitle.Location=Design.Point(25,82); header.Controls.Add(subtitle);
-            var dates=new FlowLayoutPanel { FlowDirection=FlowDirection.LeftToRight, Top=Design.P(49), Width=Design.P(270), Height=Design.P(32), WrapContents=false, Anchor=AnchorStyles.Top|AnchorStyles.Right, BackColor=header.BackColor };
-            header.Resize+=delegate { dates.Left=header.ClientSize.Width-dates.Width-Design.P(12); dayTitle.MaximumSize=new Size(Math.Max(Design.P(100),dates.Left-Design.P(36)),Design.P(42)); };
+            grid.RowStyles.Add(new RowStyle(SizeType.Absolute,Design.P(152))); grid.RowStyles.Add(new RowStyle(SizeType.Absolute,Design.P(44)));
+            grid.RowStyles.Add(new RowStyle(SizeType.Absolute,Design.P(76)));
+            grid.RowStyles.Add(new RowStyle(SizeType.Percent,100)); grid.RowStyles.Add(new RowStyle(SizeType.Absolute,Design.P(86)));
+            var header=new JournalCover { Dock=DockStyle.Fill, Margin=Design.Pad(0,0,0,12) }; dayTitle.Location=Design.Point(8,36); header.Controls.Add(dayTitle);
+            var eyebrow=Design.Label("A LITTLE SPACE FOR YOUR DAY",8,true); eyebrow.ForeColor=Design.Accent; eyebrow.Location=Design.Point(8,8); header.Controls.Add(eyebrow);
+            var subtitle=Design.Label("완벽하지 않아도 괜찮아요. 나의 속도로, 한 줄씩.",9); subtitle.ForeColor=Design.Muted; subtitle.Location=Design.Point(8,78); header.Controls.Add(subtitle);
+            var dates=new FlowLayoutPanel { FlowDirection=FlowDirection.LeftToRight, Top=Design.P(104), Width=Design.P(320), Height=Design.P(32), WrapContents=false, Anchor=AnchorStyles.Top|AnchorStyles.Left, BackColor=Color.Transparent };
+            header.Resize+=delegate { dates.Left=Design.P(6); dayTitle.MaximumSize=new Size(Math.Max(Design.P(100),header.ClientSize.Width-Design.P(24)),Design.P(42)); };
             var prev=Design.Button("‹"); prev.Size=Design.Size(30,26); prev.AccessibleName="이전 날짜"; prev.Click+=delegate { ChangeDate(date.AddDays(-1)); };
             var next=Design.Button("›"); next.Size=Design.Size(30,26); next.AccessibleName="다음 날짜"; next.Click+=delegate { ChangeDate(date.AddDays(1)); };
             var today=Design.Button("오늘"); today.Size=Design.Size(58,26); today.Click+=delegate { ChangeDate(DateTime.Today); };
@@ -101,14 +77,11 @@ namespace MyDay.Windows.UI
             var moodLabel=Design.Label("오늘의 마음",9); moodLabel.Margin=Design.Pad(0,4,10,0);
             mood.Items.AddRange(new object[] { "평온해요","행복해요","피곤해요","속상해요","설레요" }); mood.AccessibleName="오늘의 마음";
             mood.SelectedIndexChanged+=delegate { if (!binding) { entry.Mood=(string)mood.SelectedItem; QueueSave(); } };
-            var themeLabel=Design.Label("배경",9); themeLabel.Margin=Design.Pad(26,4,10,0);
-            theme.Items.AddRange(new object[] { "아이보리","화이트","미스트" }); theme.AccessibleName="배경 테마";
-            theme.SelectedIndexChanged+=delegate { if (!binding) { entry.Theme=theme.SelectedIndex; ApplyTheme(); QueueSave(); } };
             pageStyle.Items.AddRange(new object[] {"노트","카드","도트"}); pageStyle.AccessibleName="일기 종이 스타일";
             pageStyle.Margin=Design.Pad(12,0,0,0);
             pageStyle.SelectedIndexChanged+=delegate { if(!binding) { entry.PageStyle=new[] {"paper","plain","dots"}[pageStyle.SelectedIndex]; QueueSave(); RenderCards(); } };
-            appearance.Controls.AddRange(new Control[] { moodLabel,mood,themeLabel,theme,pageStyle }); grid.Controls.Add(appearance,0,1);
-            var layoutBar=new FlowLayoutPanel { Dock=DockStyle.Fill,WrapContents=false,Padding=Design.Pad(0,5,0,0) };
+            appearance.Controls.AddRange(new Control[] { moodLabel,mood,pageStyle }); grid.Controls.Add(appearance,0,1);
+            var layoutBar=new FlowLayoutPanel { Dock=DockStyle.Fill,WrapContents=true,Padding=Design.Pad(0,5,0,0) };
             var layoutLabel=Design.Label("배치",9); layoutLabel.Margin=Design.Pad(0,7,10,0);
             layoutChoice.Items.AddRange(new object[] {"자동 정렬","자유 배치"}); layoutChoice.AccessibleName="일기 블록 배치 방식";
             layoutChoice.SelectedIndexChanged+=delegate { if(!binding) SelectLayout(layoutChoice.SelectedIndex==1); };
@@ -125,12 +98,13 @@ namespace MyDay.Windows.UI
             myLayouts.Click+=delegate { ManageLayouts(); };
             layoutBar.Controls.AddRange(new Control[] {layoutLabel,layoutChoice,editLayout,arrangeLayout,templates,myLayouts,layoutHint}); grid.Controls.Add(layoutBar,0,2);
             layoutBar.Resize+=delegate { layoutHint.Visible=layoutBar.ClientSize.Width>=Design.P(740); };
-            var toolbar=new FlowLayoutPanel { Dock=DockStyle.Fill, WrapContents=false, Padding=Design.Pad(0,14,0,0) };
+            var toolbar=new FlowLayoutPanel { Dock=DockStyle.Fill, WrapContents=true, Padding=Design.Pad(0,14,0,0) };
             string[] kinds={"text","todo","habit","emotion","photo"}; string[] names={"＋ 글 일기","＋ 할 일","＋ 습관","＋ 감정","＋ 사진"};
             for(int i=0;i<kinds.Length;i++) { string kind=kinds[i]; var add=Design.Button(names[i],i==0); add.Width=Design.P(88); add.Click+=delegate { if(kind=="photo") SelectPhoto(null); else AddBlock(kind); }; toolbar.Controls.Add(add); }
             summary.Margin=Design.Pad(4,9,0,0); summary.ForeColor=Design.Muted; toolbar.Controls.Add(summary); grid.Controls.Add(toolbar,0,4);
             toolbar.Resize+=delegate { summary.Visible=toolbar.ClientSize.Width>=Design.P(630); };
-            grid.Controls.Add(board,0,3); content.Controls.Add(grid); Controls.Add(content); Controls.Add(side);
+            grid.Controls.Add(board,0,3); content.Controls.Add(grid); Controls.Add(content); Controls.Add(companion); Controls.Add(side);
+            Resize+=delegate { ArrangeShell(); }; ArrangeShell();
             board.SizeChanged+=delegate { ArrangeCards(); };
             saveTimer.Tick+=delegate { FlushSave(); };
             tray=new NotifyIcon { Icon=SystemIcons.Application, Text="MyDay · 일기와 불꽃 몬스터", Visible=!testMode };
@@ -244,7 +218,7 @@ namespace MyDay.Windows.UI
             mood.SelectedIndex=Math.Max(0,mood.Items.IndexOf(entry.Mood)); theme.SelectedIndex=entry.Theme;
             layoutChoice.SelectedIndex=entry.LayoutMode=="free"?1:0;
             pageStyle.SelectedIndex=entry.PageStyle=="paper"?0:entry.PageStyle=="dots"?2:1;
-            binding=false; RefreshLayoutControls(); ApplyTheme(); ApplyVariant(); RenderCards(); RefreshHistory(true);
+            binding=false; RefreshLayoutControls(); ApplyTheme(); ApplyVariant(); RenderCards(); RefreshHistory(true); sidebarCalendar.SetMonth(date);
         }
         private void SelectLayout(bool free)
         {
@@ -260,7 +234,7 @@ namespace MyDay.Windows.UI
             arrangeLayout.Enabled=entry.LayoutMode=="free";
             layoutHint.Text=editingLayout?"제목 드래그 · ↘ 크기":entry.LayoutMode=="free"?"내가 꾸민 페이지":"창에 맞춰 정렬";
         }
-        private void ApplyTheme() { BackColor=Design.Backgrounds[entry.Theme]; content.BackColor=BackColor; board.BackColor=BackColor; }
+        private void ApplyTheme() { BackColor=Design.Backgrounds[entry.Theme]; content.BackColor=BackColor; board.BackColor=BackColor; foreach(var cover in content.Controls.OfType<TableLayoutPanel>().SelectMany(g=>g.Controls.OfType<JournalCover>())) cover.BackColor=BackColor; }
         private void RenderCards()
         {
             board.CancelPlacement();
@@ -355,6 +329,11 @@ namespace MyDay.Windows.UI
         {
             var checks=entry.Blocks.Where(b=>b.Kind=="todo" || b.Kind=="habit").ToList();
             summary.Text=checks.Count==0?"":checks.Count(b=>b.Checked)+" / "+checks.Count+" 완료";
+            var todos=checks.Where(b=>b.Kind=="todo").ToList(); var habits=checks.Where(b=>b.Kind=="habit").ToList();
+            todoCount.Text="할 일    "+todos.Count(b=>b.Checked)+" / "+todos.Count;
+            habitCount.Text="습관     "+habits.Count(b=>b.Checked)+" / "+habits.Count;
+            todoProgress.Value=0; todoProgress.Maximum=Math.Max(1,todos.Count); todoProgress.Value=todos.Count(b=>b.Checked);
+            habitProgress.Value=0; habitProgress.Maximum=Math.Max(1,habits.Count); habitProgress.Value=habits.Count(b=>b.Checked);
         }
         public bool FlushSave()
         {
@@ -399,7 +378,7 @@ namespace MyDay.Windows.UI
                 }
                 var target=value;
                 DiaryEntry historyEntry;
-                var row=new HistoryRow(target,preview,target==date,book.Days.TryGetValue(DiaryStore.Key(target),out historyEntry) && DiaryBrowse.HasPhoto(historyEntry)); row.Click+=delegate { ChangeDate(target); };
+                var row=new HistoryRow(target,preview,target==date,book.Days.TryGetValue(DiaryStore.Key(target),out historyEntry) && DiaryBrowse.HasPhoto(historyEntry)); row.Width=history.ClientSize.Width-SystemInformation.VerticalScrollBarWidth; row.Click+=delegate { ChangeDate(target); };
                 history.Controls.Add(row);
             }
             if(dates.Count>60) {
@@ -412,7 +391,7 @@ namespace MyDay.Windows.UI
                 var count=Design.Label((historyPage+1)+" / "+((dates.Count+59)/60),8); count.Margin=Design.Pad(8,10,8,0);
                 pages.Controls.AddRange(new Control[] {prev,count,next}); history.Controls.Add(pages);
             }
-            history.ResumeLayout(); history.AutoScrollPosition=new Point(-scroll.X,-scroll.Y);
+            history.ResumeLayout(); history.AutoScrollPosition=new Point(-scroll.X,-scroll.Y); RefreshSidebarCalendar();
         }
         private void ExportBook()
         {

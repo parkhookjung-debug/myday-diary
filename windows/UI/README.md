@@ -7,6 +7,7 @@
 | 바꾸려는 것 | 파일 | 역할 |
 | --- | --- | --- |
 | 전체 색·글꼴·버튼 | [Design.cs](Design.cs) | Accent·Font·둥근 버튼·카드 |
+| 3단 화면·달력·상몬·완료 현황·작은 창 | [DiaryWindow.Shell.cs](DiaryWindow.Shell.cs) | 웹 디자인의 Windows 구현, 너비에 따른 영역 이동 |
 | 일기 메뉴·버튼·날짜 연결 | [DiaryWindow.cs](DiaryWindow.cs) | 메인 창 구성과 기능 연결 |
 | 블록의 입력창·체크·사진 버튼 | [BlockCard.cs](BlockCard.cs) | 블록 카드의 표시와 입력 |
 | 마우스 배치·크기 조절 | [DiaryBoard.cs](DiaryBoard.cs) | 드래그·핸들·캔버스 |

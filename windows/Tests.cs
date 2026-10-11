@@ -260,6 +260,7 @@ namespace MyDay.Windows
                 form.StartPosition=FormStartPosition.Manual; form.Location=new Point(-30000,-30000);
                 form.StartOnDesktop(); if(form.Visible) throw new Exception("Diary opened at desktop startup");
                 form.OpenDiary(); Console.WriteLine("Smoke: opened diary."); Application.DoEvents();
+                form.VerifyShellForTest(); Console.WriteLine("Smoke: three-column and compact shell, sidebar calendar, three themes and progress passed.");
                 form.SmokeTest(Path.Combine(directory,"windows-example.png")); form.VerifyGrowthForTest(directory); form.VerifyItemsForTest(directory); form.Close();
                 Console.WriteLine("Smoke: input, selection, reload and rendering passed.");
                 if(form.Visible || form.IsDisposed) throw new Exception("Close should hide and keep the session alive");

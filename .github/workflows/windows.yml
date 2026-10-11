@@ -32,6 +32,14 @@ jobs:
           Get-Content windows/bin/test-results.txt
           Get-Content windows/bin/test-errors.txt
           if ($testRun.ExitCode -ne 0) { throw "Tests failed: $($testRun.ExitCode)" }
+      - name: Verify native diary layout and interactions
+        shell: pwsh
+        run: |
+          $preview = Join-Path $pwd 'windows/bin/smoke-output'
+          $smokeRun = Start-Process -FilePath "$pwd/windows/bin/MyDay.exe" -ArgumentList @('--smoke-test', ('"' + $preview + '"')) -Wait -PassThru -WindowStyle Hidden -RedirectStandardOutput 'windows/bin/native-results.txt' -RedirectStandardError 'windows/bin/native-errors.txt'
+          Get-Content windows/bin/native-results.txt
+          Get-Content windows/bin/native-errors.txt
+          if ($smokeRun.ExitCode -ne 0) { throw "Native smoke failed: $($smokeRun.ExitCode)" }
       - name: Upload app and validation results
         if: always()
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
@@ -41,6 +49,10 @@ jobs:
             windows/bin/MyDay.exe
             windows/bin/test-results.txt
             windows/bin/test-errors.txt
+            windows/bin/native-results.txt
+            windows/bin/native-errors.txt
+            windows/bin/smoke-output/windows-*.png
+            windows/bin/smoke-output/smoke-result.txt
             windows/README.md
           if-no-files-found: error
           retention-days: 14

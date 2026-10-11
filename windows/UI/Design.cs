@@ -16,13 +16,15 @@ namespace MyDay.Windows.UI
         public static Size Size(int width, int height) { return new Size(P(width), P(height)); }
         public static Padding Pad(int all) { return new Padding(P(all)); }
         public static Padding Pad(int l, int t, int r, int b) { return new Padding(P(l), P(t), P(r), P(b)); }
-        public static readonly Color Ink = Color.FromArgb(37, 52, 47);
-        public static readonly Color Muted = Color.FromArgb(109, 117, 112);
-        public static readonly Color Accent = Color.FromArgb(38, 99, 84);
-        public static readonly Color Soft = Color.FromArgb(229, 231, 225);
-        public static readonly Color Tint = Color.FromArgb(233, 242, 234);
-        public static readonly Color Paper = Color.FromArgb(255, 253, 247);
-        public static readonly Color[] Backgrounds = { Color.FromArgb(246, 245, 240), Color.FromArgb(248, 249, 248), Color.FromArgb(240, 245, 240) };
+        public static readonly Color Ink = Color.FromArgb(67, 61, 54);
+        public static readonly Color Muted = Color.FromArgb(155, 149, 136);
+        public static readonly Color Accent = Color.FromArgb(128, 92, 73);
+        public static readonly Color Soft = Color.FromArgb(233, 228, 219);
+        public static readonly Color Tint = Color.FromArgb(243, 230, 223);
+        public static readonly Color Paper = Color.FromArgb(255, 252, 248);
+        public static readonly Color[] Backgrounds = { Color.FromArgb(255, 248, 243), Color.FromArgb(241, 245, 238), Color.FromArgb(247, 242, 250) };
+        public static readonly Color Sidebar = Color.FromArgb(247, 245, 240);
+        public static readonly Color Olive = Color.FromArgb(96, 105, 78);
         private static readonly Dictionary<string, Font> Fonts = new Dictionary<string, Font>();
         public static Font Font(float size, bool bold = false)
         {
@@ -70,7 +72,7 @@ namespace MyDay.Windows.UI
             while(surface!=null && surface.BackColor.A<255) surface=surface.Parent;
             e.Graphics.Clear(surface==null?Color.White:surface.BackColor);
             e.Graphics.SmoothingMode=SmoothingMode.AntiAlias;
-            Color fill=hover && Enabled ? (HoverFill ?? (BackColor==Design.Accent ? Color.FromArgb(29,78,66) : Design.Tint)) : BackColor;
+            Color fill=hover && Enabled ? (HoverFill ?? (BackColor==Design.Accent ? Color.FromArgb(105,75,60) : Design.Tint)) : BackColor;
             using(var path=Design.Rounded(new RectangleF(1,1,Width-3,Height-3),Design.P(10)))
             using(var brush=new SolidBrush(fill))
             using(var pen=new Pen(FlatAppearance.BorderColor)) {

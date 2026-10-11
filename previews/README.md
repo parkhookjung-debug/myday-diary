@@ -10,7 +10,7 @@
 
 | 파일 | 내용 |
 | --- | --- |
-| `windows/windows-example.png` | 실제 Windows UI에 격리된 예시 기록을 넣은 화면 |
+| `windows/windows-example.png` | v0.3.10 웹 디자인을 적용한 실제 Windows UI에 격리된 예시 기록을 넣은 화면 |
 | `windows/windows-photos.png` | 사진·설명과 글 블록을 자유롭게 배치한 실제 Windows UI (풍경은 검증용 생성 이미지) |
 | `windows/windows-calendar.png` | 월간 달력·기록한 날·사진 있는 날·이달의 기록 목록 |
 | `windows/windows-diary-search.png` | 사진 설명을 전체 날짜에서 검색한 실제 Windows UI |

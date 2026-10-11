@@ -15,7 +15,8 @@
 | 바꾸고 싶은 것 | 먼저 열 파일 | 수정하는 부분 |
 | --- | --- | --- |
 | 전체 색·글꼴·버튼·카드 | [Design.cs](../windows/UI/Design.cs) | `Accent`, `Backgrounds`, `Font`, `RoundedButton`, `CardPanel` |
-| 일기 창의 메뉴·사이드바·버튼 위치 | [DiaryWindow.cs](../windows/UI/DiaryWindow.cs) | 창 생성자와 컨트롤 배치, 화면 이벤트 연결 |
+| 달력·상몬·백업·완료 현황·3단 배치 | [DiaryWindow.Shell.cs](../windows/UI/DiaryWindow.Shell.cs) | `BuildSidebar`, `BuildCompanionRail`, `ArrangeShell` |
+| 일기 창의 날짜·블록 도구와 기능 연결 | [DiaryWindow.cs](../windows/UI/DiaryWindow.cs) | 창 생성자와 이벤트, `UpdateSummary`, `RefreshHistory` |
 | 날짜 표지 장식 | [JournalCover.cs](../windows/UI/JournalCover.cs) | 표지 그림과 색 |
 | 왼쪽 기록 목록 모양 | [HistoryRow.cs](../windows/UI/HistoryRow.cs) | 날짜·본문 미리보기·선택 상태 |
 | 글·할 일·습관·감정·사진 블록 | [BlockCard.cs](../windows/UI/BlockCard.cs) | 제목·입력창·체크·사진 교체 버튼 |

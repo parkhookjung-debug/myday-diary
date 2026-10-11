@@ -25,7 +25,7 @@ namespace MyDay.Windows.UI
         protected override void OnMouseLeave(EventArgs e) { hover=false; Invalidate(); base.OnMouseLeave(e); }
         protected override void OnPaint(PaintEventArgs e)
         {
-            var g=e.Graphics; g.Clear(Color.White); g.SmoothingMode=SmoothingMode.AntiAlias;
+            var g=e.Graphics; g.Clear(Parent==null?Design.Sidebar:Parent.BackColor); g.SmoothingMode=SmoothingMode.AntiAlias;
             if(selected || hover) using(var path=Design.Rounded(new RectangleF(1,1,Width-3,Height-3),Design.P(14)))
                 using(var brush=new SolidBrush(selected?Design.Tint:Design.Backgrounds[0])) g.FillPath(brush,path);
             var circle=new Rectangle(Design.P(12),Design.P(18),Design.P(40),Design.P(40));

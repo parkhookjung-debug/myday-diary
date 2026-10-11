@@ -54,7 +54,7 @@ myday-diary/
 | 원하는 작업 | Android | Windows |
 | --- | --- | --- |
 | 색·글꼴·간격 | `ui/design/`, `res/values/` | `UI/Design.cs` |
-| 일기 화면·블록 | `ui/diary/`, `ui/components/` | `UI/DiaryWindow.cs`, `UI/BlockCard.cs`, `UI/DiaryBoard.cs` |
+| 일기 화면·블록 | `ui/diary/`, `ui/components/` | `UI/DiaryWindow.Shell.cs`, `UI/DiaryWindow.cs`, `UI/BlockCard.cs`, `UI/DiaryBoard.cs` |
 | 자유 배치·크기 조절 | 현재 Windows에 적용 | `Core/DiaryLayout.cs`, `UI/DiaryBoard.cs` |
 | 기록·저장 | `data/`, `diary/` | `Core/DiaryData.cs` |
 | 사진 첨부 | 현재 Windows에 적용 | `Core/DiaryPhoto.cs`, `UI/PhotoView.cs`, `UI/BlockCard.cs` |
@@ -76,7 +76,7 @@ Android 표의 Java 경로는 `app/src/main/java/com/myday/diary/` 기준입니�
 
 GitHub Releases에 플랫폼별로 배포합니다.
 
-- Windows: `MyDay-Windows-v0.3.9-preview.zip`에 `MyDay.exe`, 실행 안내, 아이템·상몬 성장·내 레이아웃·달력/검색·사진 안내, 100종 목록, 라이선스
+- Windows: `MyDay-Windows-v0.3.10-preview.zip`에 `MyDay.exe`, 실행 안내, 아이템·상몬 성장·내 레이아웃·달력/검색·사진 안내, 100종 목록, 라이선스
 - Android: `MyDay-Android-v0.3.0-preview.apk` 개발용 debug 빌드
 - GitHub에서 자동 제공하는 Source code ZIP/TAR: 같은 태그의 전체 소스
 
