@@ -84,7 +84,9 @@ namespace MyDay.Windows.UI
                 } else if(!narrow && companionRail.Parent!=this) {
                     sidebarFlow.Controls.Remove(companionRail); companionRail.Dock=DockStyle.Right; companionRail.Width=Design.P(254); companionRail.Controls[0].Padding=Design.Pad(16,20,8,16); Controls.Add(companionRail); companionRail.SendToBack();
                 }
-                PerformLayout(); ArrangeCards();
+                // WinForms docks in reverse z-order: the fill panel must be laid out last,
+                // including a wide initial window that has never moved the companion rail.
+                content.BringToFront(); PerformLayout(); ArrangeCards();
             } finally {arrangingShell=false;}
         }
 
