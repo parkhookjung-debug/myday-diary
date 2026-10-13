@@ -19,6 +19,7 @@ class NotebookStorageDeviceTest {
     private val identifier="myday-device-test-${UUID.randomUUID()}"
     private val directory=File(target.cacheDir,identifier)
     private val isolated=object: ContextWrapper(target) {
+        override fun getApplicationContext(): Context=this
         override fun getFilesDir(): File=directory
         override fun getSharedPreferences(name: String,mode: Int): SharedPreferences=target.getSharedPreferences("$identifier-$name",mode)
     }
@@ -28,6 +29,7 @@ class NotebookStorageDeviceTest {
         require(directory.canonicalFile.parentFile==target.cacheDir.canonicalFile && directory.name.startsWith("myday-device-test-"))
         directory.deleteRecursively()
         target.getSharedPreferences("$identifier-diary",Context.MODE_PRIVATE).edit().clear().commit()
+        target.getSharedPreferences("$identifier-diary-home",Context.MODE_PRIVATE).edit().clear().commit()
     }
     @Test fun migrationAndAtomicFileFailureKeepPreviousContent() {
         val old="""{"theme":2,"character":"🐱","blocks":[{"id":"legacy","type":"todo","text":"이전 기록","checked":true}]}"""
