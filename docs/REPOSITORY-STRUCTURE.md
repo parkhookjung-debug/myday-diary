@@ -12,9 +12,11 @@ myday-diary/
 │       │   │   ├── diary/     날짜·입력·일기 동작
 │       │   │   ├── platform/  홈 위젯·배경화면 설정 연결
 │       │   │   └── ui/        화면·디자인·캐릭터·배경화면
+│       │   ├── assets/        공통 64종 애니메이션·12종 아이템·100종 형식
 │       │   └── res/           색·크기·위젯 레이아웃·설정
 │       ├── debug/             Android Studio 화면 Preview
-│       └── test/              일기·캐릭터 단위 테스트
+│       ├── test/              일기·캐릭터·JSON 단위 테스트
+│       └── androidTest/       실제 UI·사진·저장 검사
 ├── windows/                   네이티브 Windows 앱
 │   ├── Core/                  기록·저장·입력 제스처
 │   ├── UI/                    일기 창·블록·디자인
@@ -33,7 +35,7 @@ myday-diary/
 │   ├── android/               Android PNG·GIF·초기 HTML 예시
 │   └── windows/               Windows PNG·상몬 GIF
 ├── .github/                   Android/Windows CI·협업 양식
-├── tools/                     선택 개발 도구: PNG 프레임 → GIF
+├── tools/                     공통 자산 생성·상호 호환성·백업·미리보기 도구
 ├── gradle/                    Gradle Wrapper
 ├── README.md                  시작 안내·다운로드·전체 기능
 ├── CONTRIBUTING.md            협업 방법
@@ -55,17 +57,17 @@ myday-diary/
 | --- | --- | --- |
 | 색·글꼴·간격 | `ui/design/`, `res/values/` | `UI/Design.cs` |
 | 일기 화면·블록 | `ui/diary/`, `ui/components/` | `UI/DiaryWindow.Shell.cs`, `UI/DiaryWindow.cs`, `UI/BlockCard.cs`, `UI/DiaryBoard.cs` |
-| 자유 배치·크기 조절 | 현재 Windows에 적용 | `Core/DiaryLayout.cs`, `UI/DiaryBoard.cs` |
+| 자유 배치·크기 조절 | `ui/diary/PhoneFreeBoard.kt` | `Core/DiaryLayout.cs`, `UI/DiaryBoard.cs` |
 | 기록·저장 | `data/`, `diary/` | `Core/DiaryData.cs` |
-| 사진 첨부 | 현재 Windows에 적용 | `Core/DiaryPhoto.cs`, `UI/PhotoView.cs`, `UI/BlockCard.cs` |
-| 달력·일기 검색 | 현재 Windows에 적용 | `Core/DiaryBrowse.cs`, `UI/JournalBrowser.cs`, `UI/MonthCalendar.cs` |
-| 내 레이아웃 저장·재사용 | 현재 Windows에 적용 | `Core/SavedLayouts.cs`, `UI/MyLayoutsWindow.cs`, `UI/SavedLayoutDiagram.cs` |
+| 사진 첨부 | `data/NotebookPhoto.kt`, `ui/diary/PhoneBlockEditor.kt` | `Core/DiaryPhoto.cs`, `UI/PhotoView.cs`, `UI/BlockCard.cs` |
+| 달력·일기 검색 | `ui/diary/PhoneCalendar.kt` | `Core/DiaryBrowse.cs`, `UI/JournalBrowser.cs`, `UI/MonthCalendar.cs` |
+| 내 레이아웃 저장·재사용 | `diary/NotebookRules.kt`, `ui/diary/PhoneDialogs.kt` | `Core/SavedLayouts.cs`, `UI/MyLayoutsWindow.cs`, `UI/SavedLayoutDiagram.cs` |
 | 캐릭터 그림 | `ui/character/` | `Character/MonsterPainter.cs`, `MonsterAdditions.cs` |
-| 아이템 장비함 | 현재 Windows에 적용 | `Core/SangmonItems.cs`, `UI/EquipmentWindow.cs`, `UI/DiaryWindow.Items.cs` |
-| 아이템 그림·광채 | 현재 Windows에 적용 | `Character/ItemPainter.cs`, `UI/ItemView.cs` |
-| 상몬 성장·해금 | 현재 Windows에 적용 | `Core/SangmonGrowth.cs`, `UI/GrowthWindow.cs`, `UI/DiaryWindow.Growth.cs` |
-| 성장 보상 의상 | 현재 Windows에 적용 | `Character/RewardSkins.cs` |
-| 게임 속성 재질 | 현재 Windows에 적용 | `Character/GameSkins.cs` |
+| 아이템 장비함 | `ui/diary/PhoneCompanion.kt`, `diary/NotebookController.kt` | `Core/SangmonItems.cs`, `UI/EquipmentWindow.cs`, `UI/DiaryWindow.Items.cs` |
+| 아이템 그림·광채 | `ui/character/SangmonSprites.kt`, 생성 assets | `Character/ItemPainter.cs`, `UI/ItemView.cs` |
+| 상몬 성장·해금 | `diary/NotebookRules.kt`, 생성 `data/SangmonIdentity.kt` | `Core/SangmonGrowth.cs`, `UI/GrowthWindow.cs`, `UI/DiaryWindow.Growth.cs` |
+| 성장 보상 의상 | 공통 Windows 원본 → 생성 assets | `Character/RewardSkins.cs` |
+| 게임 속성 재질 | 공통 Windows 원본 → 생성 assets | `Character/GameSkins.cs` |
 | 움직임 | `ui/character/CharacterAnimation.kt` | `Character/PetBehavior.cs` |
 | 홈/바탕화면 | 위젯 Provider, Wallpaper Service, `ui/wallpaper/` | `Character/DesktopPet.cs` |
 | 검증 | `app/src/test/` | `windows/Tests.cs` |
@@ -77,7 +79,7 @@ Android 표의 Java 경로는 `app/src/main/java/com/myday/diary/` 기준입니�
 GitHub Releases에 플랫폼별로 배포합니다.
 
 - Windows: `MyDay-Windows-v0.3.10-preview.zip`에 `MyDay.exe`, 실행 안내, 아이템·상몬 성장·내 레이아웃·달력/검색·사진 안내, 100종 목록, 라이선스
-- Android: `MyDay-Android-v0.3.0-preview.apk` 개발용 debug 빌드
+- Android: `MyDay-Android-v0.4.0-preview.apk` 개발용 debug 빌드
 - GitHub에서 자동 제공하는 Source code ZIP/TAR: 같은 태그의 전체 소스
 
 빌드 출력은 소스 폴더에 커밋하지 않습니다. `windows/bin/`, `app/build/`는 로컬 빌드가 생성하고, CI 결과와 Releases에서 실행 파일을 받습니다. 캐시·기기별 SDK 경로·개인 기록·참고 사진·인증 파일도 저장소에 포함하지 않습니다.

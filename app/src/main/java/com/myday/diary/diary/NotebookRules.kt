@@ -15,7 +15,7 @@ object NotebookRules {
     const val MAX_HEIGHT = 1400
     val kinds = setOf("text", "todo", "habit", "emotion", "photo", "photo-slot")
     fun meaningful(b: DiaryBlock) = b.text.isNotBlank() || b.type == "photo" && !b.photo.isNullOrEmpty() || b.type in setOf("todo", "habit") && b.checked
-    fun record(entry: DiaryEntry) = entry.blocks.filter(::meaningful).map { listOf(it.id, it.type, it.text, it.checked, it.photo) }
+    fun record(entry: DiaryEntry) = entry.blocks.filter(::meaningful).associate {it.id to listOf(it.type,it.text,it.checked,it.photo)}
     fun level(book: DiaryBook) = 1 + book.awardedDays.size / 5
     fun xp(book: DiaryBook) = book.awardedDays.size * 10
     fun bound(b: DiaryBlock) = b.copy(x=b.x.coerceIn(0,MAX_POSITION),y=b.y.coerceIn(0,MAX_POSITION),
@@ -33,15 +33,18 @@ object NotebookRules {
     fun append(entry: DiaryEntry, blocks: List<DiaryBlock>): DiaryEntry {
         require(entry.blocks.size+blocks.size<=MAX_BLOCKS) {"한 날짜에는 블록을 200개까지 추가할 수 있어요."}
         val offset=if(entry.layoutMode=="free" && entry.blocks.isNotEmpty()) entry.blocks.maxOf {bound(it).y+bound(it).height}+16 else 0
-        require(blocks.all { it.y+offset<=MAX_POSITION }) {"아래에 배치를 추가할 공간이 부족해요."}
-        return entry.copy(blocks=entry.blocks+blocks.map {if(entry.layoutMode=="free") bound(it.copy(y=it.y+offset)) else it})
+        require(entry.layoutMode!="free" || blocks.all { it.y+offset<=MAX_POSITION }) {"아래에 배치를 추가할 공간이 부족해요."}
+        return entry.copy(blocks=entry.blocks+blocks.map {if(entry.layoutMode=="free") bound(it.copy(y=it.y+offset)) else it.copy(x=0,y=0,width=0)})
     }
     fun capture(entry: DiaryEntry, name: String): SavedLayout {
         require(name.trim().isNotEmpty() && name.trim().length<=40 && name.none {it.isISOControl()}) {"레이아웃 이름은 1~40자로 적어주세요."}
         require(entry.blocks.isNotEmpty()) {"블록을 추가한 뒤 배치를 저장해 주세요."}
-        val positions=if(entry.layoutMode=="free") entry else arrange(entry)
+        var y=12
+        val positions=if(entry.layoutMode=="free") entry.copy(blocks=entry.blocks.map(::bound)) else entry.copy(blocks=entry.blocks.map {b->
+            bound(b).copy(x=12,y=y,width=if(b.wide) 876 else 420).also {y+=it.height+16}
+        })
         return SavedLayout(name=name.trim(),mode=entry.layoutMode,style=entry.pageStyle,theme=entry.theme,
-            blocks=positions.blocks.map { bound(it.copy(id="",type=if(it.type=="photo") "photo-slot" else it.type,text="",checked=false,photo=null)) })
+            blocks=positions.blocks.map {it.copy(id="",type=if(it.type=="photo") "photo-slot" else it.type,text="",checked=false,photo=null)})
     }
     fun apply(entry: DiaryEntry, layout: SavedLayout): DiaryEntry {
         val fresh=entry.blocks.isEmpty()
@@ -53,7 +56,7 @@ object NotebookRules {
         incoming.layouts.forEach { item ->
             layouts.removeAll {it.id==item.id}
             var name=item.name;var suffix=2
-            while(layouts.any {it.name.equals(name,true)}) {val tail=" (${suffix++})";name=item.name.take(40-tail.length)+tail}
+            while(layouts.any {it.name.equals(name,true)}) {val tail=" (${suffix++})";val prefix=item.name.take(40-tail.length);name=(if(prefix.lastOrNull()?.isHighSurrogate()==true) prefix.dropLast(1) else prefix)+tail}
             layouts+=item.copy(name=name)
         }
         require(layouts.size<=MAX_LAYOUTS) {"내 레이아웃은 최대 50개까지 저장할 수 있어요."}
@@ -74,7 +77,7 @@ object NotebookRules {
             require(entry.blocks.map {it.id}.distinct().size==entry.blocks.size)
             entry.blocks.forEach {b ->
                 require(b.id.isNotBlank() && b.id.length<=64 && b.type in kinds && b.text.length<=100000 && b.title.length<=80 && b.prompt.length<=300)
-                require(b.x in 0..MAX_POSITION && b.y in 0..(if(entry.layoutMode=="free") MAX_POSITION else 282400))
+                require(b.x in 0..MAX_POSITION && b.y in 0..MAX_POSITION)
                 require(b.width==0 || b.width in MIN_WIDTH..MAX_WIDTH);require(b.height==0 || b.height in MIN_HEIGHT..MAX_HEIGHT)
                 require(b.type!="photo" || !b.photo.isNullOrEmpty()); require(b.type=="photo" || b.photo==null)
             }

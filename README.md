@@ -4,7 +4,7 @@
 [![Windows CI](https://github.com/parkhookjung-debug/myday-diary/actions/workflows/windows.yml/badge.svg)](https://github.com/parkhookjung-debug/myday-diary/actions/workflows/windows.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 
-갤럭시·Windows용 커스터마이즈 일기 앱입니다. Windows에서는 일기 블록을 자유롭게 배치하고, 바탕화면을 돌아다니는 상몬을 키우며 검과 마법 보주를 장착합니다. MIT 라이선스로 공개하며 5명이 화면·저장·캐릭터·통합·검증을 나눠 개발합니다.
+갤럭시·Windows용 커스터마이즈 일기 앱입니다. 두 버전에서 사진과 일기 블록을 자유롭게 배치하고 상몬 64종을 키우며 검·보주 12종을 장착합니다. Android는 손가락 조작과 짧은 햅틱, Windows는 바탕화면 캐릭터를 제공합니다. MIT 라이선스로 공개하며 5명이 화면·저장·캐릭터·통합·검증을 나눠 개발합니다.
 
 **코드를 수정하려면 [기능별 수정 가이드](docs/EDITING-GUIDE.md)를 먼저 열어주세요. 파일 이름을 클릭하면 해당 코드로 바로 이동합니다.**
 
@@ -15,7 +15,7 @@
 | 사용할 환경 | 다운로드 | 실행·개발 안내 |
 | --- | --- | --- |
 | Windows 10/11 | [MyDay.exe 바로 받기](https://github.com/parkhookjung-debug/myday-diary/releases/download/v0.3.10-preview/MyDay.exe) · [전체 ZIP과 안내서](https://github.com/parkhookjung-debug/myday-diary/releases/tag/v0.3.10-preview) | [Windows 안내](windows/README.md) |
-| 갤럭시 / Android 8 이상 | [Android APK 받기](https://github.com/parkhookjung-debug/myday-diary/releases/tag/v0.3.0-preview) (개발용 debug) | [Android 안내](docs/ANDROID.md) |
+| 갤럭시 / Android 8 이상 | [Android APK 받기](https://github.com/parkhookjung-debug/myday-diary/releases/tag/v0.4.0-android-preview) (개발용 debug) | [Android 안내](docs/ANDROID.md) |
 | macOS | 현재 macOS 실행 파일은 제공하지 않습니다. | Windows EXE는 Windows에서 실행합니다. |
 
 GitHub 저장소 오른쪽 **Releases → 해당 버전 → Assets**에서도 받습니다. Windows는 .NET Framework 4.8 이상에서 사용하며, 이전 앱이 실행 중이면 알림 영역 MyDay → **모두 종료** 후 새 EXE를 실행합니다. 현재 Windows 배포는 v0.3.10-preview입니다.
@@ -65,9 +65,9 @@ Windows v0.3.10-preview는 팀의 웹 디자인을 네이티브 앱에 적용했
 | --- | --- |
 | Windows | 날짜별 글·할 일·습관·감정·사진, 자유 배치, 내 레이아웃 저장·재사용, 일기 형식 100종, 월간 달력·본문/사진 설명 검색, 자동 저장·JSON 백업 |
 | Windows 상몬 | 바탕화면 이동·클릭으로 일기 열기·숨기기/재표시, 외형 64종, 하루 경험치·성장 보상, 검·보주 12종의 두 슬롯 장착 |
-| Android | 날짜별 블록 일기·자동 저장, 홈 위젯, 움직이는 캐릭터 라이브 배경화면 |
+| Android 0.4.0 | Windows와 같은 일기 100종·사진·자유 배치·내 레이아웃·달력·검색·성장·64종·장비 12종·JSON 백업, 네 탭 화면·햅틱·홈 위젯·라이브 배경화면 |
 
-Windows의 사진·자유 배치·성장·장비 기능은 현재 Android에 구현하지 않았습니다. 각 기기에 기록을 저장하며 플랫폼 사이의 자동 동기화는 없습니다. 영상 첨부와 AI 감정 대화는 후속 기능입니다.
+[Android·Windows 기능 비교와 햅틱](docs/ANDROID-PARITY.md), [Android 설치·기존 기록 이전](docs/ANDROID.md)을 확인하세요. 이전 debug APK와 서명이 달라 설치가 막히면 앱 삭제 전에 백업부터 합니다. 각 기기에 기록을 저장하며 플랫폼 사이의 자동 동기화는 없습니다. 영상 첨부와 AI 감정 대화는 후속 기능입니다.
 
 <details>
 <summary>실제 화면과 아이템 예시 보기</summary>
@@ -82,6 +82,6 @@ Windows의 사진·자유 배치·성장·장비 기능은 현재 Android에 구
 
 ## 검증과 저장 호환성
 
-Android CI는 빌드·Lint·단위 테스트를, Windows CI는 빌드·저장·레이아웃·사진·검색·성장·장비·캐릭터 렌더링 검사 162개와 네이티브 화면 검사를 실행합니다. 화면 검사는 격리된 기록으로 3단·작은 창 전환, 달력·테마·완료 현황과 기존 일기 기능을 확인합니다. 갤럭시 실기기, 여러 모니터·DPI·절전 복귀는 추가 검증 대상입니다.
+Android CI는 빌드·Lint·단위 테스트·Android 35 에뮬레이터 화면/저장/사진 검사·실제 Windows JSON 호환성 검사를, Windows CI는 빌드·저장·레이아웃·사진·검색·성장·장비·캐릭터 렌더링 검사 162개와 네이티브 화면 검사를 실행합니다. 화면 검사는 격리된 기록으로 3단·작은 창 전환, 달력·테마·완료 현황과 기존 일기 기능을 확인합니다. 갤럭시 실기기, 여러 모니터·DPI·절전 복귀는 추가 검증 대상입니다.
 
 장비를 저장한 기록은 버전 4이며 v0.3.9-preview 이상으로 열어주세요. 이전 버전 1·2·3 기록과 백업은 읽고 보존합니다. 자세한 기준은 [Windows 기록·빌드 안내](windows/README.md)에 있습니다.

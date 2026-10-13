@@ -6,7 +6,7 @@ import org.json.JSONObject
 data class SangmonSkin(val id: String,val name: String,val level: Int)
 data class SangmonItem(val id: String,val name: String,val slot: String,val description: String,val element: String)
 data class DiaryTemplate(val id: String,val name: String,val description: String,val category: String,val style: String,val layout: String,val minutes: Int,val blocks: List<DiaryBlock>) {
-    val categoryName get()=mapOf("daily" to "일상","reflection" to "회고","gratitude" to "감사","emotion" to "감정","learning" to "학습","planning" to "계획","wellbeing" to "자기 돌봄","relationship" to "관계","creative" to "창작","memory" to "추억")[category] ?: category
+    val categoryName get()=mapOf("daily" to "일상","reflection" to "회고","gratitude" to "감사","emotions" to "감정","learning" to "학습","planning" to "계획","wellbeing" to "자기 돌봄","relationships" to "관계","creativity" to "창작","memories" to "추억")[category] ?: category
     val layoutName get()=mapOf("page" to "긴 글","cards" to "질문 카드","split" to "본문 + 메모","timeline" to "타임라인","letter" to "편지","dashboard" to "플래너","cornell" to "코넬 노트","compare" to "나란히 비교")[layout] ?: "긴 글"
 }
 class NotebookCatalog(context: Context) {

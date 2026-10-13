@@ -20,9 +20,9 @@ import com.myday.diary.diary.*
 import com.myday.diary.platform.*
 import com.myday.diary.ui.components.SangmonAvatar
 
-@Composable fun AssetIcon(path: String,description: String,modifier: Modifier=Modifier,atlas: Boolean=false) {
+@Composable fun AssetIcon(path: String,description: String,modifier: Modifier=Modifier) {
     val context=LocalContext.current
-    val image=remember(path) {context.assets.open(path).use {BitmapFactory.decodeStream(it)}.let {source->if(atlas) Bitmap.createBitmap(source,0,0,192,192).also {source.recycle()} else source}}
+    val image=remember(path) {context.assets.open(path).use {BitmapFactory.decodeStream(it)}}
     DisposableEffect(image) {onDispose {image?.recycle()}}
     if(image!=null) Image(image.asImageBitmap(),description,modifier)
 }
@@ -51,7 +51,7 @@ import com.myday.diary.ui.components.SangmonAvatar
             items(catalog.characters,key={it.id}) {skin->val unlocked=level>=skin.level
                 Card(Modifier.clickable(enabled=unlocked && !controller.saving) {attempt(TactileEvent.EQUIP) {controller.selectCharacter(skin.id,skin.level)}},colors=CardDefaults.cardColors(containerColor=if(book.characterStyle==skin.id) MaterialTheme.colorScheme.primaryContainer else Color.White)) {
                     Column(Modifier.fillMaxWidth().padding(12.dp),horizontalAlignment=Alignment.CenterHorizontally) {
-                        AssetIcon("sangmon/${skin.id}.png",skin.name,Modifier.size(90.dp),true)
+                        AssetIcon("portraits/${skin.id}.png",skin.name,Modifier.size(90.dp))
                         Text(skin.name,style=MaterialTheme.typography.labelLarge)
                         Text(if(!unlocked) "Lv.${skin.level} 해금" else if(book.characterStyle==skin.id) "함께하는 중" else "함께하기",style=MaterialTheme.typography.labelSmall)
                     }

@@ -9,6 +9,8 @@
 | 기능에서 수정할 파일 찾기 | [EDITING-GUIDE.md](EDITING-GUIDE.md) | 클릭 가능한 Windows·Android 파일 표와 수정 예 |
 | 전체 폴더·배포 위치 | [REPOSITORY-STRUCTURE.md](REPOSITORY-STRUCTURE.md) | 프로젝트 구조 |
 | Windows 실행·빌드 | [README.md](../windows/README.md) | EXE·PowerShell·검증 |
+| 기능 통일·햅틱·다음 작업 | [ANDROID-PARITY.md](ANDROID-PARITY.md) | 두 플랫폼 비교·터치 동작 |
+| Android 서명·기존 앱 이전 | [ANDROID-SIGNING.md](ANDROID-SIGNING.md) | APK 업데이트·서명 키 설정 |
 | Android 실행 | [ANDROID.md](ANDROID.md) | Android Studio·갤럭시 |
 | 화면 디자인 | [WINDOWS-DESIGN.md](WINDOWS-DESIGN.md), [DESIGN.md](DESIGN.md) | 플랫폼별 디자인 수정 |
 | 일기 100종과 질문 | [JOURNAL-FORMATS.md](JOURNAL-FORMATS.md), [JOURNAL-CATALOG.md](JOURNAL-CATALOG.md) | 형식 사용·전체 목록 |

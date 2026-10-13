@@ -101,7 +101,7 @@ Android 기록과 자동 동기화하지 않습니다. 영상·시작 시 자동
 | 바탕화면 이동·드래그·투명 창 | [DesktopPet.cs](Character/DesktopPet.cs) |
 | 앱 안의 캐릭터 | [MonsterView.cs](UI/MonsterView.cs) |
 
-캐릭터는 Android 버전과 같은 스케치 좌표를 사용하지만 플랫폼별 렌더링 코드로 관리합니다. 생동감 있는 추가 행동은 현재 Windows 버전에 적용했습니다.
+캐릭터는 Android 버전과 같은 스케치 좌표를 사용하지만 플랫폼별 렌더링 코드로 관리합니다. Android 0.4.0은 Windows 그림에서 생성한 8개 동작 프레임을 사용합니다. [기능 비교](../docs/ANDROID-PARITY.md)
 
 ![Windows 캐릭터 움직임 코드로 렌더링한 예시](../previews/windows/windows-lively.gif)
 

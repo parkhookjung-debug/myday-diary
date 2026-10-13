@@ -63,6 +63,8 @@ class NotebookStorageDeviceTest {
     @Test fun catalogAndAnimatedArtworkMatchWindowsCountsAndKeepIdleQuiet() {
         val catalog=NotebookCatalog(target);assertEquals(100,catalog.templates.size);assertEquals(64,catalog.characters.size);assertEquals(12,catalog.items.size)
         assertEquals(100,catalog.templates.map {it.id}.distinct().size);assertEquals(64,catalog.characters.map {it.id}.distinct().size)
+        assertTrue(catalog.templates.all {it.categoryName.any {c->c in '가'..'힣'}})
+        catalog.characters.forEach {skin->val icon=target.assets.open("portraits/${skin.id}.png").use {BitmapFactory.decodeStream(it)};assertEquals(192,icon.width);assertEquals(192,icon.height);icon.recycle()}
         catalog.characters.forEach {skin->val atlas=target.assets.open("sangmon/${skin.id}.png").use {BitmapFactory.decodeStream(it)};assertEquals(1536,atlas.width);assertEquals(1536,atlas.height);atlas.recycle()}
         val original=target.assets.open("sangmon/original.png").use {BitmapFactory.decodeStream(it)}
         fun warm(row: Int,frame: Int): Int {var count=0;for(y in 0 until 192) for(x in 0 until 192) {val p=original.getPixel(frame*192+x,row*192+y);if(Color.alpha(p)>0 && Color.red(p)>240 && Color.green(p) in 171..234 && Color.blue(p)<180) count++};return count}

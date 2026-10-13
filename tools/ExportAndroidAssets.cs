@@ -16,6 +16,7 @@ public static class AndroidAssetExporter
         var root=Path.GetFullPath(args[0]);Directory.CreateDirectory(root);
         var characters=Path.Combine(root,"sangmon");Directory.CreateDirectory(characters);
         var icons=Path.Combine(root,"items");Directory.CreateDirectory(icons);
+        var portraits=Path.Combine(root,"portraits");Directory.CreateDirectory(portraits);
         var json=new JavaScriptSerializer();
         var identityPath=Path.Combine(root,"..","java","com","myday","diary","data","SangmonIdentity.kt");
         File.WriteAllText(identityPath,"package com.myday.diary.data\n\n// Generated from the Windows catalog by tools/export-android-assets.ps1.\nobject SangmonIdentity {\n    val levels=mapOf(\n        "+string.Join(",\n        ",MonsterVariants.All.Select(v=>json.Serialize(MonsterVariants.Id(v))+" to "+SangmonGrowth.RequiredLevel(v)))+"\n    )\n}\n",new System.Text.UTF8Encoding(false));
@@ -36,6 +37,7 @@ public static class AndroidAssetExporter
                 MonsterPainter.Draw(g,new Rectangle(10,12,172,158),MonsterPose.ForActivity(age,activity,age,0,0),true,variant);g.Restore(saved);
             }
             atlas.Save(Path.Combine(characters,MonsterVariants.Id(variant)+".png"),ImageFormat.Png);
+            using(var portrait=atlas.Clone(new Rectangle(0,0,192,192),PixelFormat.Format32bppArgb)) portrait.Save(Path.Combine(portraits,MonsterVariants.Id(variant)+".png"),ImageFormat.Png);
         }
         foreach(var item in SangmonItems.All) using(var image=new Bitmap(192,240)) {
             using(var g=Graphics.FromImage(image)) ItemPainter.Draw(g,new RectangleF(8,8,176,224),item,.2);

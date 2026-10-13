@@ -55,22 +55,19 @@
 
 ## Android: 갤럭시 앱
 
-Android 기능은 [패키지 안내](../app/src/main/java/com/myday/diary/README.md)에서 시작합니다. Windows의 사진·자유 배치·성장·장비 기능은 현재 Android에 구현하지 않았습니다.
+[Android 패키지 안내](../app/src/main/java/com/myday/diary/README.md)에 클릭 가능한 전체 파일 표가 있습니다. Android 0.4.0에는 사진·자유 배치·100종 형식·내 레이아웃·성장·장비가 모두 있습니다.
 
-| 바꾸고 싶은 것 | 먼저 열 파일 | 수정하는 부분 |
-| --- | --- | --- |
-| 화면 색 | [colors.xml](../app/src/main/res/values/colors.xml), [MyDayTheme.kt](../app/src/main/java/com/myday/diary/ui/design/MyDayTheme.kt) | 테마 색상과 Material 색 연결 |
-| 글꼴·글자 크기 | [DiaryTypography.kt](../app/src/main/java/com/myday/diary/ui/design/DiaryTypography.kt) | `DiaryTypography` |
-| 여백·카드 크기 | [DiaryDimensions.kt](../app/src/main/java/com/myday/diary/ui/design/DiaryDimensions.kt) | `screenPadding`, `cardCorner`, `sectionGap` |
-| 일기 화면과 섹션 배치 | [DiaryScreen.kt](../app/src/main/java/com/myday/diary/ui/diary/DiaryScreen.kt), [DiarySections.kt](../app/src/main/java/com/myday/diary/ui/diary/DiarySections.kt) | Compose 화면·섹션 순서 |
-| 일기 블록·공통 버튼 | [DiaryBlockCard.kt](../app/src/main/java/com/myday/diary/ui/diary/DiaryBlockCard.kt), [DiaryComponents.kt](../app/src/main/java/com/myday/diary/ui/components/DiaryComponents.kt) | 카드 내부와 재사용 UI |
-| 날짜·입력·블록 동작 | [DiaryController.kt](../app/src/main/java/com/myday/diary/diary/DiaryController.kt) | 날짜 이동·추가·수정·순서·삭제 |
-| 기록 모델·저장 | [DiaryModels.kt](../app/src/main/java/com/myday/diary/data/DiaryModels.kt), [DiaryStore.kt](../app/src/main/java/com/myday/diary/data/DiaryStore.kt) | 기록 데이터와 JSON 저장 |
-| 화면 버튼과 기능 연결 | [DiaryRoute.kt](../app/src/main/java/com/myday/diary/ui/diary/DiaryRoute.kt) | 화면 콜백·날짜 선택 연결 |
-| 홈 화면 위젯 | [DiaryWidgetProvider.kt](../app/src/main/java/com/myday/diary/DiaryWidgetProvider.kt), [diary_widget.xml](../app/src/main/res/layout/diary_widget.xml) | 위젯 갱신·클릭·위젯 배치 |
-| 캐릭터 그림·동작 | [SketchMonsterPainter.kt](../app/src/main/java/com/myday/diary/ui/character/SketchMonsterPainter.kt), [CharacterAnimation.kt](../app/src/main/java/com/myday/diary/ui/character/CharacterAnimation.kt) | 상몬 도형과 애니메이션 |
-| 라이브 배경화면 | [CharacterWallpaperService.kt](../app/src/main/java/com/myday/diary/CharacterWallpaperService.kt), [CharacterWallpaperRenderer.kt](../app/src/main/java/com/myday/diary/ui/wallpaper/CharacterWallpaperRenderer.kt) | 캐릭터 이동·터치·배경화면 렌더링 |
-| 화면 Preview | [DiaryPreviews.kt](../app/src/debug/java/com/myday/diary/ui/preview/DiaryPreviews.kt) | Android Studio debug Preview의 예시 |
+| 바꾸고 싶은 것 | 먼저 열 파일 |
+| --- | --- |
+| 네 탭·날짜·완료 현황·설정 | [PhoneNotebookScreen.kt](../app/src/main/java/com/myday/diary/ui/diary/PhoneNotebookScreen.kt) |
+| 카드·입력·체크 | [PhoneBlockEditor.kt](../app/src/main/java/com/myday/diary/ui/diary/PhoneBlockEditor.kt) |
+| 자유 배치·크기·확대 | [PhoneFreeBoard.kt](../app/src/main/java/com/myday/diary/ui/diary/PhoneFreeBoard.kt) |
+| 달력·본문 검색 | [PhoneCalendar.kt](../app/src/main/java/com/myday/diary/ui/diary/PhoneCalendar.kt) |
+| 상몬·성장·장비 UI | [PhoneCompanion.kt](../app/src/main/java/com/myday/diary/ui/diary/PhoneCompanion.kt) |
+| 사진·백업·시스템 선택기 연결 | [PhoneNotebookRoute.kt](../app/src/main/java/com/myday/diary/ui/diary/PhoneNotebookRoute.kt) |
+| 저장·성장·이전 기록·호환성 | [NotebookController.kt](../app/src/main/java/com/myday/diary/diary/NotebookController.kt), [NotebookRules.kt](../app/src/main/java/com/myday/diary/diary/NotebookRules.kt), [DiaryStore.kt](../app/src/main/java/com/myday/diary/data/DiaryStore.kt) |
+| 햅틱 반응 | [DiaryHaptics.kt](../app/src/main/java/com/myday/diary/platform/DiaryHaptics.kt) |
+| 그림·아이템·형식 원본을 두 버전에 반영 | [export-android-assets.ps1](../tools/export-android-assets.ps1) |
 
 ## 바로 따라 할 수 있는 수정 예
 
@@ -82,7 +79,7 @@ Android 기능은 [패키지 안내](../app/src/main/java/com/myday/diary/README
 
 **경험치 규칙 바꾸기:** [SangmonGrowth.cs](../windows/Core/SangmonGrowth.cs)의 `DailyXP`·`LevelXP`와 보상 레벨 `Levels`를 수정하고 [GrowthTests.cs](../windows/GrowthTests.cs)를 확인합니다. 경험치는 지급 날짜 수에서 계산하므로 값 변경은 기존 사용자의 경험치·레벨에도 영향을 줍니다.
 
-**Android 카드 모서리 바꾸기:** [DiaryDimensions.kt](../app/src/main/java/com/myday/diary/ui/design/DiaryDimensions.kt)의 `cardCorner`를 수정하고 Android Studio에서 [DiaryPreviews.kt](../app/src/debug/java/com/myday/diary/ui/preview/DiaryPreviews.kt)를 엽니다.
+**Android 카드 모서리 바꾸기:** [PhoneBlockEditor.kt](../app/src/main/java/com/myday/diary/ui/diary/PhoneBlockEditor.kt)의 RoundedCornerShape를 수정하고 에뮬레이터/갤럭시에서 확인합니다. [Android 디자인 안내](DESIGN.md)를 참고합니다.
 
 ## 수정한 뒤 확인하기
 

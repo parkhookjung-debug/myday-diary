@@ -53,6 +53,8 @@ class NotebookTest {
         assertThrows(IllegalArgumentException::class.java) {NotebookJson.decode(malformed)};assertEquals(original,memory.value)
         val full=DiaryEntry(blocks=(0 until 200).map {DiaryBlock(type="text")});assertThrows(IllegalArgumentException::class.java) {NotebookRules.append(full,listOf(DiaryBlock(type="habit")))};assertEquals(200,full.blocks.size)
         val free=NotebookRules.free(full);NotebookRules.validate(DiaryBook(days=mapOf("2026-10-13" to free)));assertEquals(200,free.blocks.map {it.x to it.y}.distinct().size)
+        val layout=NotebookRules.capture(full,"많은 카드");val reapplied=NotebookRules.apply(DiaryEntry(),layout)
+        NotebookRules.validate(DiaryBook(days=mapOf("2026-10-13" to reapplied),layouts=listOf(layout)));assertEquals(200,reapplied.blocks.size)
         assertThrows(IllegalArgumentException::class.java) {NotebookRules.validate(DiaryBook(equipment=Equipment("astral-orb","none")))}
     }
     @Test fun legacyAndroidContentAndCheckedStateSurviveModelExtension() {
@@ -79,5 +81,11 @@ class NotebookTest {
         val broken=JSONObject(raw);broken.getJSONArray("Days").getJSONObject(0).getJSONObject("Value").getJSONArray("Blocks").getJSONObject(0).put("X","oops")
         assertThrows(IllegalArgumentException::class.java) {NotebookJson.decode(broken.toString())}
         val alias=JSONObject(raw).put("CharacterStyle","cube");assertEquals("crystal",NotebookJson.decode(alias.toString()).characterStyle)
+    }
+    @Test fun reorderingMeaningfulBlocksOnAnotherDayDoesNotAwardGrowth() {
+        val memory=Memory();var day=LocalDate.of(2026,10,13);val c=NotebookController(memory,today={day})
+        c.add("text");c.add("todo");c.updateBlock(c.entry.blocks[0].copy(text="첫 기록"));c.updateBlock(c.entry.blocks[1].copy(text="할 일"))
+        day=day.plusDays(1);c.move(c.entry.blocks[0].id,1)
+        assertEquals(setOf("2026-10-13"),c.book.awardedDays);assertEquals("할 일",c.entry.blocks[0].text)
     }
 }

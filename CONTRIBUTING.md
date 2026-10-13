@@ -54,7 +54,7 @@ Android Studio에서 저장소 루트를 열고 JDK 17 이상과 Android SDK 35�
 ./gradlew.bat :app:assembleDebug :app:lintDebug :app:testDebugUnitTest
 ```
 
-다른 운영체제에서는 `./gradlew`를 사용합니다. 화면은 [debug Preview](app/src/debug/java/com/myday/diary/ui/preview/DiaryPreviews.kt)로 먼저 보고, 홈 위젯·라이브 배경화면은 갤럭시에서 확인합니다. SDK·Gradle·라이브러리 변경은 통합 담당자와 범위를 맞춥니다.
+다른 운영체제에서는 `./gradlew`를 사용합니다. 최신 Phone 화면은 에뮬레이터/갤럭시와 connectedDebugAndroidTest로 확인하고, 홈 위젯·라이브 배경화면은 갤럭시에서 확인합니다. SDK·Gradle·라이브러리 변경은 통합 담당자와 범위를 맞춥니다.
 
 ## PR과 리뷰
 
