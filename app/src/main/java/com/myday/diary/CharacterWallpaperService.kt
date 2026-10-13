@@ -9,6 +9,8 @@ import android.view.MotionEvent
 import android.view.SurfaceHolder
 import com.myday.diary.data.DiaryStore
 import com.myday.diary.data.DEFAULT_CHARACTER
+import com.myday.diary.data.Equipment
+import com.myday.diary.platform.WallpaperHaptics
 import com.myday.diary.ui.wallpaper.CharacterWallpaperRenderer
 import java.time.LocalDate
 import kotlin.math.abs
@@ -23,9 +25,11 @@ class CharacterWallpaperService : WallpaperService() {
         private val handler = Handler(Looper.getMainLooper())
         private val renderer = CharacterWallpaperRenderer(this@CharacterWallpaperService)
         private val density = resources.displayMetrics.density
-        private val store by lazy { DiaryStore(this@CharacterWallpaperService) }
+        private val homeCache by lazy { com.myday.diary.data.DiaryHomeCache(this@CharacterWallpaperService) }
         private var character = DEFAULT_CHARACTER
         private var theme = 0
+        private var equipment=Equipment()
+        private var haptics=true
         private var width = 0
         private var height = 0
         private var x = 0f
@@ -111,7 +115,10 @@ class CharacterWallpaperService : WallpaperService() {
                     constrainPosition()
                 }
                 MotionEvent.ACTION_UP -> {
-                    if (dragging && !touchMoved) happyUntil = SystemClock.uptimeMillis() + 1800L
+                    if (dragging) {
+                        happyUntil=SystemClock.uptimeMillis()+700L
+                        WallpaperHaptics.tap(this@CharacterWallpaperService,haptics)
+                    }
                     dragging = false
                 }
                 MotionEvent.ACTION_CANCEL -> dragging = false
@@ -124,12 +131,14 @@ class CharacterWallpaperService : WallpaperService() {
             val dt = ((now - previousFrame).coerceIn(0L, 50L)) / 1000f
             previousFrame = now
             if (now >= nextRead) {
-                val today = store.read(LocalDate.now().toString())
-                character = today.character
-                theme = today.theme
+                runCatching {homeCache.read()}.onSuccess {home->
+                    character=home.character;equipment=home.equipment;haptics=home.haptics
+                    theme=home.theme
+                }
                 nextRead = now + 3000L
             }
-            if (!dragging) {
+            val phase=now%42000
+            if (!dragging && now>=happyUntil && phase !in 16000..17999 && phase !in 30000..31599 && phase !in 34000..36399) {
                 x += vx * dt; y += vy * dt
                 if (x < radius) vx = abs(vx)
                 if (x > width - radius) vx = -abs(vx)
@@ -141,7 +150,8 @@ class CharacterWallpaperService : WallpaperService() {
             val canvas: Canvas = try { holder.lockCanvas() ?: return } catch (_: IllegalStateException) { return }
             try {
                 renderer.draw(canvas, theme, character, x, y, radius, now < happyUntil,
-                    timeMillis = now, moving = !dragging, dragging = dragging, facingLeft = vx < 0f)
+                    timeMillis = now, moving = !dragging, dragging = dragging, facingLeft = vx < 0f,
+                    equipment=equipment,fireAge=if(now<happyUntil) 700L-(happyUntil-now) else -1L)
             } finally { holder.unlockCanvasAndPost(canvas) }
         }
     }

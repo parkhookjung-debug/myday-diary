@@ -1,41 +1,34 @@
 package com.myday.diary.data
 
 import android.content.Context
+import android.util.AtomicFile
 import com.myday.diary.DiaryWidgetProvider
-import org.json.JSONArray
-import org.json.JSONObject
+import java.io.File
 import java.time.LocalDate
 
-/** The preference file, date keys and JSON format are unchanged by the UI refactor. */
-class DiaryStore(context: Context) : DiaryRepository {
-    private val appContext = context.applicationContext
-    private val prefs = context.getSharedPreferences("diary", Context.MODE_PRIVATE)
-
-    override fun read(date: String): DiaryEntry {
-        val raw = prefs.getString(date, null) ?: return DiaryEntry()
-        val json = JSONObject(raw)
-        val array = json.getJSONArray("blocks")
-        return DiaryEntry(json.optInt("theme").coerceIn(0, 2), json.optString("character", DEFAULT_CHARACTER),
-            (0 until array.length()).map {
-                val block = array.getJSONObject(it)
-                DiaryBlock(block.getString("id"), block.getString("type"), block.optString("text"), block.optBoolean("checked"))
-            })
-    }
-
-    override fun write(date: String, entry: DiaryEntry): Boolean {
-        val previous = read(date)
-        val blocks = JSONArray()
-        entry.blocks.forEach { block ->
-            blocks.put(JSONObject().put("id", block.id).put("type", block.type)
-                .put("text", block.text).put("checked", block.checked))
+/** Migrate legacy preferences only after the canonical book is safely persisted. */
+class DiaryStore(context: Context) : DiaryRepository, NotebookRepository {
+    private val appContext=context.applicationContext
+    private val prefs=context.getSharedPreferences("diary",Context.MODE_PRIVATE)
+    private val file=AtomicFile(File(context.filesDir,"notebook.json"))
+    @Synchronized override fun loadBook(): DiaryBook {
+        if(file.baseFile.exists() || File(file.baseFile.path+".bak").exists()) return file.openRead().use {input->
+            require(input.available()<=NotebookJson.MAX_BYTES);NotebookJson.decode(input.readBytes().toString(Charsets.UTF_8)).also(NotebookPhoto::validate).also {runCatching {DiaryHomeCache(appContext).update(it)}}
         }
-        val saved = prefs.edit().putString(date, JSONObject().put("theme", entry.theme)
-            .put("character", entry.character).put("blocks", blocks).toString()).commit()
-        fun progress(value: DiaryEntry) = value.blocks.filter { it.type in listOf("todo", "habit") }.map { it.type to it.checked }
-        if (saved && date == LocalDate.now().toString() &&
-            (previous.theme != entry.theme || previous.character != entry.character || progress(previous) != progress(entry))) {
-            DiaryWidgetProvider.refreshAll(appContext)
-        }
-        return saved
+        val days=prefs.all.filterKeys {it.matches(Regex("\\d{4}-\\d{2}-\\d{2}"))}.mapValues {(_,raw)->NotebookJson.legacy(raw as String)}
+        val previous=days[LocalDate.now().toString()]?.character
+        val character=when(previous) {"🐱"->"cat";"🐰"->"rabbit";"🐻"->"bear";else->"original"}
+        val migrated=DiaryBook(days=days,characterStyle=character)
+        if(days.isNotEmpty()) saveBook(migrated)
+        return migrated
     }
+    @Synchronized override fun saveBook(book: DiaryBook) {
+        NotebookPhoto.validate(book)
+        val encoded=NotebookJson.encode(book).toByteArray(Charsets.UTF_8)
+        val output=file.startWrite()
+        try {output.write(encoded);file.finishWrite(output)} catch(e: Exception) {file.failWrite(output);throw e}
+        runCatching {DiaryHomeCache(appContext).update(book);DiaryWidgetProvider.refreshAll(appContext)}
+    }
+    override fun read(date: String): DiaryEntry {val book=loadBook();return (book.days[date] ?: DiaryEntry()).copy(character=book.characterStyle)}
+    override fun write(date: String,entry: DiaryEntry): Boolean = runCatching {val book=loadBook();saveBook(book.copy(days=book.days+(date to entry)));true}.getOrDefault(false)
 }

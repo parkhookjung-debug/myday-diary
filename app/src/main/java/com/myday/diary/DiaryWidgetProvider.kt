@@ -13,6 +13,8 @@ import com.myday.diary.data.DiaryStore
 import com.myday.diary.ui.character.AnimatedCharacterPainter
 import com.myday.diary.ui.character.CharacterAnimation
 import com.myday.diary.ui.character.CharacterKind
+import com.myday.diary.ui.character.SangmonSprites
+import com.myday.diary.data.DiaryEntry
 import kotlin.math.roundToInt
 import java.time.LocalDate
 
@@ -52,22 +54,19 @@ class DiaryWidgetProvider : AppWidgetProvider() {
 
         private fun render(context: Context, manager: AppWidgetManager, id: Int) {
             val today = LocalDate.now()
-            val entry = DiaryStore(context).read(today.toString())
-            val tasks = entry.blocks.filter { it.type == "todo" }
-            val habits = entry.blocks.filter { it.type == "habit" }
+            val home=com.myday.diary.data.DiaryHomeCache(context).read(today)
             val cheer = context.getSharedPreferences("widget", Context.MODE_PRIVATE).getInt("cheer_$id", 0)
             val views = RemoteViews(context.packageName, R.layout.diary_widget)
             views.setTextViewText(R.id.widget_date, "${today.monthValue}월 ${today.dayOfMonth}일 · MY DAY")
             val bitmapSize = (96 * context.resources.displayMetrics.density).roundToInt().coerceIn(64, 256)
             val characterBitmap = Bitmap.createBitmap(bitmapSize, bitmapSize, Bitmap.Config.ARGB_8888)
-            AnimatedCharacterPainter(context).draw(Canvas(characterBitmap), CharacterKind.fromStoredValue(entry.character),
-                bitmapSize / 2f, bitmapSize / 2f, bitmapSize * 0.46f,
-                CharacterAnimation.pose(cheer * 200L, happy = cheer % 2 == 1))
+            SangmonSprites(context).draw(Canvas(characterBitmap),home.character,home.equipment,
+                bitmapSize/2f,bitmapSize/2f,bitmapSize*.43f,cheer*200L,if(cheer%2==1) 200L else -1L)
             views.setImageViewBitmap(R.id.widget_character, characterBitmap)
             views.setTextViewText(R.id.widget_message, cheers[cheer % cheers.size])
-            views.setTextViewText(R.id.widget_progress, "할 일 ${tasks.count { it.checked }}/${tasks.size}  ·  습관 ${habits.count { it.checked }}/${habits.size}")
+            views.setTextViewText(R.id.widget_progress, "할 일 ${home.tasksDone}/${home.tasksTotal}  ·  습관 ${home.habitsDone}/${home.habitsTotal}")
             val backgrounds = intArrayOf(R.drawable.widget_cream, R.drawable.widget_forest, R.drawable.widget_lavender)
-            views.setInt(R.id.widget_root, "setBackgroundResource", backgrounds[entry.theme])
+            views.setInt(R.id.widget_root, "setBackgroundResource", backgrounds[home.theme])
             val open = PendingIntent.getActivity(context, id,
                 Intent(context, MainActivity::class.java).addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP),
                 PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE)
