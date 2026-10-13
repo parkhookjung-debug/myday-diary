@@ -49,16 +49,16 @@ class PhoneNotebookDeviceTest {
         ui.onNodeWithTag("diary-list").performScrollToNode(hasText("예시 기록"))
         ui.onNodeWithText("예시 기록").performTextReplacement("휴대폰에서 쓴 기록")
         ui.runOnIdle {assertEquals("휴대폰에서 쓴 기록",c.book.days.getValue(day.toString()).blocks.first().text);assertEquals(10,NotebookRules.xp(c.book))}
-        ui.onNodeWithText("하루 조각 추가").performClick();ui.onNodeWithText("사진",useUnmergedTree=true).performClick()
+        ui.onNodeWithText("하루 조각 추가").performClick();ui.onNodeWithText("사진").performClick()
         ui.onNodeWithTag("diary-list").performScrollToNode(hasContentDescription("일기에 첨부한 사진"));screenshot("android-photo")
-        ui.onNodeWithText("달력",useUnmergedTree=true).performClick();screenshot("android-calendar")
+        ui.onNodeWithText("달력").performClick();screenshot("android-calendar")
         ui.onNodeWithText("본문·사진 설명 검색").performTextInput("휴대폰")
         ui.onNodeWithText("휴대폰에서 쓴 기록").assertExists()
-        ui.onNodeWithText("설정",useUnmergedTree=true).performClick();ui.onNodeWithText("라벤더").performClick();screenshot("android-settings")
+        ui.onNodeWithText("설정").performClick();ui.onNodeWithText("라벤더").performClick();screenshot("android-settings")
         ui.runOnIdle {assertEquals(2,c.entry.theme);NotebookPhoto.validate(c.book)}
     }
     @Test fun exactCharacterEquipmentAndGrowthMenus() {
-        start();ui.onNodeWithText("상몬",useUnmergedTree=true).performClick();screenshot("android-sangmon")
+        start();ui.onNodeWithText("상몬").performClick();screenshot("android-sangmon")
         ui.onNodeWithTag("sangmon-grid").performScrollToNode(hasText("빙결 상몬"));ui.onNodeWithText("빙결 상몬").performClick()
         ui.runOnIdle {assertEquals("frost",c.book.characterStyle)}
         ui.onNodeWithText("장비 12종").performClick();ui.onNodeWithTag("equipment-grid").performScrollToNode(hasText("빙결 장검"));ui.onNodeWithText("빙결 장검").performClick()

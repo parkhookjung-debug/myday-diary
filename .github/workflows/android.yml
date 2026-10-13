@@ -69,7 +69,7 @@ jobs:
         run: |
           $compiler=Join-Path $env:WINDIR 'Microsoft.NET/Framework64/v4.0.30319/csc.exe'
           $sources=Get-ChildItem windows -Filter '*.cs' -Recurse | ForEach-Object { $_.FullName }
-          & $compiler /nologo /target:exe /main:WindowsAndroidInterop /out:interop/check.exe /reference:System.Drawing.dll /reference:System.Windows.Forms.dll /reference:System.Runtime.Serialization.dll tools/WindowsAndroidInterop.cs @sources
+          & $compiler /nologo /target:exe /main:WindowsAndroidInterop ('/out:'+(Join-Path $PWD 'interop/check.exe')) /reference:System.Drawing.dll /reference:System.Windows.Forms.dll /reference:System.Runtime.Serialization.dll (Join-Path $PWD 'tools/WindowsAndroidInterop.cs') @sources
           if ($LASTEXITCODE -ne 0) { throw 'Interop harness build failed' }
           $inputFile=Get-ChildItem interop -Filter 'android-to-windows.json' -Recurse | Select-Object -First 1
           if ($null -eq $inputFile) { throw 'Android export fixture missing' }

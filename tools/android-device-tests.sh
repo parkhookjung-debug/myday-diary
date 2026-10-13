@@ -1,7 +1,9 @@
 #!/usr/bin/env bash
 set -euo pipefail
-sdkmanager "system-images;android-35;google_apis;x86_64"
-echo no | avdmanager create avd --force --name MyDayPhone --package "system-images;android-35;google_apis;x86_64" --device pixel_7 --path "$PWD/.bootstrap/android-avd"
+export PATH="$ANDROID_HOME/platform-tools:$ANDROID_HOME/emulator:$PATH"
+"$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" "system-images;android-35;google_apis;x86_64"
+mkdir -p .bootstrap
+echo no | "$ANDROID_HOME/cmdline-tools/latest/bin/avdmanager" create avd --force --name MyDayPhone --package "system-images;android-35;google_apis;x86_64" --device pixel_7 --path "$PWD/.bootstrap/android-avd"
 if [[ -e /dev/kvm ]]; then sudo chmod a+rw /dev/kvm; fi
 "$ANDROID_HOME/emulator/emulator" -avd MyDayPhone -no-window -no-audio -no-snapshot -no-boot-anim -gpu swiftshader_indirect > app/build/emulator.log 2>&1 &
 emulator_pid=$!
