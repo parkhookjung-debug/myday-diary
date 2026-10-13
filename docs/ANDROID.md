@@ -64,6 +64,12 @@ Android Studio에서 저장소 루트를 Open → SDK 35 설치 → Gradle JDK 1
 ./gradlew.bat :app:connectedDebugAndroidTest
 ```
 
-APK는 `app/build/outputs/apk/debug/app-debug.apk`입니다. 단위 검사는 지급·저장 실패·백업·이전 형식을 확인합니다. Android 35 에뮬레이터 검사는 Compose 입력·사진·달력·상몬 장착·자유 배치·형식·내 레이아웃, 사진 회전·AtomicFile 저장을 격리된 기록으로 확인합니다. Android JSON을 실제 Windows 코드로 읽는 CI 검사도 제공합니다.
+APK는 `app/build/outputs/apk/debug/app-debug.apk`입니다. 단위 검사는 지급·저장 실패·백업·이전 형식을 확인합니다. Android 35 에뮬레이터 검사는 Compose 입력·사진·달력·상몬 장착·자유 배치·형식·내 레이아웃, 사진 회전·AtomicFile 저장과 실제 ViewModel의 연속 입력·실패 재시도·종료 직전 저장을 격리된 기록으로 확인합니다. Android JSON을 실제 Windows 코드로 읽는 CI 검사도 제공합니다.
 
 진동의 실제 느낌, 갤럭시 런처의 위젯·배경화면 터치, 절전 복귀·접근성·다른 화면 크기는 실기기에서 추가 확인합니다.
+
+## 실제 에뮬레이터 화면
+
+![상몬 64종·성장](../previews/android/android-sangmon.png)
+
+[일기·사진·배치·형식·장비·설정 화면](../previews/README.md#android-040-실제-화면)

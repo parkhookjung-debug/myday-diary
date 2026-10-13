@@ -2,6 +2,22 @@
 
 플랫폼별로 나눠 보관합니다. 실행 파일은 GitHub Releases에서 받습니다.
 
+## Android 0.4.0 실제 화면
+
+Android 35 에뮬레이터에서 실제 Compose UI를 실행하고 격리된 예시 기록으로 캡처했습니다. 초기 HTML 모형이나 실제 갤럭시 캡처와 구분합니다.
+
+| 화면 | 파일 |
+| --- | --- |
+| 네 탭 일기·완료 현황 | [android-diary.png](android/android-diary.png) |
+| 상몬 64종·성장 | [android-sangmon.png](android/android-sangmon.png) |
+| 빙결 상몬·검/보주 장착 | [android-equipment.png](android/android-equipment.png) |
+| 자유 배치·크기 조절 | [android-free-layout.png](android/android-free-layout.png) |
+| 100종 형식·코넬 검색 | [android-templates.png](android/android-templates.png) |
+| 저장한 레이아웃 | [android-my-layouts.png](android/android-my-layouts.png) |
+| 사진 | [android-photo.png](android/android-photo.png) |
+| 달력·검색 | [android-calendar.png](android/android-calendar.png) |
+| 테마·햅틱·백업 설정 | [android-settings.png](android/android-settings.png) |
+
 ## Android와 초기 화면
 
 `android/`의 `monster-motion`과 `character-motion`은 앱의 캐릭터 그림·포즈 코드를 렌더링한 PNG/GIF입니다. `myday-example.html`과 PNG는 초기 일기 화면을 재현한 예시입니다. 실제 갤럭시 화면 캡처가 아닙니다.

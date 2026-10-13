@@ -40,6 +40,7 @@ class PhoneNotebookDeviceTest {
     }
     private fun screenshot(name: String) {
         ui.waitForIdle()
+        Thread.sleep(500) // Let the Android render thread publish the composed frame before capture.
         val image=InstrumentationRegistry.getInstrumentation().uiAutomation.takeScreenshot()
         val folder=File(context.getExternalFilesDir(null),"previews");folder.mkdirs()
         File(folder,"$name.png").outputStream().use {image.compress(Bitmap.CompressFormat.PNG,100,it)};image.recycle()
