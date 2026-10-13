@@ -57,7 +57,10 @@ import kotlin.math.roundToInt
                 } while(event.changes.any {it.pressed})
             }
         }) {
-            Canvas(Modifier.fillMaxSize()) {for(x in 0..(size.width/22).toInt()) for(y in 0..(size.height/22).toInt()) drawCircle(Color(0xffe0d7ca),1f,Offset(x*22f,y*22f))}
+            Canvas(Modifier.fillMaxSize()) {
+                if(entry.pageStyle=="dots") for(x in 0..(size.width/22).toInt()) for(y in 0..(size.height/22).toInt()) drawCircle(Color(0xffe0d7ca),1f,Offset(x*22f,y*22f))
+                if(entry.pageStyle=="paper") for(y in 1..(size.height/32).toInt()) drawLine(Color(0xffe9e4db),Offset(0f,y*32f),Offset(size.width,y*32f),1f)
+            }
             blocks.filter {it.x+it.width>=originX && it.y+it.height>=originY && it.x<=originX+viewportWidth/zoom && it.y<=originY+470/zoom}.forEach {block->key(block.id) {
                 val current by rememberUpdatedState(block);val commitBounds by rememberUpdatedState(onBounds)
                 var x by remember(block.x) {mutableFloatStateOf(block.x.toFloat())};var y by remember(block.y) {mutableFloatStateOf(block.y.toFloat())}

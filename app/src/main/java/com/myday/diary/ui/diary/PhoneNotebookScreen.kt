@@ -43,7 +43,7 @@ import java.time.LocalDate
         bottomBar={NavigationBar(containerColor=Color(0xfff7f5f0)) {listOf("일기","달력","상몬","설정").forEachIndexed {i,title->
             NavigationBarItem(selected=tab==i,onClick={tab=i;haptics.perform(TactileEvent.SELECT)},icon={Text(listOf("▤","▦","✦","⚙")[i])},label={Text(title)})
         }}},
-        floatingActionButton={if(tab==0) ExtendedFloatingActionButton(onClick={add=true;haptics.perform(TactileEvent.SELECT)},text={Text("하루 조각 추가")},icon={Text("＋")},containerColor=MaterialTheme.colorScheme.primary,contentColor=Color.White)}) {padding->
+        floatingActionButton={if(tab==0) ExtendedFloatingActionButton(modifier=Modifier.testTag("add-block"),onClick={add=true;haptics.perform(TactileEvent.SELECT)},text={Text("하루 조각 추가")},icon={Text("＋")},containerColor=MaterialTheme.colorScheme.primary,contentColor=Color.White)}) {padding->
         Column(Modifier.fillMaxSize().padding(padding).imePadding()) {
             controller.error?.let {message->Surface(color=Color(0xfff3e6df)) {Row(Modifier.fillMaxWidth().padding(horizontal=16.dp),horizontalArrangement=Arrangement.SpaceBetween) {
                 Text(message,Modifier.weight(1f).padding(vertical=10.dp),style=MaterialTheme.typography.bodySmall)
@@ -78,7 +78,7 @@ import java.time.LocalDate
                     }}}
                     item {FlowRow(horizontalArrangement=Arrangement.spacedBy(8.dp)) {
                         FilterChip(entry.layoutMode=="cards",{attempt(TactileEvent.SELECT) {controller.edit(entry.copy(layoutMode="cards"));editing=false}},label={Text("자동 정렬")})
-                        FilterChip(entry.layoutMode=="free",{attempt(TactileEvent.SELECT) {controller.edit(entry.copy(layoutMode="free",blocks=entry.blocks.mapIndexed {i,b->if(b.width==0 || b.height==0) NotebookRules.bound(b.copy(x=12,y=i*280)) else b}))}},label={Text("자유 배치")})
+                        FilterChip(entry.layoutMode=="free",{attempt(TactileEvent.SELECT) {controller.edit(NotebookRules.free(entry))}},label={Text("자유 배치")})
                         if(entry.layoutMode=="free") {FilterChip(editing,{editing=!editing;haptics.perform(TactileEvent.GRAB)},label={Text(if(editing) "편집 완료" else "배치 편집")})
                             TextButton({attempt(TactileEvent.DROP) {controller.edit(NotebookRules.arrange(entry))}}) {Text("자동 정리")}}
                     }}

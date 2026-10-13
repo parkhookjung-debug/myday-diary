@@ -42,7 +42,7 @@ import com.myday.diary.diary.NotebookController
             item {Button({onApply(template)},modifier=Modifier.fillMaxWidth()) {Text("이 형식으로 기록하기")}}
         }}}
         LazyColumn(Modifier.weight(1f).padding(horizontal=16.dp),verticalArrangement=Arrangement.spacedBy(8.dp),contentPadding=PaddingValues(bottom=24.dp)) {
-            items(catalog.templates.filter {query.isBlank() || "${it.categoryName} ${it.name} ${it.description} ${it.blocks.joinToString {b->b.prompt}}".contains(query,true)},key={it.id}) {template->Card(Modifier.fillMaxWidth().clickable {selected=template;keyboard?.hide()},colors=CardDefaults.cardColors(containerColor=Color.White)) {
+            items(catalog.templates.filter {query.isBlank() || "${it.categoryName} ${it.layoutName} ${it.name} ${it.description} ${it.blocks.joinToString {b->b.prompt}}".contains(query,true)},key={it.id}) {template->Card(Modifier.fillMaxWidth().clickable {selected=template;keyboard?.hide()},colors=CardDefaults.cardColors(containerColor=Color.White)) {
                 Column(Modifier.padding(16.dp)) {Text(template.name,style=MaterialTheme.typography.titleMedium);Text("${template.categoryName} · 약 ${template.minutes}분 · ${template.layoutName}",style=MaterialTheme.typography.labelSmall);Text(template.description,maxLines=2)}
             }}
         }

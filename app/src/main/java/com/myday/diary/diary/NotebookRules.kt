@@ -24,6 +24,12 @@ object NotebookRules {
         var y=12
         return entry.copy(blocks=entry.blocks.map { b -> bound(b.copy(x=12,y=y,width=if(b.wide) 876 else 420)).also {y+=it.height+16} })
     }
+    fun free(entry: DiaryEntry): DiaryEntry {
+        val columns=maxOf(1,(entry.blocks.size+23)/24)
+        return entry.copy(layoutMode="free",blocks=entry.blocks.mapIndexed {i,b->
+            if(b.width==0 || b.height==0 || b.y>MAX_POSITION) bound(b.copy(x=12+(i%columns)*900,y=12+(i/columns)*400,width=if(b.wide) 876 else 420)) else bound(b)
+        })
+    }
     fun append(entry: DiaryEntry, blocks: List<DiaryBlock>): DiaryEntry {
         require(entry.blocks.size+blocks.size<=MAX_BLOCKS) {"한 날짜에는 블록을 200개까지 추가할 수 있어요."}
         val offset=if(entry.layoutMode=="free" && entry.blocks.isNotEmpty()) entry.blocks.maxOf {bound(it).y+bound(it).height}+16 else 0

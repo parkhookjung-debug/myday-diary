@@ -49,7 +49,7 @@ class PhoneNotebookDeviceTest {
         ui.onNodeWithTag("diary-list").performScrollToNode(hasText("예시 기록"))
         ui.onNodeWithText("예시 기록").performTextReplacement("휴대폰에서 쓴 기록")
         ui.runOnIdle {assertEquals("휴대폰에서 쓴 기록",c.book.days.getValue(day.toString()).blocks.first().text);assertEquals(10,NotebookRules.xp(c.book))}
-        ui.onNodeWithText("하루 조각 추가").performClick();ui.onNodeWithText("사진").performClick()
+        ui.onNodeWithTag("add-block").performClick();ui.onNodeWithText("사진").performClick()
         ui.onNodeWithTag("diary-list").performScrollToNode(hasContentDescription("일기에 첨부한 사진"));screenshot("android-photo")
         ui.onNodeWithText("달력").performClick();screenshot("android-calendar")
         ui.onNodeWithText("본문·사진 설명 검색").performTextInput("휴대폰")
@@ -75,7 +75,7 @@ class PhoneNotebookDeviceTest {
         ui.onNodeWithText("분야·이름·질문 검색").performTextInput("코넬")
         val template=catalog.templates.first {it.layout=="cornell"}
         ui.onNodeWithText(template.name).performClick();screenshot("android-templates")
-        ui.onNodeWithText("이 형식으로 기록하기").performClick()
+        ui.onNodeWithText("이 형식으로 기록하기").performScrollTo().performClick()
         ui.runOnIdle {assertEquals(3+template.blocks.size,c.entry.blocks.size);assertEquals("예시 기록",c.entry.blocks.first().text)}
         ui.onNodeWithTag("diary-list").performScrollToNode(hasText("내 레이아웃"));ui.onNodeWithText("내 레이아웃").performClick();ui.onNodeWithText("현재 배치 저장").performClick()
         ui.onNodeWithText("이름 (1~40자)").performTextInput("휴대폰 배치");ui.onNodeWithText("저장",substring=false).performClick();screenshot("android-my-layouts")

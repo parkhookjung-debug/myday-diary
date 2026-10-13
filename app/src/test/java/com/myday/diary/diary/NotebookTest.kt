@@ -52,6 +52,7 @@ class NotebookTest {
         val malformed=JSONObject().put("Version",99).put("Days",org.json.JSONArray()).toString()
         assertThrows(IllegalArgumentException::class.java) {NotebookJson.decode(malformed)};assertEquals(original,memory.value)
         val full=DiaryEntry(blocks=(0 until 200).map {DiaryBlock(type="text")});assertThrows(IllegalArgumentException::class.java) {NotebookRules.append(full,listOf(DiaryBlock(type="habit")))};assertEquals(200,full.blocks.size)
+        val free=NotebookRules.free(full);NotebookRules.validate(DiaryBook(days=mapOf("2026-10-13" to free)));assertEquals(200,free.blocks.map {it.x to it.y}.distinct().size)
         assertThrows(IllegalArgumentException::class.java) {NotebookRules.validate(DiaryBook(equipment=Equipment("astral-orb","none")))}
     }
     @Test fun legacyAndroidContentAndCheckedStateSurviveModelExtension() {

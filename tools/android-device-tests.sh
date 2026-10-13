@@ -25,7 +25,7 @@ adb shell settings put global transition_animation_scale 0
 adb shell settings put global animator_duration_scale 0
 adb shell input keyevent 82
 test_status=0
-./gradlew --no-daemon :app:connectedDebugAndroidTest || test_status=$?
+./gradlew --no-daemon -Pandroid.injected.androidTest.leaveApksInstalledAfterRun=true :app:connectedDebugAndroidTest || test_status=$?
 mkdir -p app/build/device-previews
 adb pull /sdcard/Android/data/com.myday.diary/files/previews app/build/device-previews || true
 adb logcat -d -t 400 > app/build/device-logcat.txt
