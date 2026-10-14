@@ -4,6 +4,8 @@
 
 [전체 수정 가이드](../../../../../../../docs/EDITING-GUIDE.md) · [Android 사용 안내](../../../../../../../docs/ANDROID.md) · [플랫폼 통일·햅틱](../../../../../../../docs/ANDROID-PARITY.md)
 
+**폴더별로 보기:** [화면](ui/diary/README.md) · [디자인·그림](ui/README.md) · [데이터·사진](data/README.md) · [기능·저장 요청](diary/README.md) · [시스템·햅틱](platform/README.md)
+
 | 바꾸려는 것 | 파일 | 역할 |
 | --- | --- | --- |
 | 앱 시작·권한 | [MainActivity.kt](MainActivity.kt), [AndroidManifest.xml](../../../../AndroidManifest.xml) | 진입점·서비스·진동 권한 |

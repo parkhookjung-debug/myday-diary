@@ -6,9 +6,32 @@
 
 갤럭시·Windows용 커스터마이즈 일기 앱입니다. 두 버전에서 사진과 일기 블록을 자유롭게 배치하고 상몬 64종을 키우며 검·보주 12종을 장착합니다. Android는 손가락 조작과 짧은 햅틱, Windows는 바탕화면 캐릭터를 제공합니다. MIT 라이선스로 공개하며 5명이 화면·저장·캐릭터·통합·검증을 나눠 개발합니다.
 
-**코드를 수정하려면 [기능별 수정 가이드](docs/EDITING-GUIDE.md)를 먼저 열어주세요. 파일 이름을 클릭하면 해당 코드로 바로 이동합니다.**
+## 어떤 파일을 수정하면 되나요?
 
-현재 최신 통합 소스는 [codex/windows-app 브랜치](https://github.com/parkhookjung-debug/myday-diary/tree/codex/windows-app)에 있습니다. GitHub **Code → 브랜치 선택 → codex/windows-app**으로 이동하면 아래 파일이 보입니다. [통합 PR #7](https://github.com/parkhookjung-debug/myday-diary/pull/7)의 `main` 반영에는 팀원 리뷰 승인 1개가 필요합니다.
+**아래에서 기능을 고르고, 작업할 플랫폼의 파일 이름을 클릭하세요.** 화면·저장·캐릭터를 나눠 두었으므로 기능에 맞는 파일부터 수정합니다.
+
+| 바꾸려는 기능 | Windows에서 열 파일 | Android에서 열 파일 |
+| --- | --- | --- |
+| 색·글꼴·버튼·카드 디자인 | [Design.cs](windows/UI/Design.cs) | [MyDayTheme.kt](app/src/main/java/com/myday/diary/ui/design/MyDayTheme.kt) · [colors.xml](app/src/main/res/values/colors.xml) |
+| 전체 화면·메뉴·탭 위치 | [DiaryWindow.Shell.cs](windows/UI/DiaryWindow.Shell.cs) | [PhoneNotebookScreen.kt](app/src/main/java/com/myday/diary/ui/diary/PhoneNotebookScreen.kt) |
+| 일기 카드·입력창·체크박스 | [BlockCard.cs](windows/UI/BlockCard.cs) | [PhoneBlockEditor.kt](app/src/main/java/com/myday/diary/ui/diary/PhoneBlockEditor.kt) |
+| 블록 이동·크기 조절·자유 배치 | [DiaryBoard.cs](windows/UI/DiaryBoard.cs) | [PhoneFreeBoard.kt](app/src/main/java/com/myday/diary/ui/diary/PhoneFreeBoard.kt) |
+| 사진 회전·압축·용량 제한 | [DiaryPhoto.cs](windows/Core/DiaryPhoto.cs) | [NotebookPhoto.kt](app/src/main/java/com/myday/diary/data/NotebookPhoto.kt) |
+| 달력·일기 검색 화면 | [JournalBrowser.cs](windows/UI/JournalBrowser.cs) | [PhoneCalendar.kt](app/src/main/java/com/myday/diary/ui/diary/PhoneCalendar.kt) |
+| 일기 형식 100종의 제목·질문 | [분야별 원본 파일 안내](windows/Core/Templates/README.md) | 같은 원본 수정 후 [Android 자산 생성](tools/export-android-assets.ps1) |
+| 내 레이아웃 목록·이름·미리보기 | [MyLayoutsWindow.cs](windows/UI/MyLayoutsWindow.cs) | [PhoneDialogs.kt](app/src/main/java/com/myday/diary/ui/diary/PhoneDialogs.kt) |
+| 저장·백업 형식·이전 기록 | [DiaryData.cs](windows/Core/DiaryData.cs) | [DiaryStore.kt](app/src/main/java/com/myday/diary/data/DiaryStore.kt) · [NotebookJson.kt](app/src/main/java/com/myday/diary/data/NotebookJson.kt) |
+| 경험치·레벨·성장 규칙 | [SangmonGrowth.cs](windows/Core/SangmonGrowth.cs) | [NotebookRules.kt](app/src/main/java/com/myday/diary/diary/NotebookRules.kt) |
+| 상몬·검·보주 선택 화면 | [GrowthWindow.cs](windows/UI/GrowthWindow.cs) · [EquipmentWindow.cs](windows/UI/EquipmentWindow.cs) | [PhoneCompanion.kt](app/src/main/java/com/myday/diary/ui/diary/PhoneCompanion.kt) |
+| 상몬 외형·검/보주 그림·이름 | [상몬·아이템 원본 안내](windows/Character/README.md) · [SangmonItems.cs](windows/Core/SangmonItems.cs) | 원본 수정 후 [Android 자산 생성](tools/export-android-assets.ps1) |
+| 홈/바탕화면 캐릭터 이동·터치 | [DesktopPet.cs](windows/Character/DesktopPet.cs) · [PetBehavior.cs](windows/Character/PetBehavior.cs) | [CharacterWallpaperService.kt](app/src/main/java/com/myday/diary/CharacterWallpaperService.kt) |
+| 휴대폰 진동·햅틱 반응 | — | [DiaryHaptics.kt](app/src/main/java/com/myday/diary/platform/DiaryHaptics.kt) |
+
+**폴더에 들어가도 README가 수정 위치를 안내합니다.** [Windows 화면](windows/UI/README.md) · [Windows 저장](windows/Core/README.md) · [상몬 그림](windows/Character/README.md) · [Android 화면](app/src/main/java/com/myday/diary/ui/diary/README.md) · [Android 데이터](app/src/main/java/com/myday/diary/data/README.md) · [Android 동작](app/src/main/java/com/myday/diary/diary/README.md) · [시스템·햅틱](app/src/main/java/com/myday/diary/platform/README.md) · [개발 도구](tools/README.md)
+
+전체 설명과 수정 예는 [기능별 수정 가이드](docs/EDITING-GUIDE.md), 역할과 작업 순서는 [공동 작업 안내](CONTRIBUTING.md)에 있습니다. Android의 생성된 PNG·catalog.json·SangmonIdentity.kt는 직접 고치지 않고 원본에서 다시 생성합니다. 저장 ID를 바꾸는 작업은 기록 호환성도 함께 확인합니다.
+
+> **최신 코드 위치:** [codex/windows-app 브랜치](https://github.com/parkhookjung-debug/myday-diary/tree/codex/windows-app). 기본 main 화면에서 왔다면 이 링크로 이동하세요. [PR #7](https://github.com/parkhookjung-debug/myday-diary/pull/7)이 팀원 리뷰 승인 1개를 받은 뒤 main에 반영됩니다.
 
 ## 실행 파일 받기
 
@@ -19,27 +42,6 @@
 | macOS | 현재 macOS 실행 파일은 제공하지 않습니다. | Windows EXE는 Windows에서 실행합니다. |
 
 GitHub 저장소 오른쪽 **Releases → 해당 버전 → Assets**에서도 받습니다. Windows는 .NET Framework 4.8 이상에서 사용하며, 이전 앱이 실행 중이면 알림 영역 MyDay → **모두 종료** 후 새 EXE를 실행합니다. 현재 Windows 배포는 v0.3.10-preview입니다.
-
-## 이 기능을 바꾸려면 여기부터
-
-| 하고 싶은 수정 | 먼저 열 파일 | 자세한 안내 |
-| --- | --- | --- |
-| 전체 색·글꼴·버튼 모양 | [windows/UI/Design.cs](windows/UI/Design.cs) | [Windows 디자인](docs/WINDOWS-DESIGN.md) |
-| 일기 창·메뉴·버튼 위치 | [windows/UI/DiaryWindow.cs](windows/UI/DiaryWindow.cs) | [화면 폴더 안내](windows/UI/README.md) |
-| 달력·상몬·완료 현황·3단 배치 | [windows/UI/DiaryWindow.Shell.cs](windows/UI/DiaryWindow.Shell.cs) | [Windows 디자인](docs/WINDOWS-DESIGN.md) |
-| 글·할 일·감정·사진 카드 모양 | [windows/UI/BlockCard.cs](windows/UI/BlockCard.cs) | [화면 폴더 안내](windows/UI/README.md) |
-| 일기 형식의 이름·질문 | [windows/Core/Templates/README.md](windows/Core/Templates/README.md) | [100종 형식 목록](docs/JOURNAL-CATALOG.md) |
-| 사진 입력·압축·회전 | [windows/Core/DiaryPhoto.cs](windows/Core/DiaryPhoto.cs) | [사진 안내](docs/PHOTOS.md) |
-| 일기 데이터·저장·백업 | [windows/Core/DiaryData.cs](windows/Core/DiaryData.cs) | [기능·저장 폴더 안내](windows/Core/README.md) |
-| 상몬 몸·눈·입 그림 | [windows/Character/MonsterPainter.cs](windows/Character/MonsterPainter.cs) | [상몬 그림 폴더 안내](windows/Character/README.md) |
-| 상몬 걷기·쉬기·하품 | [windows/Character/PetBehavior.cs](windows/Character/PetBehavior.cs) | [상몬 디자인](docs/SANGMON-DESIGN.md) |
-| 경험치·레벨·보상 조건 | [windows/Core/SangmonGrowth.cs](windows/Core/SangmonGrowth.cs) | [성장 안내](docs/SANGMON-GROWTH.md) |
-| 검·보주 이름·속성·설명 | [windows/Core/SangmonItems.cs](windows/Core/SangmonItems.cs) | [아이템 안내](docs/SANGMON-ITEMS.md) |
-| 검·보주 모양·빛나는 효과 | [windows/Character/ItemPainter.cs](windows/Character/ItemPainter.cs) | [아이템 안내](docs/SANGMON-ITEMS.md) |
-| 장비함 디자인·장착 버튼 | [windows/UI/EquipmentWindow.cs](windows/UI/EquipmentWindow.cs) | [아이템 안내](docs/SANGMON-ITEMS.md) |
-| 갤럭시 화면·위젯·배경화면 | [Android 코드 안내](app/src/main/java/com/myday/diary/README.md) | [Android 디자인](docs/DESIGN.md) |
-
-블록 드래그·달력·검색·내 레이아웃·캐릭터 의상 등 나머지 기능도 [전체 수정 가이드](docs/EDITING-GUIDE.md)에서 찾습니다. **화면(UI) / 기능·저장(Core) / 그림·동작(Character)**으로 나눠 수정합니다. 각 폴더에 들어가면 README가 수정 위치를 설명합니다.
 
 ## 처음 개발에 참여한다면
 
