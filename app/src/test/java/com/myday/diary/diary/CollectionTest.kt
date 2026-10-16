@@ -15,14 +15,14 @@ class CollectionTest {
     }
     @Test fun welcomeDrawsDuplicatesAndInsufficientFunds() {
         val one=CollectionRules.draw(DiaryBook()){0};val two=CollectionRules.draw(one){0};val state=CollectionRules.state(two)
-        assertEquals(0,state.coins);assertEquals(3,state.petals);assertEquals(1,state.owned.size)
-        assertThrows(IllegalArgumentException::class.java){CollectionRules.draw(two){0}};assertEquals(2,two.collection!!.actions.size)
+        assertEquals(0,state.coins);assertEquals(3,state.petals);assertEquals(9,state.owned.size)
+        assertThrows(IllegalArgumentException::class.java){CollectionRules.draw(two){0}};assertEquals(3,two.collection!!.actions.size)
     }
     @Test fun pityExchangeAndPrefixMergesPreserveLedgerAndCurrency() {
         var book=rich();repeat(10){book=CollectionRules.draw(book){0}}
-        val state=CollectionRules.state(book);assertEquals(2,state.owned.size);assertEquals(24,state.petals)
+        val state=CollectionRules.state(book);assertEquals(10,state.owned.size);assertEquals(24,state.petals)
         val id=EquipmentCatalog.items.keys.first {it !in state.owned};val exchanged=CollectionRules.exchange(book,id);val after=CollectionRules.state(exchanged)
-        assertEquals(9,after.petals);assertEquals(3,after.owned.size);assertEquals(state.coins,after.coins);assertEquals(10,after.draws)
+        assertEquals(9,after.petals);assertEquals(11,after.owned.size);assertEquals(state.coins,after.coins);assertEquals(10,after.draws)
         assertEquals(exchanged.collection,CollectionRules.merge(book.collection,exchanged.collection))
         assertEquals(exchanged.collection,CollectionRules.merge(exchanged.collection,exchanged.collection))
         assertEquals(exchanged.collection,CollectionRules.merge(exchanged.collection,null))
@@ -38,11 +38,11 @@ class CollectionTest {
     }
     @Test fun failedAndQueuedDrawsNeverConsumeCommittedCurrencyTwice() {
         class Memory: NotebookRepository {var value=DiaryBook();var fail=false;override fun loadBook()=value;override fun saveBook(book: DiaryBook){if(fail)error("disk full");value=book}}
-        val memory=Memory();val c=NotebookController(memory);memory.fail=true;assertFalse(c.draw());assertNull(c.book.collection);assertEquals(40,CollectionRules.state(c.book).coins)
+        val memory=Memory();val c=NotebookController(memory);memory.fail=true;assertFalse(c.draw());assertEquals(0,CollectionRules.state(c.book).draws);assertEquals(40,CollectionRules.state(c.book).coins)
         memory.fail=false;assertTrue(c.draw());assertEquals(20,CollectionRules.state(c.book).coins)
         data class Pending(val book: DiaryBook,val done: (Result<DiaryBook>)->Unit)
         val queue=mutableListOf<Pending>();val queued=NotebookController(Memory(),persist={book,_,done->queue+=Pending(book,done)})
-        queued.draw();assertFalse(queued.draw());assertEquals(1,queue.size);assertNull(queued.book.collection)
+        queued.draw();assertFalse(queued.draw());assertEquals(1,queue.size);assertEquals(0,CollectionRules.state(queued.book).draws)
         val request=queue.single();request.done(Result.success(request.book));assertEquals(20,CollectionRules.state(queued.book).coins)
     }
     @Test fun v6FixtureRoundTripsForActualWindowsSerializer() {

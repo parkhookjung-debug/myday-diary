@@ -32,7 +32,7 @@ namespace MyDay.Windows.UI
             var before=SangmonCollection.State(book.Collection,book.Progress);var equipment=book.Equipment;int xp=SangmonGrowth.XP(book.Progress);
             using(var window=new CollectionWindow(book,CollectItem)) {
                 window.StartPosition=FormStartPosition.Manual;window.Location=new Point(-30000,-30000);window.Show(this);Application.DoEvents();window.DrawButton.PerformClick();
-                var saved=store.Load();if(saved.Version!=6 || SangmonCollection.State(saved.Collection,saved.Progress).Coins!=before.Coins-20 || !ReferenceEquals(equipment,book.Equipment) || SangmonGrowth.XP(book.Progress)!=xp)throw new Exception("Gift draw did not persist independently of equipment and XP");
+                var saved=store.Load();if(saved.Version!=7 || SangmonCollection.State(saved.Collection,saved.Progress).Coins!=before.Coins-20 || !ReferenceEquals(equipment,book.Equipment) || SangmonGrowth.XP(book.Progress)!=xp)throw new Exception("Gift draw did not persist independently of equipment and XP");
                 using(var image=new Bitmap(window.Width,window.Height)){window.DrawToBitmap(image,new Rectangle(Point.Empty,image.Size));image.Save(Path.Combine(directory,"windows-collection.png"));}
                 window.Size=window.MinimumSize;window.PerformLayout();Application.DoEvents();
                 if(window.DrawButton.Right>window.DrawButton.Parent.ClientSize.Width)throw new Exception("Gift draw button clipped at minimum size");
@@ -42,7 +42,7 @@ namespace MyDay.Windows.UI
             var ledger=book.Collection;int oldVersion=book.Version;bool failed=false;
             using(var locked=new FileStream(store.FilePath,FileMode.Open,FileAccess.ReadWrite,FileShare.None)) {try{CollectItem(null);}catch(IOException){failed=true;}}
             if(!failed || !ReferenceEquals(ledger,book.Collection) || oldVersion!=book.Version)throw new Exception("Failed gift save consumed currency or changed collection");
-            Console.WriteLine("Smoke: gift draw, version-six save, unchanged equipment/XP and failure rollback passed.");
+            Console.WriteLine("Smoke: gift draw, version-seven save, unchanged equipment/XP and failure rollback passed.");
         }
     }
 }

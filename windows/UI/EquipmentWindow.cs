@@ -23,6 +23,7 @@ namespace MyDay.Windows.UI
         internal readonly Button Previous=Design.Button("이전"),Next=Design.Button("다음");
         internal readonly Dictionary<string,Button> EquipButtons=new Dictionary<string,Button>();
         private int page;
+        internal readonly CheckBox OwnedOnly=new CheckBox {Text="보유 소품만",AutoSize=true};
         public EquipmentWindow(DiaryBook book,Func<string,string,bool> equip,Action openCollection=null)
         {
             this.book=book;this.equip=equip;
@@ -41,20 +42,20 @@ namespace MyDay.Windows.UI
             var clear=Design.Button("이 소품 벗기기");clear.Click+=delegate {if(Category.SelectedIndex<8 && equip(SangmonItems.Slots[Category.SelectedIndex],"none"))RefreshSelection();};
             Category.SelectedIndexChanged+=delegate {page=0;RenderItems();};Element.SelectedIndexChanged+=delegate {page=0;RenderItems();};Search.TextChanged+=delegate {page=0;RenderItems();};
             ClearWeapon.Click+=delegate {if(equip("weapon","none"))RefreshSelection();};ClearCharm.Click+=delegate {if(equip("charm","none"))RefreshSelection();};
-            filters.Controls.AddRange(new Control[]{Category,Element,Search,clear,ClearWeapon,ClearCharm});
+            OwnedOnly.CheckedChanged+=delegate {page=0;RenderItems();};filters.Controls.AddRange(new Control[]{Category,Element,Search,clear,ClearWeapon,ClearCharm,OwnedOnly});
             var footer=new FlowLayoutPanel {Dock=DockStyle.Bottom,Height=Design.P(48),Padding=Design.Pad(16,8,8,0)};
             Previous.Click+=delegate {page--;RenderItems();};Next.Click+=delegate {page++;RenderItems();};
             var close=Design.Button("닫기");close.DialogResult=DialogResult.Cancel;CancelButton=close;
             pageLabel.ForeColor=Muted;pageLabel.Margin=Design.Pad(12,6,12,0);
-            var gifts=Design.Button("소품 뽑기");gifts.Enabled=openCollection!=null;gifts.Click+=delegate {if(openCollection!=null)openCollection();};
+            var gifts=Design.Button("소품 뽑기");gifts.Enabled=openCollection!=null;gifts.Click+=delegate {if(openCollection!=null){openCollection();RenderItems();}};
             footer.Controls.AddRange(new Control[]{Previous,pageLabel,Next,gifts,close});
             Controls.Add(list);Controls.Add(filters);Controls.Add(hero);Controls.Add(footer);
             list.Resize+=delegate {LayoutItems();};RenderItems();
         }
         private void RenderItems()
         {
-            string query=Search.Text.Trim();
-            var matches=SangmonItems.All.Where(i=>(Category.SelectedIndex==8 || i.Slot==SangmonItems.Slots[Math.Max(0,Category.SelectedIndex)]) && (Element.SelectedIndex==0 || (int)i.Element==Element.SelectedIndex-1) && (query.Length==0 || (i.Name+" "+i.Description+" "+i.Id).IndexOf(query,StringComparison.OrdinalIgnoreCase)>=0)).ToArray();
+            string query=Search.Text.Trim();var owned=SangmonCollection.State(book.Collection,book.Progress).Owned;
+            var matches=SangmonItems.All.Where(i=>(!OwnedOnly.Checked || SangmonCollection.Starters.Contains(i.Id) || owned.Contains(i.Id)) && (Category.SelectedIndex==8 || i.Slot==SangmonItems.Slots[Math.Max(0,Category.SelectedIndex)]) && (Element.SelectedIndex==0 || (int)i.Element==Element.SelectedIndex-1) && (query.Length==0 || (i.Name+" "+i.Description+" "+i.Id).IndexOf(query,StringComparison.OrdinalIgnoreCase)>=0)).ToArray();
             int pages=Math.Max(1,(matches.Length+PageSize-1)/PageSize);page=Math.Max(0,Math.Min(page,pages-1));
             list.SuspendLayout();foreach(Control c in list.Controls.Cast<Control>().ToArray())c.Dispose();EquipButtons.Clear();
             foreach(var item in matches.Skip(page*PageSize).Take(PageSize)) {
@@ -62,7 +63,7 @@ namespace MyDay.Windows.UI
                 var badge=Design.Label(SangmonItems.SlotName(item.Slot)+" · "+item.Description.Split('·')[0],8,true);badge.ForeColor=Accent;badge.Location=Design.Point(16,10);card.Controls.Add(badge);
                 var art=new ItemView {Item=item,BackColor=CardFill,Location=Design.Point(16,32),Size=Design.Size(230,138),AccessibleName=item.Name+" 미리보기"};card.Controls.Add(art);
                 var name=Design.Label(item.Name,11,true);name.ForeColor=Design.Ink;name.Location=Design.Point(16,176);card.Controls.Add(name);
-                var detail=Design.Label("오늘의 상몬에게 어울리는 작은 소품",8);detail.ForeColor=Muted;detail.Location=Design.Point(16,201);card.Controls.Add(detail);
+                var detail=Design.Label(SangmonCollection.Starters.Contains(item.Id)?"기본 지급 소품":owned.Contains(item.Id)?"보유한 소품":"미보유 · 뽑기나 꽃잎 교환으로 얻어요",8);detail.ForeColor=Muted;detail.Location=Design.Point(16,201);card.Controls.Add(detail);
                 var button=Design.Button("입혀 보기");button.Location=Design.Point(16,222);button.Size=Design.Size(230,26);button.Font=Design.Font(8);button.AccessibleName=item.Name+" 장착";
                 button.Click+=delegate {if(equip(selected.Slot,selected.Id))RefreshSelection();};EquipButtons.Add(item.Id,button);card.Controls.Add(button);
                 card.Resize+=delegate {art.Width=button.Width=card.ClientSize.Width-Design.P(32);};list.Controls.Add(card);
@@ -78,10 +79,10 @@ namespace MyDay.Windows.UI
         }
         private void RefreshSelection()
         {
-            var state=book.Equipment??new SangmonEquipment();avatar.Variant=MonsterVariants.FromId(book.CharacterStyle);avatar.Equipment=state;
+            var state=book.Equipment??new SangmonEquipment();var owned=SangmonCollection.State(book.Collection,book.Progress).Owned;avatar.Variant=MonsterVariants.FromId(book.CharacterStyle);avatar.Equipment=state;
             summary.Text=string.Join("\n",Enumerable.Range(0,4).Select(row=>string.Join("    ·    ",SangmonItems.Slots.Skip(row*2).Take(2).Select(s=>SangmonItems.SlotName(s)+": "+SangmonItems.Name(SangmonItems.Get(state,s))))));
             ClearWeapon.Enabled=state.WeaponId!="none";ClearCharm.Enabled=state.CharmId!="none";
-            foreach(var pair in EquipButtons){var item=SangmonItems.Find(pair.Key);bool chosen=SangmonItems.Get(state,item.Slot)==item.Id;pair.Value.Text=chosen?"함께하는 중":"입혀 보기";pair.Value.Enabled=!chosen;}
+            foreach(var pair in EquipButtons){var item=SangmonItems.Find(pair.Key);bool chosen=SangmonItems.Get(state,item.Slot)==item.Id;bool available=SangmonCollection.Starters.Contains(item.Id) || owned.Contains(item.Id);pair.Value.Text=chosen?"함께하는 중":available?"입혀 보기":"잠김 · 먼저 소품을 얻어주세요";pair.Value.Enabled=available && !chosen;}
         }
     }
 }

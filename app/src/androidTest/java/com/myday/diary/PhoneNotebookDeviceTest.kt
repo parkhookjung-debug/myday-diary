@@ -49,10 +49,24 @@ class PhoneNotebookDeviceTest {
         start();ui.onNodeWithText("상몬").performClick();ui.onNodeWithText("소품 뽑기").performClick()
         ui.onNodeWithTag("collection-draw").performClick();ui.onNodeWithText("새 소품을 만났어요!").assertExists();screenshot("android-collection-result")
         ui.onNodeWithTag("collection-result-close").performClick()
-        ui.runOnIdle {assertEquals(20,CollectionRules.state(c.book).coins);assertEquals(1,c.book.collection!!.actions.size);assertEquals(Equipment(),c.book.equipment)}
+        ui.runOnIdle {assertEquals(20,CollectionRules.state(c.book).coins);assertEquals(1,CollectionRules.state(c.book).draws);assertEquals(Equipment(),c.book.equipment)}
         ui.onNodeWithTag("collection-draw").performClick();ui.onNodeWithTag("collection-result-close").performClick()
         ui.onNodeWithTag("collection-draw").assertIsNotEnabled();screenshot("android-collection")
         ui.runOnIdle {val state=CollectionRules.state(c.book);assertEquals(0,state.coins);assertEquals(2,state.draws);assertEquals(state,CollectionRules.state(NotebookJson.decode(NotebookJson.encode(c.book))))}
+    }
+    @Test fun lockedAccessoriesRequireAcquisitionBeforeEquipping() {
+        start();ui.onNodeWithText("상몬").performClick();ui.onNodeWithText("소품 300종").performClick()
+        ui.onNodeWithTag("equipment-solar-sword").assertIsNotEnabled()
+        ui.runOnIdle {assertFalse(c.equip("weapon","solar-sword"));assertEquals("none",c.book.equipment.weaponId);c.clearError()}
+        ui.onNodeWithText("소품 뽑기").performClick();ui.onNodeWithTag("collection-draw").performClick();ui.onNodeWithTag("collection-result-close").performClick()
+        lateinit var item: SangmonItem
+        ui.runOnIdle {val id=c.book.collection!!.actions.last().itemId;item=catalog.items.first {it.id==id};assertTrue(CollectionRules.canUse(c.book,id))}
+        ui.onNodeWithText("소품 300종").performClick()
+        val slot=EquipmentCatalog.names[EquipmentCatalog.slots.indexOf(item.slot)]
+        ui.onNodeWithTag("equipment-slots").performScrollToNode(hasText(slot));ui.onNodeWithText(slot).performClick()
+        ui.onNodeWithTag("equipment-search").performTextInput(item.name);ui.onNodeWithTag("equipment-search").performImeAction()
+        ui.onNodeWithTag("equipment-grid").performScrollToNode(hasTestTag("equipment-${item.id}"));ui.onNodeWithTag("equipment-${item.id}").performClick()
+        ui.runOnIdle {assertEquals(item.id,c.book.equipment.get(item.slot));assertEquals(20,CollectionRules.state(c.book).coins)};screenshot("android-owned-equipment")
     }
     @Test fun phoneDiaryPhotoCalendarAndThemes() {
         start();screenshot("android-diary")

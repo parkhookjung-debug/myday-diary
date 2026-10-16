@@ -67,6 +67,15 @@ class NotebookStorageDeviceTest {
         assertEquals(60,com.myday.diary.diary.NotebookRules.xp(store.loadBook()))
         assertTrue(EquipmentCatalog.slots.all {book.equipment.get(it)!="none"})
     }
+    @Test fun v7OwnershipAndBalanceSurviveStorageAndUnownedGearCannotOverwrite() {
+        val raw=InstrumentationRegistry.getInstrumentation().context.assets.open("windows-v7.json").bufferedReader().use {it.readText()}
+        val book=NotebookJson.decode(raw);val store=DiaryStore(isolated);store.saveBook(book);assertEquals(book,store.loadBook())
+        val state=com.myday.diary.diary.CollectionRules.state(book);assertEquals(90,state.coins);assertEquals(3,state.petals)
+        val id=EquipmentCatalog.items.keys.first {it !in state.owned};val slot=EquipmentCatalog.items.getValue(id)
+        val previous=File(directory,"notebook.json").readText()
+        assertThrows(IllegalArgumentException::class.java) {store.saveBook(book.copy(equipment=book.equipment.equip(slot,id)))}
+        assertEquals(previous,File(directory,"notebook.json").readText());assertEquals(book,store.loadBook())
+    }
     @Test fun catalogAndAnimatedArtworkMatchWindowsCountsAndKeepIdleQuiet() {
         val catalog=NotebookCatalog(target);assertEquals(100,catalog.templates.size);assertEquals(64,catalog.characters.size);assertEquals(300,catalog.items.size)
         assertEquals(100,catalog.templates.map {it.id}.distinct().size);assertEquals(64,catalog.characters.map {it.id}.distinct().size)

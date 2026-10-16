@@ -14,7 +14,7 @@ namespace MyDay.Windows.UI
         private readonly Label balance=Design.Label("",11,true),result=Design.Label("작은 선물 상자를 열어보세요",12,true),pageLabel=Design.Label("",9),pity=Design.Label("",9);
         private readonly ItemView gift=new ItemView {BackColor=Color.FromArgb(255,252,247)};
         private readonly TextBox search=new TextBox {AccessibleName="수집 소품 검색"};
-        private readonly CheckBox ownedOnly=new CheckBox {Text="수집한 소품만",AutoSize=true};
+        private readonly CheckBox ownedOnly=new CheckBox {Text="보유 소품만",AutoSize=true};
         internal readonly Button DrawButton=Design.Button("선물 뽑기 · 클로버 20",true);
         private readonly Button previous=Design.Button("이전"),next=Design.Button("다음");
         private int page;
@@ -30,7 +30,7 @@ namespace MyDay.Windows.UI
             result.Location=Design.Point(186,91);result.AutoSize=false;result.Size=Design.Size(470,47);hero.Controls.Add(result);
             DrawButton.Location=Design.Point(186,143);DrawButton.Size=Design.Size(240,34);DrawButton.Click+=delegate {Act(null);};hero.Controls.Add(DrawButton);
             pity.Location=Design.Point(440,153);hero.Controls.Add(pity);
-            var rules=Design.Label("환영 클로버 40 · 1 XP = 클로버 1 · 레벨 업 +5 · 연속 출석 7일마다 +10\n일반 뽑기는 300종 각각 1/300 · 10번째마다 미수집 소품 균등 보장\n중복은 꽃잎 3개 · 꽃잎 15개로 미수집 소품 선택 교환 · 자유 꾸미기는 그대로",8);
+            var rules=Design.Label("환영 클로버 40 · 1 XP = 클로버 1 · 레벨 업 +5 · 연속 출석 7일마다 +10\n일반 뽑기는 기본 제외 292종 각각 1/292 · 10번째마다 미수집 소품 균등 보장\n중복은 꽃잎 3개 · 꽃잎 15개로 미수집 소품 선택 교환 · 기본 소품 8종은 무료",8);
             rules.Location=Design.Point(24,185);rules.AutoSize=false;rules.Size=Design.Size(810,52);hero.Controls.Add(rules);
             hero.Resize+=delegate {rules.Width=Math.Max(100,hero.ClientSize.Width-Design.P(48));};
             var filters=new FlowLayoutPanel {Dock=DockStyle.Top,Height=Design.P(44),Padding=Design.Pad(20,7,12,0)};
@@ -52,7 +52,7 @@ namespace MyDay.Windows.UI
         private void RefreshItems()
         {
             var state=SangmonCollection.State(book.Collection,book.Progress);
-            balance.Text="클로버 "+state.Coins+" · 꽃잎 "+state.Petals+" · 수집 "+state.Owned.Count+"/300";
+            balance.Text="클로버 "+state.Coins+" · 꽃잎 "+state.Petals+" · 보유 "+state.Owned.Count+"/300";
             DrawButton.Enabled=state.Coins>=20 && (book.Collection==null || book.Collection.Actions.Count<SangmonCollection.MaxActions);
             DrawButton.Text="클로버 20 · 선물 뽑기";pity.Text=state.Owned.Count==SangmonItems.All.Length?"모든 소품 수집 완료 · 일반 뽑기":(10-state.Draws%10)+"회 후 새 소품 보장";
             var matches=SangmonItems.All.Where(i=>(!ownedOnly.Checked || state.Owned.Contains(i.Id)) && (i.Name+" "+i.Id).IndexOf(search.Text.Trim(),StringComparison.OrdinalIgnoreCase)>=0).ToArray();

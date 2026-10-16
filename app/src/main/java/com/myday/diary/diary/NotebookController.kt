@@ -7,7 +7,7 @@ import java.time.LocalDate
 /** Keep working edits immediate; an optional serialized writer persists large books off the UI. */
 class NotebookController(private val repository: NotebookRepository,private val today: ()->LocalDate=LocalDate::now,
     private val persist: ((DiaryBook,String?,(Result<DiaryBook>)->Unit)->Unit)?=null) {
-    var book by mutableStateOf(repository.loadBook());private set
+    var book by mutableStateOf(CollectionRules.migrate(repository.loadBook()));private set
     var date by mutableStateOf(today());private set
     var entry by mutableStateOf(book.days[date.toString()] ?: DiaryEntry());private set
     var error by mutableStateOf<String?>(null);private set
@@ -50,7 +50,7 @@ class NotebookController(private val repository: NotebookRepository,private val 
         if(index !in blocks.indices || target !in blocks.indices) return;blocks.add(target,blocks.removeAt(index));edit(entry.copy(blocks=blocks))}
     fun configure(change: (DiaryBook)->DiaryBook): Boolean {if(!saved) {error=if(saving) "저장 중이에요. 잠시 후 다시 선택해 주세요." else "먼저 일기를 다시 저장해 주세요.";return false};return commit(change(book))}
     fun selectCharacter(id: String,requiredLevel: Int): Boolean {if(NotebookRules.xp(book)<(SangmonUnlockXP.values[id] ?: Int.MAX_VALUE)) {error="Lv.$requiredLevel · 총 ${SangmonUnlockXP.values[id]} XP에서 사용할 수 있어요.";return false};return configure {it.copy(characterStyle=id)}}
-    fun equip(slot: String,id: String): Boolean {require(slot in EquipmentCatalog.slots && (id=="none" || EquipmentCatalog.items[id]==slot));return configure {it.copy(equipment=it.equipment.equip(slot,id),hasEquipment=true)}}
+    fun equip(slot: String,id: String): Boolean {require(slot in EquipmentCatalog.slots && (id=="none" || EquipmentCatalog.items[id]==slot));if(!CollectionRules.canUse(book,id)){error="뽑기나 꽃잎 교환으로 먼저 얻어주세요.";return false};return configure {it.copy(equipment=it.equipment.equip(slot,id),hasEquipment=true)}}
     fun draw(): Boolean=configure {CollectionRules.draw(it)}
     fun exchange(itemId: String): Boolean=configure {CollectionRules.exchange(it,itemId)}
     fun checkIn(): Boolean=configure {val key=today().toString();require(key in it.activities || it.activities.size<50000);it.copy(activities=it.activities+(key to ((it.activities[key] ?: 0) or NotebookRules.ATTENDANCE)))}

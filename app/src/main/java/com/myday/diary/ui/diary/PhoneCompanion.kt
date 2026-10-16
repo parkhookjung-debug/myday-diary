@@ -37,6 +37,7 @@ import com.myday.diary.ui.components.SangmonAvatar
     var missions by remember {mutableStateOf(false)}
     val keyboard=LocalSoftwareKeyboardController.current
     val book=controller.book;val level=NotebookRules.level(book);val xp=NotebookRules.xp(book)
+    val owned=remember(book) {CollectionRules.state(book).owned}
     val today=controller.actualDay;val flags=book.activities[today.toString()] ?: 0
     val attended=flags and NotebookRules.ATTENDANCE!=0
     Column(Modifier.fillMaxSize().padding(horizontal=16.dp)) {
@@ -76,6 +77,7 @@ import com.myday.diary.ui.components.SangmonAvatar
             PhoneCollection(controller,catalog,haptics,attempt,Modifier.weight(1f))
         } else {
             var slot by remember {mutableStateOf("weapon")};var query by remember {mutableStateOf("")}
+            var ownedOnly by remember {mutableStateOf(false)}
             var element by remember {mutableStateOf("")};var menu by remember {mutableStateOf(false)}
             LazyRow(Modifier.testTag("equipment-slots"),horizontalArrangement=Arrangement.spacedBy(6.dp)) {
                 items(EquipmentCatalog.slots+"all") {s->FilterChip(slot==s,{slot=s;haptics.perform(TactileEvent.SELECT)},label={Text(if(s=="all") "전체" else EquipmentCatalog.names[EquipmentCatalog.slots.indexOf(s)])})}
@@ -87,7 +89,8 @@ import com.myday.diary.ui.components.SangmonAvatar
                     DropdownMenu(menu,{menu=false}) {listOf("" to "모든 색감","Solar" to "크림","Ember" to "살구","Frost" to "하늘","Storm" to "민트","Shadow" to "라벤더","Astral" to "딸기").forEach {(id,name)->DropdownMenuItem(text={Text(name)},onClick={element=id;menu=false})}}
                 }
             }
-            val matches=catalog.items.filter {(slot=="all" || it.slot==slot) && (element.isEmpty() || it.element==element) && (query.isBlank() || (it.name+it.description+it.id).contains(query.trim(),true))}
+            FilterChip(ownedOnly,{ownedOnly=!ownedOnly},label={Text("보유 소품만")})
+            val matches=catalog.items.filter {(!ownedOnly || it.id in owned) && (slot=="all" || it.slot==slot) && (element.isEmpty() || it.element==element) && (query.isBlank() || (it.name+it.description+it.id).contains(query.trim(),true))}
             Row(Modifier.fillMaxWidth(),verticalAlignment=Alignment.CenterVertically,horizontalArrangement=Arrangement.SpaceBetween) {
                 Text("${matches.size}가지 · 소품 ${EquipmentCatalog.slots.count {book.equipment.get(it)!="none"}}개와 함께",style=MaterialTheme.typography.labelSmall)
                 TextButton({attempt(TactileEvent.EQUIP) {controller.equip(slot,"none")}},enabled=slot!="all" && controller.saved) {Text("이 소품 벗기기")}
@@ -95,10 +98,10 @@ import com.myday.diary.ui.components.SangmonAvatar
             if(matches.isEmpty())Text("맞는 소품이 없어요. 이름이나 색감을 바꿔보세요.",style=MaterialTheme.typography.bodySmall)
             LazyVerticalGrid(GridCells.Fixed(2),Modifier.weight(1f).testTag("equipment-grid"),horizontalArrangement=Arrangement.spacedBy(10.dp),verticalArrangement=Arrangement.spacedBy(10.dp),contentPadding=PaddingValues(bottom=24.dp)) {
                 items(matches,key={it.id}) {item->val equipped=item.id==book.equipment.get(item.slot)
-                    Card(Modifier.testTag("equipment-${item.id}").clickable(enabled=!controller.saving) {attempt(TactileEvent.EQUIP) {controller.equip(item.slot,item.id)}},colors=CardDefaults.cardColors(containerColor=if(equipped) Color(0xfff0e5d9) else Color(0xfffffcf7))) {
+                    Card(Modifier.testTag("equipment-${item.id}").clickable(enabled=controller.saved && item.id in owned) {attempt(TactileEvent.EQUIP) {controller.equip(item.slot,item.id)}},colors=CardDefaults.cardColors(containerColor=if(equipped) Color(0xfff0e5d9) else Color(0xfffffcf7))) {
                         Column(Modifier.fillMaxWidth().padding(10.dp),horizontalAlignment=Alignment.CenterHorizontally) {
                             AssetIcon("items/${item.id}.png",item.name,Modifier.height(96.dp));Text(item.name,style=MaterialTheme.typography.labelLarge)
-                            Text(item.description,style=MaterialTheme.typography.labelSmall);Text(if(equipped) "함께하는 중" else "입혀 보기",style=MaterialTheme.typography.labelSmall)
+                            Text(item.description,style=MaterialTheme.typography.labelSmall);Text(if(equipped) "함께하는 중" else if(item.id !in owned)"잠김 · 뽑기나 꽃잎 교환으로 얻어요" else if(item.id in CollectionRules.starters)"기본 소품 · 입혀 보기" else "보유 · 입혀 보기",style=MaterialTheme.typography.labelSmall)
                         }
                     }
                 }

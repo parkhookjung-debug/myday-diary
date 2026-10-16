@@ -44,7 +44,7 @@ namespace MyDay.Windows.UI
         private readonly bool testMode;
         public DiaryWindow(DiaryStore store, DiaryBook book, bool testMode = false)
         {
-            this.store=store; this.book=book; this.testMode=testMode;
+            SangmonCollection.Migrate(book);this.store=store; this.book=book; this.testMode=testMode;
             board=new DiaryBoard(QueueSave) { Dock=DockStyle.Fill };
             Text="MyDay · 나의 작은 일기장";
             var work=Screen.PrimaryScreen.WorkingArea;
@@ -418,6 +418,7 @@ namespace MyDay.Windows.UI
                     merged.CharacterStyle=incoming.CharacterStyle;
                     merged.Progress=SangmonGrowth.Merge(book.Progress,incoming.Progress);
                     merged.Collection=SangmonCollection.Merge(book.Collection,incoming.Collection);
+                    if(incoming.Version<7)merged.Collection=SangmonCollection.PreserveLegacy(merged.Collection,merged.Progress,incoming.Equipment);
                     merged.Equipment=SangmonItems.Import(book.Equipment,incoming.Equipment,incoming.Version>=5);
                     merged.Layouts=layouts; merged.Version=Math.Max(book.Version,incoming.Version);
                     foreach(var pair in incoming.Days) merged.Days[pair.Key]=pair.Value;

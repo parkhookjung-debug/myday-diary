@@ -4,6 +4,7 @@ package com.myday.diary.data
 object EquipmentCatalog {
     val slots=listOf("weapon","charm","head","face","neck","back","aura","ground")
     val names=listOf("손 소품","작은 소품","머리","얼굴","목","등","주변 장식","발밑")
+    val starters=listOf("frost-sword","astral-orb","solar-crown","frost-glasses","solar-scarf","solar-wings","solar-ring","frost-cloud")
     val items=mapOf(
         "solar-sword" to "weapon",
         "ember-sword" to "weapon",

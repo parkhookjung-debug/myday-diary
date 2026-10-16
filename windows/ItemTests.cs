@@ -42,7 +42,7 @@ namespace MyDay.Windows
             Check(store.Load().Equipment.WeaponId=="none" && store.Load().Equipment.CharmId=="none" && store.Load().Days.Count==1,"Unknown or wrong-slot imported gear falls back while retaining diary content");
             bool oldReadable=true;foreach(int version in new[]{1,2,3})using(var stream=new MemoryStream(Encoding.UTF8.GetBytes("{\"Version\":"+version+",\"Days\":[]}")))oldReadable&=DiaryStore.Read(stream).Equipment==null;
             Check(oldReadable,"Versions one through three remain readable without equipment");
-            var future=new DiaryBook {Version=7};rejected=false;try{DiaryStore.Validate(future);}catch(InvalidDataException){rejected=true;}Check(rejected,"Unsupported future version is rejected");
+            var future=new DiaryBook {Version=8};rejected=false;try{DiaryStore.Validate(future);}catch(InvalidDataException){rejected=true;}Check(rejected,"Unsupported future version is rejected");
             var fingerprints=new HashSet<string>();bool iconsFit=true;
             foreach(var item in SangmonItems.All)using(var image=new Bitmap(220,260)) {
                 using(var g=Graphics.FromImage(image))ItemPainter.Draw(g,new RectangleF(12,12,196,236),item,.2);
