@@ -24,7 +24,6 @@ import com.myday.diary.data.*
 import com.myday.diary.diary.*
 import com.myday.diary.platform.*
 import com.myday.diary.ui.components.SangmonAvatar
-import java.time.LocalDate
 
 @Composable fun AssetIcon(path: String,description: String,modifier: Modifier=Modifier) {
     val context=LocalContext.current
@@ -38,7 +37,7 @@ import java.time.LocalDate
     var missions by remember {mutableStateOf(false)}
     val keyboard=LocalSoftwareKeyboardController.current
     val book=controller.book;val level=NotebookRules.level(book);val xp=NotebookRules.xp(book)
-    val today=LocalDate.now();val flags=book.activities[today.toString()] ?: 0
+    val today=controller.actualDay;val flags=book.activities[today.toString()] ?: 0
     val attended=flags and NotebookRules.ATTENDANCE!=0
     Column(Modifier.fillMaxSize().padding(horizontal=16.dp)) {
         Card(Modifier.fillMaxWidth(),colors=CardDefaults.cardColors(containerColor=Color(0xfffffcf8))) {

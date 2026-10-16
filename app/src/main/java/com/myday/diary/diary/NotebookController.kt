@@ -15,6 +15,7 @@ class NotebookController(private val repository: NotebookRepository,private val 
     private var pending: DiaryBook?=null
     private var revision=0L
     val saved get()=pending==null && !saving
+    val actualDay get()=today()
     fun clearError() {error=null}
     fun report(message: String) {error=message}
     fun prepareSave(candidate: DiaryBook,recordDate: String?): DiaryBook {

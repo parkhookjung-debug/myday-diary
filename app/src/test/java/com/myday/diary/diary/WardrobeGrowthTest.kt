@@ -27,6 +27,7 @@ class WardrobeGrowthTest {
     }
     @Test fun attendanceAndRealActivitiesAwardFortyAtMostAndMergeWithoutDuplication() {
         val day=LocalDate.of(2026,10,16);val memory=Memory();val c=NotebookController(memory,today={day})
+        assertEquals(day,c.actualDay)
         c.checkIn();c.checkIn();assertEquals(5,NotebookRules.xp(c.book))
         val entry=DiaryEntry(blocks=listOf(DiaryBlock(id="text",type="text",text="스무 글자가 넘는 충분한 오늘의 일기를 작성하고 점수를 확인합니다"),DiaryBlock(id="photo",type="photo",photo="fixture"),DiaryBlock(id="todo",type="todo",checked=true),DiaryBlock(id="habit",type="habit",checked=true)))
         c.edit(entry);assertEquals(40,NotebookRules.xp(c.book));c.edit(entry);assertEquals(40,NotebookRules.xp(c.book))

@@ -90,6 +90,7 @@ class PhoneNotebookDeviceTest {
             ui.onNodeWithTag("equipment-slots").performScrollToNode(hasText(slot));ui.onNodeWithText(slot).performClick()
             ui.onNodeWithTag("equipment-search").performTextClearance();ui.onNodeWithTag("equipment-search").performTextInput(name)
             ui.onNodeWithTag("equipment-search").performImeAction()
+            ui.onNodeWithTag("equipment-grid").performScrollToNode(hasText(name))
             ui.onNodeWithText(name).performClick()
         }
         ui.runOnIdle {assertEquals("solar-crown",c.book.equipment.headId);assertEquals("frost-glasses",c.book.equipment.faceId);assertEquals("frost-cloud",c.book.equipment.groundId);assertEquals(5,NotebookRules.xp(c.book))}
