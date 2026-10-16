@@ -343,11 +343,11 @@ namespace MyDay.Windows.UI
         {
             saveTimer.Stop(); if(!dirty) return true;
             var previous=book.Progress; int previousVersion=book.Version,previousLevel=SangmonGrowth.Level(previous);
-            if(entryDirty) book.Progress=SangmonGrowth.Award(previous,entry,actualDay);
+            if(entryDirty) book.Progress=SangmonGrowth.Award(previous,entry,actualDay,savedRecord);
             bool awarded=!ReferenceEquals(previous,book.Progress);
             try {
                 store.Save(book); dirty=false; entryDirty=false; savedRecord=SangmonGrowth.CaptureRecord(entry); UpdateGrowth();
-                status.Text=awarded?"저장됨 · 상몬 +10 XP":"저장됨 · "+DateTime.Now.ToString("HH:mm");
+                status.Text=awarded?"저장됨 · 상몬 +"+(SangmonGrowth.XP(book.Progress)-SangmonGrowth.XP(previous))+" XP":"저장됨 · "+DateTime.Now.ToString("HH:mm");
                 if(SangmonGrowth.Level(book.Progress)>previousLevel) { status.Text="저장됨 · Lv."+SangmonGrowth.Level(book.Progress)+" 달성!"; if(pet!=null) pet.Celebrate(); }
                 status.ForeColor=Design.Accent; RefreshHistory(); return true;
             }
@@ -417,7 +417,7 @@ namespace MyDay.Windows.UI
                     var merged=new DiaryBook(); foreach(var pair in book.Days) merged.Days[pair.Key]=pair.Value;
                     merged.CharacterStyle=incoming.CharacterStyle;
                     merged.Progress=SangmonGrowth.Merge(book.Progress,incoming.Progress);
-                    merged.Equipment=SangmonItems.Import(book.Equipment,incoming.Equipment);
+                    merged.Equipment=SangmonItems.Import(book.Equipment,incoming.Equipment,incoming.Version>=5);
                     merged.Layouts=layouts; merged.Version=Math.Max(book.Version,incoming.Version);
                     foreach(var pair in incoming.Days) merged.Days[pair.Key]=pair.Value;
                     store.Save(merged); book=merged; dirty=false; entryDirty=false; UpdateGrowth(); LoadDate(); status.Text="가져오기 완료";

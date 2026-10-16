@@ -12,7 +12,7 @@
 
 1. [Windows 상몬/아이템 원본](../windows/Character/README.md), [아이템 이름·설명](../windows/Core/SangmonItems.cs), [100종 질문 원본](../windows/Core/Templates/README.md)을 수정합니다.
 2. Windows에서 저장소 루트 기준 `./tools/export-android-assets.ps1`를 실행합니다.
-3. 생성된 `app/src/main/assets/`와 `SangmonIdentity.kt`, 검사 자료 변경을 함께 확인합니다.
+3. 생성된 `app/src/main/assets/`와 `SangmonIdentity.kt`·`EquipmentCatalog.kt`, v4·v5 검사 자료 변경을 함께 확인합니다. `items/`는 장비함 아이콘, `equipment/`는 착용 위치를 맞춘 투명 레이어이며 300종 모두 경계 잘림을 검사합니다.
 4. 해당 플랫폼의 빌드·관련 검사를 실행하고 PR에 수정한 화면·파일을 적습니다.
 
 생성 결과를 직접 고치면 다음 생성 때 덮어써집니다. 경험치 지급량·레벨 계산을 변경할 때는 Windows의 SangmonGrowth와 Android의 NotebookRules도 함께 확인합니다. 개인 백업·임시 빌드·서명 키는 커밋하지 않습니다.

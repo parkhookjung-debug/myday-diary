@@ -26,7 +26,7 @@ function Read-AppFile([string]$path) {
 $raw=Read-AppFile 'files/notebook.json'
 if($raw) {
     $book=$raw | ConvertFrom-Json
-    if($book.Version -notin 1,2,3,4 -or $null -eq $book.Days) { throw 'The notebook format could not be verified. No backup written.' }
+    if($book.Version -notin 1,2,3,4,5 -or $null -eq $book.Days) { throw 'The notebook format could not be verified. No backup written.' }
 } else {
     $legacy=Read-AppFile 'shared_prefs/diary.xml'
     if(!$legacy) { throw 'Cannot read app data. This tool supports installed debug APKs; do not uninstall the app.' }

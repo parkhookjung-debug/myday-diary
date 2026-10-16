@@ -13,7 +13,7 @@
 | 카드·입력·체크·순서 이동 | [PhoneBlockEditor.kt](ui/diary/PhoneBlockEditor.kt) | 블록 UI·길게 잡기 |
 | 자유 배치·확대·크기 조절 | [PhoneFreeBoard.kt](ui/diary/PhoneFreeBoard.kt) | 유한 화면에서 논리 좌표 편집 |
 | 달력·본문/사진 설명 검색 | [PhoneCalendar.kt](ui/diary/PhoneCalendar.kt) | 월간 화면·전체 검색 |
-| 상몬·성장·장비함 UI | [PhoneCompanion.kt](ui/diary/PhoneCompanion.kt) | 64종·12종 선택 |
+| 상몬·성장·장비함 UI | [PhoneCompanion.kt](ui/diary/PhoneCompanion.kt) | 64종·장비 300종·8슬롯·출석/미션 |
 | 형식·내 레이아웃·이름 창 | [PhoneDialogs.kt](ui/diary/PhoneDialogs.kt) | 검색·배치 미리보기·확인 |
 | 사진 선택·백업·화면 연결 | [PhoneNotebookRoute.kt](ui/diary/PhoneNotebookRoute.kt) | 시스템 선택기·IO·확인 |
 | 저장·날짜·입력·장착 동작 | [NotebookController.kt](diary/NotebookController.kt) | UI 상태·실패 보존 |

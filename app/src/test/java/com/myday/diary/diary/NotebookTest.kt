@@ -25,7 +25,7 @@ class NotebookTest {
         val memory=Memory();val today=LocalDate.of(2026,10,13);val c=NotebookController(memory,today={today})
         c.add("text");c.edit(c.entry.copy(theme=2));c.equip("weapon","frost-sword");assertTrue(c.book.awardedDays.isEmpty())
         c.updateBlock(c.entry.blocks.single().copy(text="기록"));assertEquals(setOf(today.toString()),c.book.awardedDays)
-        c.selectDate(today.minusDays(1));c.add("habit");c.updateBlock(c.entry.blocks.single().copy(checked=true));assertEquals(10,NotebookRules.xp(c.book))
+        c.selectDate(today.minusDays(1));c.add("habit");c.updateBlock(c.entry.blocks.single().copy(checked=true));assertEquals(15,NotebookRules.xp(c.book))
         assertFalse(c.selectCharacter("growth-hero",10));assertEquals("original",c.book.characterStyle)
     }
     @Test fun failedSaveRetainsDraftBlocksNavigationAndRollsBackRewardAndEquipment() {

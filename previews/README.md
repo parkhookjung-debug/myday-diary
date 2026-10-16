@@ -2,6 +2,10 @@
 
 플랫폼별로 나눠 보관합니다. 실행 파일은 GitHub Releases에서 받습니다.
 
+## 장비 300종·출석·성장 실제 적용
+
+[50가지 장비 형태·6재질·8슬롯 조합과 실제 Windows 장비함/성장 화면](applied/wardrobe-v1/README.md). 목록·도형·착용 위치·점수 규칙의 수정 파일도 안내합니다.
+
 ## 기본 상몬 클레이 외형 실제 적용
 
 [Windows 렌더러로 그린 9가지 모습과 수정 파일 안내](applied/sangmon-clay/README.md). 투명 PNG와 Android용 64프레임 자산까지 반영했습니다. 아래의 이미지 시안과 구분합니다.

@@ -17,5 +17,6 @@
 | 자유 배치·내 레이아웃 | [FREE-LAYOUT.md](FREE-LAYOUT.md), [MY-LAYOUTS.md](MY-LAYOUTS.md) | 드래그·저장·재사용 |
 | 사진·달력·검색 | [PHOTOS.md](PHOTOS.md), [CALENDAR-SEARCH.md](CALENDAR-SEARCH.md) | 입력·저장·기록 탐색 |
 | 상몬 외형·성장·아이템 | [SANGMON-DESIGN.md](SANGMON-DESIGN.md), [SANGMON-GROWTH.md](SANGMON-GROWTH.md), [SANGMON-ITEMS.md](SANGMON-ITEMS.md) | 그림·경험치·장착 |
+| 전체 300종 장비 ID | [ITEM-CATALOG.md](ITEM-CATALOG.md) | 8슬롯별 이름·ID·속성 |
 | 공동 작업과 역할 | [CONTRIBUTING.md](../CONTRIBUTING.md), [TEAM.md](TEAM.md) | 브랜치·PR·검증·팀원 |
 | 화면 예시 | [README.md](../previews/README.md) | 플랫폼별 PNG·GIF |

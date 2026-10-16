@@ -16,8 +16,25 @@ object NotebookRules {
     val kinds = setOf("text", "todo", "habit", "emotion", "photo", "photo-slot")
     fun meaningful(b: DiaryBlock) = b.text.isNotBlank() || b.type == "photo" && !b.photo.isNullOrEmpty() || b.type in setOf("todo", "habit") && b.checked
     fun record(entry: DiaryEntry) = entry.blocks.filter(::meaningful).associate {it.id to listOf(it.type,it.text,it.checked,it.photo)}
-    fun level(book: DiaryBook) = 1 + book.awardedDays.size / 5
-    fun xp(book: DiaryBook) = book.awardedDays.size * 10
+    const val ATTENDANCE=1;const val WRITING=2;const val PHOTO=4;const val TODO=8;const val HABIT=16
+    val goals=listOf(ATTENDANCE,WRITING,PHOTO,TODO,HABIT)
+    fun points(flag: Int)=if(flag==WRITING) 10 else 5
+    fun bonus(flags: Int)=goals.filter {flags and it!=0}.sumOf(::points)
+    fun level(book: DiaryBook) = 1 + xp(book)/50
+    fun xp(book: DiaryBook) = book.awardedDays.size * 10+book.activities.values.sumOf(::bonus)
+    fun todayXp(book: DiaryBook,day: LocalDate)= (if(day.toString() in book.awardedDays) 10 else 0)+bonus(book.activities[day.toString()] ?: 0)
+    fun award(candidate: DiaryBook,prior: DiaryEntry,next: DiaryEntry,day: LocalDate): DiaryBook {
+        if(record(prior)==record(next) || next.blocks.none(::meaningful))return candidate
+        val old=prior.blocks.associateBy {it.id};var flags=0
+        val text=next.blocks.filter {it.type in setOf("text","emotion")}
+        if(text.sumOf {it.text.count {c->!c.isWhitespace()}}>=20 && text.any {old[it.id]?.text!=it.text || old[it.id]?.type!=it.type})flags=flags or WRITING
+        if(next.blocks.any {it.type=="photo" && !it.photo.isNullOrEmpty() && old[it.id]?.photo!=it.photo})flags=flags or PHOTO
+        if(next.blocks.any {it.type=="todo" && it.checked && (old[it.id]?.checked!=true || old[it.id]?.type!=it.type)})flags=flags or TODO
+        if(next.blocks.any {it.type=="habit" && it.checked && (old[it.id]?.checked!=true || old[it.id]?.type!=it.type)})flags=flags or HABIT
+        val key=day.toString();val awarded=if(candidate.awardedDays.size<50000) candidate.awardedDays+key else candidate.awardedDays
+        val activities=if(flags!=0 && (key in candidate.activities || candidate.activities.size<50000))candidate.activities+(key to ((candidate.activities[key] ?: 0) or flags)) else candidate.activities
+        return candidate.copy(awardedDays=awarded,activities=activities)
+    }
     fun bound(b: DiaryBlock) = b.copy(x=b.x.coerceIn(0,MAX_POSITION),y=b.y.coerceIn(0,MAX_POSITION),
         width=(if(b.width==0) 350 else b.width).coerceIn(MIN_WIDTH,MAX_WIDTH),height=(if(b.height==0) when(b.type) {"photo","photo-slot"->360;"emotion"->288;else->250} else b.height).coerceIn(MIN_HEIGHT,MAX_HEIGHT))
     fun arrange(entry: DiaryEntry): DiaryEntry {
@@ -61,16 +78,15 @@ object NotebookRules {
         }
         require(layouts.size<=MAX_LAYOUTS) {"내 레이아웃은 최대 50개까지 저장할 수 있어요."}
         return current.copy(days=current.days+incoming.days,layouts=layouts,characterStyle=incoming.characterStyle,
-            awardedDays=current.awardedDays+incoming.awardedDays,equipment=if(incoming.version>=4 && incoming.hasEquipment) incoming.equipment else current.equipment,
-            hasEquipment=current.hasEquipment || incoming.hasEquipment)
+            awardedDays=current.awardedDays+incoming.awardedDays,equipment=if(incoming.version>=5 && incoming.hasEquipment) incoming.equipment else if(incoming.version>=4 && incoming.hasEquipment)current.equipment.copy(weaponId=incoming.equipment.weaponId,charmId=incoming.equipment.charmId) else current.equipment,
+            hasEquipment=current.hasEquipment || incoming.hasEquipment,activities=(current.activities.keys+incoming.activities.keys).associateWith {(current.activities[it] ?: 0) or (incoming.activities[it] ?: 0)},version=maxOf(current.version,incoming.version))
     }
     fun validate(book: DiaryBook) {
-        require(book.version in 1..4 && book.days.size<=50000 && book.layouts.size<=MAX_LAYOUTS && book.awardedDays.size<=50000) {"지원하지 않거나 너무 큰 기록 파일이에요."}
+        require(book.version in 1..5 && book.days.size<=50000 && book.layouts.size<=MAX_LAYOUTS && book.awardedDays.size<=50000 && book.activities.size<=50000) {"지원하지 않거나 너무 큰 기록 파일이에요."}
         require(book.characterStyle in SangmonIdentity.levels && level(book)>=SangmonIdentity.levels.getValue(book.characterStyle))
         book.awardedDays.forEach {require(LocalDate.parse(it).year in 1..9999)}
-        val elements=setOf("solar","ember","frost","storm","shadow","astral")
-        require(book.equipment.weaponId=="none" || book.equipment.weaponId in elements.map {"$it-sword"})
-        require(book.equipment.charmId=="none" || book.equipment.charmId in elements.map {"$it-orb"})
+        book.activities.forEach {(date,flags)->require(LocalDate.parse(date).year in 1..9999 && flags in 1..31)}
+        EquipmentCatalog.slots.forEach {slot->val id=book.equipment.get(slot);require(id=="none" || EquipmentCatalog.items[id]==slot)}
         book.days.forEach { (date,entry) ->
             require(LocalDate.parse(date).year in 1..9999);require(entry.theme in 0..2 && entry.blocks.size<=MAX_BLOCKS)
             require(entry.layoutMode in setOf("cards","free") && entry.pageStyle in setOf("plain","paper","dots"))

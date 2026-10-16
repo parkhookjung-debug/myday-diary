@@ -18,10 +18,11 @@ class NotebookController(private val repository: NotebookRepository,private val 
     fun clearError() {error=null}
     fun report(message: String) {error=message}
     fun prepareSave(candidate: DiaryBook,recordDate: String?): DiaryBook {
-        var awarded=if(recordDate==null) book.awardedDays+candidate.awardedDays else book.awardedDays
+        val awarded=if(recordDate==null) book.awardedDays+candidate.awardedDays else book.awardedDays
         val next=recordDate?.let {candidate.days[it]}
-        if(next!=null && NotebookRules.record(book.days[recordDate] ?: DiaryEntry())!=NotebookRules.record(next) && next.blocks.any(NotebookRules::meaningful) && awarded.size<50000) awarded=awarded+today().toString()
-        return candidate.copy(awardedDays=awarded)
+        val activities=(book.activities.keys+candidate.activities.keys).associateWith {(book.activities[it] ?: 0) or (candidate.activities[it] ?: 0)}
+        val prepared=candidate.copy(awardedDays=awarded,activities=activities)
+        return if(next!=null) NotebookRules.award(prepared,book.days[recordDate] ?: DiaryEntry(),next,today()) else prepared
     }
     private fun commit(candidate: DiaryBook,draft: Boolean=false,onSuccess: ()->Unit={}): Boolean {
         val generation=++revision
@@ -48,7 +49,8 @@ class NotebookController(private val repository: NotebookRepository,private val 
         if(index !in blocks.indices || target !in blocks.indices) return;blocks.add(target,blocks.removeAt(index));edit(entry.copy(blocks=blocks))}
     fun configure(change: (DiaryBook)->DiaryBook): Boolean {if(!saved) {error=if(saving) "저장 중이에요. 잠시 후 다시 선택해 주세요." else "먼저 일기를 다시 저장해 주세요.";return false};return commit(change(book))}
     fun selectCharacter(id: String,requiredLevel: Int): Boolean {if(NotebookRules.level(book)<requiredLevel) {error="Lv.$requiredLevel 에서 사용할 수 있어요.";return false};return configure {it.copy(characterStyle=id)}}
-    fun equip(slot: String,id: String): Boolean {require(slot in setOf("weapon","charm"));return configure {it.copy(equipment=if(slot=="weapon") it.equipment.copy(weaponId=id) else it.equipment.copy(charmId=id),hasEquipment=true)}}
+    fun equip(slot: String,id: String): Boolean {require(slot in EquipmentCatalog.slots && (id=="none" || EquipmentCatalog.items[id]==slot));return configure {it.copy(equipment=it.equipment.equip(slot,id),hasEquipment=true)}}
+    fun checkIn(): Boolean=configure {val key=today().toString();require(key in it.activities || it.activities.size<50000);it.copy(activities=it.activities+(key to ((it.activities[key] ?: 0) or NotebookRules.ATTENDANCE)))}
     fun saveLayout(name: String) {val layout=NotebookRules.capture(entry,name);require(book.layouts.size<NotebookRules.MAX_LAYOUTS);configure {it.copy(layouts=it.layouts+layout)}}
     fun renameLayout(id: String,name: String) {require(name.trim().length in 1..40 && name.none {it.isISOControl()});configure {it.copy(layouts=it.layouts.map {l->if(l.id==id) l.copy(name=name.trim()) else l})}}
     fun deleteLayout(id: String)=configure {it.copy(layouts=it.layouts.filterNot {l->l.id==id})}

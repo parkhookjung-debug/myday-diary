@@ -82,6 +82,7 @@ namespace MyDay.Windows.Character
             var save = g.Save();
             g.SmoothingMode = SmoothingMode.AntiAlias;
             float scale = Math.Min(area.Width / 555f, area.Height / 430f);
+            if(equipment!=null && (SangmonItems.Get(equipment,"head")!="none" || SangmonItems.Get(equipment,"back")!="none" || SangmonItems.Get(equipment,"aura")!="none"))scale*=.9f;
             float shadowWidth=area.Width*(.31f+pose.Bob*.005f);
             using(var shadow=new SolidBrush(Color.FromArgb(23,Ink)))
                 g.FillEllipse(shadow,area.X+area.Width*.62f-shadowWidth/2,area.Y+area.Height*.91f,shadowWidth,area.Height*.045f);
@@ -96,6 +97,7 @@ namespace MyDay.Windows.Character
             g.TranslateTransform(275, 730); g.RotateTransform(pose.Tilt+(variant==MonsterVariant.Speedy?-8:0));
             g.ScaleTransform(pose.WidthScale*(variant==MonsterVariant.Speedy?1.05f:variant==MonsterVariant.Original && pose.Sleeping?1.06f:1),
                 pose.BodyScale*(variant==MonsterVariant.Speedy?.9f:variant==MonsterVariant.Original?(pose.Sleeping?.76f:pose.Held?1.1f:1):1)); g.TranslateTransform(-275, -730);
+            ItemPainter.DrawWearables(g,pose,equipment,true);
             DrawBehind(g,pose,variant);
             MonsterAdditions.DrawBehind(g,pose,variant);
             GameSkins.DrawBehind(g,pose,variant);
@@ -163,6 +165,7 @@ namespace MyDay.Windows.Character
                 }
             }
             DrawDetails(g,variant);
+            ItemPainter.DrawWearables(g,pose,equipment,false);
             g.Restore(bodySave);
             ItemPainter.DrawEquipped(g,pose,equipment);
             if (!pose.Held && pose.FireStrength>.01f)

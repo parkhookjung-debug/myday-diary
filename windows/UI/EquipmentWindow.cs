@@ -10,74 +10,77 @@ namespace MyDay.Windows.UI
 {
     internal sealed class EquipmentWindow : Form
     {
+        private const int PageSize=12;
         private static readonly Color Night=Color.FromArgb(21,28,45),PanelColor=Color.FromArgb(35,45,66),Gold=Color.FromArgb(242,213,159),Muted=Color.FromArgb(168,184,201);
         private readonly DiaryBook book;
         private readonly Func<string,string,bool> equip;
-        private readonly FlowLayoutPanel list=new FlowLayoutPanel {Dock=DockStyle.Fill,AutoScroll=true,WrapContents=true,Padding=Design.Pad(16,6,16,6),BackColor=Night};
+        private readonly FlowLayoutPanel list=new FlowLayoutPanel {Dock=DockStyle.Fill,AutoScroll=true,Padding=Design.Pad(12),BackColor=Night};
         private readonly MonsterView avatar=new MonsterView {BackColor=PanelColor};
-        private readonly Label weaponLabel=Design.Label("",9),charmLabel=Design.Label("",9);
-        internal readonly ChoiceButton Category=Design.Choice(152);
+        private readonly Label summary=Design.Label("",9),pageLabel=Design.Label("",9);
+        internal readonly ChoiceButton Category=Design.Choice(132),Element=Design.Choice(92);
+        internal readonly TextBox Search=new TextBox();
         internal readonly Button ClearWeapon=Design.Button("무기 해제"),ClearCharm=Design.Button("보주 해제");
+        internal readonly Button Previous=Design.Button("이전"),Next=Design.Button("다음");
         internal readonly Dictionary<string,Button> EquipButtons=new Dictionary<string,Button>();
+        private int page;
         public EquipmentWindow(DiaryBook book,Func<string,string,bool> equip)
         {
             this.book=book;this.equip=equip;
-            Text="MyDay · 상몬 아이템";BackColor=Night;ForeColor=Gold;Font=Design.Font(10);AutoScaleMode=AutoScaleMode.None;StartPosition=FormStartPosition.CenterParent;
-            var work=Screen.PrimaryScreen.WorkingArea;ClientSize=new Size(Math.Min(Design.P(960),work.Width-64),Math.Min(Design.P(800),work.Height-80));MinimumSize=Design.Size(720,540);
-            var hero=new Panel {Dock=DockStyle.Top,Height=Design.P(160),BackColor=PanelColor};
-            avatar.Location=Design.Point(16,8);avatar.Size=Design.Size(154,144);hero.Controls.Add(avatar);
-            var eyebrow=Design.Label("SANGMON · EQUIPMENT",8,true);eyebrow.Location=Design.Point(188,18);eyebrow.ForeColor=Gold;hero.Controls.Add(eyebrow);
-            var title=Design.Label("상몬의 장비함",23,true);title.Location=Design.Point(184,40);title.ForeColor=Color.White;hero.Controls.Add(title);
-            weaponLabel.Location=Design.Point(188,94);charmLabel.Location=Design.Point(188,122);weaponLabel.ForeColor=Muted;charmLabel.ForeColor=Muted;hero.Controls.AddRange(new Control[]{weaponLabel,charmLabel});
-            ClearWeapon.Size=Design.Size(98,30);ClearCharm.Size=Design.Size(98,30);ClearWeapon.BackColor=ClearCharm.BackColor=Night;ClearWeapon.ForeColor=ClearCharm.ForeColor=Gold;
-            ((RoundedButton)ClearWeapon).HoverFill=((RoundedButton)ClearCharm).HoverFill=Color.FromArgb(51,65,91);
-            ClearWeapon.Click+=delegate {if(equip("weapon","none"))RefreshSelection();};ClearCharm.Click+=delegate {if(equip("charm","none"))RefreshSelection();};hero.Controls.AddRange(new Control[]{ClearWeapon,ClearCharm});
-            hero.Resize+=delegate {ClearWeapon.Location=new Point(hero.ClientSize.Width-Design.P(122),Design.P(88));ClearCharm.Location=new Point(hero.ClientSize.Width-Design.P(122),Design.P(122));weaponLabel.MaximumSize=charmLabel.MaximumSize=new Size(hero.ClientSize.Width-Design.P(330),Design.P(24));};
-            var filters=new Panel {Dock=DockStyle.Top,Height=Design.P(40),BackColor=Night};
-            var hint=Design.Label("속성을 골라 함께하기",9,true);hint.ForeColor=Gold;hint.Location=Design.Point(24,12);filters.Controls.Add(hint);
-            Category.Items.AddRange(new object[]{"무기 6종","마법 보주 6종","전체 12종"});Category.BackColor=PanelColor;Category.ForeColor=Gold;Category.SelectedIndex=0;Category.AccessibleName="아이템 종류 선택";Category.SelectedIndexChanged+=delegate {RenderItems();};filters.Controls.Add(Category);
-            filters.Resize+=delegate {Category.Location=new Point(filters.ClientSize.Width-Category.Width-Design.P(24),Design.P(6));};
-            Category.HoverFill=Color.FromArgb(51,65,91);
-            var footer=new Panel {Dock=DockStyle.Bottom,Height=Design.P(44),BackColor=Night};
-            var rule=Design.Label("무기와 보주를 하나씩 · 모든 아이템 바로 장착 · 기록과 함께 저장",8);rule.ForeColor=Muted;rule.Location=Design.Point(24,13);footer.Controls.Add(rule);
-            var close=Design.Button("닫기");close.BackColor=PanelColor;close.ForeColor=Gold;close.Size=Design.Size(74,28);close.DialogResult=DialogResult.Cancel;footer.Controls.Add(close);CancelButton=close;
-            footer.Resize+=delegate {close.Location=new Point(footer.ClientSize.Width-close.Width-Design.P(20),Design.P(8));rule.MaximumSize=new Size(footer.ClientSize.Width-close.Width-Design.P(66),Design.P(30));};
-            ((RoundedButton)close).HoverFill=Color.FromArgb(51,65,91);
-            Controls.Add(list);Controls.Add(filters);Controls.Add(hero);Controls.Add(footer);list.Resize+=delegate {LayoutItems();};RenderItems();RefreshSelection();
+            Text="MyDay · 300종 상몬 옷장";BackColor=Night;ForeColor=Gold;Font=Design.Font(10);AutoScaleMode=AutoScaleMode.None;StartPosition=FormStartPosition.CenterParent;
+            var work=Screen.PrimaryScreen.WorkingArea;ClientSize=new Size(Math.Min(Design.P(1040),work.Width-64),Math.Min(Design.P(860),work.Height-80));MinimumSize=Design.Size(760,600);
+            var hero=new Panel {Dock=DockStyle.Top,Height=Design.P(180),BackColor=PanelColor};
+            avatar.Location=Design.Point(12,8);avatar.Size=Design.Size(166,158);hero.Controls.Add(avatar);
+            var title=Design.Label("상몬의 무한 옷장",22,true);title.ForeColor=Color.White;title.Location=Design.Point(192,20);hero.Controls.Add(title);
+            var hint=Design.Label("300 ITEMS · 8 SLOTS · 모든 장비 자유 조합",9,true);hint.ForeColor=Gold;hint.Location=Design.Point(196,58);hero.Controls.Add(hint);
+            summary.Location=Design.Point(196,85);summary.ForeColor=Muted;summary.AutoSize=false;summary.Size=Design.Size(560,76);hero.Controls.Add(summary);
+            hero.Resize+=delegate {summary.Width=Math.Max(100,hero.Width-Design.P(218));};
+            var filters=new FlowLayoutPanel {Dock=DockStyle.Top,Height=Design.P(80),Padding=Design.Pad(16,8,8,4),WrapContents=true};
+            Category.Items.AddRange(SangmonItems.SlotNames.Cast<object>().Concat(new object[]{"전체 300종"}).ToArray());Category.SelectedIndex=0;Category.AccessibleName="아이템 종류 선택";
+            Element.Items.AddRange(new object[]{"모든 속성","태양","화염","빙결","번개","그림자","별빛"});Element.SelectedIndex=0;Element.AccessibleName="아이템 속성 선택";
+            Search.Width=Design.P(190);Search.AccessibleName="장비 이름 검색";
+            var clear=Design.Button("선택 슬롯 해제");clear.Click+=delegate {if(Category.SelectedIndex<8 && equip(SangmonItems.Slots[Category.SelectedIndex],"none"))RefreshSelection();};
+            Category.SelectedIndexChanged+=delegate {page=0;RenderItems();};Element.SelectedIndexChanged+=delegate {page=0;RenderItems();};Search.TextChanged+=delegate {page=0;RenderItems();};
+            ClearWeapon.Click+=delegate {if(equip("weapon","none"))RefreshSelection();};ClearCharm.Click+=delegate {if(equip("charm","none"))RefreshSelection();};
+            filters.Controls.AddRange(new Control[]{Category,Element,Search,clear,ClearWeapon,ClearCharm});
+            var footer=new FlowLayoutPanel {Dock=DockStyle.Bottom,Height=Design.P(48),Padding=Design.Pad(16,8,8,0)};
+            Previous.Click+=delegate {page--;RenderItems();};Next.Click+=delegate {page++;RenderItems();};
+            var close=Design.Button("닫기");close.DialogResult=DialogResult.Cancel;CancelButton=close;
+            pageLabel.ForeColor=Muted;pageLabel.Margin=Design.Pad(12,6,12,0);
+            footer.Controls.AddRange(new Control[]{Previous,pageLabel,Next,close});
+            Controls.Add(list);Controls.Add(filters);Controls.Add(hero);Controls.Add(footer);
+            list.Resize+=delegate {LayoutItems();};RenderItems();
         }
         private void RenderItems()
         {
+            string query=Search.Text.Trim();
+            var matches=SangmonItems.All.Where(i=>(Category.SelectedIndex==8 || i.Slot==SangmonItems.Slots[Math.Max(0,Category.SelectedIndex)]) && (Element.SelectedIndex==0 || (int)i.Element==Element.SelectedIndex-1) && (query.Length==0 || (i.Name+" "+i.Description+" "+i.Id).IndexOf(query,StringComparison.OrdinalIgnoreCase)>=0)).ToArray();
+            int pages=Math.Max(1,(matches.Length+PageSize-1)/PageSize);page=Math.Max(0,Math.Min(page,pages-1));
             list.SuspendLayout();foreach(Control c in list.Controls.Cast<Control>().ToArray())c.Dispose();EquipButtons.Clear();
-            foreach(var item in SangmonItems.All.Where(i=>Category.SelectedIndex==2 || i.Slot==(Category.SelectedIndex==0?"weapon":"charm"))) {
-                var selected=item;
-                var card=new CardPanel {Size=Design.Size(270,260),Margin=Design.Pad(6),Fill=PanelColor};
-                var badge=Design.Label((item.Slot=="weapon"?"WEAPON":"MAGIC ORB")+"  ·  "+ElementName(item.Element),8,true);badge.ForeColor=ItemPainter.Tone(item.Element);badge.Location=Design.Point(18,12);card.Controls.Add(badge);
-                var art=new ItemView {Item=item,BackColor=PanelColor,Location=Design.Point(18,30),Size=Design.Size(234,148),AccessibleName=item.Name+" 미리보기"};card.Controls.Add(art);
-                var name=Design.Label(item.Name,11,true);name.ForeColor=Color.White;name.Location=Design.Point(18,180);card.Controls.Add(name);
-                var detail=Design.Label(item.Description,8);detail.ForeColor=Muted;detail.Location=Design.Point(18,203);card.Controls.Add(detail);
-                var button=Design.Button("장착하기");button.Location=Design.Point(18,226);button.Size=Design.Size(234,28);button.Font=Design.Font(8);button.BackColor=Night;button.ForeColor=Gold;button.AccessibleName=item.Name+" 장착";
+            foreach(var item in matches.Skip(page*PageSize).Take(PageSize)) {
+                var selected=item;var card=new CardPanel {Size=Design.Size(270,254),Margin=Design.Pad(6),Fill=PanelColor};
+                var badge=Design.Label(SangmonItems.SlotName(item.Slot)+" · "+item.Description.Split('·')[0],8,true);badge.ForeColor=ItemPainter.Tone(item.Element);badge.Location=Design.Point(16,10);card.Controls.Add(badge);
+                var art=new ItemView {Item=item,BackColor=PanelColor,Location=Design.Point(16,32),Size=Design.Size(230,138),AccessibleName=item.Name+" 미리보기"};card.Controls.Add(art);
+                var name=Design.Label(item.Name,11,true);name.ForeColor=Color.White;name.Location=Design.Point(16,176);card.Controls.Add(name);
+                var detail=Design.Label("다른 슬롯과 함께 장착할 수 있어요",8);detail.ForeColor=Muted;detail.Location=Design.Point(16,201);card.Controls.Add(detail);
+                var button=Design.Button("장착하기");button.Location=Design.Point(16,222);button.Size=Design.Size(230,26);button.Font=Design.Font(8);button.AccessibleName=item.Name+" 장착";
                 button.Click+=delegate {if(equip(selected.Slot,selected.Id))RefreshSelection();};EquipButtons.Add(item.Id,button);card.Controls.Add(button);
-                ((RoundedButton)button).HoverFill=Color.FromArgb(51,65,91);
-                card.Resize+=delegate {art.Width=button.Width=card.ClientSize.Width-Design.P(36);detail.MaximumSize=new Size(art.Width,Design.P(20));};list.Controls.Add(card);
+                card.Resize+=delegate {art.Width=button.Width=card.ClientSize.Width-Design.P(32);};list.Controls.Add(card);
             }
-            list.ResumeLayout();list.AutoScrollPosition=Point.Empty;LayoutItems();RefreshSelection();
+            if(matches.Length==0){var empty=Design.Label("맞는 장비가 없어요. 검색어나 속성을 바꿔보세요.",10);empty.ForeColor=Muted;list.Controls.Add(empty);}
+            list.ResumeLayout();list.AutoScrollPosition=Point.Empty;pageLabel.Text=matches.Length+"종 · "+(page+1)+" / "+pages;Previous.Enabled=page>0;Next.Enabled=page+1<pages;
+            LayoutItems();RefreshSelection();
         }
         private void LayoutItems()
         {
-            int width=list.ClientSize.Width-Design.P(32)-SystemInformation.VerticalScrollBarWidth;
-            int columns=width>=Design.P(720)?3:2;
-            foreach(Control card in list.Controls)card.Width=Math.Max(Design.P(200),width/columns-Design.P(12));
+            int width=list.ClientSize.Width-Design.P(30)-SystemInformation.VerticalScrollBarWidth,columns=width>=Design.P(800)?3:2;
+            foreach(var card in list.Controls.OfType<CardPanel>())card.Width=Math.Max(Design.P(210),width/columns-Design.P(12));
         }
         private void RefreshSelection()
         {
             var state=book.Equipment??new SangmonEquipment();avatar.Variant=MonsterVariants.FromId(book.CharacterStyle);avatar.Equipment=state;
-            weaponLabel.Text="무기  ·  "+SangmonItems.Name(state.WeaponId);charmLabel.Text="보주  ·  "+SangmonItems.Name(state.CharmId);
+            summary.Text=string.Join("\n",Enumerable.Range(0,4).Select(row=>string.Join("    ·    ",SangmonItems.Slots.Skip(row*2).Take(2).Select(s=>SangmonItems.SlotName(s)+": "+SangmonItems.Name(SangmonItems.Get(state,s))))));
             ClearWeapon.Enabled=state.WeaponId!="none";ClearCharm.Enabled=state.CharmId!="none";
-            foreach(var pair in EquipButtons) {var item=SangmonItems.Find(pair.Key);bool chosen=(item.Slot=="weapon"?state.WeaponId:state.CharmId)==item.Id;pair.Value.Text=chosen?"장착 중":"장착하기";pair.Value.Enabled=!chosen;}
-        }
-        private static string ElementName(ItemElement e)
-        {
-            switch(e){case ItemElement.Solar:return "태양";case ItemElement.Ember:return "화염";case ItemElement.Frost:return "빙결";case ItemElement.Storm:return "번개";case ItemElement.Shadow:return "그림자";default:return "별빛";}
+            foreach(var pair in EquipButtons){var item=SangmonItems.Find(pair.Key);bool chosen=SangmonItems.Get(state,item.Slot)==item.Id;pair.Value.Text=chosen?"장착 중":"장착하기";pair.Value.Enabled=!chosen;}
         }
     }
 }

@@ -14,6 +14,6 @@
 | 형식 생성·적용·검색 | [DiaryTemplates.cs](DiaryTemplates.cs) | 기본 형식과 전체 목록·블록 생성 |
 | 분야별 일기 제목·질문 | [README.md](Templates/README.md) | 분야별 *Formats.cs 찾기 |
 | 편지·코넬 등 배치 | [JournalLayouts.cs](JournalLayouts.cs) | 형식별 배치 계산 |
-| 경험치·해금 조건 | [SangmonGrowth.cs](SangmonGrowth.cs) | DailyXP·LevelXP·보상 레벨·중복 지급 방지 |
-| 아이템 이름·설명·슬롯 | [SangmonItems.cs](SangmonItems.cs) | 12종 목록·장착·해제·백업 복원 |
+| 출석·활동 점수·해금 조건 | [SangmonGrowth.cs](SangmonGrowth.cs) | 6가지 미션·LevelXP·보상 레벨·날짜/항목 중복 지급 방지 |
+| 아이템 이름·설명·슬롯 | [SangmonItems.cs](SangmonItems.cs) | 50형태×6재질·300종·8슬롯·장착·해제·백업 복원 |
 | 클릭과 드래그 구분 | [PetGesture.cs](PetGesture.cs) | 포인터 입력 상태 |

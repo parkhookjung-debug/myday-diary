@@ -62,9 +62,9 @@ class PhoneNotebookDeviceTest {
         start();ui.onNodeWithText("상몬").performClick();screenshot("android-sangmon")
         ui.onNodeWithTag("sangmon-grid").performScrollToNode(hasText("빙결 상몬"));ui.onNodeWithText("빙결 상몬").performClick()
         ui.runOnIdle {assertEquals("frost",c.book.characterStyle)}
-        ui.onNodeWithText("장비 12종").performClick();ui.onNodeWithTag("equipment-grid").performScrollToNode(hasText("빙결 장검"));ui.onNodeWithText("빙결 장검").performClick()
-        ui.onNodeWithText("보주").performClick();ui.onNodeWithTag("equipment-grid").performScrollToNode(hasText("별빛 구슬"));ui.onNodeWithText("별빛 구슬").performClick();screenshot("android-equipment")
-        ui.runOnIdle {assertEquals(Equipment("frost-sword","astral-orb"),c.book.equipment);assertEquals(0,NotebookRules.xp(c.book));assertEquals(64,catalog.characters.size);assertEquals(12,catalog.items.size)}
+        ui.onNodeWithText("장비 300종").performClick();ui.onNodeWithTag("equipment-grid").performScrollToNode(hasText("빙결 장검"));ui.onNodeWithText("빙결 장검").performClick()
+        ui.onNodeWithText("보주·소품").performClick();ui.onNodeWithTag("equipment-grid").performScrollToNode(hasText("별빛 구슬"));ui.onNodeWithText("별빛 구슬").performClick();screenshot("android-equipment")
+        ui.runOnIdle {assertEquals(Equipment("frost-sword","astral-orb"),c.book.equipment);assertEquals(0,NotebookRules.xp(c.book));assertEquals(64,catalog.characters.size);assertEquals(300,catalog.items.size)}
     }
     @Test fun freeBoardDragTemplateAndSavedLayoutsRetainContent() {
         start(true)
@@ -81,5 +81,18 @@ class PhoneNotebookDeviceTest {
         ui.onNodeWithTag("diary-list").performScrollToNode(hasText("내 레이아웃"));ui.onNodeWithText("내 레이아웃").performClick();ui.onNodeWithText("현재 배치 저장").performClick()
         ui.onNodeWithText("이름 (1~40자)").performTextInput("휴대폰 배치");ui.onNodeWithText("저장",substring=false).performClick();screenshot("android-my-layouts")
         ui.runOnIdle {assertEquals("휴대폰 배치",c.book.layouts.single().name);assertTrue(c.book.layouts.single().blocks.all {it.text.isEmpty() && !it.checked})}
+    }
+    @Test fun attendanceAndSearchableExtraSlotsKeepIndependentSelections() {
+        start();ui.onNodeWithText("상몬").performClick();ui.onNodeWithText("출석 +5 XP").performClick()
+        ui.onNodeWithText("출석 완료").assertIsNotEnabled();ui.runOnIdle {assertEquals(5,NotebookRules.xp(c.book))}
+        ui.onNodeWithText("장비 300종").performClick()
+        listOf("머리" to "태양 왕관","얼굴" to "빙결 안경","발밑" to "빙결 구름 발판").forEach {(slot,name)->
+            ui.onNodeWithTag("equipment-slots").performScrollToNode(hasText(slot));ui.onNodeWithText(slot).performClick()
+            ui.onNodeWithTag("equipment-search").performTextClearance();ui.onNodeWithTag("equipment-search").performTextInput(name)
+            ui.onNodeWithTag("equipment-search").performImeAction()
+            ui.onNodeWithText(name).performClick()
+        }
+        ui.runOnIdle {assertEquals("solar-crown",c.book.equipment.headId);assertEquals("frost-glasses",c.book.equipment.faceId);assertEquals("frost-cloud",c.book.equipment.groundId);assertEquals(5,NotebookRules.xp(c.book))}
+        screenshot("android-wardrobe-growth")
     }
 }

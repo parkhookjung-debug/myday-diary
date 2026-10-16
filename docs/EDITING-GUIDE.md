@@ -49,6 +49,7 @@
 | 성장 보상 의상 그림 | [RewardSkins.cs](../windows/Character/RewardSkins.cs) | 8종 보상 의상·색·소품 |
 | 성장과 일기·바탕화면 연결 | [DiaryWindow.Growth.cs](../windows/UI/DiaryWindow.Growth.cs) | 성장 창 열기·보상 장착·상태 갱신 |
 | 검·보주의 이름·속성·설명 | [SangmonItems.cs](../windows/Core/SangmonItems.cs) | `All` 목록과 슬롯·장착·백업 규칙 |
+| 장비 300종의 추가 형태·착용 위치 | [ItemPainter.Wardrobe.cs](../windows/Character/ItemPainter.Wardrobe.cs) | 50가지 형태와 8슬롯 레이어. 이름은 SangmonItems.Forms에서 변경 |
 | 검·보주의 모양·광채·장착 위치 | [ItemPainter.cs](../windows/Character/ItemPainter.cs) | `Sword`, `Orb`, `Tone`, `DrawEquipped` |
 | 장비함 디자인·분류·장착 버튼 | [EquipmentWindow.cs](../windows/UI/EquipmentWindow.cs) | 남색·금색 화면, 카드, 슬롯 상태 |
 | 아이템의 움직이는 미리보기 | [ItemView.cs](../windows/UI/ItemView.cs) | 미리보기 타이머와 그리기 |

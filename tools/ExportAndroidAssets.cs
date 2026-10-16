@@ -17,9 +17,11 @@ public static class AndroidAssetExporter
         var characters=Path.Combine(root,"sangmon");Directory.CreateDirectory(characters);
         var icons=Path.Combine(root,"items");Directory.CreateDirectory(icons);
         var portraits=Path.Combine(root,"portraits");Directory.CreateDirectory(portraits);
+        var overlays=Path.Combine(root,"equipment");Directory.CreateDirectory(overlays);
         var json=new JavaScriptSerializer();
         var identityPath=Path.Combine(root,"..","java","com","myday","diary","data","SangmonIdentity.kt");
         File.WriteAllText(identityPath,"package com.myday.diary.data\n\n// Generated from the Windows catalog by tools/export-android-assets.ps1.\nobject SangmonIdentity {\n    val levels=mapOf(\n        "+string.Join(",\n        ",MonsterVariants.All.Select(v=>json.Serialize(MonsterVariants.Id(v))+" to "+SangmonGrowth.RequiredLevel(v)))+"\n    )\n}\n",new System.Text.UTF8Encoding(false));
+        File.WriteAllText(Path.Combine(Path.GetDirectoryName(identityPath),"EquipmentCatalog.kt"),"package com.myday.diary.data\n\n// Generated from windows/Core/SangmonItems.cs. Do not edit.\nobject EquipmentCatalog {\n    val slots=listOf("+string.Join(",",SangmonItems.Slots.Select(json.Serialize))+")\n    val names=listOf("+string.Join(",",SangmonItems.SlotNames.Select(json.Serialize))+")\n    val items=mapOf(\n        "+string.Join(",\n        ",SangmonItems.All.Select(i=>json.Serialize(i.Id)+" to "+json.Serialize(i.Slot)))+"\n    )\n}\n",new System.Text.UTF8Encoding(false));
         File.WriteAllText(Path.Combine(root,"catalog.json"),json.Serialize(new {
             characters=MonsterVariants.All.Select(v=>new {id=MonsterVariants.Id(v),name=MonsterVariants.Name(v),level=SangmonGrowth.RequiredLevel(v)}).ToArray(),
             items=SangmonItems.All.Select(i=>new {id=i.Id,name=i.Name,slot=i.Slot,description=i.Description,element=i.Element.ToString()}).ToArray(),
@@ -42,6 +44,11 @@ public static class AndroidAssetExporter
         foreach(var item in SangmonItems.All) using(var image=new Bitmap(192,240)) {
             using(var g=Graphics.FromImage(image)) ItemPainter.Draw(g,new RectangleF(8,8,176,224),item,.2);
             image.Save(Path.Combine(icons,item.Id+".png"),ImageFormat.Png);
+            using(var overlay=new Bitmap(192,192)) {
+                using(var g=Graphics.FromImage(overlay))ItemPainter.DrawOverlay(g,new Rectangle(10,12,172,158),item);
+                for(int edge=0;edge<192;edge++)if(overlay.GetPixel(edge,0).A!=0 || overlay.GetPixel(edge,191).A!=0 || overlay.GetPixel(0,edge).A!=0 || overlay.GetPixel(191,edge).A!=0)throw new InvalidOperationException("Equipment overlay clipped: "+item.Id);
+                overlay.Save(Path.Combine(overlays,item.Id+".png"),ImageFormat.Png);
+            }
         }
         var fixture=new DiaryBook {Version=4,CharacterStyle="frost",Progress=new SangmonProgress(),Equipment=new SangmonEquipment {WeaponId="frost-sword",CharmId="astral-orb"}};
         fixture.Progress.AwardedDays.AddRange(new[] {"2026-10-07","2026-10-08"});
@@ -59,6 +66,11 @@ public static class AndroidAssetExporter
         using(var output=File.Create(Path.Combine(resourcePath,"windows-v4.json"))) new System.Runtime.Serialization.Json.DataContractJsonSerializer(typeof(DiaryBook)).WriteObject(output,fixture);
         var deviceResources=Path.Combine(root,"..","..","androidTest","assets");Directory.CreateDirectory(deviceResources);
         File.Copy(Path.Combine(resourcePath,"windows-v4.json"),Path.Combine(deviceResources,"windows-v4.json"),true);
-        Console.WriteLine("Exported 64 animated Sangmon atlases, 12 items and 100 exact Windows templates.");return 0;
+        fixture.Version=5;fixture.Progress=SangmonGrowth.Award(SangmonGrowth.CheckIn(fixture.Progress,new DateTime(2026,10,16)),entry,new DateTime(2026,10,16));
+        foreach(string slot in SangmonItems.Slots.Skip(2))fixture.Equipment=SangmonItems.Select(fixture.Equipment,slot,SangmonItems.All.First(i=>i.Slot==slot).Id);
+        DiaryStore.Validate(fixture);
+        using(var output=File.Create(Path.Combine(resourcePath,"windows-v5.json")))new System.Runtime.Serialization.Json.DataContractJsonSerializer(typeof(DiaryBook)).WriteObject(output,fixture);
+        File.Copy(Path.Combine(resourcePath,"windows-v5.json"),Path.Combine(deviceResources,"windows-v5.json"),true);
+        Console.WriteLine("Exported 64 Sangmon atlases, "+SangmonItems.All.Length+" items/overlays and 100 templates.");return 0;
     }
 }

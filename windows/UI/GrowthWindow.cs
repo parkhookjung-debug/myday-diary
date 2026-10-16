@@ -13,7 +13,7 @@ namespace MyDay.Windows.UI
         private readonly Func<MonsterVariant,bool> equip;
         private readonly FlowLayoutPanel rewards=new FlowLayoutPanel {Dock=DockStyle.Fill,AutoScroll=true,WrapContents=true,Padding=Design.Pad(16,8,16,8)};
         internal readonly Button[] EquipButtons=new Button[8];
-        internal GrowthWindow(DiaryBook book,Func<MonsterVariant,bool> equip)
+        internal GrowthWindow(DiaryBook book,Func<MonsterVariant,bool> equip,Func<bool> checkIn=null)
         {
             this.book=book; this.equip=equip;
             Text="MyDay · 상몬 성장"; Font=Design.Font(10); ForeColor=Design.Ink; BackColor=Design.Backgrounds[0];
@@ -25,16 +25,26 @@ namespace MyDay.Windows.UI
             var avatar=new MonsterView {Location=Design.Point(24,20),Size=Design.Size(160,140),Variant=MonsterVariants.FromId(book.CharacterStyle),Equipment=book.Equipment,BackColor=hero.Fill}; hero.Controls.Add(avatar);
             var eyebrow=Design.Label("SANGMON · GROWTH JOURNAL",8,true); eyebrow.ForeColor=Design.Accent; eyebrow.Location=Design.Point(204,19); hero.Controls.Add(eyebrow);
             var title=Design.Label("Lv."+SangmonGrowth.Level(book.Progress)+"  함께 쌓아가는 하루",20,true); title.Location=Design.Point(202,42); hero.Controls.Add(title);
-            int xp=SangmonGrowth.XP(book.Progress), days=xp/SangmonGrowth.DailyXP;
+            int xp=SangmonGrowth.XP(book.Progress), days=book.Progress==null?0:book.Progress.AwardedDays.Count;
             var meter=new ProgressBar {Minimum=0,Maximum=50,Value=xp%50,Location=Design.Point(204,91),Size=Design.Size(390,9),Style=ProgressBarStyle.Continuous}; hero.Controls.Add(meter);
             var detail=Design.Label((xp%50)+" / 50 XP  ·  기록한 날 "+days+"일  ·  총 "+xp+" XP",9); detail.Location=Design.Point(204,110); detail.ForeColor=Design.Muted; hero.Controls.Add(detail);
             var next=SangmonGrowth.Rewards.FirstOrDefault(v=>!SangmonGrowth.CanUse(book.Progress,v));
             var hint=Design.Label(next==MonsterVariant.Original?"모든 성장 외형을 모았어요. 다음 기록도 함께해요!":"다음 보상  ·  Lv."+SangmonGrowth.RequiredLevel(next)+" "+MonsterVariants.Name(next),9,true); hint.ForeColor=Design.Accent; hint.Location=Design.Point(204,140); hero.Controls.Add(hint);
             hero.Resize+=delegate { meter.Width=Math.Max(Design.P(100),Math.Min(Design.P(520),hero.ClientSize.Width-Design.P(238))); title.MaximumSize=new Size(hero.ClientSize.Width-Design.P(220),Design.P(40)); hint.MaximumSize=new Size(hero.ClientSize.Width-Design.P(220),Design.P(32)); };
-            var footer=new Panel {Dock=DockStyle.Bottom,Height=Design.P(60),Padding=Design.Pad(24,10,20,0)};
-            bool today=book.Progress!=null && book.Progress.AwardedDays.Contains(DiaryStore.Key(DateTime.Today));
-            var rule=Design.Label((today?"오늘의 +10 XP 획득 완료":"내용을 기록하고 저장하면 오늘의 +10 XP")+"\n하루 한 번 · 50 XP마다 레벨 업 · 쉬는 날에도 성장 유지",9); rule.ForeColor=Design.Muted; footer.Controls.Add(rule);
-            var close=Design.Button("닫기"); close.Dock=DockStyle.Right; close.Width=Design.P(80); close.DialogResult=DialogResult.Cancel; footer.Controls.Add(close); CancelButton=close;
+            var footer=new Panel {Dock=DockStyle.Bottom,Height=Design.P(100),Padding=Design.Pad(24,10,20,0)};
+            var rule=Design.Label("",9);rule.AutoSize=false;rule.Height=Design.P(80);rule.ForeColor=Design.Muted;footer.Controls.Add(rule);
+            var attendance=Design.Button("오늘 출석 +5 XP",true);attendance.Size=Design.Size(142,36);footer.Controls.Add(attendance);
+            var close=Design.Button("닫기"); close.Size=Design.Size(80,36); close.DialogResult=DialogResult.Cancel; footer.Controls.Add(close); CancelButton=close;
+            Action refresh=delegate {
+                xp=SangmonGrowth.XP(book.Progress);title.Text="Lv."+SangmonGrowth.Level(book.Progress)+"  함께 쌓아가는 하루";meter.Value=xp%50;
+                detail.Text=(xp%50)+" / 50 XP · 기록 "+(book.Progress==null?0:book.Progress.AwardedDays.Count)+"일 · 총 "+xp+" XP";
+                bool attended=(SangmonGrowth.Flags(book.Progress,DateTime.Today)&SangmonGrowth.Attendance)!=0;
+                attendance.Enabled=checkIn!=null && !attended;attendance.Text=attended?"오늘 출석 완료":"오늘 출석 +5 XP";
+                rule.Text="오늘 "+SangmonGrowth.TodayXP(book.Progress,DateTime.Today)+" / 40 XP · 각 항목 하루 한 번\n출석 +5 · 첫 기록 저장 +10 · 글 20자 이상 +10\n사진 · 할 일 완료 · 습관 완료 각각 +5\n50 XP마다 레벨 업 · 기존 경험치 유지";
+                var reward=SangmonGrowth.Rewards.FirstOrDefault(v=>!SangmonGrowth.CanUse(book.Progress,v));hint.Text=reward==MonsterVariant.Original?"모든 성장 외형을 모았어요!":"다음 보상 · Lv."+SangmonGrowth.RequiredLevel(reward)+" "+MonsterVariants.Name(reward);
+            };
+            footer.Resize+=delegate {rule.Location=Design.Point(24,8);rule.Width=Math.Max(100,footer.ClientSize.Width-Design.P(300));close.Location=new Point(footer.ClientSize.Width-Design.P(100),Design.P(20));attendance.Location=new Point(close.Left-Design.P(152),Design.P(20));};
+            attendance.Click+=delegate {if(checkIn!=null && checkIn()){refresh();RefreshButtons();}};
             Controls.Add(rewards); Controls.Add(hero); Controls.Add(footer);
             for(int i=0;i<SangmonGrowth.Rewards.Length;i++) {
                 var v=SangmonGrowth.Rewards[i]; bool unlocked=SangmonGrowth.CanUse(book.Progress,v);
@@ -48,7 +58,7 @@ namespace MyDay.Windows.UI
                 card.Resize+=delegate { preview.Width=card.ClientSize.Width-Design.P(32); button.Width=card.ClientSize.Width-Design.P(32); };
                 rewards.Controls.Add(card);
             }
-            rewards.Resize+=delegate { LayoutCards(); }; LayoutCards(); RefreshButtons();
+            rewards.Resize+=delegate { LayoutCards(); }; LayoutCards(); RefreshButtons();refresh();
         }
         private void LayoutCards()
         {

@@ -75,3 +75,7 @@ jobs:
           if ($null -eq $inputFile) { throw 'Android export fixture missing' }
           & ./interop/check.exe $inputFile.FullName ./interop/windows-roundtrip.json
           if ($LASTEXITCODE -ne 0) { throw 'Android / Windows compatibility failed' }
+          $v5=Get-ChildItem interop -Filter 'android-v5-to-windows.json' -Recurse | Select-Object -First 1
+          if ($null -eq $v5) { throw 'Android v5 export fixture missing' }
+          & ./interop/check.exe $v5.FullName ./interop/windows-v5-roundtrip.json
+          if ($LASTEXITCODE -ne 0) { throw 'Android / Windows v5 compatibility failed' }

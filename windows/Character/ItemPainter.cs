@@ -7,7 +7,7 @@ using Shape=MyDay.Windows.Character.MonsterPainter.Shape;
 namespace MyDay.Windows.Character
 {
     // Original vector equipment: metallic facets, gemstone cores and bounded magical halos.
-    public static class ItemPainter
+    public static partial class ItemPainter
     {
         private static readonly Color Ink=Color.FromArgb(24,29,52),Gold=Color.FromArgb(241,199,110);
         public static Color Tone(ItemElement e)
@@ -27,7 +27,7 @@ namespace MyDay.Windows.Character
             var saved=g.Save(); g.SmoothingMode=SmoothingMode.AntiAlias;
             float scale=Math.Min(area.Width/200,area.Height/240);
             g.TranslateTransform(area.X+area.Width/2,area.Y+area.Height/2); g.ScaleTransform(scale,scale); g.TranslateTransform(-100,-120);
-            if(item.Slot=="weapon") Sword(g,item.Element,seconds); else Orb(g,item.Element,seconds);
+            if(item.Form=="sword") Sword(g,item.Element,seconds); else if(item.Form=="orb") Orb(g,item.Element,seconds);else Wardrobe(g,item,seconds);
             g.Restore(saved);
         }
         private static void Halo(Graphics g,float x,float y,float width,float height,Color tone,float pulse)
@@ -141,7 +141,7 @@ namespace MyDay.Windows.Character
             var weapon=SangmonItems.Find(equipment.WeaponId);var charm=SangmonItems.Find(equipment.CharmId);
             if(weapon!=null) {
                 var save=g.Save();g.TranslateTransform(480,625);g.RotateTransform(-15+(float)Math.Sin(pose.Phase*2)*3);g.TranslateTransform(-480,-625);
-                Draw(g,new RectangleF(415,450,190,300),weapon,pose.Phase);g.Restore(save);
+                Draw(g,WeaponPlacement(weapon),weapon,pose.Phase);g.Restore(save);
             }
             if(charm!=null) Draw(g,new RectangleF(340,410+(float)Math.Sin(pose.Phase*2)*8,118,126),charm,pose.Phase);
         }

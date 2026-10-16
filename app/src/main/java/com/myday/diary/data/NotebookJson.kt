@@ -23,7 +23,7 @@ object NotebookJson {
     }
     fun decode(raw: String): DiaryBook {
         require(raw.toByteArray(Charsets.UTF_8).size<=MAX_BYTES) {"백업은 128MB 이하로 선택해 주세요."}
-        val o=JSONObject(raw);val version=integer(o,"Version");require(version in 1..4) {"지원하지 않는 백업 버전이에요."}
+        val o=JSONObject(raw);val version=integer(o,"Version");require(version in 1..5) {"지원하지 않는 백업 버전이에요."}
         val days=linkedMapOf<String,DiaryEntry>()
         fun put(date: String,e: JSONObject) {
             require(!days.containsKey(date)) {"백업에 같은 날짜가 중복돼 있어요."}
@@ -39,10 +39,15 @@ object NotebookJson {
         val awarded=o.optJSONObject("Progress")?.getJSONArray("AwardedDays") ?: JSONArray()
         val awardedList=(0 until awarded.length()).map {awarded.getString(it)};require(awardedList.distinct().size==awardedList.size)
         val equipment=o.optJSONObject("Equipment")
+        val activities=o.optJSONObject("Progress")?.optJSONArray("Activities") ?: JSONArray()
+        val activityMap=linkedMapOf<String,Int>()
+        for(i in 0 until activities.length()) {val a=activities.getJSONObject(i);val date=a.getString("Date");require(date !in activityMap);activityMap[date]=integer(a,"Flags")}
+        var gear=Equipment()
+        EquipmentCatalog.slots.forEach {slot->val key=slot.replaceFirstChar {it.uppercaseChar()}+"Id";gear=gear.equip(slot,if(equipment==null || equipment.isNull(key)) "none" else equipment.getString(key))}
         return DiaryBook(version,days,o.optString("CharacterStyle","original"),
             (0 until layouts.length()).map {i-> val l=layouts.getJSONObject(i);SavedLayout(l.getString("Id"),l.getString("Name"),l.getString("Mode"),l.getString("Style"),integer(l,"Theme"),blocks(l.getJSONArray("Blocks"),true))},
-            awardedList.toSet(),Equipment(equipment?.optString("WeaponId","none") ?: "none",equipment?.optString("CharmId","none") ?: "none"),
-            o.optJSONObject("Android")?.optBoolean("Haptics",true) ?: true,equipment!=null).let {book->
+            awardedList.toSet(),gear,
+            o.optJSONObject("Android")?.optBoolean("Haptics",true) ?: true,equipment!=null,activityMap).let {book->
                 val style=mapOf("droplet" to "fin","puddle" to "shell","pill" to "tailed","cube" to "crystal","cloud" to "furry","twin" to "flower")[book.characterStyle] ?: book.characterStyle
                 val required=SangmonIdentity.levels[style]
                 book.copy(characterStyle=if(required!=null && NotebookRules.level(book)>=required) style else "original")
@@ -56,13 +61,14 @@ object NotebookJson {
     fun encode(book: DiaryBook): String {
         NotebookRules.validate(book)
         return JSONObject().apply {
-            put("Version",4);put("CharacterStyle",book.characterStyle)
+            val expanded=book.activities.isNotEmpty() || EquipmentCatalog.slots.any {val id=book.equipment.get(it);id!="none" && !id.endsWith("-sword") && !id.endsWith("-orb")}
+            put("Version",maxOf(book.version,if(expanded) 5 else 4));put("CharacterStyle",book.characterStyle)
             put("Days",JSONArray().apply {book.days.toSortedMap().forEach {(date,e)->put(JSONObject().put("Key",date).put("Value",JSONObject()
                 .put("Theme",e.theme).put("Mood",e.mood).put("Character",e.character).put("LayoutMode",e.layoutMode).put("PageStyle",e.pageStyle)
                 .put("Blocks",JSONArray(e.blocks.map {block(it)}))))}})
             put("Layouts",JSONArray(book.layouts.map {l->JSONObject().put("Id",l.id).put("Name",l.name).put("Mode",l.mode).put("Style",l.style).put("Theme",l.theme).put("Blocks",JSONArray(l.blocks.map {block(it,true)}))}))
-            put("Progress",JSONObject().put("AwardedDays",JSONArray(book.awardedDays.sorted())))
-            if(book.hasEquipment) put("Equipment",JSONObject().put("WeaponId",book.equipment.weaponId).put("CharmId",book.equipment.charmId))
+            put("Progress",JSONObject().put("AwardedDays",JSONArray(book.awardedDays.sorted())).put("Activities",JSONArray(book.activities.toSortedMap().map {(date,flags)->JSONObject().put("Date",date).put("Flags",flags)})))
+            if(book.hasEquipment) put("Equipment",JSONObject().apply {EquipmentCatalog.slots.forEach {slot->put(slot.replaceFirstChar {it.uppercaseChar()}+"Id",book.equipment.get(slot))}})
             put("Android",JSONObject().put("Haptics",book.haptics))
         }.toString().also {require(it.toByteArray().size<=MAX_BYTES) {"전체 기록이 128MB를 넘었어요. 백업 후 사진을 정리해 주세요."}}
     }

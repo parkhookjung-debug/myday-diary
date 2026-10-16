@@ -84,7 +84,7 @@ namespace MyDay.Windows.Core
         }
         public static void Validate(DiaryBook book)
         {
-            if (book == null || book.Version != 1 && book.Version != 2 && book.Version != 3 && book.Version != 4 || book.Days == null)
+            if (book == null || book.Version < 1 || book.Version > 5 || book.Days == null)
                 throw new InvalidDataException("지원하지 않는 기록 파일입니다.");
             if (book.Days.Count > 50000) throw new InvalidDataException("기록 파일이 너무 큽니다.");
             book.CharacterStyle=MonsterVariants.Id(MonsterVariants.FromId(book.CharacterStyle));
@@ -158,7 +158,8 @@ namespace MyDay.Windows.Core
         public static string Key(DateTime date) { return date.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture); }
         private static void UpgradeVersion(DiaryBook book)
         {
-            if(book.Equipment!=null) book.Version=4;
+            if(SangmonItems.Expanded(book.Equipment) || book.Progress!=null && book.Progress.Activities!=null && book.Progress.Activities.Count>0)book.Version=5;
+            else if(book.Equipment!=null && book.Version<4) book.Version=4;
             else if(book.Progress!=null && book.Version<3) book.Version=3;
             else if(book.Version<2 && (book.Layouts.Count>0 || book.Days.Values.Any(e=>e.Blocks.Any(b=>b.Kind=="photo-slot")))) book.Version=2;
         }

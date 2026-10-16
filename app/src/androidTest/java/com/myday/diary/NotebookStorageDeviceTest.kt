@@ -60,8 +60,15 @@ class NotebookStorageDeviceTest {
         assertEquals(1200,result.width);assertEquals(1600,result.height);result.recycle();assertTrue(bytes.size<=NotebookPhoto.MAX_BYTES)
         val exif=ExifInterface(bytes.inputStream());assertNull(exif.getAttribute(ExifInterface.TAG_GPS_LONGITUDE))
     }
+    @Test fun v5MissionsAndAllEquipmentSlotsSurviveAtomicStorageAndHomeCache() {
+        val raw=InstrumentationRegistry.getInstrumentation().context.assets.open("windows-v5.json").bufferedReader().use {it.readText()}
+        val book=NotebookJson.decode(raw);val store=DiaryStore(isolated);store.saveBook(book)
+        assertEquals(book,store.loadBook());assertEquals(book.equipment,DiaryHomeCache(isolated).read().equipment)
+        assertEquals(60,com.myday.diary.diary.NotebookRules.xp(store.loadBook()))
+        assertTrue(EquipmentCatalog.slots.all {book.equipment.get(it)!="none"})
+    }
     @Test fun catalogAndAnimatedArtworkMatchWindowsCountsAndKeepIdleQuiet() {
-        val catalog=NotebookCatalog(target);assertEquals(100,catalog.templates.size);assertEquals(64,catalog.characters.size);assertEquals(12,catalog.items.size)
+        val catalog=NotebookCatalog(target);assertEquals(100,catalog.templates.size);assertEquals(64,catalog.characters.size);assertEquals(300,catalog.items.size)
         assertEquals(100,catalog.templates.map {it.id}.distinct().size);assertEquals(64,catalog.characters.map {it.id}.distinct().size)
         assertTrue(catalog.templates.all {it.categoryName.any {c->c in '가'..'힣'}})
         catalog.characters.forEach {skin->val icon=target.assets.open("portraits/${skin.id}.png").use {BitmapFactory.decodeStream(it)};assertEquals(192,icon.width);assertEquals(192,icon.height);icon.recycle()}

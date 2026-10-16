@@ -15,8 +15,8 @@ namespace MyDay.Windows
     {
         private static void RunItemTests(string directory)
         {
-            Check(SangmonItems.All.Length==12 && SangmonItems.All.Select(i=>i.Id).Distinct().Count()==12 && SangmonItems.All.Select(i=>i.Name).Distinct().Count()==12,"Twelve item IDs and names are distinct");
-            Check(SangmonItems.All.Count(i=>i.Slot=="weapon")==6 && SangmonItems.All.Count(i=>i.Slot=="charm")==6 && SangmonItems.All.GroupBy(i=>i.Element).All(g=>g.Count()==2),"Six elements each provide one sword and one charm");
+            Check(SangmonItems.All.Length==300 && SangmonItems.All.Select(i=>i.Id).Distinct().Count()==300 && SangmonItems.All.Select(i=>i.Name).Distinct().Count()==300,"300 item IDs and names are distinct");
+            Check(SangmonItems.Forms.Length==50 && SangmonItems.All.Select(i=>i.Slot).Distinct().Count()==8 && SangmonItems.All.GroupBy(i=>i.Element).All(g=>g.Count()==50),"50 forms across eight slots each have six materials");
             var gear=SangmonItems.Select(null,"weapon","frost-sword");var pair=SangmonItems.Select(gear,"charm","solar-orb");
             Check(gear.CharmId=="none" && pair.WeaponId=="frost-sword" && pair.CharmId=="solar-orb","Two independent slots equip together without mutating the previous state");
             var clear=SangmonItems.Select(pair,"weapon","none");
@@ -33,25 +33,25 @@ namespace MyDay.Windows
             var entry=DiaryTemplates.NewPage();entry.Blocks[0].Text="보존할 일기";book.Days["2026-10-10"]=entry;book.Layouts.Add(SavedLayouts.Capture(entry,"기존 형식",800));
             var store=new DiaryStore(Path.Combine(directory,"items"));store.Save(book);var loaded=store.Load();
             Check(loaded.Version==4 && loaded.Equipment.WeaponId==pair.WeaponId && loaded.Equipment.CharmId==pair.CharmId && loaded.Days["2026-10-10"].Blocks[0].Text==entry.Blocks[0].Text && loaded.Layouts.Count==1 && SangmonGrowth.XP(loaded.Progress)==10,"Equipment round-trips as version four with diary, layouts and growth intact");
-            bool allSaved=true;foreach(var item in SangmonItems.All){book.Equipment=SangmonItems.Select(book.Equipment,item.Slot,item.Id);store.Save(book);var current=store.Load().Equipment;allSaved&=(item.Slot=="weapon"?current.WeaponId:current.CharmId)==item.Id;}
-            Check(allSaved && SangmonGrowth.XP(store.Load().Progress)==10,"All twelve selections survive reload without granting XP");
+            bool allSaved=true;foreach(var item in SangmonItems.All){book.Equipment=SangmonItems.Select(book.Equipment,item.Slot,item.Id);store.Save(book);var current=store.Load().Equipment;allSaved&=SangmonItems.Get(current,item.Slot)==item.Id;}
+            Check(allSaved && SangmonGrowth.XP(store.Load().Progress)==10 && store.Load().Version==5,"All 300 selections survive reload without granting XP using version five");
             string backup=Path.Combine(directory,"items-export.json");store.Export(backup,book);
             using(var stream=File.OpenRead(backup))Check(DiaryStore.Read(stream).Equipment.WeaponId==book.Equipment.WeaponId,"Equipment is included in JSON backups");
-            book.Equipment=null;store.Save(book);Check(book.Version==4 && store.Load().Version==4,"Removing equipment data never downgrades a version-four book");
+            book.Equipment=null;store.Save(book);Check(book.Version==5 && store.Load().Version==5,"Removing equipment data never downgrades a version-five book");
             book.Equipment=new SangmonEquipment {WeaponId="future-sword",CharmId="frost-sword"};store.Save(book);
             Check(store.Load().Equipment.WeaponId=="none" && store.Load().Equipment.CharmId=="none" && store.Load().Days.Count==1,"Unknown or wrong-slot imported gear falls back while retaining diary content");
             bool oldReadable=true;foreach(int version in new[]{1,2,3})using(var stream=new MemoryStream(Encoding.UTF8.GetBytes("{\"Version\":"+version+",\"Days\":[]}")))oldReadable&=DiaryStore.Read(stream).Equipment==null;
             Check(oldReadable,"Versions one through three remain readable without equipment");
-            var future=new DiaryBook {Version=5};rejected=false;try{DiaryStore.Validate(future);}catch(InvalidDataException){rejected=true;}Check(rejected,"Unsupported future version is rejected");
+            var future=new DiaryBook {Version=6};rejected=false;try{DiaryStore.Validate(future);}catch(InvalidDataException){rejected=true;}Check(rejected,"Unsupported future version is rejected");
             var fingerprints=new HashSet<string>();bool iconsFit=true;
             foreach(var item in SangmonItems.All)using(var image=new Bitmap(220,260)) {
                 using(var g=Graphics.FromImage(image))ItemPainter.Draw(g,new RectangleF(12,12,196,236),item,.2);
                 using(var stream=new MemoryStream()){image.Save(stream,System.Drawing.Imaging.ImageFormat.Png);fingerprints.Add(Convert.ToBase64String(stream.ToArray()));}
                 iconsFit&=ClearEdges(image);
             }
-            Check(fingerprints.Count==12 && iconsFit,"All twelve item icons render distinctly with transparent margins");
+            Check(fingerprints.Count==300 && iconsFit,"All 300 item icons render distinctly with transparent margins");
             bool fits=true;string failure="";
-            foreach(var weapon in SangmonItems.All.Where(i=>i.Slot=="weapon"))foreach(var charm in SangmonItems.All.Where(i=>i.Slot=="charm"))
+            foreach(var weapon in SangmonItems.All.Where(i=>i.Form=="sword"))foreach(var charm in SangmonItems.All.Where(i=>i.Form=="orb"))
             foreach(var variant in new[]{MonsterVariant.Original,MonsterVariant.Winged,MonsterVariant.Mini,MonsterVariant.MemoryHero})
             foreach(bool left in new[]{true,false})foreach(var activity in new[]{PetActivity.Hop,PetActivity.Fire,PetActivity.Yawn,PetActivity.Drag})
             using(var image=new Bitmap(240,220)) {
@@ -60,6 +60,18 @@ namespace MyDay.Windows
                 bool clearEdges=ClearEdges(image);if(!clearEdges && failure=="")failure=weapon.Id+" "+charm.Id+" "+variant+" "+activity+" "+left;fits&=clearEdges;
             }
             Check(fits,"Every dual-slot combination fits desktop poses in both directions: "+failure);
+            bool wardrobeFits=true;string wardrobeFailure="";
+            foreach(var item in SangmonItems.All)foreach(bool left in new[]{true,false})foreach(var activity in new[]{PetActivity.Hop,PetActivity.Drag})using(var image=new Bitmap(240,220)) {
+                var equipped=SangmonItems.Select(null,item.Slot,item.Id);
+                using(var g=Graphics.FromImage(image))MonsterPainter.Draw(g,new Rectangle(16,22,208,176),MonsterPose.ForActivity(.32,activity,.32,0,0),left,MonsterVariant.Original,equipped);
+                if(!ClearEdges(image)){wardrobeFits=false;wardrobeFailure=item.Id+" "+activity+" "+left;}
+            }
+            Check(wardrobeFits,"All 300 equipped items fit hop and held poses in either direction: "+wardrobeFailure);
+            var full=new SangmonEquipment();foreach(string slot in SangmonItems.Slots)full=SangmonItems.Select(full,slot,SangmonItems.All.First(i=>i.Slot==slot).Id);
+            var fullCopy=SangmonItems.Copy(full);var removed=SangmonItems.Select(full,"head","none");
+            Check(SangmonItems.Slots.All(s=>SangmonItems.Get(full,s)==SangmonItems.Get(fullCopy,s)) && SangmonItems.Slots.Where(s=>s!="head").All(s=>SangmonItems.Get(full,s)==SangmonItems.Get(removed,s)),"Eight-slot copies and independent removal preserve all other customizations");
+            var older=SangmonItems.Import(full,new SangmonEquipment {WeaponId="frost-sword"},false);
+            Check(older.WeaponId=="frost-sword" && SangmonItems.Slots.Skip(2).All(s=>SangmonItems.Get(older,s)==SangmonItems.Get(full,s)),"Importing v4 gear changes its two slots while preserving six newer slots");
         }
         private static bool ClearEdges(Bitmap image)
         {
@@ -75,7 +87,7 @@ namespace MyDay.Windows
             for(int frame=0;frame<80;frame++)using(var image=new Bitmap(960,840)) {
                 using(var g=Graphics.FromImage(image)) {
                     g.Clear(Color.FromArgb(21,28,45));
-                    for(int i=0;i<SangmonItems.All.Length;i++) {
+                    for(int i=0;i<12;i++) {
                         var item=SangmonItems.All[i];int x=i%4*240,y=i/4*280;
                         using(var panel=new SolidBrush(Color.FromArgb(35,45,66)))using(var rounded=Design.Rounded(new RectangleF(x+8,y+8,224,264),14))g.FillPath(panel,rounded);
                         using(var pen=new Pen(ItemPainter.Tone(item.Element),2))g.DrawLine(pen,x+24,y+27,x+216,y+27);

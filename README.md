@@ -4,7 +4,9 @@
 [![Windows CI](https://github.com/parkhookjung-debug/myday-diary/actions/workflows/windows.yml/badge.svg)](https://github.com/parkhookjung-debug/myday-diary/actions/workflows/windows.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 
-갤럭시·Windows용 커스터마이즈 일기 앱입니다. 두 버전에서 사진과 일기 블록을 자유롭게 배치하고 상몬 64종을 키우며 검·보주 12종을 장착합니다. Android는 손가락 조작과 짧은 햅틱, Windows는 바탕화면 캐릭터를 제공합니다. MIT 라이선스로 공개하며 5명이 화면·저장·캐릭터·통합·검증을 나눠 개발합니다.
+갤럭시·Windows용 커스터마이즈 일기 앱입니다. 두 버전에서 사진과 일기 블록을 자유롭게 배치하고 상몬 64종을 키우며 장비 300종을 8개 슬롯에 조합합니다. Android는 손가락 조작과 짧은 햅틱, Windows는 바탕화면 캐릭터를 제공합니다. MIT 라이선스로 공개하며 5명이 화면·저장·캐릭터·통합·검증을 나눠 개발합니다.
+
+**새 장비·성장 시스템:** [300종 장비·8슬롯·검색과 수정 파일](docs/SANGMON-ITEMS.md) · [출석·일기 미션 점수표](docs/SANGMON-GROWTH.md) · [실제 적용 이미지](previews/applied/wardrobe-v1/README.md). 기존 경험치를 유지하며 항목별 하루 한 번, 최대 40 XP를 쌓습니다.
 
 **새 캐릭터 적용:** [기본 상몬의 3D풍 클레이 외형·실제 렌더링·수정 파일 안내](previews/applied/sangmon-clay/README.md). 기본 상몬에 먼저 적용했으며 Windows와 Android 자산에 함께 반영했습니다. 기존 Releases 파일에는 아직 포함되지 않습니다.
 
@@ -68,8 +70,8 @@ Windows v0.3.10-preview는 팀의 웹 디자인을 네이티브 앱에 적용했
 | 플랫폼 | 구현한 기능 |
 | --- | --- |
 | Windows | 날짜별 글·할 일·습관·감정·사진, 자유 배치, 내 레이아웃 저장·재사용, 일기 형식 100종, 월간 달력·본문/사진 설명 검색, 자동 저장·JSON 백업 |
-| Windows 상몬 | 바탕화면 이동·클릭으로 일기 열기·숨기기/재표시, 외형 64종, 하루 경험치·성장 보상, 검·보주 12종의 두 슬롯 장착 |
-| Android 0.4.0 | Windows와 같은 일기 100종·사진·자유 배치·내 레이아웃·달력·검색·성장·64종·장비 12종·JSON 백업, 네 탭 화면·햅틱·홈 위젯·라이브 배경화면 |
+| Windows 상몬 | 바탕화면 이동·클릭으로 일기 열기·숨기기/재표시, 외형 64종, 출석·활동 미션·성장 보상, 장비 300종의 8슬롯 조합 |
+| Android 0.5.0 소스 | Windows와 같은 일기 100종·사진·자유 배치·내 레이아웃·달력·검색·성장·64종·장비 300종·버전 5 JSON 백업, 네 탭 화면·햅틱·홈 위젯·라이브 배경화면 |
 
 [Android·Windows 기능 비교와 햅틱](docs/ANDROID-PARITY.md), [Android 설치·기존 기록 이전](docs/ANDROID.md)을 확인하세요. 이전 debug APK와 서명이 달라 설치가 막히면 앱 삭제 전에 백업부터 합니다. 각 기기에 기록을 저장하며 플랫폼 사이의 자동 동기화는 없습니다. 영상 첨부와 AI 감정 대화는 후속 기능입니다.
 
@@ -80,12 +82,12 @@ Windows v0.3.10-preview는 팀의 웹 디자인을 네이티브 앱에 적용했
 
 ![Windows 일기 예시](previews/windows/windows-example.png)
 
-![상몬 아이템 12종](previews/windows/windows-item-catalog.png)
+![상몬 장비 50가지 형태·6재질](previews/applied/wardrobe-v1/wardrobe-50-forms.png)
 
 </details>
 
 ## 검증과 저장 호환성
 
-Android CI는 빌드·Lint·단위 테스트·Android 35 에뮬레이터 화면/저장/사진 검사·실제 Windows JSON 호환성 검사를, Windows CI는 빌드·저장·레이아웃·사진·검색·성장·장비·캐릭터 렌더링 검사 162개와 네이티브 화면 검사를 실행합니다. 화면 검사는 격리된 기록으로 3단·작은 창 전환, 달력·테마·완료 현황과 기존 일기 기능을 확인합니다. 갤럭시 실기기, 여러 모니터·DPI·절전 복귀는 추가 검증 대상입니다.
+Android CI는 빌드·Lint·단위 테스트·Android 35 에뮬레이터 화면/저장/사진 검사·실제 Windows JSON 호환성 검사를, Windows CI는 빌드·저장·레이아웃·사진·검색·성장·장비·캐릭터 렌더링 검사 173개와 네이티브 화면 검사를 실행합니다. 화면 검사는 격리된 기록으로 3단·작은 창 전환, 달력·테마·완료 현황과 기존 일기 기능을 확인합니다. 갤럭시 실기기, 여러 모니터·DPI·절전 복귀는 추가 검증 대상입니다.
 
-장비를 저장한 기록은 버전 4이며 v0.3.9-preview 이상으로 열어주세요. 이전 버전 1·2·3 기록과 백업은 읽고 보존합니다. 자세한 기준은 [Windows 기록·빌드 안내](windows/README.md)에 있습니다.
+출석·활동 미션과 확장 장비는 버전 5로 저장합니다. 이번 변경을 포함한 새 Windows·Android로 열어주세요. 버전 1~4의 기록·기존 장비·경험치도 보존합니다. 자세한 기준은 [성장 안내](docs/SANGMON-GROWTH.md)와 [장비 안내](docs/SANGMON-ITEMS.md)에 있습니다.
