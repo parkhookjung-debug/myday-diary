@@ -92,7 +92,7 @@ import com.myday.diary.ui.components.SangmonAvatar
             if(matches.isEmpty())Text("맞는 장비가 없어요. 검색어나 속성을 바꿔보세요.",style=MaterialTheme.typography.bodySmall)
             LazyVerticalGrid(GridCells.Fixed(2),Modifier.weight(1f).testTag("equipment-grid"),horizontalArrangement=Arrangement.spacedBy(10.dp),verticalArrangement=Arrangement.spacedBy(10.dp),contentPadding=PaddingValues(bottom=24.dp)) {
                 items(matches,key={it.id}) {item->val equipped=item.id==book.equipment.get(item.slot)
-                    Card(Modifier.clickable(enabled=!controller.saving) {attempt(TactileEvent.EQUIP) {controller.equip(item.slot,item.id)}},colors=CardDefaults.cardColors(containerColor=if(equipped) MaterialTheme.colorScheme.primaryContainer else Color(0xffeeeeff))) {
+                    Card(Modifier.testTag("equipment-${item.id}").clickable(enabled=!controller.saving) {attempt(TactileEvent.EQUIP) {controller.equip(item.slot,item.id)}},colors=CardDefaults.cardColors(containerColor=if(equipped) MaterialTheme.colorScheme.primaryContainer else Color(0xffeeeeff))) {
                         Column(Modifier.fillMaxWidth().padding(10.dp),horizontalAlignment=Alignment.CenterHorizontally) {
                             AssetIcon("items/${item.id}.png",item.name,Modifier.height(96.dp));Text(item.name,style=MaterialTheme.typography.labelLarge)
                             Text(item.description,style=MaterialTheme.typography.labelSmall);Text(if(equipped) "장착 중" else "장착하기",style=MaterialTheme.typography.labelSmall)

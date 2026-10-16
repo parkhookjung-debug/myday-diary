@@ -86,12 +86,12 @@ class PhoneNotebookDeviceTest {
         start();ui.onNodeWithText("상몬").performClick();ui.onNodeWithText("출석 +5 XP").performClick()
         ui.onNodeWithText("출석 완료").assertIsNotEnabled();ui.runOnIdle {assertEquals(5,NotebookRules.xp(c.book))}
         ui.onNodeWithText("장비 300종").performClick()
-        listOf("머리" to "태양 왕관","얼굴" to "빙결 안경","발밑" to "빙결 구름 발판").forEach {(slot,name)->
+        listOf(Triple("머리","태양 왕관","solar-crown"),Triple("얼굴","빙결 안경","frost-glasses"),Triple("발밑","빙결 구름 발판","frost-cloud")).forEach {(slot,name,id)->
             ui.onNodeWithTag("equipment-slots").performScrollToNode(hasText(slot));ui.onNodeWithText(slot).performClick()
             ui.onNodeWithTag("equipment-search").performTextClearance();ui.onNodeWithTag("equipment-search").performTextInput(name)
             ui.onNodeWithTag("equipment-search").performImeAction()
-            ui.onNodeWithTag("equipment-grid").performScrollToNode(hasText(name))
-            ui.onNodeWithText(name).performClick()
+            ui.onNodeWithTag("equipment-grid").performScrollToNode(hasTestTag("equipment-$id"))
+            ui.onNodeWithTag("equipment-$id").performClick()
         }
         ui.runOnIdle {assertEquals("solar-crown",c.book.equipment.headId);assertEquals("frost-glasses",c.book.equipment.faceId);assertEquals("frost-cloud",c.book.equipment.groundId);assertEquals(5,NotebookRules.xp(c.book))}
         screenshot("android-wardrobe-growth")
