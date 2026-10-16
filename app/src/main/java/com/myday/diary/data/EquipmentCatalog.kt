@@ -3,7 +3,7 @@ package com.myday.diary.data
 // Generated from windows/Core/SangmonItems.cs. Do not edit.
 object EquipmentCatalog {
     val slots=listOf("weapon","charm","head","face","neck","back","aura","ground")
-    val names=listOf("무기","보주·소품","머리","얼굴","목","등","오라","발밑")
+    val names=listOf("손 소품","작은 소품","머리","얼굴","목","등","주변 장식","발밑")
     val items=mapOf(
         "solar-sword" to "weapon",
         "ember-sword" to "weapon",

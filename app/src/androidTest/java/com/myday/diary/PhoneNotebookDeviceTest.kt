@@ -62,8 +62,8 @@ class PhoneNotebookDeviceTest {
         start();ui.onNodeWithText("상몬").performClick();screenshot("android-sangmon")
         ui.onNodeWithTag("sangmon-grid").performScrollToNode(hasText("빙결 상몬"));ui.onNodeWithText("빙결 상몬").performClick()
         ui.runOnIdle {assertEquals("frost",c.book.characterStyle)}
-        ui.onNodeWithText("장비 300종").performClick();ui.onNodeWithTag("equipment-grid").performScrollToNode(hasText("빙결 장검"));ui.onNodeWithText("빙결 장검").performClick()
-        ui.onNodeWithText("보주·소품").performClick();ui.onNodeWithTag("equipment-grid").performScrollToNode(hasText("별빛 구슬"));ui.onNodeWithText("별빛 구슬").performClick();screenshot("android-equipment")
+        ui.onNodeWithText("소품 300종").performClick();ui.onNodeWithTag("equipment-grid").performScrollToNode(hasTestTag("equipment-frost-sword"));ui.onNodeWithTag("equipment-frost-sword").performClick()
+        ui.onNodeWithText("작은 소품").performClick();ui.onNodeWithTag("equipment-grid").performScrollToNode(hasTestTag("equipment-astral-orb"));ui.onNodeWithTag("equipment-astral-orb").performClick();screenshot("android-equipment")
         ui.runOnIdle {assertEquals(Equipment("frost-sword","astral-orb"),c.book.equipment);assertEquals(0,NotebookRules.xp(c.book));assertEquals(64,catalog.characters.size);assertEquals(300,catalog.items.size)}
     }
     @Test fun freeBoardDragTemplateAndSavedLayoutsRetainContent() {
@@ -85,8 +85,8 @@ class PhoneNotebookDeviceTest {
     @Test fun attendanceAndSearchableExtraSlotsKeepIndependentSelections() {
         start();ui.onNodeWithText("상몬").performClick();ui.onNodeWithText("출석 +5 XP").performClick()
         ui.onNodeWithText("출석 완료").assertIsNotEnabled();ui.runOnIdle {assertEquals(5,NotebookRules.xp(c.book))}
-        ui.onNodeWithText("장비 300종").performClick()
-        listOf(Triple("머리","태양 왕관","solar-crown"),Triple("얼굴","빙결 안경","frost-glasses"),Triple("발밑","빙결 구름 발판","frost-cloud")).forEach {(slot,name,id)->
+        ui.onNodeWithText("소품 300종").performClick()
+        listOf(Triple("머리","크림 리본 머리띠","solar-crown"),Triple("얼굴","하늘 동그란 안경","frost-glasses"),Triple("발밑","하늘 폭신 구름","frost-cloud")).forEach {(slot,name,id)->
             ui.onNodeWithTag("equipment-slots").performScrollToNode(hasText(slot));ui.onNodeWithText(slot).performClick()
             ui.onNodeWithTag("equipment-search").performTextClearance();ui.onNodeWithTag("equipment-search").performTextInput(name)
             ui.onNodeWithTag("equipment-search").performImeAction()

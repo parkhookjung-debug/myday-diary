@@ -1,48 +1,50 @@
-# 상몬 장비함 · 300종 / 8슬롯
+# 상몬의 작은 옷장 · 소품 300종
 
-기본 상몬의 클레이 외형과 함께 사용하는 새 장비함입니다. **50가지 형태 × 6가지 속성 재질 = 300종**이며, 기존 검·보주 12종의 ID와 이름을 보존합니다. 현재 장비는 모두 무료로 선택하는 꾸미기 아이템입니다.
+상몬과 함께하는 일상 소품입니다. **50가지 형태 × 6가지 파스텔 색감 = 300종**으로, 크림·살구·하늘·민트·라벤더·딸기를 고를 수 있습니다. 둥근 모양과 따뜻한 갈색 윤곽선으로 문구·인형·니트 느낌을 냈습니다. 모든 소품을 무료로 선택할 수 있습니다.
 
-![50가지 장비 형태](../previews/applied/wardrobe-v1/wardrobe-50-forms.png)
+![소품 조합 예시](../previews/applied/cozy-v1/outfits-eight-slots.png)
 
-| 슬롯 | 형태 | 아이템 수 |
+| 위치 | 소품 예 | 개수 |
 | --- | --- | ---: |
-| 무기 | 검·단검·도끼·망치·지팡이·창·활·요술봉·낫·마도서·부채·우산 | 72 |
-| 보주·소품 | 보주·수정 조각·랜턴·나침반·방울·물약병 | 36 |
-| 머리 | 왕관·후드·마법 모자·투구·베레모·꽃·빛 고리·사슴뿔 | 48 |
-| 얼굴 | 안경·외눈 안경·가면·고글·별 안대·볼 스티커 | 36 |
-| 목 | 목도리·나비넥타이·넥타이·펜던트·칼라·헤드폰 | 36 |
-| 등 | 날개·망토·가방·로켓·잎사귀·깃발 | 36 |
-| 오라 | 마법진·룬 문자·별무리·거품 | 24 |
-| 발밑 | 구름 발판·호버 보드 | 12 |
+| 손 소품 | 색연필·크레용·꽃·카메라·풍선·막대 사탕·머그컵·비눗방울 막대·달 쿠션·노트·부채·우산 | 72 |
+| 작은 소품 | 동그란 참·편지·반딧불 병·시계·방울·우유병 | 36 |
+| 머리 | 리본·보닛·니트 비니·버킷햇·베레모·데이지 핀·도넛 머리띠·토끼 귀 | 48 |
+| 얼굴 | 동그란/하트 안경·수면 안대·선글라스·별 스티커·볼터치 | 36 |
+| 목 | 니트 목도리·리본·스카프·하트 목걸이·레이스 칼라·헤드폰 | 36 |
+| 등 | 나비 날개·체크 담요·배낭·곰 인형·잎사귀 가방·크로스백 | 36 |
+| 주변 장식 | 하트·꽃잎·별·비눗방울 | 24 |
+| 발밑 | 폭신 구름·체크 쿠션 | 12 |
 
-각 형태는 태양·화염·빙결·번개·그림자·별빛 재질로 나뉩니다. 300개의 서로 다른 조각을 수작업으로 그린다는 뜻이 아니라, 50가지 도형을 여섯 재질로 렌더링하는 구조입니다. 장비 목록은 계속 추가할 수 있고 UI나 저장기에 300개 제한을 두지 않습니다.
+![50가지 형태](../previews/applied/cozy-v1/wardrobe-50-forms.png)
+
+300종은 서로 다른 조각 300개가 아니라 50가지 도형에 여섯 색감을 적용한 구성입니다. 목록은 더 늘릴 수 있으며 300개 제한을 두지 않습니다.
 
 ## 사용 방법
 
-- **Windows:** 일기 오른쪽 아이템 또는 바탕화면 캐릭터 우클릭 → 아이템 장착. 슬롯·속성·이름으로 찾고 페이지를 넘겨 장착합니다. 페이지당 12개만 표시해 300개의 애니메이션을 동시에 실행하지 않습니다.
-- **Android:** 상몬 → 장비 300종. 위쪽 슬롯 목록을 좌우로 넘기고 속성·이름으로 검색합니다. 목록은 화면에 필요한 카드만 표시합니다.
-- 각 슬롯에 하나씩 **최대 8개를 함께 장착**합니다. 하나를 바꾸거나 해제해도 나머지는 유지합니다. 슬롯별 해제로 장식을 빼고 기본 상몬을 사용할 수 있습니다.
-- 장비는 앱 전체 설정으로 날짜·상몬 버전을 바꿔도 유지합니다. 앱·바탕화면/위젯/라이브 배경화면에 함께 표시하고 JSON 백업에 포함합니다.
-- 장비 변경은 XP를 지급하지 않습니다. 구매·가챠·전투 능력치는 없습니다.
-
-![8슬롯 조합 예시](../previews/applied/wardrobe-v1/outfits-eight-slots.png)
+- Windows: 일기 오른쪽 **옷장**, 또는 바탕화면 상몬 우클릭 → **작은 옷장**. 위치·색감·이름으로 찾고 **입혀 보기**를 누릅니다. 한 페이지에는 12개를 표시합니다.
+- Android: **상몬 → 소품 300종**에서 위치·색감·이름으로 찾습니다.
+- 위치마다 하나씩 최대 8개를 조합합니다. **이 소품 벗기기**로 개별 해제할 수 있습니다.
+- 선택은 날짜·상몬 외형을 바꿔도 유지하고 JSON 백업에 포함합니다. 구매·전투 능력치가 없으며 소품 변경은 XP를 지급하지 않습니다.
 
 ## 팀원이 수정할 파일
 
 | 바꿀 내용 | 파일 |
 | --- | --- |
-| 장비 추가·이름·속성·슬롯 | [SangmonItems.cs](../windows/Core/SangmonItems.cs)의 Forms·Create |
-| 기존 검·보주 그림 | [ItemPainter.cs](../windows/Character/ItemPainter.cs) |
-| 추가 48가지 형태·착용 위치·레이어 | [ItemPainter.Wardrobe.cs](../windows/Character/ItemPainter.Wardrobe.cs)의 Wardrobe·Placement |
-| Windows 검색·필터·페이지·장착 UI | [EquipmentWindow.cs](../windows/UI/EquipmentWindow.cs) |
-| Android 장비함·검색·필터 | [PhoneCompanion.kt](../app/src/main/java/com/myday/diary/ui/diary/PhoneCompanion.kt) |
+| 소품 이름·목록·색감 이름·저장 ID | [SangmonItems.cs](../windows/Core/SangmonItems.cs)의 Forms·PaletteNames·Create |
+| 50가지 그림·파스텔 RGB·선·음영 | [CozyItems.cs](../windows/Character/CozyItems.cs) |
+| 아이콘 크기·손 소품의 움직임 | [ItemPainter.cs](../windows/Character/ItemPainter.cs) |
+| 착용 위치·앞/뒤 순서·Android 레이어 | [ItemPainter.Wardrobe.cs](../windows/Character/ItemPainter.Wardrobe.cs) |
+| Windows 옷장 화면·검색·필터 | [EquipmentWindow.cs](../windows/UI/EquipmentWindow.cs) |
+| Android 옷장 화면·검색·필터 | [PhoneCompanion.kt](../app/src/main/java/com/myday/diary/ui/diary/PhoneCompanion.kt) |
 | Android 착용 레이어·포즈 | [SangmonSprites.kt](../app/src/main/java/com/myday/diary/ui/character/SangmonSprites.kt) |
-| 공통 이미지와 Kotlin ID 목록 다시 생성 | [export-android-assets.ps1](../tools/export-android-assets.ps1) |
+| Android 공통 자산 다시 생성 | [export-android-assets.ps1](../tools/export-android-assets.ps1) |
 
-새 형태는 Forms에 추가하고 Wardrobe에 그리는 분기를 추가합니다. 기존 ID를 이름 변경에 따라 바꾸지 마세요. 새 슬롯은 Windows 장비 모델·Get/Set·Placement, Android Equipment·JSON·홈 캐시·그리기 순서까지 함께 확장해야 합니다. PNG나 생성된 EquipmentCatalog.kt를 직접 고치지 않습니다.
-
-[전체 300종 ID 목록](ITEM-CATALOG.md) · [출석·성장 규칙](SANGMON-GROWTH.md) · [실제 적용과 화면](../previews/applied/wardrobe-v1/README.md)
+새 형태는 Forms와 CozyItems.Draw에 함께 추가합니다. PNG와 생성된 EquipmentCatalog.kt는 직접 수정하지 않습니다. 소품만 바꿨다면 생성 스크립트에 `-ItemsOnly`를 붙여 상몬 본체 자산을 다시 그리지 않을 수 있습니다.
 
 ## 저장 호환성
 
-새 장비나 추가 슬롯은 **백업 버전 5**로 저장합니다. 새 앱은 버전 1~4도 읽으며 기존 무기·보주와 일기를 보존합니다. 버전 5 백업은 이번 변경을 포함한 Windows·Android로 여세요. 이전 Releases의 앱으로는 새 백업을 열 수 없습니다. 새로운 기능을 저장해도 예전 형식으로 낮추지 않습니다.
+기존 선택을 보존하기 위해 내부 ID는 그대로입니다. 예를 들어 `solar-sword`는 이제 **크림 색연필**, `solar-crown`은 **크림 리본 머리띠**입니다. Solar/Ember 같은 열거형도 기존 저장용 값이며 화면에는 파스텔 색감으로 표시합니다. 표시 이름을 바꿀 때 ID를 바꾸지 마세요.
+
+새 소품과 추가 위치는 백업 버전 5를 사용합니다. 버전 1~4도 읽으며 성장·출석·일기 기록은 유지합니다. 새 백업은 이번 변경을 포함한 Windows·Android로 여세요. 이전 Releases 앱에는 이 옷장이 포함되지 않습니다.
+
+[전체 300종 ID 목록](ITEM-CATALOG.md) · [출석·성장 규칙](SANGMON-GROWTH.md) · [적용 이미지](../previews/applied/cozy-v1/README.md)

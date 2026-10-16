@@ -12,8 +12,9 @@
 | 귀·꼬리·날개 등 추가 장식 | [MonsterAdditions.cs](MonsterAdditions.cs) | 뒤/앞 레이어 |
 | RPG 속성의 몸 재질 | [GameSkins.cs](GameSkins.cs) | 8종 속성 팔레트·명암·효과 |
 | 성장 보상 의상 | [RewardSkins.cs](RewardSkins.cs) | 8종 의상·소품 |
-| 검·보주·빛나는 효과 | [ItemPainter.cs](ItemPainter.cs) | Sword·Orb·Tone·DrawEquipped |
-| 300종 장비의 50가지 형태·8슬롯 착용 위치 | [ItemPainter.Wardrobe.cs](ItemPainter.Wardrobe.cs) | 추가 도형·앞/뒤 레이어·Android 착용 PNG 원본 |
-| 검·보주 이름과 설명 | [SangmonItems.cs](../Core/SangmonItems.cs) | 그림과 별도로 관리하는 아이템 목록 |
+| 소품 아이콘·손 소품의 움직임 | [ItemPainter.cs](ItemPainter.cs) | 공통 크기·DrawEquipped |
+| 일상 소품 50형태·파스텔 6색 | [CozyItems.cs](CozyItems.cs) | 그림·음영·따뜻한 윤곽선 |
+| 8슬롯 착용 위치 | [ItemPainter.Wardrobe.cs](ItemPainter.Wardrobe.cs) | Placement·앞/뒤 레이어·Android 착용 PNG 원본 |
+| 소품 이름과 설명 | [SangmonItems.cs](../Core/SangmonItems.cs) | 그림과 별도로 관리하는 아이템 목록 |
 | 걷기·쉬기·하품·클릭 반응 | [PetBehavior.cs](PetBehavior.cs) | 행동 전환·가속·반응 시간 |
 | 바탕화면 이동·메뉴·장비 적용 | [DesktopPet.cs](DesktopPet.cs) | 투명 창·드래그·경계·우클릭 메뉴 |

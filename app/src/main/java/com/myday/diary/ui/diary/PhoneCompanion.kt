@@ -59,7 +59,7 @@ import com.myday.diary.ui.components.SangmonAvatar
         }
         Row(horizontalArrangement=Arrangement.spacedBy(8.dp)) {
             FilterChip(tab==0,{tab=0;haptics.perform(TactileEvent.SELECT)},label={Text("상몬 64종")})
-            FilterChip(tab==1,{tab=1;haptics.perform(TactileEvent.SELECT)},label={Text("장비 300종")})
+            FilterChip(tab==1,{tab=1;haptics.perform(TactileEvent.SELECT)},label={Text("소품 300종")})
         }
         if(tab==0) LazyVerticalGrid(GridCells.Fixed(2),Modifier.weight(1f).testTag("sangmon-grid"),horizontalArrangement=Arrangement.spacedBy(10.dp),verticalArrangement=Arrangement.spacedBy(10.dp),contentPadding=PaddingValues(bottom=24.dp)) {
             items(catalog.characters,key={it.id}) {skin->val unlocked=level>=skin.level
@@ -78,24 +78,24 @@ import com.myday.diary.ui.components.SangmonAvatar
                 items(EquipmentCatalog.slots+"all") {s->FilterChip(slot==s,{slot=s;haptics.perform(TactileEvent.SELECT)},label={Text(if(s=="all") "전체" else EquipmentCatalog.names[EquipmentCatalog.slots.indexOf(s)])})}
             }
             Row(verticalAlignment=Alignment.CenterVertically) {
-                OutlinedTextField(query,{query=it},Modifier.weight(1f).testTag("equipment-search"),label={Text("장비 이름 검색")},singleLine=true,keyboardOptions=KeyboardOptions(imeAction=ImeAction.Done),keyboardActions=KeyboardActions(onDone={keyboard?.hide()}))
+                OutlinedTextField(query,{query=it},Modifier.weight(1f).testTag("equipment-search"),label={Text("소품 이름 검색")},singleLine=true,keyboardOptions=KeyboardOptions(imeAction=ImeAction.Done),keyboardActions=KeyboardActions(onDone={keyboard?.hide()}))
                 Box {
-                    TextButton({menu=true}) {Text(if(element.isEmpty()) "모든 속성" else mapOf("Solar" to "태양","Ember" to "화염","Frost" to "빙결","Storm" to "번개","Shadow" to "그림자","Astral" to "별빛")[element] ?: element)}
-                    DropdownMenu(menu,{menu=false}) {listOf("" to "모든 속성","Solar" to "태양","Ember" to "화염","Frost" to "빙결","Storm" to "번개","Shadow" to "그림자","Astral" to "별빛").forEach {(id,name)->DropdownMenuItem(text={Text(name)},onClick={element=id;menu=false})}}
+                    TextButton({menu=true}) {Text(if(element.isEmpty()) "모든 색감" else mapOf("Solar" to "크림","Ember" to "살구","Frost" to "하늘","Storm" to "민트","Shadow" to "라벤더","Astral" to "딸기")[element] ?: element)}
+                    DropdownMenu(menu,{menu=false}) {listOf("" to "모든 색감","Solar" to "크림","Ember" to "살구","Frost" to "하늘","Storm" to "민트","Shadow" to "라벤더","Astral" to "딸기").forEach {(id,name)->DropdownMenuItem(text={Text(name)},onClick={element=id;menu=false})}}
                 }
             }
             val matches=catalog.items.filter {(slot=="all" || it.slot==slot) && (element.isEmpty() || it.element==element) && (query.isBlank() || (it.name+it.description+it.id).contains(query.trim(),true))}
             Row(Modifier.fillMaxWidth(),verticalAlignment=Alignment.CenterVertically,horizontalArrangement=Arrangement.SpaceBetween) {
-                Text("${matches.size}종 · ${EquipmentCatalog.slots.count {book.equipment.get(it)!="none"}}개 슬롯 착용",style=MaterialTheme.typography.labelSmall)
-                TextButton({attempt(TactileEvent.EQUIP) {controller.equip(slot,"none")}},enabled=slot!="all" && controller.saved) {Text("선택 슬롯 해제")}
+                Text("${matches.size}가지 · 소품 ${EquipmentCatalog.slots.count {book.equipment.get(it)!="none"}}개와 함께",style=MaterialTheme.typography.labelSmall)
+                TextButton({attempt(TactileEvent.EQUIP) {controller.equip(slot,"none")}},enabled=slot!="all" && controller.saved) {Text("이 소품 벗기기")}
             }
-            if(matches.isEmpty())Text("맞는 장비가 없어요. 검색어나 속성을 바꿔보세요.",style=MaterialTheme.typography.bodySmall)
+            if(matches.isEmpty())Text("맞는 소품이 없어요. 이름이나 색감을 바꿔보세요.",style=MaterialTheme.typography.bodySmall)
             LazyVerticalGrid(GridCells.Fixed(2),Modifier.weight(1f).testTag("equipment-grid"),horizontalArrangement=Arrangement.spacedBy(10.dp),verticalArrangement=Arrangement.spacedBy(10.dp),contentPadding=PaddingValues(bottom=24.dp)) {
                 items(matches,key={it.id}) {item->val equipped=item.id==book.equipment.get(item.slot)
-                    Card(Modifier.testTag("equipment-${item.id}").clickable(enabled=!controller.saving) {attempt(TactileEvent.EQUIP) {controller.equip(item.slot,item.id)}},colors=CardDefaults.cardColors(containerColor=if(equipped) MaterialTheme.colorScheme.primaryContainer else Color(0xffeeeeff))) {
+                    Card(Modifier.testTag("equipment-${item.id}").clickable(enabled=!controller.saving) {attempt(TactileEvent.EQUIP) {controller.equip(item.slot,item.id)}},colors=CardDefaults.cardColors(containerColor=if(equipped) Color(0xfff0e5d9) else Color(0xfffffcf7))) {
                         Column(Modifier.fillMaxWidth().padding(10.dp),horizontalAlignment=Alignment.CenterHorizontally) {
                             AssetIcon("items/${item.id}.png",item.name,Modifier.height(96.dp));Text(item.name,style=MaterialTheme.typography.labelLarge)
-                            Text(item.description,style=MaterialTheme.typography.labelSmall);Text(if(equipped) "장착 중" else "장착하기",style=MaterialTheme.typography.labelSmall)
+                            Text(item.description,style=MaterialTheme.typography.labelSmall);Text(if(equipped) "함께하는 중" else "입혀 보기",style=MaterialTheme.typography.labelSmall)
                         }
                     }
                 }

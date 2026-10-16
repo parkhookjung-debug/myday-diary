@@ -52,7 +52,7 @@ Android 기록과 자동 동기화하지 않습니다. 영상·시작 시 자동
 
 [상몬 성장](../docs/SANGMON-GROWTH.md): 오른쪽 **성장** 또는 상몬 우클릭 → **상몬 성장**에서 경험치와 다음 보상을 확인합니다. 출석·기록·글·사진·완료 미션으로 하루 최대 40 XP, 50 XP마다 레벨 업하며 추가 보상 8종을 해금·장착합니다. 총 64종이고 기존 56종은 계속 자유롭게 선택합니다.
 
-[아이템 장비함](../docs/SANGMON-ITEMS.md): 오른쪽 **아이템** 또는 상몬 우클릭 → **아이템 장착**에서 50가지 형태·6가지 재질의 장비 300종을 검색·필터·페이지로 찾습니다. 8개 슬롯에 함께 장착하고 각각 해제합니다. 일기와 바탕화면에 함께 적용하고 저장·백업에 포함합니다.
+[상몬의 작은 옷장](../docs/SANGMON-ITEMS.md): 오른쪽 **옷장** 또는 상몬 우클릭 → **작은 옷장**에서 50가지 일상 소품·6가지 파스텔 색감의 300종을 검색·필터·페이지로 찾습니다. 8개 위치에 함께 입히고 각각 벗길 수 있습니다. 일기와 바탕화면에 함께 적용하고 저장·백업에 포함합니다.
 
 ## 기록 위치
 
@@ -78,7 +78,7 @@ Android 기록과 자동 동기화하지 않습니다. 영상·시작 시 자동
 | 상몬 성장·레벨·보상·병합 | [SangmonGrowth.cs](Core/SangmonGrowth.cs), [GrowthWindow.cs](UI/GrowthWindow.cs), [DiaryWindow.Growth.cs](UI/DiaryWindow.Growth.cs) |
 | 성장 보상 의상·검증 | [RewardSkins.cs](Character/RewardSkins.cs), [GrowthTests.cs](GrowthTests.cs) |
 | 아이템 모델·장착·백업 | [SangmonItems.cs](Core/SangmonItems.cs), [DiaryWindow.Items.cs](UI/DiaryWindow.Items.cs) |
-| 아이템 그림·장비함·미리보기 | [ItemPainter.cs](Character/ItemPainter.cs), [EquipmentWindow.cs](UI/EquipmentWindow.cs), [ItemView.cs](UI/ItemView.cs) |
+| 아이템 그림·장비함·미리보기 | [CozyItems.cs](Character/CozyItems.cs), [ItemPainter.cs](Character/ItemPainter.cs), [EquipmentWindow.cs](UI/EquipmentWindow.cs), [ItemView.cs](UI/ItemView.cs) |
 | 장비 저장·슬롯·그림 경계 검증 | [ItemTests.cs](ItemTests.cs) |
 | 날짜 표지 | [JournalCover.cs](UI/JournalCover.cs) |
 | 형식 선택·미리보기 | [TemplateGallery.cs](UI/TemplateGallery.cs) |

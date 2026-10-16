@@ -12,7 +12,14 @@ public static class AndroidAssetExporter
 {
     public static int Main(string[] args)
     {
-        if(args.Length!=1) return 1;
+        try{return Export(args);}catch(Exception ex){Console.Error.WriteLine(ex);return 1;}
+    }
+    private static int Export(string[] args)
+    {
+        if(args.Length<1 || args.Length>3 || (args.Length>=2 && args[1]!="--items-only")) return 1;
+        bool itemsOnly=args.Length>=2;
+        string itemSlot=args.Length==3?args[2]:null;
+        if(itemSlot!=null && !SangmonItems.Slots.Contains(itemSlot))return 1;
         var root=Path.GetFullPath(args[0]);Directory.CreateDirectory(root);
         var characters=Path.Combine(root,"sangmon");Directory.CreateDirectory(characters);
         var icons=Path.Combine(root,"items");Directory.CreateDirectory(icons);
@@ -31,7 +38,7 @@ public static class AndroidAssetExporter
                     width=JournalLayouts.Arrange(t.Layout,t.Sections.Length,900)[index].Width,height=JournalLayouts.Arrange(t.Layout,t.Sections.Length,900)[index].Height}).ToArray()}).ToArray()
         }),new System.Text.UTF8Encoding(false));
         var activities=new[] {PetActivity.Rest,PetActivity.Walk,PetActivity.Fire,PetActivity.Yawn,PetActivity.Hop,PetActivity.Look,PetActivity.Sleep,PetActivity.Drag};
-        foreach(var variant in MonsterVariants.All) using(var atlas=new Bitmap(192*8,192*activities.Length)) {
+        foreach(var variant in itemsOnly?new MonsterVariant[0]:MonsterVariants.All) using(var atlas=new Bitmap(192*8,192*activities.Length)) {
             using(var g=Graphics.FromImage(atlas)) for(int row=0;row<activities.Length;row++) for(int frame=0;frame<8;frame++) {
                 var activity=activities[row];
                 double age=row==0?new[] {0,.3,.8,1.2,2.4,3.2,3.86,4.05}[frame]:row==1 || row==2?frame*.1:row==4?frame*.65/8:row==3?frame*.2:frame*.3;
@@ -41,7 +48,8 @@ public static class AndroidAssetExporter
             atlas.Save(Path.Combine(characters,MonsterVariants.Id(variant)+".png"),ImageFormat.Png);
             using(var portrait=atlas.Clone(new Rectangle(0,0,192,192),PixelFormat.Format32bppArgb)) portrait.Save(Path.Combine(portraits,MonsterVariants.Id(variant)+".png"),ImageFormat.Png);
         }
-        foreach(var item in SangmonItems.All) using(var image=new Bitmap(192,240)) {
+        var items=SangmonItems.All.Where(i=>itemSlot==null || i.Slot==itemSlot).ToArray();
+        foreach(var item in items) using(var image=new Bitmap(192,240)) {
             using(var g=Graphics.FromImage(image)) ItemPainter.Draw(g,new RectangleF(8,8,176,224),item,.2);
             image.Save(Path.Combine(icons,item.Id+".png"),ImageFormat.Png);
             using(var overlay=new Bitmap(192,192)) {
@@ -49,6 +57,7 @@ public static class AndroidAssetExporter
                 for(int edge=0;edge<192;edge++)if(overlay.GetPixel(edge,0).A!=0 || overlay.GetPixel(edge,191).A!=0 || overlay.GetPixel(0,edge).A!=0 || overlay.GetPixel(191,edge).A!=0)throw new InvalidOperationException("Equipment overlay clipped: "+item.Id);
                 overlay.Save(Path.Combine(overlays,item.Id+".png"),ImageFormat.Png);
             }
+            Console.WriteLine("Exported item "+item.Id);
         }
         var fixture=new DiaryBook {Version=4,CharacterStyle="frost",Progress=new SangmonProgress(),Equipment=new SangmonEquipment {WeaponId="frost-sword",CharmId="astral-orb"}};
         fixture.Progress.AwardedDays.AddRange(new[] {"2026-10-07","2026-10-08"});
@@ -71,6 +80,6 @@ public static class AndroidAssetExporter
         DiaryStore.Validate(fixture);
         using(var output=File.Create(Path.Combine(resourcePath,"windows-v5.json")))new System.Runtime.Serialization.Json.DataContractJsonSerializer(typeof(DiaryBook)).WriteObject(output,fixture);
         File.Copy(Path.Combine(resourcePath,"windows-v5.json"),Path.Combine(deviceResources,"windows-v5.json"),true);
-        Console.WriteLine("Exported 64 Sangmon atlases, "+SangmonItems.All.Length+" items/overlays and 100 templates.");return 0;
+        Console.WriteLine("Exported "+(itemsOnly?"existing Sangmon atlases unchanged, ":"64 Sangmon atlases, ")+items.Length+" items/overlays and 100 templates.");return 0;
     }
 }

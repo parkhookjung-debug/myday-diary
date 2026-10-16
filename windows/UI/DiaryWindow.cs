@@ -25,7 +25,7 @@ namespace MyDay.Windows.UI
         private readonly Button myLayouts=Design.Button("내 레이아웃");
         private readonly Button browse=Design.Button("달력 · 일기 검색");
         private readonly Button growth=Design.Button("상몬 성장");
-        private readonly Button items=Design.Button("아이템");
+        private readonly Button items=Design.Button("옷장");
         private readonly Button editLayout=Design.Button("배치 편집"),arrangeLayout=Design.Button("자동 정리");
         private readonly Label layoutHint=Design.Label("",9);
         private readonly Label status = Design.Label("내 컴퓨터에 자동 저장", 9);
@@ -111,7 +111,7 @@ namespace MyDay.Windows.UI
             var trayMenu=new ContextMenuStrip(); trayMenu.Items.Add("일기 열기",null,delegate { OpenDiary(); });
             trayMenu.Items.Add("캐릭터 표시 / 숨기기",null,delegate { TogglePet(); });
             trayMenu.Items.Add("상몬 성장",null,delegate { OpenGrowth(); });
-            trayMenu.Items.Add("아이템 장착",null,delegate { OpenItems(); });
+            trayMenu.Items.Add("작은 옷장",null,delegate { OpenItems(); });
             trayMenu.Items.Add("모두 종료",null,delegate { ExitApp(); }); tray.ContextMenuStrip=trayMenu;
             tray.DoubleClick+=delegate { OpenDiary(); };
             avatar.Fired+=delegate { if (pet!=null) pet.Fire(); };

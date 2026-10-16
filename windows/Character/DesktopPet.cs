@@ -60,7 +60,7 @@ namespace MyDay.Windows.Character
             var menu = new ContextMenuStrip();
             menu.Items.Add("일기 열기", null, delegate { openDiary(); });
             if(openGrowth!=null) menu.Items.Add("상몬 성장",null,delegate { openGrowth(); });
-            if(openItems!=null) menu.Items.Add("아이템 장착",null,delegate { openItems(); });
+            if(openItems!=null) menu.Items.Add("작은 옷장",null,delegate { openItems(); });
             var versions=new ToolStripMenuItem("캐릭터 버전");
             foreach(var item in MonsterVariants.All) {
                 var choice=item; var option=new ToolStripMenuItem(MonsterVariants.Name(item)) { Checked=item==variant };

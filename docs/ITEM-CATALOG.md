@@ -1,343 +1,345 @@
-# 장비 300종 ID 목록
+# 소품 300종 ID 목록
 
-[사용 방법·수정 파일](SANGMON-ITEMS.md) · 원본: windows/Core/SangmonItems.cs · 50형태 × 6재질
+[사용 방법·수정 파일](SANGMON-ITEMS.md) · 원본: windows/Core/SangmonItems.cs · 50형태 × 6색감
 
-## weapon
+기존 저장과의 호환을 위해 영문 ID를 유지합니다. 현재 표시 이름과 색감은 아래와 같습니다.
 
-| ID | 이름 | 속성 |
+## 손 소품 (weapon)
+
+| 저장 ID | 현재 이름 | 색감 |
 | --- | --- | --- |
-| solar-sword | 태양 성검 | Solar |
-| ember-sword | 화염 대검 | Ember |
-| frost-sword | 빙결 장검 | Frost |
-| storm-sword | 번개 쌍날검 | Storm |
-| shadow-sword | 그림자 곡검 | Shadow |
-| astral-sword | 별빛 룬검 | Astral |
-| solar-dagger | 태양 단검 | Solar |
-| ember-dagger | 화염 단검 | Ember |
-| frost-dagger | 빙결 단검 | Frost |
-| storm-dagger | 번개 단검 | Storm |
-| shadow-dagger | 그림자 단검 | Shadow |
-| astral-dagger | 별빛 단검 | Astral |
-| solar-axe | 태양 전투 도끼 | Solar |
-| ember-axe | 화염 전투 도끼 | Ember |
-| frost-axe | 빙결 전투 도끼 | Frost |
-| storm-axe | 번개 전투 도끼 | Storm |
-| shadow-axe | 그림자 전투 도끼 | Shadow |
-| astral-axe | 별빛 전투 도끼 | Astral |
-| solar-hammer | 태양 망치 | Solar |
-| ember-hammer | 화염 망치 | Ember |
-| frost-hammer | 빙결 망치 | Frost |
-| storm-hammer | 번개 망치 | Storm |
-| shadow-hammer | 그림자 망치 | Shadow |
-| astral-hammer | 별빛 망치 | Astral |
-| solar-staff | 태양 지팡이 | Solar |
-| ember-staff | 화염 지팡이 | Ember |
-| frost-staff | 빙결 지팡이 | Frost |
-| storm-staff | 번개 지팡이 | Storm |
-| shadow-staff | 그림자 지팡이 | Shadow |
-| astral-staff | 별빛 지팡이 | Astral |
-| solar-spear | 태양 창 | Solar |
-| ember-spear | 화염 창 | Ember |
-| frost-spear | 빙결 창 | Frost |
-| storm-spear | 번개 창 | Storm |
-| shadow-spear | 그림자 창 | Shadow |
-| astral-spear | 별빛 창 | Astral |
-| solar-bow | 태양 활 | Solar |
-| ember-bow | 화염 활 | Ember |
-| frost-bow | 빙결 활 | Frost |
-| storm-bow | 번개 활 | Storm |
-| shadow-bow | 그림자 활 | Shadow |
-| astral-bow | 별빛 활 | Astral |
-| solar-wand | 태양 요술봉 | Solar |
-| ember-wand | 화염 요술봉 | Ember |
-| frost-wand | 빙결 요술봉 | Frost |
-| storm-wand | 번개 요술봉 | Storm |
-| shadow-wand | 그림자 요술봉 | Shadow |
-| astral-wand | 별빛 요술봉 | Astral |
-| solar-scythe | 태양 낫 | Solar |
-| ember-scythe | 화염 낫 | Ember |
-| frost-scythe | 빙결 낫 | Frost |
-| storm-scythe | 번개 낫 | Storm |
-| shadow-scythe | 그림자 낫 | Shadow |
-| astral-scythe | 별빛 낫 | Astral |
-| solar-book | 태양 마도서 | Solar |
-| ember-book | 화염 마도서 | Ember |
-| frost-book | 빙결 마도서 | Frost |
-| storm-book | 번개 마도서 | Storm |
-| shadow-book | 그림자 마도서 | Shadow |
-| astral-book | 별빛 마도서 | Astral |
-| solar-fan | 태양 부채 | Solar |
-| ember-fan | 화염 부채 | Ember |
-| frost-fan | 빙결 부채 | Frost |
-| storm-fan | 번개 부채 | Storm |
-| shadow-fan | 그림자 부채 | Shadow |
-| astral-fan | 별빛 부채 | Astral |
-| solar-umbrella | 태양 우산 | Solar |
-| ember-umbrella | 화염 우산 | Ember |
-| frost-umbrella | 빙결 우산 | Frost |
-| storm-umbrella | 번개 우산 | Storm |
-| shadow-umbrella | 그림자 우산 | Shadow |
-| astral-umbrella | 별빛 우산 | Astral |
+| solar-sword | 크림 색연필 | 크림 |
+| ember-sword | 살구 색연필 | 살구 |
+| frost-sword | 하늘 색연필 | 하늘 |
+| storm-sword | 민트 색연필 | 민트 |
+| shadow-sword | 라벤더 색연필 | 라벤더 |
+| astral-sword | 딸기 색연필 | 딸기 |
+| solar-dagger | 크림 크레용 | 크림 |
+| ember-dagger | 살구 크레용 | 살구 |
+| frost-dagger | 하늘 크레용 | 하늘 |
+| storm-dagger | 민트 크레용 | 민트 |
+| shadow-dagger | 라벤더 크레용 | 라벤더 |
+| astral-dagger | 딸기 크레용 | 딸기 |
+| solar-axe | 크림 꽃 한 송이 | 크림 |
+| ember-axe | 살구 꽃 한 송이 | 살구 |
+| frost-axe | 하늘 꽃 한 송이 | 하늘 |
+| storm-axe | 민트 꽃 한 송이 | 민트 |
+| shadow-axe | 라벤더 꽃 한 송이 | 라벤더 |
+| astral-axe | 딸기 꽃 한 송이 | 딸기 |
+| solar-hammer | 크림 미니 카메라 | 크림 |
+| ember-hammer | 살구 미니 카메라 | 살구 |
+| frost-hammer | 하늘 미니 카메라 | 하늘 |
+| storm-hammer | 민트 미니 카메라 | 민트 |
+| shadow-hammer | 라벤더 미니 카메라 | 라벤더 |
+| astral-hammer | 딸기 미니 카메라 | 딸기 |
+| solar-staff | 크림 풍선 | 크림 |
+| ember-staff | 살구 풍선 | 살구 |
+| frost-staff | 하늘 풍선 | 하늘 |
+| storm-staff | 민트 풍선 | 민트 |
+| shadow-staff | 라벤더 풍선 | 라벤더 |
+| astral-staff | 딸기 풍선 | 딸기 |
+| solar-spear | 크림 막대 사탕 | 크림 |
+| ember-spear | 살구 막대 사탕 | 살구 |
+| frost-spear | 하늘 막대 사탕 | 하늘 |
+| storm-spear | 민트 막대 사탕 | 민트 |
+| shadow-spear | 라벤더 막대 사탕 | 라벤더 |
+| astral-spear | 딸기 막대 사탕 | 딸기 |
+| solar-bow | 크림 머그컵 | 크림 |
+| ember-bow | 살구 머그컵 | 살구 |
+| frost-bow | 하늘 머그컵 | 하늘 |
+| storm-bow | 민트 머그컵 | 민트 |
+| shadow-bow | 라벤더 머그컵 | 라벤더 |
+| astral-bow | 딸기 머그컵 | 딸기 |
+| solar-wand | 크림 비눗방울 막대 | 크림 |
+| ember-wand | 살구 비눗방울 막대 | 살구 |
+| frost-wand | 하늘 비눗방울 막대 | 하늘 |
+| storm-wand | 민트 비눗방울 막대 | 민트 |
+| shadow-wand | 라벤더 비눗방울 막대 | 라벤더 |
+| astral-wand | 딸기 비눗방울 막대 | 딸기 |
+| solar-scythe | 크림 초승달 쿠션 | 크림 |
+| ember-scythe | 살구 초승달 쿠션 | 살구 |
+| frost-scythe | 하늘 초승달 쿠션 | 하늘 |
+| storm-scythe | 민트 초승달 쿠션 | 민트 |
+| shadow-scythe | 라벤더 초승달 쿠션 | 라벤더 |
+| astral-scythe | 딸기 초승달 쿠션 | 딸기 |
+| solar-book | 크림 작은 노트 | 크림 |
+| ember-book | 살구 작은 노트 | 살구 |
+| frost-book | 하늘 작은 노트 | 하늘 |
+| storm-book | 민트 작은 노트 | 민트 |
+| shadow-book | 라벤더 작은 노트 | 라벤더 |
+| astral-book | 딸기 작은 노트 | 딸기 |
+| solar-fan | 크림 조개 부채 | 크림 |
+| ember-fan | 살구 조개 부채 | 살구 |
+| frost-fan | 하늘 조개 부채 | 하늘 |
+| storm-fan | 민트 조개 부채 | 민트 |
+| shadow-fan | 라벤더 조개 부채 | 라벤더 |
+| astral-fan | 딸기 조개 부채 | 딸기 |
+| solar-umbrella | 크림 도트 우산 | 크림 |
+| ember-umbrella | 살구 도트 우산 | 살구 |
+| frost-umbrella | 하늘 도트 우산 | 하늘 |
+| storm-umbrella | 민트 도트 우산 | 민트 |
+| shadow-umbrella | 라벤더 도트 우산 | 라벤더 |
+| astral-umbrella | 딸기 도트 우산 | 딸기 |
 
-## charm
+## 작은 소품 (charm)
 
-| ID | 이름 | 속성 |
+| 저장 ID | 현재 이름 | 색감 |
 | --- | --- | --- |
-| solar-orb | 태양의 성환 | Solar |
-| ember-orb | 화염 심장 | Ember |
-| frost-orb | 빙결 수정 | Frost |
-| storm-orb | 번개 핵 | Storm |
-| shadow-orb | 그림자 보주 | Shadow |
-| astral-orb | 별빛 구슬 | Astral |
-| solar-crystal | 태양 수정 조각 | Solar |
-| ember-crystal | 화염 수정 조각 | Ember |
-| frost-crystal | 빙결 수정 조각 | Frost |
-| storm-crystal | 번개 수정 조각 | Storm |
-| shadow-crystal | 그림자 수정 조각 | Shadow |
-| astral-crystal | 별빛 수정 조각 | Astral |
-| solar-lantern | 태양 랜턴 | Solar |
-| ember-lantern | 화염 랜턴 | Ember |
-| frost-lantern | 빙결 랜턴 | Frost |
-| storm-lantern | 번개 랜턴 | Storm |
-| shadow-lantern | 그림자 랜턴 | Shadow |
-| astral-lantern | 별빛 랜턴 | Astral |
-| solar-compass | 태양 나침반 | Solar |
-| ember-compass | 화염 나침반 | Ember |
-| frost-compass | 빙결 나침반 | Frost |
-| storm-compass | 번개 나침반 | Storm |
-| shadow-compass | 그림자 나침반 | Shadow |
-| astral-compass | 별빛 나침반 | Astral |
-| solar-bell | 태양 방울 | Solar |
-| ember-bell | 화염 방울 | Ember |
-| frost-bell | 빙결 방울 | Frost |
-| storm-bell | 번개 방울 | Storm |
-| shadow-bell | 그림자 방울 | Shadow |
-| astral-bell | 별빛 방울 | Astral |
-| solar-bottle | 태양 물약병 | Solar |
-| ember-bottle | 화염 물약병 | Ember |
-| frost-bottle | 빙결 물약병 | Frost |
-| storm-bottle | 번개 물약병 | Storm |
-| shadow-bottle | 그림자 물약병 | Shadow |
-| astral-bottle | 별빛 물약병 | Astral |
+| solar-orb | 크림 동그란 참 | 크림 |
+| ember-orb | 살구 동그란 참 | 살구 |
+| frost-orb | 하늘 동그란 참 | 하늘 |
+| storm-orb | 민트 동그란 참 | 민트 |
+| shadow-orb | 라벤더 동그란 참 | 라벤더 |
+| astral-orb | 딸기 동그란 참 | 딸기 |
+| solar-crystal | 크림 편지 봉투 | 크림 |
+| ember-crystal | 살구 편지 봉투 | 살구 |
+| frost-crystal | 하늘 편지 봉투 | 하늘 |
+| storm-crystal | 민트 편지 봉투 | 민트 |
+| shadow-crystal | 라벤더 편지 봉투 | 라벤더 |
+| astral-crystal | 딸기 편지 봉투 | 딸기 |
+| solar-lantern | 크림 반딧불 병 | 크림 |
+| ember-lantern | 살구 반딧불 병 | 살구 |
+| frost-lantern | 하늘 반딧불 병 | 하늘 |
+| storm-lantern | 민트 반딧불 병 | 민트 |
+| shadow-lantern | 라벤더 반딧불 병 | 라벤더 |
+| astral-lantern | 딸기 반딧불 병 | 딸기 |
+| solar-compass | 크림 작은 시계 | 크림 |
+| ember-compass | 살구 작은 시계 | 살구 |
+| frost-compass | 하늘 작은 시계 | 하늘 |
+| storm-compass | 민트 작은 시계 | 민트 |
+| shadow-compass | 라벤더 작은 시계 | 라벤더 |
+| astral-compass | 딸기 작은 시계 | 딸기 |
+| solar-bell | 크림 고양이 방울 | 크림 |
+| ember-bell | 살구 고양이 방울 | 살구 |
+| frost-bell | 하늘 고양이 방울 | 하늘 |
+| storm-bell | 민트 고양이 방울 | 민트 |
+| shadow-bell | 라벤더 고양이 방울 | 라벤더 |
+| astral-bell | 딸기 고양이 방울 | 딸기 |
+| solar-bottle | 크림 우유병 | 크림 |
+| ember-bottle | 살구 우유병 | 살구 |
+| frost-bottle | 하늘 우유병 | 하늘 |
+| storm-bottle | 민트 우유병 | 민트 |
+| shadow-bottle | 라벤더 우유병 | 라벤더 |
+| astral-bottle | 딸기 우유병 | 딸기 |
 
-## head
+## 머리 (head)
 
-| ID | 이름 | 속성 |
+| 저장 ID | 현재 이름 | 색감 |
 | --- | --- | --- |
-| solar-crown | 태양 왕관 | Solar |
-| ember-crown | 화염 왕관 | Ember |
-| frost-crown | 빙결 왕관 | Frost |
-| storm-crown | 번개 왕관 | Storm |
-| shadow-crown | 그림자 왕관 | Shadow |
-| astral-crown | 별빛 왕관 | Astral |
-| solar-hood | 태양 후드 | Solar |
-| ember-hood | 화염 후드 | Ember |
-| frost-hood | 빙결 후드 | Frost |
-| storm-hood | 번개 후드 | Storm |
-| shadow-hood | 그림자 후드 | Shadow |
-| astral-hood | 별빛 후드 | Astral |
-| solar-wizardhat | 태양 마법 모자 | Solar |
-| ember-wizardhat | 화염 마법 모자 | Ember |
-| frost-wizardhat | 빙결 마법 모자 | Frost |
-| storm-wizardhat | 번개 마법 모자 | Storm |
-| shadow-wizardhat | 그림자 마법 모자 | Shadow |
-| astral-wizardhat | 별빛 마법 모자 | Astral |
-| solar-helmet | 태양 투구 | Solar |
-| ember-helmet | 화염 투구 | Ember |
-| frost-helmet | 빙결 투구 | Frost |
-| storm-helmet | 번개 투구 | Storm |
-| shadow-helmet | 그림자 투구 | Shadow |
-| astral-helmet | 별빛 투구 | Astral |
-| solar-beret | 태양 베레모 | Solar |
-| ember-beret | 화염 베레모 | Ember |
-| frost-beret | 빙결 베레모 | Frost |
-| storm-beret | 번개 베레모 | Storm |
-| shadow-beret | 그림자 베레모 | Shadow |
-| astral-beret | 별빛 베레모 | Astral |
-| solar-flower | 태양 꽃 장식 | Solar |
-| ember-flower | 화염 꽃 장식 | Ember |
-| frost-flower | 빙결 꽃 장식 | Frost |
-| storm-flower | 번개 꽃 장식 | Storm |
-| shadow-flower | 그림자 꽃 장식 | Shadow |
-| astral-flower | 별빛 꽃 장식 | Astral |
-| solar-halo | 태양 빛 고리 | Solar |
-| ember-halo | 화염 빛 고리 | Ember |
-| frost-halo | 빙결 빛 고리 | Frost |
-| storm-halo | 번개 빛 고리 | Storm |
-| shadow-halo | 그림자 빛 고리 | Shadow |
-| astral-halo | 별빛 빛 고리 | Astral |
-| solar-antlers | 태양 사슴뿔 | Solar |
-| ember-antlers | 화염 사슴뿔 | Ember |
-| frost-antlers | 빙결 사슴뿔 | Frost |
-| storm-antlers | 번개 사슴뿔 | Storm |
-| shadow-antlers | 그림자 사슴뿔 | Shadow |
-| astral-antlers | 별빛 사슴뿔 | Astral |
+| solar-crown | 크림 리본 머리띠 | 크림 |
+| ember-crown | 살구 리본 머리띠 | 살구 |
+| frost-crown | 하늘 리본 머리띠 | 하늘 |
+| storm-crown | 민트 리본 머리띠 | 민트 |
+| shadow-crown | 라벤더 리본 머리띠 | 라벤더 |
+| astral-crown | 딸기 리본 머리띠 | 딸기 |
+| solar-hood | 크림 보닛 | 크림 |
+| ember-hood | 살구 보닛 | 살구 |
+| frost-hood | 하늘 보닛 | 하늘 |
+| storm-hood | 민트 보닛 | 민트 |
+| shadow-hood | 라벤더 보닛 | 라벤더 |
+| astral-hood | 딸기 보닛 | 딸기 |
+| solar-wizardhat | 크림 니트 비니 | 크림 |
+| ember-wizardhat | 살구 니트 비니 | 살구 |
+| frost-wizardhat | 하늘 니트 비니 | 하늘 |
+| storm-wizardhat | 민트 니트 비니 | 민트 |
+| shadow-wizardhat | 라벤더 니트 비니 | 라벤더 |
+| astral-wizardhat | 딸기 니트 비니 | 딸기 |
+| solar-helmet | 크림 버킷햇 | 크림 |
+| ember-helmet | 살구 버킷햇 | 살구 |
+| frost-helmet | 하늘 버킷햇 | 하늘 |
+| storm-helmet | 민트 버킷햇 | 민트 |
+| shadow-helmet | 라벤더 버킷햇 | 라벤더 |
+| astral-helmet | 딸기 버킷햇 | 딸기 |
+| solar-beret | 크림 베레모 | 크림 |
+| ember-beret | 살구 베레모 | 살구 |
+| frost-beret | 하늘 베레모 | 하늘 |
+| storm-beret | 민트 베레모 | 민트 |
+| shadow-beret | 라벤더 베레모 | 라벤더 |
+| astral-beret | 딸기 베레모 | 딸기 |
+| solar-flower | 크림 데이지 핀 | 크림 |
+| ember-flower | 살구 데이지 핀 | 살구 |
+| frost-flower | 하늘 데이지 핀 | 하늘 |
+| storm-flower | 민트 데이지 핀 | 민트 |
+| shadow-flower | 라벤더 데이지 핀 | 라벤더 |
+| astral-flower | 딸기 데이지 핀 | 딸기 |
+| solar-halo | 크림 도넛 머리띠 | 크림 |
+| ember-halo | 살구 도넛 머리띠 | 살구 |
+| frost-halo | 하늘 도넛 머리띠 | 하늘 |
+| storm-halo | 민트 도넛 머리띠 | 민트 |
+| shadow-halo | 라벤더 도넛 머리띠 | 라벤더 |
+| astral-halo | 딸기 도넛 머리띠 | 딸기 |
+| solar-antlers | 크림 토끼 귀 | 크림 |
+| ember-antlers | 살구 토끼 귀 | 살구 |
+| frost-antlers | 하늘 토끼 귀 | 하늘 |
+| storm-antlers | 민트 토끼 귀 | 민트 |
+| shadow-antlers | 라벤더 토끼 귀 | 라벤더 |
+| astral-antlers | 딸기 토끼 귀 | 딸기 |
 
-## face
+## 얼굴 (face)
 
-| ID | 이름 | 속성 |
+| 저장 ID | 현재 이름 | 색감 |
 | --- | --- | --- |
-| solar-glasses | 태양 안경 | Solar |
-| ember-glasses | 화염 안경 | Ember |
-| frost-glasses | 빙결 안경 | Frost |
-| storm-glasses | 번개 안경 | Storm |
-| shadow-glasses | 그림자 안경 | Shadow |
-| astral-glasses | 별빛 안경 | Astral |
-| solar-monocle | 태양 외눈 안경 | Solar |
-| ember-monocle | 화염 외눈 안경 | Ember |
-| frost-monocle | 빙결 외눈 안경 | Frost |
-| storm-monocle | 번개 외눈 안경 | Storm |
-| shadow-monocle | 그림자 외눈 안경 | Shadow |
-| astral-monocle | 별빛 외눈 안경 | Astral |
-| solar-mask | 태양 가면 | Solar |
-| ember-mask | 화염 가면 | Ember |
-| frost-mask | 빙결 가면 | Frost |
-| storm-mask | 번개 가면 | Storm |
-| shadow-mask | 그림자 가면 | Shadow |
-| astral-mask | 별빛 가면 | Astral |
-| solar-visor | 태양 고글 | Solar |
-| ember-visor | 화염 고글 | Ember |
-| frost-visor | 빙결 고글 | Frost |
-| storm-visor | 번개 고글 | Storm |
-| shadow-visor | 그림자 고글 | Shadow |
-| astral-visor | 별빛 고글 | Astral |
-| solar-starpatch | 태양 별 안대 | Solar |
-| ember-starpatch | 화염 별 안대 | Ember |
-| frost-starpatch | 빙결 별 안대 | Frost |
-| storm-starpatch | 번개 별 안대 | Storm |
-| shadow-starpatch | 그림자 별 안대 | Shadow |
-| astral-starpatch | 별빛 별 안대 | Astral |
-| solar-cheeks | 태양 볼 스티커 | Solar |
-| ember-cheeks | 화염 볼 스티커 | Ember |
-| frost-cheeks | 빙결 볼 스티커 | Frost |
-| storm-cheeks | 번개 볼 스티커 | Storm |
-| shadow-cheeks | 그림자 볼 스티커 | Shadow |
-| astral-cheeks | 별빛 볼 스티커 | Astral |
+| solar-glasses | 크림 동그란 안경 | 크림 |
+| ember-glasses | 살구 동그란 안경 | 살구 |
+| frost-glasses | 하늘 동그란 안경 | 하늘 |
+| storm-glasses | 민트 동그란 안경 | 민트 |
+| shadow-glasses | 라벤더 동그란 안경 | 라벤더 |
+| astral-glasses | 딸기 동그란 안경 | 딸기 |
+| solar-monocle | 크림 하트 안경 | 크림 |
+| ember-monocle | 살구 하트 안경 | 살구 |
+| frost-monocle | 하늘 하트 안경 | 하늘 |
+| storm-monocle | 민트 하트 안경 | 민트 |
+| shadow-monocle | 라벤더 하트 안경 | 라벤더 |
+| astral-monocle | 딸기 하트 안경 | 딸기 |
+| solar-mask | 크림 수면 안대 | 크림 |
+| ember-mask | 살구 수면 안대 | 살구 |
+| frost-mask | 하늘 수면 안대 | 하늘 |
+| storm-mask | 민트 수면 안대 | 민트 |
+| shadow-mask | 라벤더 수면 안대 | 라벤더 |
+| astral-mask | 딸기 수면 안대 | 딸기 |
+| solar-visor | 크림 도트 선글라스 | 크림 |
+| ember-visor | 살구 도트 선글라스 | 살구 |
+| frost-visor | 하늘 도트 선글라스 | 하늘 |
+| storm-visor | 민트 도트 선글라스 | 민트 |
+| shadow-visor | 라벤더 도트 선글라스 | 라벤더 |
+| astral-visor | 딸기 도트 선글라스 | 딸기 |
+| solar-starpatch | 크림 별 스티커 | 크림 |
+| ember-starpatch | 살구 별 스티커 | 살구 |
+| frost-starpatch | 하늘 별 스티커 | 하늘 |
+| storm-starpatch | 민트 별 스티커 | 민트 |
+| shadow-starpatch | 라벤더 별 스티커 | 라벤더 |
+| astral-starpatch | 딸기 별 스티커 | 딸기 |
+| solar-cheeks | 크림 볼터치 | 크림 |
+| ember-cheeks | 살구 볼터치 | 살구 |
+| frost-cheeks | 하늘 볼터치 | 하늘 |
+| storm-cheeks | 민트 볼터치 | 민트 |
+| shadow-cheeks | 라벤더 볼터치 | 라벤더 |
+| astral-cheeks | 딸기 볼터치 | 딸기 |
 
-## neck
+## 목 (neck)
 
-| ID | 이름 | 속성 |
+| 저장 ID | 현재 이름 | 색감 |
 | --- | --- | --- |
-| solar-scarf | 태양 목도리 | Solar |
-| ember-scarf | 화염 목도리 | Ember |
-| frost-scarf | 빙결 목도리 | Frost |
-| storm-scarf | 번개 목도리 | Storm |
-| shadow-scarf | 그림자 목도리 | Shadow |
-| astral-scarf | 별빛 목도리 | Astral |
-| solar-bowtie | 태양 나비넥타이 | Solar |
-| ember-bowtie | 화염 나비넥타이 | Ember |
-| frost-bowtie | 빙결 나비넥타이 | Frost |
-| storm-bowtie | 번개 나비넥타이 | Storm |
-| shadow-bowtie | 그림자 나비넥타이 | Shadow |
-| astral-bowtie | 별빛 나비넥타이 | Astral |
-| solar-tie | 태양 넥타이 | Solar |
-| ember-tie | 화염 넥타이 | Ember |
-| frost-tie | 빙결 넥타이 | Frost |
-| storm-tie | 번개 넥타이 | Storm |
-| shadow-tie | 그림자 넥타이 | Shadow |
-| astral-tie | 별빛 넥타이 | Astral |
-| solar-pendant | 태양 펜던트 | Solar |
-| ember-pendant | 화염 펜던트 | Ember |
-| frost-pendant | 빙결 펜던트 | Frost |
-| storm-pendant | 번개 펜던트 | Storm |
-| shadow-pendant | 그림자 펜던트 | Shadow |
-| astral-pendant | 별빛 펜던트 | Astral |
-| solar-collar | 태양 칼라 | Solar |
-| ember-collar | 화염 칼라 | Ember |
-| frost-collar | 빙결 칼라 | Frost |
-| storm-collar | 번개 칼라 | Storm |
-| shadow-collar | 그림자 칼라 | Shadow |
-| astral-collar | 별빛 칼라 | Astral |
-| solar-headphones | 태양 헤드폰 | Solar |
-| ember-headphones | 화염 헤드폰 | Ember |
-| frost-headphones | 빙결 헤드폰 | Frost |
-| storm-headphones | 번개 헤드폰 | Storm |
-| shadow-headphones | 그림자 헤드폰 | Shadow |
-| astral-headphones | 별빛 헤드폰 | Astral |
+| solar-scarf | 크림 니트 목도리 | 크림 |
+| ember-scarf | 살구 니트 목도리 | 살구 |
+| frost-scarf | 하늘 니트 목도리 | 하늘 |
+| storm-scarf | 민트 니트 목도리 | 민트 |
+| shadow-scarf | 라벤더 니트 목도리 | 라벤더 |
+| astral-scarf | 딸기 니트 목도리 | 딸기 |
+| solar-bowtie | 크림 리본 | 크림 |
+| ember-bowtie | 살구 리본 | 살구 |
+| frost-bowtie | 하늘 리본 | 하늘 |
+| storm-bowtie | 민트 리본 | 민트 |
+| shadow-bowtie | 라벤더 리본 | 라벤더 |
+| astral-bowtie | 딸기 리본 | 딸기 |
+| solar-tie | 크림 삼각 스카프 | 크림 |
+| ember-tie | 살구 삼각 스카프 | 살구 |
+| frost-tie | 하늘 삼각 스카프 | 하늘 |
+| storm-tie | 민트 삼각 스카프 | 민트 |
+| shadow-tie | 라벤더 삼각 스카프 | 라벤더 |
+| astral-tie | 딸기 삼각 스카프 | 딸기 |
+| solar-pendant | 크림 하트 목걸이 | 크림 |
+| ember-pendant | 살구 하트 목걸이 | 살구 |
+| frost-pendant | 하늘 하트 목걸이 | 하늘 |
+| storm-pendant | 민트 하트 목걸이 | 민트 |
+| shadow-pendant | 라벤더 하트 목걸이 | 라벤더 |
+| astral-pendant | 딸기 하트 목걸이 | 딸기 |
+| solar-collar | 크림 레이스 칼라 | 크림 |
+| ember-collar | 살구 레이스 칼라 | 살구 |
+| frost-collar | 하늘 레이스 칼라 | 하늘 |
+| storm-collar | 민트 레이스 칼라 | 민트 |
+| shadow-collar | 라벤더 레이스 칼라 | 라벤더 |
+| astral-collar | 딸기 레이스 칼라 | 딸기 |
+| solar-headphones | 크림 폭신 헤드폰 | 크림 |
+| ember-headphones | 살구 폭신 헤드폰 | 살구 |
+| frost-headphones | 하늘 폭신 헤드폰 | 하늘 |
+| storm-headphones | 민트 폭신 헤드폰 | 민트 |
+| shadow-headphones | 라벤더 폭신 헤드폰 | 라벤더 |
+| astral-headphones | 딸기 폭신 헤드폰 | 딸기 |
 
-## back
+## 등 (back)
 
-| ID | 이름 | 속성 |
+| 저장 ID | 현재 이름 | 색감 |
 | --- | --- | --- |
-| solar-wings | 태양 날개 | Solar |
-| ember-wings | 화염 날개 | Ember |
-| frost-wings | 빙결 날개 | Frost |
-| storm-wings | 번개 날개 | Storm |
-| shadow-wings | 그림자 날개 | Shadow |
-| astral-wings | 별빛 날개 | Astral |
-| solar-cape | 태양 망토 | Solar |
-| ember-cape | 화염 망토 | Ember |
-| frost-cape | 빙결 망토 | Frost |
-| storm-cape | 번개 망토 | Storm |
-| shadow-cape | 그림자 망토 | Shadow |
-| astral-cape | 별빛 망토 | Astral |
-| solar-backpack | 태양 가방 | Solar |
-| ember-backpack | 화염 가방 | Ember |
-| frost-backpack | 빙결 가방 | Frost |
-| storm-backpack | 번개 가방 | Storm |
-| shadow-backpack | 그림자 가방 | Shadow |
-| astral-backpack | 별빛 가방 | Astral |
-| solar-rocket | 태양 로켓 | Solar |
-| ember-rocket | 화염 로켓 | Ember |
-| frost-rocket | 빙결 로켓 | Frost |
-| storm-rocket | 번개 로켓 | Storm |
-| shadow-rocket | 그림자 로켓 | Shadow |
-| astral-rocket | 별빛 로켓 | Astral |
-| solar-leaf | 태양 잎사귀 | Solar |
-| ember-leaf | 화염 잎사귀 | Ember |
-| frost-leaf | 빙결 잎사귀 | Frost |
-| storm-leaf | 번개 잎사귀 | Storm |
-| shadow-leaf | 그림자 잎사귀 | Shadow |
-| astral-leaf | 별빛 잎사귀 | Astral |
-| solar-banner | 태양 깃발 | Solar |
-| ember-banner | 화염 깃발 | Ember |
-| frost-banner | 빙결 깃발 | Frost |
-| storm-banner | 번개 깃발 | Storm |
-| shadow-banner | 그림자 깃발 | Shadow |
-| astral-banner | 별빛 깃발 | Astral |
+| solar-wings | 크림 나비 날개 | 크림 |
+| ember-wings | 살구 나비 날개 | 살구 |
+| frost-wings | 하늘 나비 날개 | 하늘 |
+| storm-wings | 민트 나비 날개 | 민트 |
+| shadow-wings | 라벤더 나비 날개 | 라벤더 |
+| astral-wings | 딸기 나비 날개 | 딸기 |
+| solar-cape | 크림 체크 담요 | 크림 |
+| ember-cape | 살구 체크 담요 | 살구 |
+| frost-cape | 하늘 체크 담요 | 하늘 |
+| storm-cape | 민트 체크 담요 | 민트 |
+| shadow-cape | 라벤더 체크 담요 | 라벤더 |
+| astral-cape | 딸기 체크 담요 | 딸기 |
+| solar-backpack | 크림 작은 배낭 | 크림 |
+| ember-backpack | 살구 작은 배낭 | 살구 |
+| frost-backpack | 하늘 작은 배낭 | 하늘 |
+| storm-backpack | 민트 작은 배낭 | 민트 |
+| shadow-backpack | 라벤더 작은 배낭 | 라벤더 |
+| astral-backpack | 딸기 작은 배낭 | 딸기 |
+| solar-rocket | 크림 곰 인형 | 크림 |
+| ember-rocket | 살구 곰 인형 | 살구 |
+| frost-rocket | 하늘 곰 인형 | 하늘 |
+| storm-rocket | 민트 곰 인형 | 민트 |
+| shadow-rocket | 라벤더 곰 인형 | 라벤더 |
+| astral-rocket | 딸기 곰 인형 | 딸기 |
+| solar-leaf | 크림 잎사귀 가방 | 크림 |
+| ember-leaf | 살구 잎사귀 가방 | 살구 |
+| frost-leaf | 하늘 잎사귀 가방 | 하늘 |
+| storm-leaf | 민트 잎사귀 가방 | 민트 |
+| shadow-leaf | 라벤더 잎사귀 가방 | 라벤더 |
+| astral-leaf | 딸기 잎사귀 가방 | 딸기 |
+| solar-banner | 크림 미니 크로스백 | 크림 |
+| ember-banner | 살구 미니 크로스백 | 살구 |
+| frost-banner | 하늘 미니 크로스백 | 하늘 |
+| storm-banner | 민트 미니 크로스백 | 민트 |
+| shadow-banner | 라벤더 미니 크로스백 | 라벤더 |
+| astral-banner | 딸기 미니 크로스백 | 딸기 |
 
-## aura
+## 주변 장식 (aura)
 
-| ID | 이름 | 속성 |
+| 저장 ID | 현재 이름 | 색감 |
 | --- | --- | --- |
-| solar-ring | 태양 마법진 | Solar |
-| ember-ring | 화염 마법진 | Ember |
-| frost-ring | 빙결 마법진 | Frost |
-| storm-ring | 번개 마법진 | Storm |
-| shadow-ring | 그림자 마법진 | Shadow |
-| astral-ring | 별빛 마법진 | Astral |
-| solar-runes | 태양 룬 문자 | Solar |
-| ember-runes | 화염 룬 문자 | Ember |
-| frost-runes | 빙결 룬 문자 | Frost |
-| storm-runes | 번개 룬 문자 | Storm |
-| shadow-runes | 그림자 룬 문자 | Shadow |
-| astral-runes | 별빛 룬 문자 | Astral |
-| solar-stars | 태양 별무리 | Solar |
-| ember-stars | 화염 별무리 | Ember |
-| frost-stars | 빙결 별무리 | Frost |
-| storm-stars | 번개 별무리 | Storm |
-| shadow-stars | 그림자 별무리 | Shadow |
-| astral-stars | 별빛 별무리 | Astral |
-| solar-bubbles | 태양 거품 | Solar |
-| ember-bubbles | 화염 거품 | Ember |
-| frost-bubbles | 빙결 거품 | Frost |
-| storm-bubbles | 번개 거품 | Storm |
-| shadow-bubbles | 그림자 거품 | Shadow |
-| astral-bubbles | 별빛 거품 | Astral |
+| solar-ring | 크림 작은 하트 | 크림 |
+| ember-ring | 살구 작은 하트 | 살구 |
+| frost-ring | 하늘 작은 하트 | 하늘 |
+| storm-ring | 민트 작은 하트 | 민트 |
+| shadow-ring | 라벤더 작은 하트 | 라벤더 |
+| astral-ring | 딸기 작은 하트 | 딸기 |
+| solar-runes | 크림 꽃잎 바람 | 크림 |
+| ember-runes | 살구 꽃잎 바람 | 살구 |
+| frost-runes | 하늘 꽃잎 바람 | 하늘 |
+| storm-runes | 민트 꽃잎 바람 | 민트 |
+| shadow-runes | 라벤더 꽃잎 바람 | 라벤더 |
+| astral-runes | 딸기 꽃잎 바람 | 딸기 |
+| solar-stars | 크림 반짝 별 | 크림 |
+| ember-stars | 살구 반짝 별 | 살구 |
+| frost-stars | 하늘 반짝 별 | 하늘 |
+| storm-stars | 민트 반짝 별 | 민트 |
+| shadow-stars | 라벤더 반짝 별 | 라벤더 |
+| astral-stars | 딸기 반짝 별 | 딸기 |
+| solar-bubbles | 크림 동글 비눗방울 | 크림 |
+| ember-bubbles | 살구 동글 비눗방울 | 살구 |
+| frost-bubbles | 하늘 동글 비눗방울 | 하늘 |
+| storm-bubbles | 민트 동글 비눗방울 | 민트 |
+| shadow-bubbles | 라벤더 동글 비눗방울 | 라벤더 |
+| astral-bubbles | 딸기 동글 비눗방울 | 딸기 |
 
-## ground
+## 발밑 (ground)
 
-| ID | 이름 | 속성 |
+| 저장 ID | 현재 이름 | 색감 |
 | --- | --- | --- |
-| solar-cloud | 태양 구름 발판 | Solar |
-| ember-cloud | 화염 구름 발판 | Ember |
-| frost-cloud | 빙결 구름 발판 | Frost |
-| storm-cloud | 번개 구름 발판 | Storm |
-| shadow-cloud | 그림자 구름 발판 | Shadow |
-| astral-cloud | 별빛 구름 발판 | Astral |
-| solar-board | 태양 호버 보드 | Solar |
-| ember-board | 화염 호버 보드 | Ember |
-| frost-board | 빙결 호버 보드 | Frost |
-| storm-board | 번개 호버 보드 | Storm |
-| shadow-board | 그림자 호버 보드 | Shadow |
-| astral-board | 별빛 호버 보드 | Astral |
+| solar-cloud | 크림 폭신 구름 | 크림 |
+| ember-cloud | 살구 폭신 구름 | 살구 |
+| frost-cloud | 하늘 폭신 구름 | 하늘 |
+| storm-cloud | 민트 폭신 구름 | 민트 |
+| shadow-cloud | 라벤더 폭신 구름 | 라벤더 |
+| astral-cloud | 딸기 폭신 구름 | 딸기 |
+| solar-board | 크림 체크 쿠션 | 크림 |
+| ember-board | 살구 체크 쿠션 | 살구 |
+| frost-board | 하늘 체크 쿠션 | 하늘 |
+| storm-board | 민트 체크 쿠션 | 민트 |
+| shadow-board | 라벤더 체크 쿠션 | 라벤더 |
+| astral-board | 딸기 체크 쿠션 | 딸기 |

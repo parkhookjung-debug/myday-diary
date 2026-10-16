@@ -20,11 +20,11 @@ namespace MyDay.Windows.UI
             if(!FlushSave())return false;
             var previous=book.Equipment;int version=book.Version;
             var candidate=SangmonItems.Select(previous,slot,id);book.Equipment=candidate;
-            try {store.Save(book);ApplyEquipment();status.Text="아이템 저장됨";status.ForeColor=Design.Accent;return true;}
+            try {store.Save(book);ApplyEquipment();status.Text="소품 저장됨";status.ForeColor=Design.Accent;return true;}
             catch(Exception ex) {
                 book.Equipment=previous;book.Version=version;ApplyEquipment();
                 if(testMode)throw new IOException("Isolated equipment save failed.",ex);
-                MessageBox.Show(this,"아이템을 저장하지 못했어요. 기존 장비를 유지했어요.\n\n"+ex.Message,"아이템 저장",MessageBoxButtons.OK,MessageBoxIcon.Error);return false;
+                MessageBox.Show(this,"소품을 저장하지 못했어요. 기존 모습을 유지했어요.\n\n"+ex.Message,"작은 옷장",MessageBoxButtons.OK,MessageBoxIcon.Error);return false;
             }
         }
         internal void VerifyItemsForTest(string directory)
