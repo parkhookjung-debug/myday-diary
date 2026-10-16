@@ -52,7 +52,7 @@ namespace MyDay.Windows.UI
             characterChoice.Location=Design.Point(18,270); characterChoice.Size=Design.Size(180,30); characterChoice.AccessibleName="캐릭터 버전";
             characterChoice.Items.AddRange(MonsterVariants.All.Select(v=>(object)MonsterVariants.Name(v)));
             characterChoice.ItemEnabled=i=>SangmonGrowth.CanUse(book.Progress,(MonsterVariant)i);
-            characterChoice.ItemLabel=i=>MonsterVariants.Name((MonsterVariant)i)+(characterChoice.ItemEnabled(i)?"":" · Lv."+SangmonGrowth.RequiredLevel((MonsterVariant)i));
+            characterChoice.ItemLabel=i=>MonsterVariants.Name((MonsterVariant)i)+(characterChoice.ItemEnabled(i)?"":" · 총 "+SangmonGrowth.RequiredXP((MonsterVariant)i)+" XP");
             characterChoice.SelectedIndexChanged+=delegate { if(!binding) SelectVariant((MonsterVariant)characterChoice.SelectedIndex); }; friend.Controls.Add(characterChoice);
             growth.Location=Design.Point(18,310); growth.Size=Design.Size(104,30); growth.Font=Design.Font(8); growth.Click+=delegate { OpenGrowth(); }; friend.Controls.Add(growth);
             items.Location=Design.Point(130,310); items.Size=Design.Size(68,30); items.Font=Design.Font(8); items.Click+=delegate { OpenItems(); }; friend.Controls.Add(items);

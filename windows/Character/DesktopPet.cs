@@ -30,7 +30,7 @@ namespace MyDay.Windows.Character
             foreach(var v in MonsterVariants.All) {
                 bool enabled=canUse==null || canUse(v);
                 variantItems[(int)v].Enabled=enabled;
-                variantItems[(int)v].Text=MonsterVariants.Name(v)+(enabled?"":" · Lv."+SangmonGrowth.RequiredLevel(v));
+                variantItems[(int)v].Text=MonsterVariants.Name(v)+(enabled?"":" · 총 "+SangmonGrowth.RequiredXP(v)+" XP");
             }
         }
         private readonly ToolStripMenuItem[] variantItems=new ToolStripMenuItem[MonsterVariants.All.Length];
