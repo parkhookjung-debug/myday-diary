@@ -16,4 +16,5 @@
 | 편지·코넬 등 배치 | [JournalLayouts.cs](JournalLayouts.cs) | 형식별 배치 계산 |
 | 출석·활동 점수·해금 조건 | [SangmonGrowth.cs](SangmonGrowth.cs) | 6가지 미션·LevelXP·보상 레벨·날짜/항목 중복 지급 방지 |
 | 아이템 이름·설명·슬롯 | [SangmonItems.cs](SangmonItems.cs) | 50가지 일상 소품×6가지 파스텔 색감·300종·8슬롯·장착·해제·백업 복원 |
+| 클로버·뽑기·꽃잎·수집 기록 | [SangmonCollection.cs](SangmonCollection.cs) | 재화·균등 확률·10회 보장·교환·병합 |
 | 클릭과 드래그 구분 | [PetGesture.cs](PetGesture.cs) | 포인터 입력 상태 |

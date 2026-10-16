@@ -12,7 +12,7 @@ namespace MyDay.Windows.UI
     {
         private void UpdateGrowth()
         {
-            growth.Text="성장 · Lv."+SangmonGrowth.Level(book.Progress)+" · "+(SangmonGrowth.XP(book.Progress)%50)+"/50";
+            growth.Text="성장 · Lv."+SangmonGrowth.Level(book.Progress)+" · "+SangmonGrowth.IntoLevel(book.Progress)+"/"+SangmonGrowth.NeededXP(SangmonGrowth.Level(book.Progress));
             if(pet!=null) pet.SetAvailability(v=>SangmonGrowth.CanUse(book.Progress,v));
         }
         private void OpenGrowth()
@@ -60,8 +60,8 @@ namespace MyDay.Windows.UI
             FlushSaveAt(DateTime.Today.AddDays(1));
             if(SangmonGrowth.XP(book.Progress)!=before+20 || !store.Load().Progress.AwardedDays.Contains(DiaryStore.Key(DateTime.Today.AddDays(1)))) throw new Exception("Save retry lost growth");
             int simulatedDay=2;
-            while(SangmonGrowth.Level(book.Progress)<2){entry.Blocks[0].Text+=" 기록";QueueSave();FlushSaveAt(DateTime.Today.AddDays(simulatedDay++));}
-            if(SangmonGrowth.Level(book.Progress)!=2 || !characterChoice.ItemEnabled((int)MonsterVariant.Apprentice) || characterChoice.ItemEnabled((int)MonsterVariant.Bookmark)) throw new Exception("Reward threshold or diary menu gate failed");
+            while(!SangmonGrowth.CanUse(book.Progress,MonsterVariant.Apprentice)){entry.Blocks[0].Text+=" 기록";QueueSave();FlushSaveAt(DateTime.Today.AddDays(simulatedDay++));}
+            if(SangmonGrowth.Level(book.Progress)!=6 || !characterChoice.ItemEnabled((int)MonsterVariant.Apprentice) || characterChoice.ItemEnabled((int)MonsterVariant.Bookmark)) throw new Exception("Reward threshold or diary menu gate failed");
             using(var window=new GrowthWindow(book,EquipReward,ClaimAttendance)) {
                 window.StartPosition=FormStartPosition.Manual; window.Location=new Point(-30000,-30000); window.Show(this); Application.DoEvents();
                 if(!window.EquipButtons[0].Enabled || window.EquipButtons.Skip(1).Any(b=>b.Enabled)) throw new Exception("Growth cards do not match unlocked state");
@@ -73,7 +73,7 @@ namespace MyDay.Windows.UI
                 using(var image=new Bitmap(window.Width,window.Height)) { window.DrawToBitmap(image,new Rectangle(Point.Empty,image.Size)); image.Save(Path.Combine(directory,"windows-sangmon-growth-compact.png")); }
                 window.Close();
             }
-            while(SangmonGrowth.Level(book.Progress)<10){entry.Blocks[0].Text+=" 기록";QueueSave();FlushSaveAt(DateTime.Today.AddDays(simulatedDay++));}
+            while(!SangmonGrowth.CanUse(book.Progress,MonsterVariant.MemoryHero)){entry.Blocks[0].Text+=" 기록";QueueSave();FlushSaveAt(DateTime.Today.AddDays(simulatedDay++));}
             int attendanceXP=SangmonGrowth.XP(book.Progress);var committed=book.Progress;int committedVersion=book.Version;
             using(var locked=new FileStream(store.FilePath,FileMode.Open,FileAccess.ReadWrite,FileShare.None)){bool failed=false;try{ClaimAttendance();}catch(IOException){failed=true;}if(!failed || !ReferenceEquals(committed,book.Progress) || book.Version!=committedVersion)throw new Exception("Failed attendance changed growth");}
             ClaimAttendance();ClaimAttendance();

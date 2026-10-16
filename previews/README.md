@@ -2,6 +2,10 @@
 
 플랫폼별로 나눠 보관합니다. 실행 파일은 GitHub Releases에서 받습니다.
 
+## 세분화한 성장·소품 뽑기
+
+[Windows의 실제 선물 상자와 성장 화면](applied/collection-v1/README.md). [규칙과 수정 파일](../docs/SANGMON-COLLECTION.md)
+
 ## 파스텔 일상 소품 300종
 
 [상몬의 작은 옷장 · 50가지 형태와 8가지 조합](applied/cozy-v1/README.md). 현재 적용한 아기자기한 소품 디자인입니다.

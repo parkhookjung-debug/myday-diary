@@ -13,7 +13,7 @@ namespace MyDay.Windows.UI
         private void OpenItems()
         {
             OpenDiary();if(!FlushSave())return;
-            using(var window=new EquipmentWindow(book,EquipItem))window.ShowDialog(this);
+            using(var window=new EquipmentWindow(book,EquipItem,OpenCollection))window.ShowDialog(this);
         }
         private bool EquipItem(string slot,string id)
         {

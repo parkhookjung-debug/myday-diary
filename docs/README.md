@@ -20,3 +20,5 @@
 | 전체 300종 장비 ID | [ITEM-CATALOG.md](ITEM-CATALOG.md) | 8슬롯별 이름·ID·속성 |
 | 공동 작업과 역할 | [CONTRIBUTING.md](../CONTRIBUTING.md), [TEAM.md](TEAM.md) | 브랜치·PR·검증·팀원 |
 | 화면 예시 | [README.md](../previews/README.md) | 플랫폼별 PNG·GIF |
+
+[소품 뽑기·수집 도감·클로버·꽃잎·확률](SANGMON-COLLECTION.md)

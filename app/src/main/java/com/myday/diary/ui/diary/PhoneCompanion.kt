@@ -45,10 +45,10 @@ import com.myday.diary.ui.components.SangmonAvatar
                 Row(verticalAlignment=Alignment.CenterVertically) {
                     SangmonAvatar(book.characterStyle,book.equipment,modifier=Modifier.size(96.dp),haptics=haptics)
                     Column(Modifier.weight(1f).padding(start=8.dp)) {
-                        Text("Lv.$level · 나의 상몬",style=MaterialTheme.typography.titleLarge)
+                        Text("Lv.$level · ${NotebookRules.chapter(level)}",style=MaterialTheme.typography.titleLarge)
                         Text("총 $xp XP · 기록 ${book.awardedDays.size}일",style=MaterialTheme.typography.bodySmall)
-                        LinearProgressIndicator(progress={xp%50/50f},modifier=Modifier.fillMaxWidth().padding(vertical=8.dp))
-                        Text("다음 레벨까지 ${50-xp%50} XP",style=MaterialTheme.typography.labelSmall)
+                        LinearProgressIndicator(progress={NotebookRules.intoLevel(book).toFloat()/NotebookRules.neededXp(level)},modifier=Modifier.fillMaxWidth().padding(vertical=8.dp))
+                        Text("다음 레벨까지 ${NotebookRules.neededXp(level)-NotebookRules.intoLevel(book)} XP · 레벨 업 클로버 +5",style=MaterialTheme.typography.labelSmall)
                     }
                 }
                 Row(Modifier.fillMaxWidth(),verticalAlignment=Alignment.CenterVertically,horizontalArrangement=Arrangement.SpaceBetween) {
@@ -60,17 +60,20 @@ import com.myday.diary.ui.components.SangmonAvatar
         Row(horizontalArrangement=Arrangement.spacedBy(8.dp)) {
             FilterChip(tab==0,{tab=0;haptics.perform(TactileEvent.SELECT)},label={Text("상몬 64종")})
             FilterChip(tab==1,{tab=1;haptics.perform(TactileEvent.SELECT)},label={Text("소품 300종")})
+            FilterChip(tab==2,{tab=2;haptics.perform(TactileEvent.SELECT)},label={Text("소품 뽑기")})
         }
         if(tab==0) LazyVerticalGrid(GridCells.Fixed(2),Modifier.weight(1f).testTag("sangmon-grid"),horizontalArrangement=Arrangement.spacedBy(10.dp),verticalArrangement=Arrangement.spacedBy(10.dp),contentPadding=PaddingValues(bottom=24.dp)) {
-            items(catalog.characters,key={it.id}) {skin->val unlocked=level>=skin.level
+            items(catalog.characters,key={it.id}) {skin->val unlocked=xp>=skin.xp
                 Card(Modifier.clickable(enabled=unlocked && !controller.saving) {attempt(TactileEvent.EQUIP) {controller.selectCharacter(skin.id,skin.level)}},colors=CardDefaults.cardColors(containerColor=if(book.characterStyle==skin.id) MaterialTheme.colorScheme.primaryContainer else Color.White)) {
                     Column(Modifier.fillMaxWidth().padding(12.dp),horizontalAlignment=Alignment.CenterHorizontally) {
                         AssetIcon("portraits/${skin.id}.png",skin.name,Modifier.size(80.dp))
                         Text(skin.name,style=MaterialTheme.typography.labelLarge)
-                        Text(if(!unlocked) "Lv.${skin.level} 해금" else if(book.characterStyle==skin.id) "함께하는 중" else "함께하기",style=MaterialTheme.typography.labelSmall)
+                        Text(if(!unlocked) "Lv.${skin.level} · 총 ${skin.xp} XP 해금" else if(book.characterStyle==skin.id) "함께하는 중" else "함께하기",style=MaterialTheme.typography.labelSmall)
                     }
                 }
             }
+        } else if(tab==2) {
+            PhoneCollection(controller,catalog,haptics,attempt,Modifier.weight(1f))
         } else {
             var slot by remember {mutableStateOf("weapon")};var query by remember {mutableStateOf("")}
             var element by remember {mutableStateOf("")};var menu by remember {mutableStateOf(false)}
@@ -108,7 +111,7 @@ import com.myday.diary.ui.components.SangmonAvatar
                 val done=if(flag==0)today.toString() in book.awardedDays else flags and flag!=0
                 Text((if(done) "✓ " else "○ ")+name+" XP")
             }
-            Text("각 항목 하루 한 번 · 최대 40 XP\n글자 수는 글·감정 블록의 공백을 제외해 합산해요. 저장에 성공한 활동만 지급해요. 50 XP마다 레벨 업하며 기존 경험치는 유지돼요.",style=MaterialTheme.typography.bodySmall)
+            Text("각 항목 하루 한 번 · 최대 40 XP\n글자 수는 글·감정 블록의 공백을 제외해 합산해요. 저장에 성공한 활동만 지급해요. 새싹(1~9) 10 XP · 일상(10~29) 20 XP · 동행(30~49) 30 XP · 단짝(50~) 50 XP씩 레벨 업해요. 기존 경험치와 외형 해금 XP는 유지돼요.",style=MaterialTheme.typography.bodySmall)
         }
     },confirmButton={TextButton({missions=false}) {Text("닫기")}})
 }

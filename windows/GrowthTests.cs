@@ -39,9 +39,9 @@ namespace MyDay.Windows
             Check(MonsterVariants.All.Take(56).All(v=>SangmonGrowth.CanUse(null,v)),"Existing fifty-six appearances remain freely available");
             Check(SangmonGrowth.Rewards.Length==8 && SangmonGrowth.Rewards.All(v=>!SangmonGrowth.CanUse(null,v)),"Eight added rewards start locked");
             for(int i=1;i<5;i++) progress=SangmonGrowth.Award(progress,entry,day.AddDays(i));
-            Check(SangmonGrowth.XP(progress)==50 && SangmonGrowth.Level(progress)==2 && SangmonGrowth.CanUse(progress,MonsterVariant.Apprentice) && !SangmonGrowth.CanUse(progress,MonsterVariant.Bookmark),"Five writing days unlock only the level-two reward");
+            Check(SangmonGrowth.XP(progress)==50 && SangmonGrowth.Level(progress)==6 && SangmonGrowth.CanUse(progress,MonsterVariant.Apprentice) && !SangmonGrowth.CanUse(progress,MonsterVariant.Bookmark),"Five writing days unlock only the 50-XP reward with preserved threshold");
             for(int i=5;i<45;i++) progress=SangmonGrowth.Award(progress,entry,day.AddDays(i));
-            Check(SangmonGrowth.Level(progress)==10 && SangmonGrowth.Rewards.All(v=>SangmonGrowth.CanUse(progress,v)),"Forty-five days unlock all eight rewards");
+            Check(SangmonGrowth.Level(progress)==28 && SangmonGrowth.Rewards.All(v=>SangmonGrowth.CanUse(progress,v)),"Forty-five days unlock all eight rewards");
             var afterBreak=SangmonGrowth.Award(progress,entry,day.AddYears(1));
             Check(SangmonGrowth.XP(afterBreak)==460,"A break never removes previous experience");
             var merged=SangmonGrowth.Merge(progress,tomorrow);

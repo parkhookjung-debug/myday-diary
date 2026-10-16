@@ -21,7 +21,7 @@ namespace MyDay.Windows.Core
 
     public static class SangmonGrowth
     {
-        public const int DailyXP=10, LevelXP=50;
+        public const int DailyXP=10;
         public const int Attendance=1, Writing=2, Photo=4, Todo=8, Habit=16;
         public static readonly int[] Goals={Attendance,Writing,Photo,Todo,Habit};
         public static readonly string[] GoalNames={"출석","글 20자 이상","사진 첨부","할 일 완료","습관 완료"};
@@ -32,9 +32,29 @@ namespace MyDay.Windows.Core
         public static int XP(SangmonProgress progress) { return progress==null?0:progress.AwardedDays.Count*DailyXP+(progress.Activities==null?0:progress.Activities.Sum(d=>Goals.Where(f=>(d.Flags&f)!=0).Sum(f=>Points(f)))); }
         public static int Flags(SangmonProgress progress,DateTime date) {var day=progress==null || progress.Activities==null?null:progress.Activities.FirstOrDefault(d=>d.Date==DiaryStore.Key(date));return day==null?0:day.Flags;}
         public static int TodayXP(SangmonProgress p,DateTime date) {return (p!=null && p.AwardedDays.Contains(DiaryStore.Key(date))?DailyXP:0)+Goals.Where(f=>(Flags(p,date)&f)!=0).Sum(f=>Points(f));}
-        public static int Level(SangmonProgress progress) { return 1+XP(progress)/LevelXP; }
-        public static int RequiredLevel(MonsterVariant variant) { int i=Array.IndexOf(Rewards,variant); return i<0?1:Levels[i]; }
-        public static bool CanUse(SangmonProgress progress,MonsterVariant variant) { return RequiredLevel(variant)<=Level(progress); }
+        public static int LevelFromXP(int xp) {
+            if(xp<90)return 1+xp/10;
+            if(xp<490)return 10+(xp-90)/20;
+            if(xp<1090)return 30+(xp-490)/30;
+            return 50+(xp-1090)/50;
+        }
+        public static int Level(SangmonProgress progress) {return LevelFromXP(XP(progress));}
+        public static int NeededXP(int level) {return level<10?10:level<30?20:level<50?30:50;}
+        public static int FloorXP(int level) {return level<10?(level-1)*10:level<30?90+(level-10)*20:level<50?490+(level-30)*30:1090+(level-50)*50;}
+        public static int IntoLevel(SangmonProgress p) {return XP(p)-FloorXP(Level(p));}
+        public static string Chapter(int level) {return level<10?"새싹 친구":level<30?"일상 친구":level<50?"다정한 동행":"오래된 단짝";}
+        public static int AttendanceWeeks(SangmonProgress p) {
+            int weeks=0,run=0;DateTime previous=DateTime.MinValue;
+            foreach(var day in (p==null || p.Activities==null?new List<GrowthDay>():p.Activities).Where(d=>(d.Flags&Attendance)!=0).OrderBy(d=>d.Date,StringComparer.Ordinal)) {
+                var date=DateTime.ParseExact(day.Date,"yyyy-MM-dd",System.Globalization.CultureInfo.InvariantCulture);
+                run=previous!=DateTime.MinValue && (date-previous).Days==1?run+1:1;
+                if(run%7==0)weeks++;previous=date;
+            }
+            return weeks;
+        }
+        public static int RequiredLevel(MonsterVariant variant) { int i=Array.IndexOf(Rewards,variant); return i<0?1:LevelFromXP((Levels[i]-1)*50); }
+        public static int RequiredXP(MonsterVariant variant) {int i=Array.IndexOf(Rewards,variant);return i<0?0:(Levels[i]-1)*50;}
+        public static bool CanUse(SangmonProgress progress,MonsterVariant variant) {return XP(progress)>=RequiredXP(variant);}
         public static bool HasRecord(DiaryEntry entry)
         {
             return entry!=null && entry.Blocks.Any(Meaningful);

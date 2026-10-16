@@ -20,7 +20,19 @@ object NotebookRules {
     val goals=listOf(ATTENDANCE,WRITING,PHOTO,TODO,HABIT)
     fun points(flag: Int)=if(flag==WRITING) 10 else 5
     fun bonus(flags: Int)=goals.filter {flags and it!=0}.sumOf(::points)
-    fun level(book: DiaryBook) = 1 + xp(book)/50
+    fun levelFromXp(xp: Int)=when {xp<90->1+xp/10;xp<490->10+(xp-90)/20;xp<1090->30+(xp-490)/30;else->50+(xp-1090)/50}
+    fun level(book: DiaryBook)=levelFromXp(xp(book))
+    fun neededXp(level: Int)=when {level<10->10;level<30->20;level<50->30;else->50}
+    fun floorXp(level: Int)=when {level<10->(level-1)*10;level<30->90+(level-10)*20;level<50->490+(level-30)*30;else->1090+(level-50)*50}
+    fun intoLevel(book: DiaryBook)=xp(book)-floorXp(level(book))
+    fun chapter(level: Int)=when {level<10->"새싹 친구";level<30->"일상 친구";level<50->"다정한 동행";else->"오래된 단짝"}
+    fun attendanceWeeks(book: DiaryBook): Int {
+        var previous: LocalDate?=null;var run=0;var weeks=0
+        book.activities.filterValues {it and ATTENDANCE!=0}.keys.sorted().forEach {
+            val day=LocalDate.parse(it);run=if(previous?.plusDays(1)==day)run+1 else 1
+            if(run%7==0)weeks++;previous=day
+        };return weeks
+    }
     fun xp(book: DiaryBook) = book.awardedDays.size * 10+book.activities.values.sumOf(::bonus)
     fun todayXp(book: DiaryBook,day: LocalDate)= (if(day.toString() in book.awardedDays) 10 else 0)+bonus(book.activities[day.toString()] ?: 0)
     fun award(candidate: DiaryBook,prior: DiaryEntry,next: DiaryEntry,day: LocalDate): DiaryBook {
@@ -79,13 +91,14 @@ object NotebookRules {
         require(layouts.size<=MAX_LAYOUTS) {"내 레이아웃은 최대 50개까지 저장할 수 있어요."}
         return current.copy(days=current.days+incoming.days,layouts=layouts,characterStyle=incoming.characterStyle,
             awardedDays=current.awardedDays+incoming.awardedDays,equipment=if(incoming.version>=5 && incoming.hasEquipment) incoming.equipment else if(incoming.version>=4 && incoming.hasEquipment)current.equipment.copy(weaponId=incoming.equipment.weaponId,charmId=incoming.equipment.charmId) else current.equipment,
-            hasEquipment=current.hasEquipment || incoming.hasEquipment,activities=(current.activities.keys+incoming.activities.keys).associateWith {(current.activities[it] ?: 0) or (incoming.activities[it] ?: 0)},version=maxOf(current.version,incoming.version))
+            hasEquipment=current.hasEquipment || incoming.hasEquipment,activities=(current.activities.keys+incoming.activities.keys).associateWith {(current.activities[it] ?: 0) or (incoming.activities[it] ?: 0)},version=maxOf(current.version,incoming.version),collection=CollectionRules.merge(current.collection,incoming.collection))
     }
     fun validate(book: DiaryBook) {
-        require(book.version in 1..5 && book.days.size<=50000 && book.layouts.size<=MAX_LAYOUTS && book.awardedDays.size<=50000 && book.activities.size<=50000) {"지원하지 않거나 너무 큰 기록 파일이에요."}
-        require(book.characterStyle in SangmonIdentity.levels && level(book)>=SangmonIdentity.levels.getValue(book.characterStyle))
+        require(book.version in 1..6 && book.days.size<=50000 && book.layouts.size<=MAX_LAYOUTS && book.awardedDays.size<=50000 && book.activities.size<=50000) {"지원하지 않거나 너무 큰 기록 파일이에요."}
+        require(book.characterStyle in SangmonIdentity.levels && xp(book)>=SangmonUnlockXP.values.getValue(book.characterStyle))
         book.awardedDays.forEach {require(LocalDate.parse(it).year in 1..9999)}
         book.activities.forEach {(date,flags)->require(LocalDate.parse(date).year in 1..9999 && flags in 1..31)}
+        CollectionRules.state(book)
         EquipmentCatalog.slots.forEach {slot->val id=book.equipment.get(slot);require(id=="none" || EquipmentCatalog.items[id]==slot)}
         book.days.forEach { (date,entry) ->
             require(LocalDate.parse(date).year in 1..9999);require(entry.theme in 0..2 && entry.blocks.size<=MAX_BLOCKS)

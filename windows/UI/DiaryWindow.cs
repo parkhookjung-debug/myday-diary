@@ -417,6 +417,7 @@ namespace MyDay.Windows.UI
                     var merged=new DiaryBook(); foreach(var pair in book.Days) merged.Days[pair.Key]=pair.Value;
                     merged.CharacterStyle=incoming.CharacterStyle;
                     merged.Progress=SangmonGrowth.Merge(book.Progress,incoming.Progress);
+                    merged.Collection=SangmonCollection.Merge(book.Collection,incoming.Collection);
                     merged.Equipment=SangmonItems.Import(book.Equipment,incoming.Equipment,incoming.Version>=5);
                     merged.Layouts=layouts; merged.Version=Math.Max(book.Version,incoming.Version);
                     foreach(var pair in incoming.Days) merged.Days[pair.Key]=pair.Value;

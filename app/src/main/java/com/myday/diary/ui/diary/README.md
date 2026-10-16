@@ -18,3 +18,5 @@
 `DiaryScreen/DiaryBlockCard/DiaryDialogs/DiaryRoute/DiarySections`는 초기 Preview·호환 검사용 코드입니다. 현재 앱 화면을 고치려면 위의 **Phone 파일**부터 봅니다. 기존 debug Preview는 초기 화면이므로 최신 화면은 에뮬레이터/갤럭시에서 실행합니다.
 
 [Android 전체 파일 안내](../../README.md) · [디자인 가이드](../../../../../../../../../docs/DESIGN.md)
+
+소품 뽑기·수집 도감 화면은 [PhoneCollection.kt](PhoneCollection.kt), 성장 카드와 진입 탭은 [PhoneCompanion.kt](PhoneCompanion.kt)에서 수정합니다.

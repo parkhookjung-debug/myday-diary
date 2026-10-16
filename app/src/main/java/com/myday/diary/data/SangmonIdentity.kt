@@ -59,13 +59,17 @@ object SangmonIdentity {
         "golem" to 1,
         "ocean" to 1,
         "astral" to 1,
-        "growth-apprentice" to 2,
-        "growth-bookmark" to 3,
-        "growth-knight" to 4,
-        "growth-mage" to 5,
-        "growth-explorer" to 6,
-        "growth-alchemist" to 7,
-        "growth-sovereign" to 8,
-        "growth-hero" to 10
+        "growth-apprentice" to 6,
+        "growth-bookmark" to 10,
+        "growth-knight" to 13,
+        "growth-mage" to 15,
+        "growth-explorer" to 18,
+        "growth-alchemist" to 20,
+        "growth-sovereign" to 23,
+        "growth-hero" to 28
     )
+}
+
+object SangmonUnlockXP {
+    val values=mapOf("original" to 0,"puffy" to 0,"winged" to 0,"speedy" to 0,"dazed" to 0,"spiky" to 0,"horned" to 0,"mini" to 0,"fin" to 0,"shell" to 0,"tailed" to 0,"crystal" to 0,"furry" to 0,"sprout" to 0,"flower" to 0,"ribbon" to 0,"angel" to 0,"devil" to 0,"crown" to 0,"wizard" to 0,"pirate" to 0,"astronaut" to 0,"headphones" to 0,"glasses" to 0,"scarf" to 0,"backpack" to 0,"sleep-cap" to 0,"raincoat" to 0,"winter" to 0,"star" to 0,"moon" to 0,"heart" to 0,"cat" to 0,"rabbit" to 0,"fox" to 0,"puppy" to 0,"bear" to 0,"ram" to 0,"deer" to 0,"dragon" to 0,"butterfly" to 0,"axolotl" to 0,"shark" to 0,"peacock" to 0,"turtle" to 0,"octopus" to 0,"robot" to 0,"cactus" to 0,"ember" to 0,"frost" to 0,"volt" to 0,"venom" to 0,"shadow" to 0,"golem" to 0,"ocean" to 0,"astral" to 0,"growth-apprentice" to 50,"growth-bookmark" to 100,"growth-knight" to 150,"growth-mage" to 200,"growth-explorer" to 250,"growth-alchemist" to 300,"growth-sovereign" to 350,"growth-hero" to 450)
 }

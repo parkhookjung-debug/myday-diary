@@ -33,7 +33,7 @@ data class SavedLayout(val id: String = UUID.randomUUID().toString(), val name: 
 data class DiaryBook(val version: Int = 4, val days: Map<String, DiaryEntry> = emptyMap(),
     val characterStyle: String = "original", val layouts: List<SavedLayout> = emptyList(),
     val awardedDays: Set<String> = emptySet(), val equipment: Equipment = Equipment(), val haptics: Boolean = true,
-    val hasEquipment: Boolean = true,val activities: Map<String,Int> = emptyMap())
+    val hasEquipment: Boolean = true,val activities: Map<String,Int> = emptyMap(),val collection: CollectionBook?=null)
 
 interface NotebookRepository {
     fun loadBook(): DiaryBook
@@ -44,3 +44,7 @@ interface DiaryRepository {
     fun read(date: String): DiaryEntry
     fun write(date: String, entry: DiaryEntry): Boolean
 }
+
+// A single ordered ledger makes spending and duplicate conversion reproducible on both platforms.
+data class CollectionAction(val id: String,val kind: String,val itemId: String)
+data class CollectionBook(val actions: List<CollectionAction> = emptyList())

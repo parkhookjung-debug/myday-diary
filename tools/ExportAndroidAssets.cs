@@ -28,9 +28,10 @@ public static class AndroidAssetExporter
         var json=new JavaScriptSerializer();
         var identityPath=Path.Combine(root,"..","java","com","myday","diary","data","SangmonIdentity.kt");
         File.WriteAllText(identityPath,"package com.myday.diary.data\n\n// Generated from the Windows catalog by tools/export-android-assets.ps1.\nobject SangmonIdentity {\n    val levels=mapOf(\n        "+string.Join(",\n        ",MonsterVariants.All.Select(v=>json.Serialize(MonsterVariants.Id(v))+" to "+SangmonGrowth.RequiredLevel(v)))+"\n    )\n}\n",new System.Text.UTF8Encoding(false));
+        File.AppendAllText(identityPath,"\nobject SangmonUnlockXP {\n    val values=mapOf("+string.Join(",",MonsterVariants.All.Select(v=>json.Serialize(MonsterVariants.Id(v))+" to "+SangmonGrowth.RequiredXP(v)))+")\n}\n",new System.Text.UTF8Encoding(false));
         File.WriteAllText(Path.Combine(Path.GetDirectoryName(identityPath),"EquipmentCatalog.kt"),"package com.myday.diary.data\n\n// Generated from windows/Core/SangmonItems.cs. Do not edit.\nobject EquipmentCatalog {\n    val slots=listOf("+string.Join(",",SangmonItems.Slots.Select(json.Serialize))+")\n    val names=listOf("+string.Join(",",SangmonItems.SlotNames.Select(json.Serialize))+")\n    val items=mapOf(\n        "+string.Join(",\n        ",SangmonItems.All.Select(i=>json.Serialize(i.Id)+" to "+json.Serialize(i.Slot)))+"\n    )\n}\n",new System.Text.UTF8Encoding(false));
         File.WriteAllText(Path.Combine(root,"catalog.json"),json.Serialize(new {
-            characters=MonsterVariants.All.Select(v=>new {id=MonsterVariants.Id(v),name=MonsterVariants.Name(v),level=SangmonGrowth.RequiredLevel(v)}).ToArray(),
+            characters=MonsterVariants.All.Select(v=>new {id=MonsterVariants.Id(v),name=MonsterVariants.Name(v),level=SangmonGrowth.RequiredLevel(v),xp=SangmonGrowth.RequiredXP(v)}).ToArray(),
             items=SangmonItems.All.Select(i=>new {id=i.Id,name=i.Name,slot=i.Slot,description=i.Description,element=i.Element.ToString()}).ToArray(),
             templates=DiaryTemplates.All.Select(t=>new {id=t.Id,name=t.Name,description=t.Description,style=t.Style,category=t.Category,minutes=t.Minutes,layout=t.Layout,
                 sections=t.Sections.Select((s,index)=>new {kind=s.Kind,title=s.Title,prompt=s.Prompt,
@@ -80,6 +81,9 @@ public static class AndroidAssetExporter
         DiaryStore.Validate(fixture);
         using(var output=File.Create(Path.Combine(resourcePath,"windows-v5.json")))new System.Runtime.Serialization.Json.DataContractJsonSerializer(typeof(DiaryBook)).WriteObject(output,fixture);
         File.Copy(Path.Combine(resourcePath,"windows-v5.json"),Path.Combine(deviceResources,"windows-v5.json"),true);
+        fixture.Version=6;fixture.Collection=SangmonCollection.Draw(null,fixture.Progress,n=>0);fixture.Collection=SangmonCollection.Draw(fixture.Collection,fixture.Progress,n=>0);
+        using(var output=File.Create(Path.Combine(resourcePath,"windows-v6.json")))new System.Runtime.Serialization.Json.DataContractJsonSerializer(typeof(DiaryBook)).WriteObject(output,fixture);
+        File.Copy(Path.Combine(resourcePath,"windows-v6.json"),Path.Combine(deviceResources,"windows-v6.json"),true);
         Console.WriteLine("Exported "+(itemsOnly?"existing Sangmon atlases unchanged, ":"64 Sangmon atlases, ")+items.Length+" items/overlays and 100 templates.");return 0;
     }
 }

@@ -45,6 +45,15 @@ class PhoneNotebookDeviceTest {
         val folder=File(context.getExternalFilesDir(null),"previews");folder.mkdirs()
         File(folder,"$name.png").outputStream().use {image.compress(Bitmap.CompressFormat.PNG,100,it)};image.recycle()
     }
+    @Test fun giftDrawRevealsOnlySavedResultsAndDisablesWhenEmpty() {
+        start();ui.onNodeWithText("상몬").performClick();ui.onNodeWithText("소품 뽑기").performClick()
+        ui.onNodeWithTag("collection-draw").performClick();ui.onNodeWithText("새 소품을 만났어요!").assertExists();screenshot("android-collection-result")
+        ui.onNodeWithTag("collection-result-close").performClick()
+        ui.runOnIdle {assertEquals(20,CollectionRules.state(c.book).coins);assertEquals(1,c.book.collection!!.actions.size);assertEquals(Equipment(),c.book.equipment)}
+        ui.onNodeWithTag("collection-draw").performClick();ui.onNodeWithTag("collection-result-close").performClick()
+        ui.onNodeWithTag("collection-draw").assertIsNotEnabled();screenshot("android-collection")
+        ui.runOnIdle {val state=CollectionRules.state(c.book);assertEquals(0,state.coins);assertEquals(2,state.draws);assertEquals(state,CollectionRules.state(NotebookJson.decode(NotebookJson.encode(c.book))))}
+    }
     @Test fun phoneDiaryPhotoCalendarAndThemes() {
         start();screenshot("android-diary")
         ui.onNodeWithTag("diary-list").performScrollToNode(hasText("예시 기록"))

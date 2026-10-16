@@ -23,7 +23,7 @@ namespace MyDay.Windows.UI
         internal readonly Button Previous=Design.Button("이전"),Next=Design.Button("다음");
         internal readonly Dictionary<string,Button> EquipButtons=new Dictionary<string,Button>();
         private int page;
-        public EquipmentWindow(DiaryBook book,Func<string,string,bool> equip)
+        public EquipmentWindow(DiaryBook book,Func<string,string,bool> equip,Action openCollection=null)
         {
             this.book=book;this.equip=equip;
             Text="MyDay · 300가지 상몬 소품";BackColor=Backdrop;ForeColor=Accent;Font=Design.Font(10);AutoScaleMode=AutoScaleMode.None;StartPosition=FormStartPosition.CenterParent;
@@ -46,7 +46,8 @@ namespace MyDay.Windows.UI
             Previous.Click+=delegate {page--;RenderItems();};Next.Click+=delegate {page++;RenderItems();};
             var close=Design.Button("닫기");close.DialogResult=DialogResult.Cancel;CancelButton=close;
             pageLabel.ForeColor=Muted;pageLabel.Margin=Design.Pad(12,6,12,0);
-            footer.Controls.AddRange(new Control[]{Previous,pageLabel,Next,close});
+            var gifts=Design.Button("소품 뽑기");gifts.Enabled=openCollection!=null;gifts.Click+=delegate {if(openCollection!=null)openCollection();};
+            footer.Controls.AddRange(new Control[]{Previous,pageLabel,Next,gifts,close});
             Controls.Add(list);Controls.Add(filters);Controls.Add(hero);Controls.Add(footer);
             list.Resize+=delegate {LayoutItems();};RenderItems();
         }

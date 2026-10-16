@@ -63,6 +63,7 @@ namespace MyDay.Windows.Core
         [DataMember(EmitDefaultValue=false)] public List<SavedLayout> Layouts=new List<SavedLayout>();
         [DataMember(EmitDefaultValue=false)] public SangmonProgress Progress;
         [DataMember(EmitDefaultValue=false)] public SangmonEquipment Equipment;
+        [DataMember(EmitDefaultValue=false)] public CollectionBook Collection;
     }
 
     public sealed class DiaryStore
@@ -84,12 +85,13 @@ namespace MyDay.Windows.Core
         }
         public static void Validate(DiaryBook book)
         {
-            if (book == null || book.Version < 1 || book.Version > 5 || book.Days == null)
+            if (book == null || book.Version < 1 || book.Version > 6 || book.Days == null)
                 throw new InvalidDataException("지원하지 않는 기록 파일입니다.");
             if (book.Days.Count > 50000) throw new InvalidDataException("기록 파일이 너무 큽니다.");
             book.CharacterStyle=MonsterVariants.Id(MonsterVariants.FromId(book.CharacterStyle));
             SangmonGrowth.Validate(book.Progress);
             SangmonItems.Validate(book.Equipment);
+            SangmonCollection.Validate(book.Collection,book.Progress);
             if(!SangmonGrowth.CanUse(book.Progress,MonsterVariants.FromId(book.CharacterStyle))) book.CharacterStyle="original";
             if(book.Layouts==null) book.Layouts=new List<SavedLayout>();
             SavedLayouts.Validate(book.Layouts);
@@ -158,6 +160,8 @@ namespace MyDay.Windows.Core
         public static string Key(DateTime date) { return date.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture); }
         private static void UpgradeVersion(DiaryBook book)
         {
+            if(book.Collection!=null){book.Version=6;return;}
+            if(book.Version>=6)return;
             if(SangmonItems.Expanded(book.Equipment) || book.Progress!=null && book.Progress.Activities!=null && book.Progress.Activities.Count>0)book.Version=5;
             else if(book.Equipment!=null && book.Version<4) book.Version=4;
             else if(book.Progress!=null && book.Version<3) book.Version=3;

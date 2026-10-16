@@ -19,3 +19,5 @@
 | 성장 화면·보상 장착 | [GrowthWindow.cs](GrowthWindow.cs), [DiaryWindow.Growth.cs](DiaryWindow.Growth.cs) | 경험치·보상 카드와 연결 |
 | 아이템 장비함·장착 연결 | [EquipmentWindow.cs](EquipmentWindow.cs), [DiaryWindow.Items.cs](DiaryWindow.Items.cs) | 두 슬롯과 저장·적용 |
 | 앱 안 캐릭터·아이템 미리보기 | [MonsterView.cs](MonsterView.cs), [ItemView.cs](ItemView.cs) | 타이머와 렌더링 연결 |
+
+뽑기·수집 도감은 [CollectionWindow.cs](CollectionWindow.cs), 저장 성공/실패 처리는 [DiaryWindow.Collection.cs](DiaryWindow.Collection.cs)에서 수정합니다. [규칙 안내](../../docs/SANGMON-COLLECTION.md)
