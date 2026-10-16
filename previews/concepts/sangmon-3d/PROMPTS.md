@@ -2,7 +2,7 @@
 
 사용 도구: 기본 `image_gen` 도구. CLI/API fallback은 사용하지 않았습니다.
 
-원본 정체성은 저장소의 `app/src/main/assets/portraits/original.png`를 사용했습니다. 사용자가 제공한 설명 이미지는 데스크톱 펫의 작고 단순한 3D 스타일과 자연스러운 동작 방향을 참고하는 용도입니다.
+원본 정체성은 제작 당시 저장소의 `app/src/main/assets/portraits/original.png`를 사용했습니다. 이후 앱 자산이 갱신되어 당시 파일을 [sangmon-sketch-reference-v1.png](sangmon-sketch-reference-v1.png)에 그대로 보존했습니다. 사용자가 제공한 설명 이미지는 데스크톱 펫의 작고 단순한 3D 스타일과 자연스러운 동작 방향을 참고하는 용도입니다.
 
 ## 캐릭터 기준
 

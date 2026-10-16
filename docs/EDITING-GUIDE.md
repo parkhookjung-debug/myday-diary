@@ -37,6 +37,7 @@
 | 바꾸고 싶은 것 | 먼저 열 파일 | 수정하는 부분 |
 | --- | --- | --- |
 | 상몬의 기본 몸·눈·입·포즈 | [MonsterPainter.cs](../windows/Character/MonsterPainter.cs) | 공통 몸 경로와 `MonsterPose` |
+| 기본 상몬의 클레이 재질·눈·옆입·작은 불꽃 | [ClayMaterial.cs](../windows/Character/ClayMaterial.cs) | 입체 음영과 얼굴. [실제 적용본](../previews/applied/sangmon-clay/README.md) 확인 후 Android 자산도 다시 생성 |
 | 꼬리·귀·날개·목도리 등 추가 외형 | [MonsterAdditions.cs](../windows/Character/MonsterAdditions.cs) | 몸 뒤/앞에 덧붙이는 그림 |
 | RPG 속성 외형의 색·명암·효과 | [GameSkins.cs](../windows/Character/GameSkins.cs) | 화염·빙결 등 몸 재질 |
 | 캐릭터 이름·저장 ID·이동 속도 | [MonsterVariants.cs](../windows/Character/MonsterVariants.cs) | `Names`, `Ids`, `SpeedFactor` |

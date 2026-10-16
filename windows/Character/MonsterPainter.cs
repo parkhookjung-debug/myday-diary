@@ -43,7 +43,7 @@ namespace MyDay.Windows.Character
         }
     }
 
-    // Retains the Android sketch outline; Windows poses add stretch, expressions and reactions.
+    // Shared identity and poses; Original uses the approved ivory clay direction.
     public static class MonsterPainter
     {
         public static readonly Color Ink = Color.FromArgb(57, 55, 53);
@@ -94,12 +94,13 @@ namespace MyDay.Windows.Character
             }
             var bodySave = g.Save();
             g.TranslateTransform(275, 730); g.RotateTransform(pose.Tilt+(variant==MonsterVariant.Speedy?-8:0));
-            g.ScaleTransform(pose.WidthScale*(variant==MonsterVariant.Speedy?1.05f:1),pose.BodyScale*(variant==MonsterVariant.Speedy?.9f:1)); g.TranslateTransform(-275, -730);
+            g.ScaleTransform(pose.WidthScale*(variant==MonsterVariant.Speedy?1.05f:variant==MonsterVariant.Original && pose.Sleeping?1.06f:1),
+                pose.BodyScale*(variant==MonsterVariant.Speedy?.9f:variant==MonsterVariant.Original?(pose.Sleeping?.76f:pose.Held?1.1f:1):1)); g.TranslateTransform(-275, -730);
             DrawBehind(g,pose,variant);
             MonsterAdditions.DrawBehind(g,pose,variant);
             GameSkins.DrawBehind(g,pose,variant);
             RewardSkins.DrawBehind(g,pose,variant);
-            float l = pose.Toe, r = -pose.Toe;
+            float l = variant==MonsterVariant.Original?ClayMaterial.Step(pose.Toe):pose.Toe, r = -l;
             if(variant==MonsterVariant.Puffy) {
                 using(var body=new Shape().M(215,513).C(219,482,231,451,248,439).C(261,433,268,455,275,491)
                     .C(281,466,288,430,307,433).C(326,435,337,469,342,498).C(425,500,509,566,507,647)
@@ -123,11 +124,14 @@ namespace MyDay.Windows.Character
                 .C(357,654,334,672,318,684).C(287,708,260,742,238,765+l).C(225,783+l,213,778+l,214,755+l)
                 .C(196,767+l,177,761+l,170,749+l).C(154,732,169,702,180,679).L(205,632)
                 .C(181,637,150,627,133,612).C(112,598,113,582,120,568).C(137,542,165,519,190,515).Q(207,511,215,513).Close()) {
-                    if(!GameSkins.PaintBody(g,body,pose,variant) && !RewardSkins.PaintBody(g,body,variant)) Fill(g,body,Body);
+                    if(variant==MonsterVariant.Original) ClayMaterial.Body(g,body.Path,l);
+                    else if(!GameSkins.PaintBody(g,body,pose,variant) && !RewardSkins.PaintBody(g,body,variant)) Fill(g,body,Body);
                 }
             }
             MonsterAdditions.DrawFront(g,pose,variant);
             RewardSkins.DrawFront(g,pose,variant);
+            if(variant==MonsterVariant.Original) ClayMaterial.Face(g,pose);
+            else {
             using (var mouth = new Shape().M(120,586).Q(154,567,185,561).C(205,557,222,565,227,579)
                 .C(232,593,220,614,209,625).Q(168,643,133,611).Q(123,601,120,586).Close()) Fill(g, mouth, GameSkins.IsGame(variant)?GameSkins.Light(variant):Mouth, false);
             using (var lip = new Shape().M(120,586).Q(154,567,185,561).C(205,557,222,565,227,579)
@@ -152,6 +156,7 @@ namespace MyDay.Windows.Character
                 if(variant!=MonsterVariant.Dazed) using (var shine = new SolidBrush(Color.FromArgb(245,Body))) g.FillEllipse(shine,-5,-11,4,6);
                 g.Restore(eye);
             }
+            }
             if(pose.Curious || pose.Happy) {
                 using(var blush=new SolidBrush(Color.FromArgb(pose.Happy?75:40,238,156,122))) {
                     g.FillEllipse(blush,226,509,22,11); g.FillEllipse(blush,310,509,22,11);
@@ -163,7 +168,10 @@ namespace MyDay.Windows.Character
             if (!pose.Held && pose.FireStrength>.01f)
             {
                 float size = .42f + pose.FireStrength*(.47f + pose.Pulse*.13f);
-                g.TranslateTransform(136,636); g.ScaleTransform(size,size); g.RotateTransform((pose.Pulse-.5f)*7); g.TranslateTransform(-136,-636);
+                float anchorX=variant==MonsterVariant.Original?120:136, anchorY=variant==MonsterVariant.Original?586:636;
+                g.TranslateTransform(anchorX,anchorY); g.ScaleTransform(size,size); g.RotateTransform((pose.Pulse-.5f)*7); g.TranslateTransform(-anchorX,-anchorY);
+                if(variant==MonsterVariant.Original) ClayMaterial.Flame(g);
+                else {
                 using (var stream = new Shape().M(121,607).Q(103,611,106,624).L(133,639).Q(129,620,121,607).Close()) Fill(g,stream,Fire,false);
                 using (var fire = new Shape().M(130,630).C(115,613,95,609,81,617).C(63,610,42,625,32,638).Q(40,646,56,644)
                     .C(37,658,22,677,30,695).C(33,708,43,708,57,696).C(51,711,52,724,63,725).C(73,726,82,706,83,701)
@@ -172,10 +180,11 @@ namespace MyDay.Windows.Character
                 using (var core = new Shape().M(83,620).Q(68,632,77,640).Q(84,635,88,635).Q(79,650,91,657)
                     .Q(98,650,100,642).Q(95,664,106,665).Q(116,653,116,646).Q(115,669,125,661)
                     .Q(139,640,119,625).Q(100,616,83,620).Close()) Fill(g,core,Core);
+                }
                 if(pose.Happy && pose.FireStrength>0) {
                     for(int i=0;i<5;i++) {
                         float phase=(pose.Phase*1.7f+i*.19f)%1;
-                        float px=70-phase*65,py=641+(float)Math.Sin(phase*6+i)*22;
+                        float px=(variant==MonsterVariant.Original?45:70)-phase*65,py=(variant==MonsterVariant.Original?586:641)+(float)Math.Sin(phase*6+i)*22;
                         using(var ember=new SolidBrush(Color.FromArgb((int)(170*(1-phase)*pose.FireStrength),i%2==0?Fire:Color.FromArgb(237,160,91))))
                             g.FillEllipse(ember,px,py,5+phase*3,5+phase*3);
                     }

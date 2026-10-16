@@ -7,6 +7,7 @@
 | 바꾸려는 것 | 파일 | 역할 |
 | --- | --- | --- |
 | 상몬 기본 몸·눈·입·포즈 | [MonsterPainter.cs](MonsterPainter.cs) | 공통 몸 경로와 움직이는 포즈 |
+| 기본 상몬의 3D풍 클레이 음영·얼굴·작은 불꽃 | [ClayMaterial.cs](ClayMaterial.cs) | 기본 original 외형만 담당, [실제 적용 미리보기](../../previews/applied/sangmon-clay/README.md) |
 | 이름·저장 ID·이동 속도 | [MonsterVariants.cs](MonsterVariants.cs) | 64종 외형 식별 |
 | 귀·꼬리·날개 등 추가 장식 | [MonsterAdditions.cs](MonsterAdditions.cs) | 뒤/앞 레이어 |
 | RPG 속성의 몸 재질 | [GameSkins.cs](GameSkins.cs) | 8종 속성 팔레트·명암·효과 |
