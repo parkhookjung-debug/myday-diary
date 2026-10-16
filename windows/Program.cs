@@ -21,7 +21,13 @@ namespace MyDay.Windows
             {
                 try { Tests.Run(); return 0; } catch(Exception ex) { Console.Error.WriteLine(ex); return 1; }
             }
+            if(args.Length==3 && args[0]=="--chat-test") {
+                try {Tests.ChatTransport(args[1],args[2]).GetAwaiter().GetResult();return 0;}catch(Exception ex){Console.Error.WriteLine(ex);return 1;}
+            }
             SetProcessDPIAware(); Application.EnableVisualStyles(); Application.SetCompatibleTextRenderingDefault(false);
+            if(args.Length==4 && args[0]=="--chat-smoke") {
+                try {Tests.ChatSmoke(args[1],args[2],Path.GetFullPath(args[3]));return 0;}catch(Exception ex){Console.Error.WriteLine(ex);return 1;}
+            }
             if(args.Length==2 && args[0]=="--smoke-test")
             {
                 Application.SetUnhandledExceptionMode(UnhandledExceptionMode.ThrowException);

@@ -22,3 +22,5 @@
 | 화면 예시 | [README.md](../previews/README.md) | 플랫폼별 PNG·GIF |
 
 [소품 뽑기·수집 도감·클로버·꽃잎·확률](SANGMON-COLLECTION.md)
+
+[Windows 서버 채팅·실행·공통 API·수정 위치](CHAT.md)

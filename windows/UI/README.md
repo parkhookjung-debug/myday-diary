@@ -21,3 +21,5 @@
 | 앱 안 캐릭터·아이템 미리보기 | [MonsterView.cs](MonsterView.cs), [ItemView.cs](ItemView.cs) | 타이머와 렌더링 연결 |
 
 뽑기·수집 도감은 [CollectionWindow.cs](CollectionWindow.cs), 저장 성공/실패 처리는 [DiaryWindow.Collection.cs](DiaryWindow.Collection.cs)에서 수정합니다. [규칙 안내](../../docs/SANGMON-COLLECTION.md)
+
+채팅 화면은 [ChatWindow.cs](ChatWindow.cs), 말풍선은 [ChatTranscript.cs](ChatTranscript.cs), 일기 앱 진입은 [DiaryWindow.Chat.cs](DiaryWindow.Chat.cs)에서 수정합니다. 통신은 [ChatClient.cs](../Chat/ChatClient.cs)입니다.

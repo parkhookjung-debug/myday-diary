@@ -12,12 +12,13 @@ myday-diary/
 │       │   │   ├── diary/     날짜·입력·일기 동작
 │       │   │   ├── platform/  홈 위젯·배경화면 설정 연결
 │       │   │   └── ui/        화면·디자인·캐릭터·배경화면
-│       │   ├── assets/        공통 64종 애니메이션·12종 아이템·100종 형식
+│       │   ├── assets/        공통 64종 애니메이션·300종 소품·100종 형식
 │       │   └── res/           색·크기·위젯 레이아웃·설정
 │       ├── debug/             Android Studio 화면 Preview
 │       ├── test/              일기·캐릭터·JSON 단위 테스트
 │       └── androidTest/       실제 UI·사진·저장 검사
 ├── windows/                   네이티브 Windows 앱
+│   ├── Chat/                  채팅 HTTP·JSON·취소
 │   ├── Core/                  기록·저장·입력 제스처
 │   ├── UI/                    일기 창·블록·디자인
 │   ├── Character/             상몬 그림·행동·외형·게임 재질
@@ -30,6 +31,7 @@ myday-diary/
 │   ├── SavedLayoutTests.cs    내 레이아웃 저장·재사용·보존 검증
 │   ├── build.ps1              .NET Framework 빌드
 │   └── 실행.cmd               소스에서 빌드 후 실행
+├── server/                    초대형 공용 채팅 서버·SQLite·통신 검사
 ├── docs/                      실행·디자인·협업 문서
 ├── previews/
 │   ├── android/               Android PNG·GIF·초기 HTML 예시

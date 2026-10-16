@@ -2,6 +2,10 @@
 
 플랫폼별로 나눠 보관합니다. 실행 파일은 GitHub Releases에서 받습니다.
 
+## Windows 서버 채팅
+
+[실제 서버에 연결한 Windows 채팅 창](applied/chat-v1/README.md). 서버 실행과 Android용 공통 API를 함께 정리했습니다.
+
 ## 소품 소유권·잠금·기본 지급
 
 [기본 8종·미보유 잠금·보유 필터·선물 상자 실제 화면](applied/ownership-v1/README.md)

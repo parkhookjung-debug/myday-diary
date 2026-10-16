@@ -22,6 +22,9 @@ jobs:
       - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
         with:
           persist-credentials: false
+      - uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1 # v6
+        with:
+          python-version: '3.11'
       - name: Build native Windows app
         shell: pwsh
         run: ./windows/build.ps1
@@ -40,6 +43,14 @@ jobs:
           Get-Content windows/bin/native-results.txt
           Get-Content windows/bin/native-errors.txt
           if ($smokeRun.ExitCode -ne 0) { throw "Native smoke failed: $($smokeRun.ExitCode)" }
+      - name: Verify chat server and native Windows clients
+        shell: pwsh
+        run: |
+          $env:PYTHONUTF8='1'
+          python -m unittest discover -s server -p 'test_*.py' -v
+          if ($LASTEXITCODE -ne 0) { throw 'Chat server tests failed' }
+          python server/test_windows_chat.py --exe windows/bin/MyDay.exe --output windows/bin/smoke-output
+          if ($LASTEXITCODE -ne 0) { throw 'Windows chat integration failed' }
       - name: Upload app and validation results
         if: always()
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4

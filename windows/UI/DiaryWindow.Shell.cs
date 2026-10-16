@@ -29,6 +29,7 @@ namespace MyDay.Windows.UI
             sidebarCalendar=new MonthCalendar(book,date,picker.MinDate,picker.MaxDate,ChangeDate) {Size=Design.Size(216,262),Margin=Design.Pad(0,14,0,10)};
             sidebarFlow.Controls.Add(sidebarCalendar);
             browse.Size=Design.Size(216,32); browse.AccessibleName="달력과 일기 검색 열기"; browse.Click+=delegate { BrowseDiary(); }; sidebarFlow.Controls.Add(browse);
+            var chat=Design.Button("상몬 라운지 · 채팅");chat.Size=Design.Size(216,32);chat.AccessibleName="서버 채팅 열기";chat.Click+=delegate {OpenChat();};sidebarFlow.Controls.Add(chat);
             var title=Design.Label("차곡차곡 쌓인 기록",10,true); title.Margin=Design.Pad(6,20,0,8); sidebarFlow.Controls.Add(title);
             history.Dock=DockStyle.None; history.Size=Design.Size(216,190); history.Padding=Design.Pad(0); history.BackColor=Design.Sidebar; history.Margin=Design.Pad(0); sidebarFlow.Controls.Add(history);
             var backup=new Panel {Size=Design.Size(216,190),Margin=Design.Pad(0,20,0,0)};

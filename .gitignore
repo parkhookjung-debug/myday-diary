@@ -21,3 +21,8 @@ keystore.properties
 /.codex-remote-attachments/
 /windows/bin/
 /windows/test-output/
+
+# Private server invitations, chat data and Python caches.
+/server/.local/
+__pycache__/
+*.pyc
