@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Net;
 using System.Runtime.Serialization;
@@ -30,6 +31,7 @@ namespace MyDay.Windows.Chat
         [DataMember] public List<string> users {get;set;}
         [DataMember] public long cursor {get;set;}
         [DataMember] public bool reset {get;set;}
+        [DataMember(EmitDefaultValue=false)] public int pollAfterMs {get;set;}
     }
     [DataContract] internal sealed class ChatErrorBody { [DataMember] public string error {get;set;} }
     [DataContract] internal sealed class ChatOk { [DataMember] public bool ok {get;set;} }
@@ -113,11 +115,17 @@ namespace MyDay.Windows.Chat
         }
         public async Task<ChatPage> Poll(long cursor,CancellationToken cancel,int wait=20)
         {
-            var page=await Request<ChatPage>("api/messages?after="+cursor+"&wait="+wait,"GET",null,cancel).ConfigureAwait(false);
-            if(page==null || page.messages==null || page.users==null || page.messages.Count>100 || page.users.Count>64 || page.cursor<0)throw new IOException("메시지 목록이 올바르지 않아요.");
-            foreach(var message in page.messages)ValidateMessage(message);
-            foreach(string name in page.users)if(name==null || name.Length>20)throw new IOException("참여자 목록이 올바르지 않아요.");
-            return page;
+            var clock=Stopwatch.StartNew();
+            while(true) {
+                var page=await Request<ChatPage>("api/messages?after="+cursor+"&wait="+wait,"GET",null,cancel).ConfigureAwait(false);
+                if(page==null || page.messages==null || page.users==null || page.messages.Count>100 || page.users.Count>64 || page.cursor<0 || page.pollAfterMs<0 || page.pollAfterMs>30000)throw new IOException("메시지 목록이 올바르지 않아요.");
+                foreach(var message in page.messages)ValidateMessage(message);
+                foreach(string name in page.users)if(name==null || name.Length>20)throw new IOException("참여자 목록이 올바르지 않아요.");
+                if(page.pollAfterMs==0 || wait==0 || page.reset || page.messages.Count>0 || clock.ElapsedMilliseconds>=wait*1000)return page;
+                // Cloudflare Free does not hold an idle object awake for long polling.
+                int remaining=wait*1000-(int)clock.ElapsedMilliseconds;
+                await Task.Delay(Math.Min(page.pollAfterMs,remaining),cancel).ConfigureAwait(false);
+            }
         }
         private static void ValidateMessage(ChatMessage message)
         {

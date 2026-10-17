@@ -87,7 +87,7 @@ namespace MyDay.Windows.UI
                     foreach(var message in page.messages)if(message.id>cursor) {Append(message);cursor=message.id;}
                     cursor=Math.Max(cursor,page.cursor);people.Items.Clear();foreach(string name in page.users)people.Items.Add(name+(name==nickname?" (나)":""));
                     if(failures>0)Status("서버에 다시 연결됐어요.");failures=0;
-                } catch(ChatException ex) {if(ex.Status==401 || ex.Status==403)throw;Status(ex.Message);delay=2000;}
+                } catch(ChatException ex) {if(ex.Status==401 || ex.Status==403 || ex.Status==503)throw;Status(ex.Message);delay=ex.Status==429?10000:2000;}
                 catch(OperationCanceledException) {throw;}
                 catch(Exception) {failures++;Status("연결을 확인하고 있어요. 서버가 켜져 있는지 확인해 주세요.");if(failures>=3)throw new System.IO.IOException("서버 연결이 끊겼어요. 다시 입장해 주세요.");delay=2000;}
                 if(delay>0)await Task.Delay(delay,cancel);

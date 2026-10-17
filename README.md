@@ -12,7 +12,7 @@
 
 **새 캐릭터 적용:** [기본 상몬의 3D풍 클레이 외형·실제 렌더링·수정 파일 안내](previews/applied/sangmon-clay/README.md). 기본 상몬에 먼저 적용했으며 Windows와 Android 자산에 함께 반영했습니다. 기존 Releases 파일에는 아직 포함되지 않습니다.
 
-**Windows 서버 채팅:** 왼쪽 **상몬 라운지 · 채팅**에서 초대코드로 공용방에 입장합니다. [서버 실행·같은 Wi-Fi 접속](server/README.md) · [기능·공통 API·수정 파일](docs/CHAT.md) · [실제 화면](previews/applied/chat-v1/README.md). Windows부터 구현했으며 Android 채팅은 다음 단계입니다. 외부 상시 서버는 아직 배포하지 않았습니다.
+**Windows·Mac 채팅 / 현재 로컬 개발:** 일기 앱의 **상몬 라운지 · 채팅**에서 같은 서버에 접속하도록 구현했습니다. [계정 없이 실행·같은 Wi-Fi·무료 배포 차단·수정 파일](docs/FREE-CHAT.md) · [Mac 일기 앱](macos/README.md) · [기존 Python 서버](server/README.md) · [공통 API](docs/CHAT.md). 무료 계정을 준비하기 전까지 외부 배포를 진행하지 않습니다. Windows 실제 통신은 로컬 검증했고 Mac 빌드·실행은 Mac 환경에서 별도 확인해야 합니다. Android 채팅은 후속입니다.
 
 ## 어떤 파일을 수정하면 되나요?
 
@@ -21,6 +21,7 @@
 | 바꾸려는 기능 | Windows에서 열 파일 | Android에서 열 파일 |
 | --- | --- | --- |
 | 서버 채팅·메시지·접속자·초대코드 | [ChatClient.cs](windows/Chat/ChatClient.cs) · [ChatWindow.cs](windows/UI/ChatWindow.cs) · [chat_server.py](server/chat_server.py) | 공통 API 준비 · Android 화면은 후속 |
+| 무료 서버·Mac 채팅 화면·공통 통신 | [무료 서버 원본](server/cloudflare/src/index.ts) · [배포 차단](server/cloudflare/tools/free-deploy.mjs) · [Mac 화면](macos/Sources/MyDay/ChatView.swift) · [Mac 통신](macos/Sources/MyDay/ChatClient.swift) | [공통 프로토콜](docs/CHAT.md) |
 | 색·글꼴·버튼·카드 디자인 | [Design.cs](windows/UI/Design.cs) | [MyDayTheme.kt](app/src/main/java/com/myday/diary/ui/design/MyDayTheme.kt) · [colors.xml](app/src/main/res/values/colors.xml) |
 | 전체 화면·메뉴·탭 위치 | [DiaryWindow.Shell.cs](windows/UI/DiaryWindow.Shell.cs) | [PhoneNotebookScreen.kt](app/src/main/java/com/myday/diary/ui/diary/PhoneNotebookScreen.kt) |
 | 일기 카드·입력창·체크박스 | [BlockCard.cs](windows/UI/BlockCard.cs) | [PhoneBlockEditor.kt](app/src/main/java/com/myday/diary/ui/diary/PhoneBlockEditor.kt) |
@@ -49,7 +50,7 @@
 | --- | --- | --- |
 | Windows 10/11 | [MyDay.exe 바로 받기](https://github.com/parkhookjung-debug/myday-diary/releases/download/v0.3.10-preview/MyDay.exe) · [전체 ZIP과 안내서](https://github.com/parkhookjung-debug/myday-diary/releases/tag/v0.3.10-preview) | [Windows 안내](windows/README.md) |
 | 갤럭시 / Android 8 이상 | [Android APK 받기](https://github.com/parkhookjung-debug/myday-diary/releases/tag/v0.4.0-android-preview) (개발용 debug) | [Android 안내](docs/ANDROID.md) |
-| macOS | 현재 macOS 실행 파일은 제공하지 않습니다. | Windows EXE는 Windows에서 실행합니다. |
+| macOS 13 이상 | [Mac 개발 소스·로컬 빌드 안내](macos/README.md). 새 채팅 포함 실행 파일은 아직 Releases에 없습니다. | Windows EXE 대신 Mac용 앱을 빌드합니다. |
 
 GitHub 저장소 오른쪽 **Releases → 해당 버전 → Assets**에서도 받습니다. Windows는 .NET Framework 4.8 이상에서 사용하며, 이전 앱이 실행 중이면 알림 영역 MyDay → **모두 종료** 후 새 EXE를 실행합니다. 현재 Windows 배포는 v0.3.10-preview입니다.
 

@@ -26,3 +26,11 @@ keystore.properties
 /server/.local/
 __pycache__/
 *.pyc
+
+# Local Cloudflare dependencies, credentials and emulated chat data.
+node_modules/
+.wrangler/
+.dev.vars
+.dev.vars.*
+/server/cloudflare/.test-worker/
+/macos/.build/

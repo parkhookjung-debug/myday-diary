@@ -30,7 +30,7 @@ namespace MyDay.Windows
             var a=new ChatClient(address);var b=new ChatClient(address);Exception failure=null;
             try {
                 var session=await a.Join("연결검사 가",code,CancellationToken.None);await b.Join("연결검사 나",code,CancellationToken.None);
-                Check(session.nickname=="연결검사 가","Windows client authenticates against real Python server");
+                Check(session.nickname=="연결검사 가","Windows client authenticates against the configured chat server");
                 bool rejected=false;try{await new ChatClient(address).Join("연결검사 가",code,CancellationToken.None);}catch(ChatException e){rejected=e.Status==409;}Check(rejected,"Windows reports duplicate nickname");
                 rejected=false;try{await new ChatClient(address).Join("잘못된 코드","invalid-code",CancellationToken.None);}catch(ChatException e){rejected=e.Status==403;}Check(rejected,"Windows reports invalid invitation without connecting");
                 string nonce=Guid.NewGuid().ToString("N");var sent=await a.Send("안녕하세요 🌱\r\n함께 기록해요",nonce,CancellationToken.None);var retry=await a.Send("안녕하세요 🌱\r\n함께 기록해요",nonce,CancellationToken.None);

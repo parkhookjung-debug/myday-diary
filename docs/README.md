@@ -24,3 +24,5 @@
 [소품 뽑기·수집 도감·클로버·꽃잎·확률](SANGMON-COLLECTION.md)
 
 [Windows 서버 채팅·실행·공통 API·수정 위치](CHAT.md)
+
+[비용 0원 로컬 서버·Mac/Windows 채팅·무료 계정 배포 차단](FREE-CHAT.md)
