@@ -86,6 +86,6 @@ macOS 13 이상에서 Command Line Tools를 설치하고 `zsh macos/build.comman
 
 서버 폴더에서 `npm run check`, `npm test`, `npm run build`를 실행합니다. build는 **dry-run**이므로 외부에 배포하지 않습니다. Windows 앱 빌드 뒤 `npm run test:native -- ../../windows/bin/MyDay.exe ../../.bootstrap/free-chat-smoke`로 실제 EXE와 로컬 Workers 서버의 통신·창 동작을 검사합니다. Mac에서는 `npm run test:native -- ../../macos/build/MyDay.app/Contents/MacOS/MyDay`를 실행합니다.
 
-서버 기능·배포 차단 테스트는 계정 없이 실행할 수 있습니다. Windows에서 Mac SwiftUI 앱을 직접 빌드·실행할 수는 없습니다. Mac 실행 환경 또는 향후 GitHub의 Mac 빌드 결과로 별도 확인해야 합니다.
+서버 기능·배포 차단 테스트는 계정 없이 실행할 수 있습니다. 2026-10-17 소스 커밋 `1b99609`의 [자동 검사](https://github.com/parkhookjung-debug/myday-diary/actions/runs/39037445085)에서 서버 검사와 Windows·Mac의 빌드·실제 앱 통신·채팅 화면 렌더링이 통과했습니다. 해당 화면의 **Artifacts**에는 Windows EXE와 Apple Silicon Mac 앱 ZIP을 7일간 보관합니다. Intel Mac과 사용자 기기에서의 실행은 추가 확인 대상입니다. 외부 서버는 배포하지 않았습니다.
 
 공식 근거(2026-10-17 확인): [Workers 요금](https://developers.cloudflare.com/workers/platform/pricing/) · [Durable Objects Free 한도 초과 시 실패](https://developers.cloudflare.com/durable-objects/platform/pricing/) · [GitHub 공개 저장소 표준 러너 무료](https://docs.github.com/en/actions/concepts/billing-and-usage).

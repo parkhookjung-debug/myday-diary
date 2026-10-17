@@ -1,6 +1,6 @@
 # 마이데이 macOS · 채팅 개발판
 
-**기존 Mac 일기 앱에 상몬 라운지 채팅을 추가했습니다.** Windows와 같은 서버·초대코드를 사용합니다. [계정 없는 로컬 서버·같은 Wi-Fi 접속·0원 구성](../docs/FREE-CHAT.md). 현재 Windows 컴퓨터에서 소스를 준비했으며 Mac 빌드·실행 검증은 별도입니다. 아래 기존 일기·성장·백업 범위는 유지하며 Windows 최신 버전 7 백업과 소품 뽑기 전체 호환은 아직 아닙니다.
+**기존 Mac 일기 앱에 상몬 라운지 채팅을 추가했습니다.** Windows와 같은 서버·초대코드를 사용합니다. [계정 없는 로컬 서버·같은 Wi-Fi 접속·0원 구성](../docs/FREE-CHAT.md). [GitHub Mac 검사](https://github.com/parkhookjung-debug/myday-diary/actions/runs/39037445085)에서 빌드·기존 기록·실제 앱 채팅 통신·두 크기 화면 렌더링이 통과했습니다. **Artifacts → myday-chat-macOS-ARM64**에서 Apple Silicon용 앱 ZIP을 받습니다(7일 보관). Intel Mac 빌드·실기기 실행은 별도 확인 대상입니다. 아래 기존 일기·성장·백업 범위는 유지하며 Windows 최신 버전 7 백업과 소품 뽑기 전체 호환은 아직 아닙니다.
 
 화면은 `Sources/MyDay/ChatView.swift`, 통신은 `ChatClient.swift`, 일기 진입 버튼은 `MyDay.swift`, 검사 코드는 `ChatVerification.swift`에서 수정합니다. 채팅은 버튼 또는 메뉴의 **상몬 라운지 · 채팅**으로 열고 ⌘+Enter로 전송합니다. 초대코드와 접속 토큰은 일기·백업·설정 파일에 저장하지 않습니다.
 
@@ -87,4 +87,4 @@ Windows 내보내기는 사진당 JPEG 2MB·긴 변 1,600픽셀, 사진 Base64 �
 
 `--render-preview`는 임시 예시 기록으로 기본·좁은 화면·템플릿·자유 배치 PNG를 저장소 루트 기준 `macos/build/`에 만듭니다. macOS 그래픽 세션에서 실행하세요.
 
-`.github/workflows/chat-compatibility.yml`에 Mac 일기 빌드·기존 데이터 검사·실제 앱과 로컬 Workers 서버의 채팅 검사·두 크기 채팅 화면 렌더링을 준비했습니다. 같은 워크플로의 Windows 작업도 동일한 서버 코드를 검사합니다. 외부 서버 배포나 Cloudflare 계정은 필요하지 않습니다. 현재는 로컬 개발만 진행하므로 아직 이 새 CI를 실행하지 않았습니다. CPU별 빌드가 필요하면 각 Mac에서 빌드하고 ZIP 이름의 CPU를 확인하세요.
+`.github/workflows/chat-compatibility.yml`은 Mac 일기 빌드·기존 데이터 검사·실제 앱과 로컬 Workers 서버의 채팅 검사·두 크기 채팅 화면 렌더링을 실행합니다. 같은 워크플로의 Windows 작업도 동일한 서버 코드를 검사합니다. 외부 서버 배포나 Cloudflare 계정은 필요하지 않습니다. 2026-10-17 소스 커밋 `1b99609`에서 모두 통과했습니다. CPU별 빌드가 필요하면 각 Mac에서 빌드하고 ZIP 이름의 CPU를 확인하세요.

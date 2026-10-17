@@ -12,7 +12,7 @@
 
 **새 캐릭터 적용:** [기본 상몬의 3D풍 클레이 외형·실제 렌더링·수정 파일 안내](previews/applied/sangmon-clay/README.md). 기본 상몬에 먼저 적용했으며 Windows와 Android 자산에 함께 반영했습니다. 기존 Releases 파일에는 아직 포함되지 않습니다.
 
-**Windows·Mac 채팅 / 현재 로컬 개발:** 일기 앱의 **상몬 라운지 · 채팅**에서 같은 서버에 접속하도록 구현했습니다. [계정 없이 실행·같은 Wi-Fi·무료 배포 차단·수정 파일](docs/FREE-CHAT.md) · [Mac 일기 앱](macos/README.md) · [기존 Python 서버](server/README.md) · [공통 API](docs/CHAT.md). 무료 계정을 준비하기 전까지 외부 배포를 진행하지 않습니다. Windows 실제 통신은 로컬 검증했고 Mac 빌드·실행은 Mac 환경에서 별도 확인해야 합니다. Android 채팅은 후속입니다.
+**Windows·Mac 채팅 / 현재 로컬 개발:** 일기 앱의 **상몬 라운지 · 채팅**에서 같은 서버에 접속하도록 구현했습니다. [계정 없이 실행·같은 Wi-Fi·무료 배포 차단·수정 파일](docs/FREE-CHAT.md) · [Mac 일기 앱](macos/README.md) · [기존 Python 서버](server/README.md) · [공통 API](docs/CHAT.md). [자동 검사](https://github.com/parkhookjung-debug/myday-diary/actions/runs/39037445085)에서 서버·Windows·Mac 빌드와 실제 앱 통신이 통과했습니다. 해당 화면 아래 **Artifacts**에서 Windows 실행 파일과 Apple Silicon Mac 앱을 받습니다(7일 보관). 무료 계정을 준비하기 전까지 외부 서버는 배포하지 않습니다. Android 채팅은 후속입니다.
 
 ## 어떤 파일을 수정하면 되나요?
 
