@@ -1,0 +1,94 @@
+name: Free chat and native Mac-Windows compatibility
+
+on:
+  push:
+    branches: [main, codex/windows-app]
+    paths: ['server/cloudflare/**', 'macos/**', 'windows/Chat/**', 'windows/ChatTests.cs', 'windows/UI/ChatWindow.cs', '.github/workflows/chat-compatibility.yml']
+  pull_request:
+    branches: [main]
+    paths: ['server/cloudflare/**', 'macos/**', 'windows/Chat/**', 'windows/ChatTests.cs', 'windows/UI/ChatWindow.cs', '.github/workflows/chat-compatibility.yml']
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: chat-compatibility-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  server:
+    # Public repository + standard runner only. Never deploy or use Cloudflare secrets in CI.
+    if: github.event.repository.private == false
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    defaults:
+      run:
+        working-directory: server/cloudflare
+    env:
+      WRANGLER_SEND_METRICS: 'false'
+      WRANGLER_LOG_PATH: .wrangler/logs
+      MYDAY_CHAT_JOIN_CODE: local-test-code-only
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+        with:
+          node-version: '24'
+      - run: npm ci --no-audit --no-fund
+      - run: npm run check
+      - run: npm test
+      - run: npm run build
+
+  native:
+    if: github.event.repository.private == false
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [windows-latest, macos-latest]
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 15
+    env:
+      WRANGLER_SEND_METRICS: 'false'
+      WRANGLER_LOG_PATH: .wrangler/logs
+      MYDAY_CHAT_JOIN_CODE: local-test-code-only
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+        with:
+          node-version: '24'
+      - run: npm ci --no-audit --no-fund
+        working-directory: server/cloudflare
+      - run: npm run build
+        working-directory: server/cloudflare
+      - name: Build existing native Windows diary with chat
+        if: runner.os == 'Windows'
+        shell: pwsh
+        run: ./windows/build.ps1
+      - name: Verify Windows native transport and chat controls against Workers
+        if: runner.os == 'Windows'
+        working-directory: server/cloudflare
+        run: npm run test:native -- ../../windows/bin/MyDay.exe ../../windows/bin/smoke-output
+      - name: Build existing Mac diary and verify saved data
+        if: runner.os == 'macOS'
+        run: zsh macos/build.command
+      - name: Verify Mac native transport against Workers
+        if: runner.os == 'macOS'
+        working-directory: server/cloudflare
+        run: npm run test:native -- ../../macos/build/MyDay.app/Contents/MacOS/MyDay
+      - name: Render native Mac chat in two sizes
+        if: runner.os == 'macOS'
+        run: macos/build/MyDay.app/Contents/MacOS/MyDay --render-chat
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: myday-chat-${{ runner.os }}-${{ runner.arch }}
+          path: |
+            windows/bin/MyDay.exe
+            windows/bin/smoke-output/windows-chat*.png
+            macos/build/*.zip
+            macos/build/chat*.png
+          if-no-files-found: error
+          retention-days: 7

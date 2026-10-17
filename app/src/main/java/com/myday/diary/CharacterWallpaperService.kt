@@ -1,14 +1,17 @@
 package com.myday.diary
 
 import android.graphics.Canvas
-import android.graphics.Color
-import android.graphics.Paint
 import android.os.Handler
 import android.os.Looper
 import android.os.SystemClock
 import android.service.wallpaper.WallpaperService
 import android.view.MotionEvent
 import android.view.SurfaceHolder
+import com.myday.diary.data.DiaryStore
+import com.myday.diary.data.DEFAULT_CHARACTER
+import com.myday.diary.data.Equipment
+import com.myday.diary.platform.WallpaperHaptics
+import com.myday.diary.ui.wallpaper.CharacterWallpaperRenderer
 import java.time.LocalDate
 import kotlin.math.abs
 import kotlin.math.hypot
@@ -20,11 +23,13 @@ class CharacterWallpaperService : WallpaperService() {
 
     inner class CharacterEngine : Engine() {
         private val handler = Handler(Looper.getMainLooper())
-        private val paint = Paint(Paint.ANTI_ALIAS_FLAG)
+        private val renderer = CharacterWallpaperRenderer(this@CharacterWallpaperService)
         private val density = resources.displayMetrics.density
-        private val store by lazy { DiaryStore(this@CharacterWallpaperService) }
-        private var character = "🐰"
+        private val homeCache by lazy { com.myday.diary.data.DiaryHomeCache(this@CharacterWallpaperService) }
+        private var character = DEFAULT_CHARACTER
         private var theme = 0
+        private var equipment=Equipment()
+        private var haptics=true
         private var width = 0
         private var height = 0
         private var x = 0f
@@ -42,7 +47,7 @@ class CharacterWallpaperService : WallpaperService() {
         private var previousFrame = 0L
         private var nextRead = 0L
         private var happyUntil = 0L
-        private val radius get() = min(48f * density, min(width, height) / 4f).coerceAtLeast(1f)
+        private val radius get() = min(renderer.characterRadius, min(width, height) / 4f).coerceAtLeast(1f)
         private val frame = object : Runnable {
             override fun run() {
                 if (!visible || !ready) return
@@ -110,7 +115,10 @@ class CharacterWallpaperService : WallpaperService() {
                     constrainPosition()
                 }
                 MotionEvent.ACTION_UP -> {
-                    if (dragging && !touchMoved) happyUntil = SystemClock.uptimeMillis() + 1800L
+                    if (dragging) {
+                        happyUntil=SystemClock.uptimeMillis()+700L
+                        WallpaperHaptics.tap(this@CharacterWallpaperService,haptics)
+                    }
                     dragging = false
                 }
                 MotionEvent.ACTION_CANCEL -> dragging = false
@@ -123,12 +131,14 @@ class CharacterWallpaperService : WallpaperService() {
             val dt = ((now - previousFrame).coerceIn(0L, 50L)) / 1000f
             previousFrame = now
             if (now >= nextRead) {
-                val today = store.read(LocalDate.now().toString())
-                character = today.character
-                theme = today.theme
+                runCatching {homeCache.read()}.onSuccess {home->
+                    character=home.character;equipment=home.equipment;haptics=home.haptics
+                    theme=home.theme
+                }
                 nextRead = now + 3000L
             }
-            if (!dragging) {
+            val phase=now%42000
+            if (!dragging && now>=happyUntil && phase !in 16000..17999 && phase !in 30000..31599 && phase !in 34000..36399) {
                 x += vx * dt; y += vy * dt
                 if (x < radius) vx = abs(vx)
                 if (x > width - radius) vx = -abs(vx)
@@ -139,28 +149,9 @@ class CharacterWallpaperService : WallpaperService() {
             val holder = surfaceHolder
             val canvas: Canvas = try { holder.lockCanvas() ?: return } catch (_: IllegalStateException) { return }
             try {
-                val backgrounds = intArrayOf(Color.rgb(255, 248, 243), Color.rgb(240, 245, 239), Color.rgb(243, 240, 250))
-                canvas.drawColor(backgrounds[theme])
-                // Quiet decorative dots belong to the wallpaper, never a touch overlay.
-                paint.color = Color.argb(30, 128, 92, 73)
-                var dotX = 26f * density
-                while (dotX < width) {
-                    var dotY = 26f * density
-                    while (dotY < height) { canvas.drawCircle(dotX, dotY, density, paint); dotY += 52f * density }
-                    dotX += 52f * density
-                }
-                paint.color = Color.argb(210, 255, 255, 255)
-                canvas.drawCircle(x, y, radius, paint)
-                paint.color = Color.rgb(57, 43, 36)
-                paint.textAlign = Paint.Align.CENTER
-                paint.textSize = radius * 1.35f
-                val baseline = y - (paint.fontMetrics.ascent + paint.fontMetrics.descent) / 2f
-                canvas.drawText(character, x, baseline, paint)
-                if (now < happyUntil) {
-                    paint.textSize = 14f * density
-                    paint.color = Color.rgb(128, 92, 73)
-                    canvas.drawText("♡", x, (y - radius - 12f * density).coerceAtLeast(20f * density), paint)
-                }
+                renderer.draw(canvas, theme, character, x, y, radius, now < happyUntil,
+                    timeMillis = now, moving = !dragging, dragging = dragging, facingLeft = vx < 0f,
+                    equipment=equipment,fireAge=if(now<happyUntil) 700L-(happyUntil-now) else -1L)
             } finally { holder.unlockCanvasAndPost(canvas) }
         }
     }

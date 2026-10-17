@@ -34,6 +34,8 @@ jobs:
         run: '"$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" "platforms;android-35" "build-tools;35.0.0"'
       - name: Build, lint and run available unit tests
         run: ./gradlew --no-daemon :app:assembleDebug :app:lintDebug :app:testDebugUnitTest
+      - name: Verify phone gestures, storage and artwork on Android 35
+        run: bash tools/android-device-tests.sh
       - name: Upload debug APK and reports
         if: always()
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
@@ -42,5 +44,46 @@ jobs:
           path: |
             app/build/outputs/apk/debug/app-debug.apk
             app/build/reports/
+            app/build/outputs/androidTest-results/
+            app/build/interop/
+            app/build/device-previews/
+            app/build/emulator.log
+            app/build/device-logcat.txt
           if-no-files-found: ignore
           retention-days: 7
+  windows-interop:
+    name: Android and Windows backup compatibility
+    needs: android
+    runs-on: windows-2025
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803
+        with:
+          persist-credentials: false
+      - uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4
+        with:
+          name: myday-debug-${{ github.run_number }}
+          path: interop
+      - name: Read Android export with the actual Windows serializer
+        shell: pwsh
+        run: |
+          $compiler=Join-Path $env:WINDIR 'Microsoft.NET/Framework64/v4.0.30319/csc.exe'
+          $sources=Get-ChildItem windows -Filter '*.cs' -Recurse | ForEach-Object { $_.FullName }
+          & $compiler /nologo /target:exe /main:WindowsAndroidInterop ('/out:'+(Join-Path $PWD 'interop/check.exe')) /reference:System.Drawing.dll /reference:System.Windows.Forms.dll /reference:System.Runtime.Serialization.dll (Join-Path $PWD 'tools/WindowsAndroidInterop.cs') @sources
+          if ($LASTEXITCODE -ne 0) { throw 'Interop harness build failed' }
+          $inputFile=Get-ChildItem interop -Filter 'android-to-windows.json' -Recurse | Select-Object -First 1
+          if ($null -eq $inputFile) { throw 'Android export fixture missing' }
+          & ./interop/check.exe $inputFile.FullName ./interop/windows-roundtrip.json
+          if ($LASTEXITCODE -ne 0) { throw 'Android / Windows compatibility failed' }
+          $v5=Get-ChildItem interop -Filter 'android-v5-to-windows.json' -Recurse | Select-Object -First 1
+          if ($null -eq $v5) { throw 'Android v5 export fixture missing' }
+          & ./interop/check.exe $v5.FullName ./interop/windows-v5-roundtrip.json
+          if ($LASTEXITCODE -ne 0) { throw 'Android / Windows v5 compatibility failed' }
+          $v6=Get-ChildItem interop -Filter 'android-v6-to-windows.json' -Recurse | Select-Object -First 1
+          if ($null -eq $v6) { throw 'Android v6 export fixture missing' }
+          & ./interop/check.exe $v6.FullName ./interop/windows-v6-roundtrip.json
+          if ($LASTEXITCODE -ne 0) { throw 'Android / Windows v6 compatibility failed' }
+          $v7=Get-ChildItem interop -Filter 'android-v7-to-windows.json' -Recurse | Select-Object -First 1
+          if ($null -eq $v7) { throw 'Android v7 export fixture missing' }
+          & ./interop/check.exe $v7.FullName ./interop/windows-v7-roundtrip.json
+          if ($LASTEXITCODE -ne 0) { throw 'Android / Windows v7 compatibility failed' }

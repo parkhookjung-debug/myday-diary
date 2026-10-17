@@ -1,0 +1,2677 @@
+[
+  {
+    "id": "free",
+    "name": "자유 일기",
+    "description": "형식 없이, 오늘 떠오르는 이야기를 길게 써요.",
+    "style": "paper",
+    "category": "daily",
+    "minutes": 5,
+    "layout": "page",
+    "reference": "dayone",
+    "sections": [
+      {
+        "kind": "text",
+        "title": "오늘의 이야기",
+        "prompt": "기억하고 싶은 장면부터 천천히 적어보세요."
+      }
+    ]
+  },
+  {
+    "id": "reflection",
+    "name": "하루 회고",
+    "description": "장면 · 배움 · 내일, 세 조각으로 하루를 돌아봐요.",
+    "style": "paper",
+    "category": "reflection",
+    "minutes": 7,
+    "layout": "split",
+    "reference": "dayone",
+    "sections": [
+      {
+        "kind": "text",
+        "title": "기억에 남는 장면",
+        "prompt": "오늘 다시 떠올리고 싶은 순간은 무엇인가요?"
+      },
+      {
+        "kind": "text",
+        "title": "오늘 알게 된 것",
+        "prompt": "잘된 일이나 아쉬운 일에서 무엇을 배웠나요?"
+      },
+      {
+        "kind": "todo",
+        "title": "내일의 작은 약속",
+        "prompt": "내일 나를 위해 할 수 있는 한 가지를 적어요."
+      }
+    ]
+  },
+  {
+    "id": "gratitude",
+    "name": "감사 일기",
+    "description": "사소한 기쁨을 놓치지 않고 남겨요.",
+    "style": "paper",
+    "category": "gratitude",
+    "minutes": 3,
+    "layout": "cards",
+    "reference": "dayone",
+    "sections": [
+      {
+        "kind": "text",
+        "title": "고마웠던 순간",
+        "prompt": "오늘 나를 웃게 한 작은 일은 무엇이었나요?"
+      },
+      {
+        "kind": "text",
+        "title": "전하고 싶은 말",
+        "prompt": "고마운 사람에게 마음속 인사를 남겨보세요."
+      }
+    ]
+  },
+  {
+    "id": "questions",
+    "name": "질문 일기",
+    "description": "막막할 때, 세 질문을 따라 써보세요.",
+    "style": "plain",
+    "category": "emotions",
+    "minutes": 5,
+    "layout": "cards",
+    "reference": "journey",
+    "sections": [
+      {
+        "kind": "text",
+        "title": "오늘을 한 단어로",
+        "prompt": "그 단어를 고른 이유도 함께 적어보세요."
+      },
+      {
+        "kind": "emotion",
+        "title": "내 마음이 머문 곳",
+        "prompt": "오늘 가장 오래 느낀 감정은 어디서 시작됐나요?"
+      },
+      {
+        "kind": "text",
+        "title": "나에게 해주고 싶은 말",
+        "prompt": "오늘의 나에게 다정한 한 문장을 남겨요."
+      }
+    ]
+  },
+  {
+    "id": "bullet",
+    "name": "불렛 저널",
+    "description": "할 일 · 습관 · 메모를 짧고 간결하게 정리해요.",
+    "style": "dots",
+    "category": "planning",
+    "minutes": 5,
+    "layout": "dashboard",
+    "reference": "bullet",
+    "sections": [
+      {
+        "kind": "todo",
+        "title": "오늘의 우선순위",
+        "prompt": "가장 중요한 일 하나부터 시작해요."
+      },
+      {
+        "kind": "habit",
+        "title": "나를 위한 루틴",
+        "prompt": "오늘 이어가고 싶은 습관을 적어요."
+      },
+      {
+        "kind": "text",
+        "title": "짧은 메모",
+        "prompt": "떠오른 생각과 작은 성취를 가볍게 남겨요."
+      }
+    ]
+  },
+  {
+    "id": "letter",
+    "name": "상몬에게 편지",
+    "description": "누군가에게 털어놓듯, 내 마음을 자유롭게 써요.",
+    "style": "paper",
+    "category": "relationships",
+    "minutes": 5,
+    "layout": "letter",
+    "reference": "journey",
+    "sections": [
+      {
+        "kind": "emotion",
+        "title": "상몬아, 오늘은 말이야",
+        "prompt": "상몬에게 들려주고 싶은 이야기를 적어보세요."
+      }
+    ]
+  },
+  {
+    "id": "one-line",
+    "name": "한 줄 일기",
+    "description": "짧은 문장 하나로 오늘을 저장해요.",
+    "style": "paper",
+    "category": "daily",
+    "minutes": 1,
+    "layout": "page",
+    "reference": "dayone",
+    "sections": [
+      {
+        "kind": "text",
+        "title": "오늘의 한 줄",
+        "prompt": "오늘을 다시 떠올릴 때 읽고 싶은 문장은?"
+      }
+    ]
+  },
+  {
+    "id": "three-lines",
+    "name": "세 줄 일기",
+    "description": "사건 · 마음 · 마무리를 한 줄씩 남겨요.",
+    "style": "plain",
+    "category": "daily",
+    "minutes": 3,
+    "layout": "cards",
+    "reference": "dayone",
+    "sections": [
+      {
+        "kind": "text",
+        "title": "무슨 일이 있었나요",
+        "prompt": "오늘을 대표하는 사건 하나를 적어요."
+      },
+      {
+        "kind": "emotion",
+        "title": "어떤 기분이었나요",
+        "prompt": "그때 느낀 마음을 한 줄로 써요."
+      },
+      {
+        "kind": "text",
+        "title": "하루를 닫는 말",
+        "prompt": "오늘의 나에게 짧은 마침표를 남겨요."
+      }
+    ]
+  },
+  {
+    "id": "morning-pages",
+    "name": "모닝 페이지",
+    "description": "아침에 떠오르는 생각을 멈추지 않고 써요.",
+    "style": "paper",
+    "category": "daily",
+    "minutes": 10,
+    "layout": "page",
+    "reference": "journey",
+    "sections": [
+      {
+        "kind": "text",
+        "title": "아침의 생각 흐름",
+        "prompt": "고치거나 정리하지 않고 머릿속 이야기를 이어 써요."
+      },
+      {
+        "kind": "text",
+        "title": "오늘 붙잡을 생각",
+        "prompt": "쓴 글에서 오늘 기억하고 싶은 생각 하나를 골라요."
+      }
+    ]
+  },
+  {
+    "id": "five-am",
+    "name": "아침 5분 일기",
+    "description": "기분과 우선순위를 짧게 확인하며 시작해요.",
+    "style": "plain",
+    "category": "daily",
+    "minutes": 5,
+    "layout": "dashboard",
+    "reference": "dayone",
+    "sections": [
+      {
+        "kind": "emotion",
+        "title": "지금의 마음",
+        "prompt": "아침의 기분과 몸 상태를 가볍게 적어요."
+      },
+      {
+        "kind": "todo",
+        "title": "오늘 꼭 할 한 가지",
+        "prompt": "시간을 가장 먼저 내주고 싶은 일은?"
+      },
+      {
+        "kind": "text",
+        "title": "오늘 기대하는 것",
+        "prompt": "작아도 좋은, 기다려지는 순간을 적어요."
+      }
+    ]
+  },
+  {
+    "id": "five-pm",
+    "name": "저녁 5분 일기",
+    "description": "잘된 일과 아쉬움을 남기고 하루를 닫아요.",
+    "style": "paper",
+    "category": "daily",
+    "minutes": 5,
+    "layout": "compare",
+    "reference": "dayone",
+    "sections": [
+      {
+        "kind": "text",
+        "title": "좋았던 순간",
+        "prompt": "오늘 다시 경험하고 싶은 순간은?"
+      },
+      {
+        "kind": "text",
+        "title": "아쉬웠던 순간",
+        "prompt": "다음에는 조금 바꾸고 싶은 장면을 적어요."
+      },
+      {
+        "kind": "text",
+        "title": "오늘을 마치는 말",
+        "prompt": "잠들기 전 나에게 남길 말을 써요."
+      }
+    ]
+  },
+  {
+    "id": "day-timeline",
+    "name": "하루 타임라인",
+    "description": "아침부터 밤까지 기억을 시간순으로 이어요.",
+    "style": "dots",
+    "category": "daily",
+    "minutes": 7,
+    "layout": "timeline",
+    "reference": "journey",
+    "sections": [
+      {
+        "kind": "text",
+        "title": "아침",
+        "prompt": "하루를 어떻게 시작했나요?"
+      },
+      {
+        "kind": "text",
+        "title": "낮",
+        "prompt": "가장 바빴거나 즐거웠던 낮의 장면은?"
+      },
+      {
+        "kind": "text",
+        "title": "저녁",
+        "prompt": "저녁에는 누구와 무엇을 했나요?"
+      },
+      {
+        "kind": "text",
+        "title": "밤",
+        "prompt": "잠들기 전 남아 있는 생각을 적어요."
+      }
+    ]
+  },
+  {
+    "id": "five-senses",
+    "name": "오감 일기",
+    "description": "보고 듣고 느낀 감각으로 오늘을 묘사해요.",
+    "style": "paper",
+    "category": "daily",
+    "minutes": 5,
+    "layout": "cards",
+    "reference": "creative",
+    "sections": [
+      {
+        "kind": "text",
+        "title": "눈과 귀에 남은 것",
+        "prompt": "기억나는 색과 소리를 적어요."
+      },
+      {
+        "kind": "text",
+        "title": "맛과 향",
+        "prompt": "오늘의 음식이나 장소에서 어떤 향이 났나요?"
+      },
+      {
+        "kind": "text",
+        "title": "몸으로 느낀 순간",
+        "prompt": "온도·촉감·바람 중 기억에 남는 감각은?"
+      }
+    ]
+  },
+  {
+    "id": "moment-caption",
+    "name": "순간 캡션 일기",
+    "description": "사진 한 장을 설명하듯 장면을 글로 담아요.",
+    "style": "plain",
+    "category": "daily",
+    "minutes": 3,
+    "layout": "split",
+    "reference": "dayone",
+    "sections": [
+      {
+        "kind": "text",
+        "title": "한 장면의 캡션",
+        "prompt": "사진으로 남기고 싶은 순간을 말로 묘사해요."
+      },
+      {
+        "kind": "text",
+        "title": "장면의 배경",
+        "prompt": "어디에서 누구와 보낸 순간이었나요?"
+      },
+      {
+        "kind": "emotion",
+        "title": "그때의 마음",
+        "prompt": "장면 밖에는 어떤 감정이 있었나요?"
+      }
+    ]
+  },
+  {
+    "id": "weekend-note",
+    "name": "주말 일기",
+    "description": "쉬고 즐긴 시간을 한 장에 모아요.",
+    "style": "paper",
+    "category": "daily",
+    "minutes": 5,
+    "layout": "dashboard",
+    "reference": "dayone",
+    "sections": [
+      {
+        "kind": "text",
+        "title": "이번 주말의 장면",
+        "prompt": "평일과 달랐던 시간을 적어요."
+      },
+      {
+        "kind": "text",
+        "title": "잘 쉰 순간",
+        "prompt": "휴식으로 느껴진 활동은 무엇인가요?"
+      },
+      {
+        "kind": "todo",
+        "title": "다음 주의 작은 준비",
+        "prompt": "새 주를 편하게 시작할 준비 한 가지는?"
+      }
+    ]
+  },
+  {
+    "id": "what-so-now",
+    "name": "사건·의미·다음 행동",
+    "description": "경험을 세 단계로 돌아보고 다음 행동을 정해요.",
+    "style": "plain",
+    "category": "reflection",
+    "minutes": 7,
+    "layout": "timeline",
+    "reference": "what",
+    "sections": [
+      {
+        "kind": "text",
+        "title": "어떤 일이 있었나",
+        "prompt": "상황과 내가 한 행동을 사실 중심으로 적어요."
+      },
+      {
+        "kind": "text",
+        "title": "나에게 어떤 의미인가",
+        "prompt": "그 경험이 보여준 생각이나 배움은 무엇인가요?"
+      },
+      {
+        "kind": "todo",
+        "title": "이제 무엇을 할까",
+        "prompt": "배움을 다음 행동 하나로 연결해요."
+      }
+    ]
+  },
+  {
+    "id": "gibbs-cycle",
+    "name": "깁스 6단계 회고",
+    "description": "경험에서 행동 계획까지 여섯 단계로 살펴봐요.",
+    "style": "paper",
+    "category": "reflection",
+    "minutes": 15,
+    "layout": "timeline",
+    "reference": "gibbs",
+    "sections": [
+      {
+        "kind": "text",
+        "title": "1. 경험 묘사",
+        "prompt": "누가 어떤 상황에서 무엇을 했는지 적어요."
+      },
+      {
+        "kind": "emotion",
+        "title": "2. 그때의 마음",
+        "prompt": "상황 전후로 생각과 감정이 어떻게 달라졌나요?"
+      },
+      {
+        "kind": "text",
+        "title": "3. 잘된 점과 아쉬운 점",
+        "prompt": "도움이 된 행동과 어려웠던 부분을 적어요."
+      },
+      {
+        "kind": "text",
+        "title": "4. 이유 살펴보기",
+        "prompt": "결과에 영향을 준 요인은 무엇이었나요?"
+      },
+      {
+        "kind": "text",
+        "title": "5. 배운 점",
+        "prompt": "다르게 할 수 있었던 점과 얻은 배움을 적어요."
+      },
+      {
+        "kind": "todo",
+        "title": "6. 다음 실천",
+        "prompt": "비슷한 상황에서 시도할 행동을 정해요."
+      }
+    ]
+  },
+  {
+    "id": "weekly-review",
+    "name": "주간 회고",
+    "description": "한 주의 성과와 피로를 함께 돌아봐요.",
+    "style": "dots",
+    "category": "reflection",
+    "minutes": 10,
+    "layout": "dashboard",
+    "reference": "dayone",
+    "sections": [
+      {
+        "kind": "text",
+        "title": "이번 주의 핵심",
+        "prompt": "한 주를 대표하는 경험을 적어요."
+      },
+      {
+        "kind": "text",
+        "title": "잘 이어간 것",
+        "prompt": "다음 주에도 유지할 행동은?"
+      },
+      {
+        "kind": "text",
+        "title": "덜어낼 것",
+        "prompt": "에너지를 쓰게 한 일 중 줄일 수 있는 것은?"
+      },
+      {
+        "kind": "todo",
+        "title": "다음 주 한 걸음",
+        "prompt": "작게 바꿔볼 행동 하나를 적어요."
+      }
+    ]
+  },
+  {
+    "id": "monthly-review",
+    "name": "월간 회고",
+    "description": "한 달의 변화와 다음 달의 방향을 남겨요.",
+    "style": "paper",
+    "category": "reflection",
+    "minutes": 15,
+    "layout": "compare",
+    "reference": "dayone",
+    "sections": [
+      {
+        "kind": "text",
+        "title": "이번 달의 나",
+        "prompt": "지난달과 달라진 모습은 무엇인가요?"
+      },
+      {
+        "kind": "text",
+        "title": "다음 달의 나",
+        "prompt": "이어가고 싶은 변화와 덜고 싶은 습관은?"
+      },
+      {
+        "kind": "todo",
+        "title": "다음 달의 첫 행동",
+        "prompt": "방향을 실행으로 옮길 작은 시작을 정해요."
+      }
+    ]
+  },
+  {
+    "id": "keep-change",
+    "name": "유지·바꾸기 회고",
+    "description": "계속할 행동과 바꿀 행동을 나란히 적어요.",
+    "style": "plain",
+    "category": "reflection",
+    "minutes": 5,
+    "layout": "compare",
+    "reference": "what",
+    "sections": [
+      {
+        "kind": "text",
+        "title": "유지하고 싶은 것",
+        "prompt": "이번 경험에서 효과가 있었던 행동을 적어요."
+      },
+      {
+        "kind": "text",
+        "title": "바꾸고 싶은 것",
+        "prompt": "같은 결과를 피하려면 무엇을 바꿀 수 있나요?"
+      },
+      {
+        "kind": "todo",
+        "title": "작은 실험",
+        "prompt": "바꾼 행동을 언제 한 번 해볼까요?"
+      }
+    ]
+  },
+  {
+    "id": "turning-point",
+    "name": "전환점 기록",
+    "description": "마음이나 방향이 바뀐 순간을 자세히 남겨요.",
+    "style": "paper",
+    "category": "reflection",
+    "minutes": 10,
+    "layout": "split",
+    "reference": "journey",
+    "sections": [
+      {
+        "kind": "text",
+        "title": "바뀐 순간의 이야기",
+        "prompt": "전환이 일어난 장면을 구체적으로 적어요."
+      },
+      {
+        "kind": "text",
+        "title": "그전의 생각",
+        "prompt": "이전에는 어떤 생각을 가지고 있었나요?"
+      },
+      {
+        "kind": "text",
+        "title": "지금의 생각",
+        "prompt": "새로 받아들이게 된 것은 무엇인가요?"
+      }
+    ]
+  },
+  {
+    "id": "mistake-learning",
+    "name": "실수에서 배운 일기",
+    "description": "실수의 조건과 다음 준비를 분리해 살펴봐요.",
+    "style": "plain",
+    "category": "reflection",
+    "minutes": 7,
+    "layout": "cornell",
+    "reference": "what",
+    "sections": [
+      {
+        "kind": "text",
+        "title": "살펴볼 질문",
+        "prompt": "이 경험에서 이해하고 싶은 점을 적어요."
+      },
+      {
+        "kind": "text",
+        "title": "실제 일어난 일",
+        "prompt": "추측과 사실을 구분해 상황을 정리해요."
+      },
+      {
+        "kind": "todo",
+        "title": "다음에 챙길 것",
+        "prompt": "다시 시도할 때 필요한 준비를 적어요."
+      }
+    ]
+  },
+  {
+    "id": "success-recipe",
+    "name": "성공 요인 일기",
+    "description": "잘된 경험을 다시 만들 수 있게 조건을 남겨요.",
+    "style": "paper",
+    "category": "reflection",
+    "minutes": 5,
+    "layout": "split",
+    "reference": "gibbs",
+    "sections": [
+      {
+        "kind": "text",
+        "title": "잘된 경험",
+        "prompt": "작은 성취라도 과정을 자세히 적어요."
+      },
+      {
+        "kind": "text",
+        "title": "도움이 된 조건",
+        "prompt": "시간·환경·협력이 어떻게 도움이 됐나요?"
+      },
+      {
+        "kind": "habit",
+        "title": "다시 이어갈 행동",
+        "prompt": "다음에도 반복하고 싶은 행동을 적어요."
+      }
+    ]
+  },
+  {
+    "id": "decision-review",
+    "name": "선택 돌아보기",
+    "description": "당시의 이유와 지금의 결과를 비교해요.",
+    "style": "plain",
+    "category": "reflection",
+    "minutes": 10,
+    "layout": "compare",
+    "reference": "dayone",
+    "sections": [
+      {
+        "kind": "text",
+        "title": "선택할 때의 이유",
+        "prompt": "그때 알고 있던 정보와 중요하게 본 기준은?"
+      },
+      {
+        "kind": "text",
+        "title": "선택 뒤의 결과",
+        "prompt": "예상과 같거나 달랐던 점은 무엇인가요?"
+      },
+      {
+        "kind": "text",
+        "title": "다음 선택의 기준",
+        "prompt": "이번 경험이 남긴 판단 기준을 적어요."
+      }
+    ]
+  },
+  {
+    "id": "three-thanks",
+    "name": "세 가지 감사",
+    "description": "오늘 고마웠던 일을 세 가지로 나눠 남겨요.",
+    "style": "paper",
+    "category": "gratitude",
+    "minutes": 3,
+    "layout": "cards",
+    "reference": "dayone",
+    "sections": [
+      {
+        "kind": "text",
+        "title": "첫 번째 감사",
+        "prompt": "오늘 도움이나 기쁨을 준 일을 적어요."
+      },
+      {
+        "kind": "text",
+        "title": "두 번째 감사",
+        "prompt": "그 밖에 놓치고 싶지 않은 좋은 순간은?"
+      },
+      {
+        "kind": "text",
+        "title": "세 번째 감사",
+        "prompt": "작아서 지나칠 뻔한 고마움을 찾아봐요."
+      }
+    ]
+  },
+  {
+    "id": "small-joy",
+    "name": "소확행 기록",
+    "description": "별것 아닌 듯한 즐거움을 구체적으로 기억해요.",
+    "style": "paper",
+    "category": "gratitude",
+    "minutes": 3,
+    "layout": "page",
+    "reference": "dayone",
+    "sections": [
+      {
+        "kind": "text",
+        "title": "작은 행복의 장면",
+        "prompt": "언제 어디서 무엇 때문에 웃었나요?"
+      },
+      {
+        "kind": "text",
+        "title": "내가 좋아하는 이유",
+        "prompt": "그 순간이 나에게 좋았던 이유를 적어요."
+      }
+    ]
+  },
+  {
+    "id": "self-thanks",
+    "name": "나에게 감사",
+    "description": "오늘 나를 위해 애쓴 행동을 알아봐줘요.",
+    "style": "plain",
+    "category": "gratitude",
+    "minutes": 5,
+    "layout": "letter",
+    "reference": "dayone",
+    "sections": [
+      {
+        "kind": "text",
+        "title": "오늘의 나에게",
+        "prompt": "내가 나를 위해 해준 일을 편지처럼 써요."
+      },
+      {
+        "kind": "text",
+        "title": "기억할 노력",
+        "prompt": "결과와 관계없이 인정하고 싶은 노력은?"
+      }
+    ]
+  },
+  {
+    "id": "thank-you-letter",
+    "name": "감사 편지",
+    "description": "고마운 사람에게 전하고 싶은 말을 써요.",
+    "style": "paper",
+    "category": "gratitude",
+    "minutes": 7,
+    "layout": "letter",
+    "reference": "journey",
+    "sections": [
+      {
+        "kind": "text",
+        "title": "너에게 고마운 이유",
+        "prompt": "구체적인 장면을 떠올리며 마음을 남겨요."
+      },
+      {
+        "kind": "todo",
+        "title": "마음을 전할 방법",
+        "prompt": "직접 전하고 싶다면 어떤 작은 행동을 할까요?"
+      }
+    ]
+  },
+  {
+    "id": "ordinary-thanks",
+    "name": "당연했던 것의 감사",
+    "description": "익숙해서 지나친 일상의 도움을 찾아봐요.",
+    "style": "paper",
+    "category": "gratitude",
+    "minutes": 5,
+    "layout": "cards",
+    "reference": "dayone",
+    "sections": [
+      {
+        "kind": "text",
+        "title": "생활을 편하게 한 것",
+        "prompt": "오늘 자연스럽게 누렸던 편안함은?"
+      },
+      {
+        "kind": "text",
+        "title": "보이지 않은 도움",
+        "prompt": "누군가의 수고 덕분에 가능했던 일은?"
+      },
+      {
+        "kind": "text",
+        "title": "새롭게 보이는 것",
+        "prompt": "다시 보니 소중하게 느껴진 일상을 적어요."
+      }
+    ]
+  },
+  {
+    "id": "people-thanks",
+    "name": "사람에게 받은 온기",
+    "description": "주변 사람이 건넨 작은 친절을 모아요.",
+    "style": "plain",
+    "category": "gratitude",
+    "minutes": 5,
+    "layout": "split",
+    "reference": "journey",
+    "sections": [
+      {
+        "kind": "text",
+        "title": "따뜻했던 만남",
+        "prompt": "누가 어떤 말이나 행동으로 힘을 줬나요?"
+      },
+      {
+        "kind": "text",
+        "title": "내가 느낀 변화",
+        "prompt": "그 친절 뒤에 마음이 어떻게 달라졌나요?"
+      },
+      {
+        "kind": "todo",
+        "title": "이어줄 친절",
+        "prompt": "받은 온기를 어떤 행동으로 이어가고 싶나요?"
+      }
+    ]
+  },
+  {
+    "id": "nature-thanks",
+    "name": "자연에서 찾은 감사",
+    "description": "하늘과 계절에서 잠깐의 기쁨을 남겨요.",
+    "style": "paper",
+    "category": "gratitude",
+    "minutes": 3,
+    "layout": "cards",
+    "reference": "journey",
+    "sections": [
+      {
+        "kind": "text",
+        "title": "오늘 만난 자연",
+        "prompt": "빛·나무·바람 중 눈에 들어온 것을 적어요."
+      },
+      {
+        "kind": "text",
+        "title": "잠깐 멈춘 순간",
+        "prompt": "그 풍경을 보는 동안 무엇을 느꼈나요?"
+      }
+    ]
+  },
+  {
+    "id": "good-news",
+    "name": "좋은 소식 일기",
+    "description": "반가운 소식과 기다려지는 일을 기록해요.",
+    "style": "plain",
+    "category": "gratitude",
+    "minutes": 3,
+    "layout": "compare",
+    "reference": "dayone",
+    "sections": [
+      {
+        "kind": "text",
+        "title": "들려온 좋은 소식",
+        "prompt": "오늘 반가웠던 소식은 무엇인가요?"
+      },
+      {
+        "kind": "text",
+        "title": "기대하는 다음 장면",
+        "prompt": "그 소식 이후 무엇이 기다려지나요?"
+      }
+    ]
+  },
+  {
+    "id": "weekly-thanks",
+    "name": "한 주의 감사 모음",
+    "description": "한 주에서 오래 기억할 고마움을 골라요.",
+    "style": "paper",
+    "category": "gratitude",
+    "minutes": 7,
+    "layout": "dashboard",
+    "reference": "dayone",
+    "sections": [
+      {
+        "kind": "text",
+        "title": "이번 주 가장 고마운 일",
+        "prompt": "일주일을 돌아보며 한 장면을 골라요."
+      },
+      {
+        "kind": "text",
+        "title": "고마운 사람",
+        "prompt": "이번 주 곁을 내준 사람을 적어요."
+      },
+      {
+        "kind": "text",
+        "title": "내가 나에게 준 것",
+        "prompt": "이번 주 나를 잘 돌본 행동은?"
+      },
+      {
+        "kind": "todo",
+        "title": "다음 주의 감사 실천",
+        "prompt": "고마운 마음을 이어갈 작은 일을 정해요."
+      }
+    ]
+  },
+  {
+    "id": "mood-check",
+    "name": "감정 체크인",
+    "description": "지금의 감정과 필요한 것을 짧게 확인해요.",
+    "style": "plain",
+    "category": "emotions",
+    "minutes": 3,
+    "layout": "cards",
+    "reference": "dayone",
+    "sections": [
+      {
+        "kind": "emotion",
+        "title": "지금 마음의 이름",
+        "prompt": "가장 가까운 감정 단어를 골라 이유를 적어요."
+      },
+      {
+        "kind": "text",
+        "title": "지금 필요한 것",
+        "prompt": "휴식·대화·정리 중 무엇이 필요하나요?"
+      }
+    ]
+  },
+  {
+    "id": "emotion-timeline",
+    "name": "감정 타임라인",
+    "description": "하루 동안 마음이 바뀐 흐름을 남겨요.",
+    "style": "paper",
+    "category": "emotions",
+    "minutes": 5,
+    "layout": "timeline",
+    "reference": "journey",
+    "sections": [
+      {
+        "kind": "emotion",
+        "title": "아침의 마음",
+        "prompt": "아침에 가장 먼저 느낀 기분은?"
+      },
+      {
+        "kind": "emotion",
+        "title": "낮의 마음",
+        "prompt": "어떤 사건 뒤에 기분이 달라졌나요?"
+      },
+      {
+        "kind": "emotion",
+        "title": "지금의 마음",
+        "prompt": "하루 끝에 남아 있는 감정을 적어요."
+      }
+    ]
+  },
+  {
+    "id": "unsent-words",
+    "name": "말하지 못한 마음",
+    "description": "밖으로 꺼내지 못한 말을 기록 안에 남겨요.",
+    "style": "paper",
+    "category": "emotions",
+    "minutes": 7,
+    "layout": "letter",
+    "reference": "journey",
+    "sections": [
+      {
+        "kind": "emotion",
+        "title": "입 밖으로 못 낸 말",
+        "prompt": "누구에게 어떤 말을 하고 싶었나요?"
+      },
+      {
+        "kind": "text",
+        "title": "내 마음의 바람",
+        "prompt": "그 말 속에서 내가 원했던 것은?"
+      }
+    ]
+  },
+  {
+    "id": "worry-sort",
+    "name": "걱정 분류 일기",
+    "description": "걱정을 적고 지금 할 수 있는 일을 골라요.",
+    "style": "plain",
+    "category": "emotions",
+    "minutes": 7,
+    "layout": "compare",
+    "reference": "journey",
+    "sections": [
+      {
+        "kind": "emotion",
+        "title": "마음에 걸리는 것",
+        "prompt": "떠오르는 걱정을 판단 없이 적어요."
+      },
+      {
+        "kind": "text",
+        "title": "지금 손댈 수 있는 것",
+        "prompt": "오늘 바꿀 수 있는 부분과 기다려야 할 부분은?"
+      },
+      {
+        "kind": "todo",
+        "title": "작은 다음 행동",
+        "prompt": "당장 가능한 한 가지를 정해요."
+      }
+    ]
+  },
+  {
+    "id": "anger-pause",
+    "name": "화난 날의 멈춤 일기",
+    "description": "상황과 원하는 말을 나눠 적어봐요.",
+    "style": "plain",
+    "category": "emotions",
+    "minutes": 7,
+    "layout": "cornell",
+    "reference": "journey",
+    "sections": [
+      {
+        "kind": "text",
+        "title": "내가 묻고 싶은 것",
+        "prompt": "무엇 때문에 마음이 크게 움직였나요?"
+      },
+      {
+        "kind": "emotion",
+        "title": "그때의 장면과 마음",
+        "prompt": "실제로 있었던 일과 느낀 감정을 구분해 적어요."
+      },
+      {
+        "kind": "text",
+        "title": "차분해진 뒤 전할 말",
+        "prompt": "시간이 지난 뒤 어떻게 표현하고 싶나요?"
+      }
+    ]
+  },
+  {
+    "id": "sad-day",
+    "name": "속상한 날 일기",
+    "description": "힘들었던 장면과 작은 위로를 함께 남겨요.",
+    "style": "paper",
+    "category": "emotions",
+    "minutes": 5,
+    "layout": "split",
+    "reference": "journey",
+    "sections": [
+      {
+        "kind": "emotion",
+        "title": "오늘 힘들었던 이야기",
+        "prompt": "설명하려 애쓰지 않고 마음을 풀어 써요."
+      },
+      {
+        "kind": "text",
+        "title": "조금 편했던 순간",
+        "prompt": "아주 잠깐이라도 편안했던 때가 있었나요?"
+      },
+      {
+        "kind": "todo",
+        "title": "나에게 줄 작은 위로",
+        "prompt": "오늘 나를 위해 해줄 수 있는 일은?"
+      }
+    ]
+  },
+  {
+    "id": "energy-map",
+    "name": "에너지 지도",
+    "description": "기운을 준 일과 지치게 한 일을 비교해요.",
+    "style": "plain",
+    "category": "emotions",
+    "minutes": 5,
+    "layout": "compare",
+    "reference": "dayone",
+    "sections": [
+      {
+        "kind": "text",
+        "title": "에너지가 생긴 순간",
+        "prompt": "어떤 활동이나 만남 뒤에 힘이 났나요?"
+      },
+      {
+        "kind": "text",
+        "title": "에너지가 줄어든 순간",
+        "prompt": "어떤 상황에서 피곤함을 느꼈나요?"
+      },
+      {
+        "kind": "todo",
+        "title": "다음에 조절할 것",
+        "prompt": "일정이나 환경을 조금 바꿔볼 방법은?"
+      }
+    ]
+  },
+  {
+    "id": "comfort-list",
+    "name": "나만의 위로 목록",
+    "description": "편안함을 느끼는 말·장소·행동을 모아요.",
+    "style": "dots",
+    "category": "emotions",
+    "minutes": 5,
+    "layout": "cards",
+    "reference": "journey",
+    "sections": [
+      {
+        "kind": "text",
+        "title": "듣고 싶은 말",
+        "prompt": "지금 나에게 도움이 될 말은 무엇인가요?"
+      },
+      {
+        "kind": "text",
+        "title": "머물고 싶은 장소",
+        "prompt": "편안함을 주는 공간을 떠올려봐요."
+      },
+      {
+        "kind": "habit",
+        "title": "해보고 싶은 행동",
+        "prompt": "작게 실천할 수 있는 편안한 루틴은?"
+      }
+    ]
+  },
+  {
+    "id": "mixed-feelings",
+    "name": "복잡한 감정 일기",
+    "description": "함께 존재하는 다른 마음들을 나란히 살펴요.",
+    "style": "paper",
+    "category": "emotions",
+    "minutes": 7,
+    "layout": "compare",
+    "reference": "journey",
+    "sections": [
+      {
+        "kind": "emotion",
+        "title": "마음의 한쪽",
+        "prompt": "지금 느끼는 첫 번째 감정과 이유를 적어요."
+      },
+      {
+        "kind": "emotion",
+        "title": "마음의 다른 쪽",
+        "prompt": "동시에 느끼는 다른 감정은 무엇인가요?"
+      },
+      {
+        "kind": "text",
+        "title": "둘 다 받아들이는 말",
+        "prompt": "두 마음을 가진 나에게 해줄 말은?"
+      }
+    ]
+  },
+  {
+    "id": "cornell-notes",
+    "name": "코넬 학습 일기",
+    "description": "핵심 질문 · 학습 내용 · 요약으로 배움을 정리해요.",
+    "style": "dots",
+    "category": "learning",
+    "minutes": 10,
+    "layout": "cornell",
+    "reference": "cornell",
+    "sections": [
+      {
+        "kind": "text",
+        "title": "핵심 질문과 단서",
+        "prompt": "배운 내용에서 다시 물어볼 질문과 키워드는?"
+      },
+      {
+        "kind": "text",
+        "title": "학습 내용",
+        "prompt": "설명과 예시를 내 말로 정리해요."
+      },
+      {
+        "kind": "text",
+        "title": "마지막 요약",
+        "prompt": "전체 내용을 짧게 연결해 설명해요."
+      }
+    ]
+  },
+  {
+    "id": "study-log",
+    "name": "공부 기록",
+    "description": "학습 목표와 실제 진행을 한 장에 남겨요.",
+    "style": "dots",
+    "category": "learning",
+    "minutes": 5,
+    "layout": "dashboard",
+    "reference": "dayone",
+    "sections": [
+      {
+        "kind": "text",
+        "title": "오늘 공부한 것",
+        "prompt": "과목·범위·공부한 시간을 적어요."
+      },
+      {
+        "kind": "text",
+        "title": "이해가 된 부분",
+        "prompt": "내 말로 설명할 수 있게 된 개념은?"
+      },
+      {
+        "kind": "todo",
+        "title": "다시 볼 부분",
+        "prompt": "복습할 페이지나 문제를 적어요."
+      }
+    ]
+  },
+  {
+    "id": "lecture-review",
+    "name": "강의 복습 일기",
+    "description": "강의의 핵심과 질문을 분리해 남겨요.",
+    "style": "plain",
+    "category": "learning",
+    "minutes": 7,
+    "layout": "cornell",
+    "reference": "cornell",
+    "sections": [
+      {
+        "kind": "text",
+        "title": "다시 묻고 싶은 질문",
+        "prompt": "강의에서 아직 설명하기 어려운 부분은?"
+      },
+      {
+        "kind": "text",
+        "title": "강의의 핵심",
+        "prompt": "중요한 내용과 교수님의 예시를 적어요."
+      },
+      {
+        "kind": "todo",
+        "title": "복습의 첫 단계",
+        "prompt": "질문을 해결할 다음 행동을 정해요."
+      }
+    ]
+  },
+  {
+    "id": "mistake-notes",
+    "name": "오답 회고",
+    "description": "틀린 이유와 다시 풀 기준을 기록해요.",
+    "style": "plain",
+    "category": "learning",
+    "minutes": 7,
+    "layout": "compare",
+    "reference": "what",
+    "sections": [
+      {
+        "kind": "text",
+        "title": "처음의 풀이",
+        "prompt": "어떤 판단이나 계산으로 답을 골랐나요?"
+      },
+      {
+        "kind": "text",
+        "title": "다시 이해한 풀이",
+        "prompt": "정답으로 가는 핵심 차이는 무엇인가요?"
+      },
+      {
+        "kind": "todo",
+        "title": "재도전 약속",
+        "prompt": "언제 같은 유형을 다시 풀어볼까요?"
+      }
+    ]
+  },
+  {
+    "id": "reading-log",
+    "name": "독서 일기",
+    "description": "읽은 이야기와 내 생각을 함께 남겨요.",
+    "style": "paper",
+    "category": "learning",
+    "minutes": 7,
+    "layout": "split",
+    "reference": "journey",
+    "sections": [
+      {
+        "kind": "text",
+        "title": "책에서 만난 이야기",
+        "prompt": "제목과 읽은 부분, 기억할 내용을 적어요."
+      },
+      {
+        "kind": "text",
+        "title": "남기고 싶은 문장",
+        "prompt": "짧은 문장이나 내 말로 요약한 생각을 써요."
+      },
+      {
+        "kind": "text",
+        "title": "내 삶과 만나는 점",
+        "prompt": "이 책이 떠올리게 한 경험은?"
+      }
+    ]
+  },
+  {
+    "id": "reading-questions",
+    "name": "독서 질문 노트",
+    "description": "책을 읽으며 생긴 질문을 따라 생각해요.",
+    "style": "plain",
+    "category": "learning",
+    "minutes": 10,
+    "layout": "cornell",
+    "reference": "cornell",
+    "sections": [
+      {
+        "kind": "text",
+        "title": "읽기 전 질문",
+        "prompt": "이 책에서 알고 싶은 것은 무엇인가요?"
+      },
+      {
+        "kind": "text",
+        "title": "읽으며 발견한 것",
+        "prompt": "질문에 답이 될 내용과 근거를 정리해요."
+      },
+      {
+        "kind": "text",
+        "title": "읽은 뒤 새 질문",
+        "prompt": "다음에 더 알아보고 싶은 점은?"
+      }
+    ]
+  },
+  {
+    "id": "language-log",
+    "name": "언어 학습 일기",
+    "description": "새 표현을 내 상황에서 사용해봐요.",
+    "style": "dots",
+    "category": "learning",
+    "minutes": 5,
+    "layout": "cards",
+    "reference": "dayone",
+    "sections": [
+      {
+        "kind": "text",
+        "title": "오늘 배운 표현",
+        "prompt": "뜻과 사용한 상황을 함께 적어요."
+      },
+      {
+        "kind": "text",
+        "title": "내가 만든 예문",
+        "prompt": "내 일상에 맞는 문장으로 바꿔 써요."
+      },
+      {
+        "kind": "todo",
+        "title": "써볼 상황",
+        "prompt": "누구와 언제 이 표현을 사용해볼까요?"
+      }
+    ]
+  },
+  {
+    "id": "project-learning",
+    "name": "프로젝트 배움 일기",
+    "description": "작업 중의 문제와 시도를 경험으로 남겨요.",
+    "style": "plain",
+    "category": "learning",
+    "minutes": 10,
+    "layout": "split",
+    "reference": "gibbs",
+    "sections": [
+      {
+        "kind": "text",
+        "title": "이번 작업의 이야기",
+        "prompt": "무엇을 만들며 어떤 문제가 있었나요?"
+      },
+      {
+        "kind": "text",
+        "title": "시도와 결과",
+        "prompt": "해본 방법마다 어떤 결과가 나왔나요?"
+      },
+      {
+        "kind": "todo",
+        "title": "다음 확인",
+        "prompt": "아직 남은 질문을 어떻게 검증할까요?"
+      }
+    ]
+  },
+  {
+    "id": "learning-gap",
+    "name": "아는 것·모르는 것",
+    "description": "이해했다고 생각한 부분을 설명하며 점검해요.",
+    "style": "plain",
+    "category": "learning",
+    "minutes": 7,
+    "layout": "compare",
+    "reference": "cornell",
+    "sections": [
+      {
+        "kind": "text",
+        "title": "설명할 수 있는 것",
+        "prompt": "자료 없이 친구에게 설명하듯 써보세요."
+      },
+      {
+        "kind": "text",
+        "title": "막힌 지점",
+        "prompt": "설명 도중 멈추거나 헷갈린 부분을 적어요."
+      },
+      {
+        "kind": "todo",
+        "title": "확인할 행동",
+        "prompt": "예제·문제·질문 중 어떤 방법으로 확인할까요?"
+      }
+    ]
+  },
+  {
+    "id": "skill-practice",
+    "name": "기술 연습 일기",
+    "description": "반복 연습의 작은 변화를 기록해요.",
+    "style": "dots",
+    "category": "learning",
+    "minutes": 5,
+    "layout": "dashboard",
+    "reference": "what",
+    "sections": [
+      {
+        "kind": "text",
+        "title": "오늘의 연습",
+        "prompt": "무엇을 얼마나 연습했나요?"
+      },
+      {
+        "kind": "text",
+        "title": "달라진 부분",
+        "prompt": "이전보다 편해진 점과 아직 어려운 점은?"
+      },
+      {
+        "kind": "habit",
+        "title": "다음 연습 루틴",
+        "prompt": "다음에 반복할 동작이나 과정을 적어요."
+      }
+    ]
+  },
+  {
+    "id": "daily-plan",
+    "name": "하루 계획 일기",
+    "description": "오늘의 우선순위와 여유를 함께 정해요.",
+    "style": "dots",
+    "category": "planning",
+    "minutes": 5,
+    "layout": "dashboard",
+    "reference": "dayone",
+    "sections": [
+      {
+        "kind": "text",
+        "title": "오늘의 방향",
+        "prompt": "오늘 어떤 하루를 보내고 싶나요?"
+      },
+      {
+        "kind": "todo",
+        "title": "가장 먼저 할 일",
+        "prompt": "중요한 일 하나를 정하고 시작 시간을 적어요."
+      },
+      {
+        "kind": "todo",
+        "title": "여유가 생기면 할 일",
+        "prompt": "꼭 끝내지 않아도 되는 일을 따로 적어요."
+      },
+      {
+        "kind": "habit",
+        "title": "쉬는 시간",
+        "prompt": "집중 사이에 어떤 휴식을 넣을까요?"
+      }
+    ]
+  },
+  {
+    "id": "weekly-plan",
+    "name": "주간 계획 일기",
+    "description": "이번 주에 힘을 쓸 곳과 남겨둘 여백을 정해요.",
+    "style": "dots",
+    "category": "planning",
+    "minutes": 7,
+    "layout": "dashboard",
+    "reference": "dayone",
+    "sections": [
+      {
+        "kind": "text",
+        "title": "이번 주의 중심",
+        "prompt": "한 주 동안 가장 중요하게 볼 일은?"
+      },
+      {
+        "kind": "todo",
+        "title": "우선할 일정",
+        "prompt": "먼저 확보해야 하는 시간과 일정을 적어요."
+      },
+      {
+        "kind": "todo",
+        "title": "미뤄도 되는 일",
+        "prompt": "이번 주에 무리해서 하지 않을 일을 골라요."
+      },
+      {
+        "kind": "habit",
+        "title": "유지할 루틴",
+        "prompt": "한 주 동안 이어갈 작은 습관은?"
+      }
+    ]
+  },
+  {
+    "id": "monthly-plan",
+    "name": "월간 방향 노트",
+    "description": "이번 달의 목표와 시작점을 한 장에 담아요.",
+    "style": "dots",
+    "category": "planning",
+    "minutes": 10,
+    "layout": "split",
+    "reference": "dayone",
+    "sections": [
+      {
+        "kind": "text",
+        "title": "이번 달의 방향",
+        "prompt": "어떤 변화가 생기면 만족할 수 있을까요?"
+      },
+      {
+        "kind": "todo",
+        "title": "첫 번째 단계",
+        "prompt": "시작하기 위해 이번 주에 할 일을 적어요."
+      },
+      {
+        "kind": "text",
+        "title": "챙길 조건",
+        "prompt": "시간·도움·환경 중 필요한 것은?"
+      }
+    ]
+  },
+  {
+    "id": "goal-steps",
+    "name": "목표 쪼개기",
+    "description": "큰 목표를 작고 확인 가능한 행동으로 나눠요.",
+    "style": "plain",
+    "category": "planning",
+    "minutes": 10,
+    "layout": "timeline",
+    "reference": "dayone",
+    "sections": [
+      {
+        "kind": "text",
+        "title": "도착하고 싶은 곳",
+        "prompt": "목표가 이루어진 모습을 구체적으로 적어요."
+      },
+      {
+        "kind": "todo",
+        "title": "첫 단계",
+        "prompt": "가장 작게 시작할 수 있는 행동은?"
+      },
+      {
+        "kind": "todo",
+        "title": "중간 단계",
+        "prompt": "첫 단계를 마친 뒤 이어갈 행동은?"
+      },
+      {
+        "kind": "text",
+        "title": "확인할 기준",
+        "prompt": "진행 여부를 무엇으로 확인할까요?"
+      }
+    ]
+  },
+  {
+    "id": "goal-check",
+    "name": "목표 점검 일기",
+    "description": "계획과 실제 진행을 비교하며 다음 단계를 정해요.",
+    "style": "plain",
+    "category": "planning",
+    "minutes": 7,
+    "layout": "compare",
+    "reference": "dayone",
+    "sections": [
+      {
+        "kind": "text",
+        "title": "처음의 계획",
+        "prompt": "어디까지 하려고 했나요?"
+      },
+      {
+        "kind": "text",
+        "title": "실제 진행",
+        "prompt": "지금까지 한 일과 막힌 지점을 적어요."
+      },
+      {
+        "kind": "todo",
+        "title": "조정한 다음 단계",
+        "prompt": "범위나 시간을 어떻게 바꿔볼까요?"
+      }
+    ]
+  },
+  {
+    "id": "goal-finish",
+    "name": "목표 완료 기록",
+    "description": "완료한 과정과 다음에 쓸 배움을 보관해요.",
+    "style": "paper",
+    "category": "planning",
+    "minutes": 7,
+    "layout": "split",
+    "reference": "dayone",
+    "sections": [
+      {
+        "kind": "text",
+        "title": "완료까지의 이야기",
+        "prompt": "시작부터 끝까지 어떤 과정을 거쳤나요?"
+      },
+      {
+        "kind": "text",
+        "title": "도움을 준 것",
+        "prompt": "사람·도구·습관 중 무엇이 효과가 있었나요?"
+      },
+      {
+        "kind": "text",
+        "title": "다음에도 쓸 방법",
+        "prompt": "다른 목표에도 가져가고 싶은 방법은?"
+      }
+    ]
+  },
+  {
+    "id": "project-board",
+    "name": "프로젝트 일기",
+    "description": "진행·막힘·다음 작업을 간단히 모아요.",
+    "style": "dots",
+    "category": "planning",
+    "minutes": 7,
+    "layout": "dashboard",
+    "reference": "bullet",
+    "sections": [
+      {
+        "kind": "text",
+        "title": "프로젝트의 현재",
+        "prompt": "만드는 것과 지금 단계는 무엇인가요?"
+      },
+      {
+        "kind": "text",
+        "title": "완료한 작업",
+        "prompt": "이번 작업에서 끝낸 부분을 적어요."
+      },
+      {
+        "kind": "text",
+        "title": "막힌 작업",
+        "prompt": "도움이나 확인이 필요한 부분은?"
+      },
+      {
+        "kind": "todo",
+        "title": "다음 작업",
+        "prompt": "다음에 바로 시작할 한 작업을 골라요."
+      }
+    ]
+  },
+  {
+    "id": "time-use",
+    "name": "시간 사용 회고",
+    "description": "계획한 시간과 실제 사용을 비교해요.",
+    "style": "plain",
+    "category": "planning",
+    "minutes": 5,
+    "layout": "compare",
+    "reference": "dayone",
+    "sections": [
+      {
+        "kind": "text",
+        "title": "계획했던 시간",
+        "prompt": "오늘 시간을 어떻게 쓰려고 했나요?"
+      },
+      {
+        "kind": "text",
+        "title": "실제로 쓴 시간",
+        "prompt": "기억나는 활동과 대략의 시간을 적어요."
+      },
+      {
+        "kind": "todo",
+        "title": "다음에 바꿀 배치",
+        "prompt": "집중이나 휴식 시간을 어떻게 조정할까요?"
+      }
+    ]
+  },
+  {
+    "id": "meeting-notes",
+    "name": "회의 후 일기",
+    "description": "논의와 내 생각, 후속 행동을 분리해 기록해요.",
+    "style": "plain",
+    "category": "planning",
+    "minutes": 7,
+    "layout": "cornell",
+    "reference": "dayone",
+    "sections": [
+      {
+        "kind": "text",
+        "title": "확인할 질문",
+        "prompt": "회의 뒤에도 남은 질문은 무엇인가요?"
+      },
+      {
+        "kind": "text",
+        "title": "논의와 결정",
+        "prompt": "주요 내용과 함께 정한 일을 적어요."
+      },
+      {
+        "kind": "todo",
+        "title": "내 후속 행동",
+        "prompt": "누구와 무엇을 언제 확인할까요?"
+      }
+    ]
+  },
+  {
+    "id": "habit-log",
+    "name": "습관 관찰 일기",
+    "description": "습관의 실행과 방해 조건을 함께 남겨요.",
+    "style": "dots",
+    "category": "wellbeing",
+    "minutes": 5,
+    "layout": "dashboard",
+    "reference": "bullet",
+    "sections": [
+      {
+        "kind": "habit",
+        "title": "오늘 이어갈 습관",
+        "prompt": "작게 정한 행동을 기록하고 실행 뒤 체크해요."
+      },
+      {
+        "kind": "text",
+        "title": "실행을 도운 조건",
+        "prompt": "어떤 시간이나 장소에서 시작하기 쉬웠나요?"
+      },
+      {
+        "kind": "text",
+        "title": "실행을 막은 조건",
+        "prompt": "어떤 상황에서 어려웠는지 적어요."
+      }
+    ]
+  },
+  {
+    "id": "sleep-log",
+    "name": "수면 기록",
+    "description": "잠든 시간과 아침 느낌을 관찰해요.",
+    "style": "paper",
+    "category": "wellbeing",
+    "minutes": 3,
+    "layout": "cards",
+    "reference": "journey",
+    "sections": [
+      {
+        "kind": "text",
+        "title": "어젯밤의 시간",
+        "prompt": "잠든 때와 일어난 때를 기억나는 만큼 적어요."
+      },
+      {
+        "kind": "text",
+        "title": "아침의 느낌",
+        "prompt": "일어났을 때 느낀 몸 상태와 기분은?"
+      },
+      {
+        "kind": "text",
+        "title": "잠들기 전 활동",
+        "prompt": "어떤 활동을 하다가 잠들었나요?"
+      }
+    ]
+  },
+  {
+    "id": "meal-log",
+    "name": "식사 일기",
+    "description": "먹은 것과 식사 장면을 짧게 남겨요.",
+    "style": "dots",
+    "category": "wellbeing",
+    "minutes": 3,
+    "layout": "timeline",
+    "reference": "dayone",
+    "sections": [
+      {
+        "kind": "text",
+        "title": "첫 식사",
+        "prompt": "무엇을 어디서 누구와 먹었나요?"
+      },
+      {
+        "kind": "text",
+        "title": "중간의 식사와 간식",
+        "prompt": "기억나는 음식과 식사 상황을 적어요."
+      },
+      {
+        "kind": "text",
+        "title": "마지막 식사",
+        "prompt": "하루 끝에 먹은 것과 만족감을 남겨요."
+      }
+    ]
+  },
+  {
+    "id": "movement-log",
+    "name": "움직임 일기",
+    "description": "오늘의 활동과 몸의 느낌을 기록해요.",
+    "style": "dots",
+    "category": "wellbeing",
+    "minutes": 5,
+    "layout": "dashboard",
+    "reference": "dayone",
+    "sections": [
+      {
+        "kind": "text",
+        "title": "오늘의 움직임",
+        "prompt": "걷기·운동·스트레칭 중 무엇을 했나요?"
+      },
+      {
+        "kind": "text",
+        "title": "전후의 느낌",
+        "prompt": "활동 전후로 어떤 차이를 느꼈나요?"
+      },
+      {
+        "kind": "habit",
+        "title": "다음에 이어갈 활동",
+        "prompt": "무리 없이 이어가고 싶은 움직임을 적어요."
+      }
+    ]
+  },
+  {
+    "id": "walk-note",
+    "name": "산책 일기",
+    "description": "걸으며 본 풍경과 떠오른 생각을 남겨요.",
+    "style": "paper",
+    "category": "wellbeing",
+    "minutes": 5,
+    "layout": "split",
+    "reference": "journey",
+    "sections": [
+      {
+        "kind": "text",
+        "title": "오늘 걸은 길",
+        "prompt": "길의 모습과 기억에 남는 풍경을 적어요."
+      },
+      {
+        "kind": "text",
+        "title": "길에서 든 생각",
+        "prompt": "걷는 동안 어떤 생각이 찾아왔나요?"
+      },
+      {
+        "kind": "text",
+        "title": "발견한 작은 것",
+        "prompt": "평소 지나쳤던 것 중 새로 보인 것은?"
+      }
+    ]
+  },
+  {
+    "id": "rest-log",
+    "name": "휴식 일기",
+    "description": "쉰 방법과 휴식 뒤의 느낌을 돌아봐요.",
+    "style": "paper",
+    "category": "wellbeing",
+    "minutes": 5,
+    "layout": "compare",
+    "reference": "dayone",
+    "sections": [
+      {
+        "kind": "text",
+        "title": "쉬기 전",
+        "prompt": "어떤 상태여서 쉬고 싶었나요?"
+      },
+      {
+        "kind": "text",
+        "title": "쉰 뒤",
+        "prompt": "무엇을 하며 쉬었고 기분은 어떻게 달라졌나요?"
+      },
+      {
+        "kind": "text",
+        "title": "나에게 맞는 휴식",
+        "prompt": "다음에도 해보고 싶은 방법을 적어요."
+      }
+    ]
+  },
+  {
+    "id": "digital-rest",
+    "name": "디지털 휴식 기록",
+    "description": "화면을 본 시간과 잠시 내려놓은 순간을 적어요.",
+    "style": "plain",
+    "category": "wellbeing",
+    "minutes": 5,
+    "layout": "compare",
+    "reference": "dayone",
+    "sections": [
+      {
+        "kind": "text",
+        "title": "화면과 보낸 시간",
+        "prompt": "오늘 주로 어떤 용도로 화면을 봤나요?"
+      },
+      {
+        "kind": "text",
+        "title": "화면 밖의 시간",
+        "prompt": "기기를 내려놓고 어떤 시간을 보냈나요?"
+      },
+      {
+        "kind": "habit",
+        "title": "다음의 짧은 휴식",
+        "prompt": "화면에서 잠깐 떨어질 행동을 정해요."
+      }
+    ]
+  },
+  {
+    "id": "space-reset",
+    "name": "공간 정리 일기",
+    "description": "작은 공간을 정리한 전후를 기록해요.",
+    "style": "dots",
+    "category": "wellbeing",
+    "minutes": 5,
+    "layout": "compare",
+    "reference": "bullet",
+    "sections": [
+      {
+        "kind": "text",
+        "title": "정리 전의 공간",
+        "prompt": "불편했던 점과 남기고 싶던 것을 적어요."
+      },
+      {
+        "kind": "text",
+        "title": "정리 후의 공간",
+        "prompt": "무엇을 바꾸었고 사용감은 어떤가요?"
+      },
+      {
+        "kind": "habit",
+        "title": "유지할 한 가지",
+        "prompt": "다음에도 이어갈 간단한 정리 습관은?"
+      }
+    ]
+  },
+  {
+    "id": "routine-review",
+    "name": "루틴 점검 일기",
+    "description": "아침·낮·저녁의 반복을 관찰해요.",
+    "style": "dots",
+    "category": "wellbeing",
+    "minutes": 7,
+    "layout": "timeline",
+    "reference": "bullet",
+    "sections": [
+      {
+        "kind": "text",
+        "title": "아침 루틴",
+        "prompt": "자연스럽게 이어진 행동과 어려운 행동은?"
+      },
+      {
+        "kind": "text",
+        "title": "낮 루틴",
+        "prompt": "집중과 휴식을 어떻게 오갔나요?"
+      },
+      {
+        "kind": "text",
+        "title": "저녁 루틴",
+        "prompt": "하루를 마무리하며 어떤 행동을 했나요?"
+      },
+      {
+        "kind": "habit",
+        "title": "하나만 바꿔보기",
+        "prompt": "내일 가볍게 조정할 행동을 골라요."
+      }
+    ]
+  },
+  {
+    "id": "self-care-note",
+    "name": "나를 돌본 기록",
+    "description": "나에게 해준 작은 돌봄을 모아요.",
+    "style": "paper",
+    "category": "wellbeing",
+    "minutes": 5,
+    "layout": "cards",
+    "reference": "dayone",
+    "sections": [
+      {
+        "kind": "text",
+        "title": "몸을 위해 해준 것",
+        "prompt": "오늘의 작은 돌봄 행동을 적어요."
+      },
+      {
+        "kind": "emotion",
+        "title": "마음을 위해 해준 것",
+        "prompt": "마음이 편해진 행동이나 말을 기록해요."
+      },
+      {
+        "kind": "todo",
+        "title": "내일 챙길 작은 것",
+        "prompt": "내일 나에게 해주고 싶은 일은?"
+      }
+    ]
+  },
+  {
+    "id": "future-letter",
+    "name": "미래의 나에게",
+    "description": "나중의 내가 읽을 편지를 남겨요.",
+    "style": "paper",
+    "category": "relationships",
+    "minutes": 10,
+    "layout": "letter",
+    "reference": "journey",
+    "sections": [
+      {
+        "kind": "text",
+        "title": "미래의 나에게 보내는 편지",
+        "prompt": "지금의 생활과 바람을 편지로 써요."
+      },
+      {
+        "kind": "text",
+        "title": "기억해줬으면 하는 것",
+        "prompt": "미래에도 잊지 않았으면 하는 마음은?"
+      }
+    ]
+  },
+  {
+    "id": "past-letter",
+    "name": "과거의 나에게",
+    "description": "그때의 나에게 지금의 말을 건네요.",
+    "style": "paper",
+    "category": "relationships",
+    "minutes": 10,
+    "layout": "letter",
+    "reference": "journey",
+    "sections": [
+      {
+        "kind": "text",
+        "title": "그때의 나에게",
+        "prompt": "어떤 시기의 나에게 말을 걸고 싶나요?"
+      },
+      {
+        "kind": "text",
+        "title": "지금 알게 된 것",
+        "prompt": "시간이 지나 새로 보이는 것을 적어요."
+      }
+    ]
+  },
+  {
+    "id": "friend-note",
+    "name": "친구와의 하루",
+    "description": "함께 보낸 시간과 남은 말을 기록해요.",
+    "style": "paper",
+    "category": "relationships",
+    "minutes": 5,
+    "layout": "split",
+    "reference": "journey",
+    "sections": [
+      {
+        "kind": "text",
+        "title": "같이 보낸 장면",
+        "prompt": "친구와 어디서 어떤 시간을 보냈나요?"
+      },
+      {
+        "kind": "text",
+        "title": "기억나는 대화",
+        "prompt": "오래 남은 말이나 웃었던 이야기는?"
+      },
+      {
+        "kind": "todo",
+        "title": "다음에 함께할 것",
+        "prompt": "같이 해보고 싶은 작은 일을 적어요."
+      }
+    ]
+  },
+  {
+    "id": "family-note",
+    "name": "가족 이야기",
+    "description": "익숙한 가족의 장면을 새롭게 남겨요.",
+    "style": "paper",
+    "category": "relationships",
+    "minutes": 5,
+    "layout": "cards",
+    "reference": "journey",
+    "sections": [
+      {
+        "kind": "text",
+        "title": "오늘의 가족 장면",
+        "prompt": "함께했거나 떠올린 순간을 적어요."
+      },
+      {
+        "kind": "text",
+        "title": "새로 알게 된 모습",
+        "prompt": "오늘 처음 알거나 다시 본 모습은?"
+      },
+      {
+        "kind": "text",
+        "title": "전하고 싶은 말",
+        "prompt": "가족에게 남기고 싶은 말은 무엇인가요?"
+      }
+    ]
+  },
+  {
+    "id": "conversation-review",
+    "name": "대화 회고",
+    "description": "내가 말한 것과 들은 것을 나눠 돌아봐요.",
+    "style": "plain",
+    "category": "relationships",
+    "minutes": 7,
+    "layout": "compare",
+    "reference": "gibbs",
+    "sections": [
+      {
+        "kind": "text",
+        "title": "내가 전한 말",
+        "prompt": "어떤 생각을 어떻게 표현했나요?"
+      },
+      {
+        "kind": "text",
+        "title": "내가 들은 말",
+        "prompt": "상대의 이야기 중 기억에 남는 부분은?"
+      },
+      {
+        "kind": "text",
+        "title": "다음 대화에서 챙길 것",
+        "prompt": "더 묻거나 다르게 표현하고 싶은 점은?"
+      }
+    ]
+  },
+  {
+    "id": "conflict-note",
+    "name": "갈등 돌아보기",
+    "description": "각자의 관점과 다음 대화의 질문을 남겨요.",
+    "style": "plain",
+    "category": "relationships",
+    "minutes": 10,
+    "layout": "compare",
+    "reference": "what",
+    "sections": [
+      {
+        "kind": "text",
+        "title": "내가 본 상황",
+        "prompt": "어떤 장면에서 마음이 부딪혔나요?"
+      },
+      {
+        "kind": "text",
+        "title": "아직 모르는 상대의 관점",
+        "prompt": "추측 대신 직접 물어보고 싶은 점을 적어요."
+      },
+      {
+        "kind": "todo",
+        "title": "다음 대화의 준비",
+        "prompt": "차분히 확인할 질문 하나를 골라요."
+      }
+    ]
+  },
+  {
+    "id": "together-note",
+    "name": "함께 만든 기억",
+    "description": "둘이 함께한 순간과 작은 약속을 담아요.",
+    "style": "paper",
+    "category": "relationships",
+    "minutes": 7,
+    "layout": "split",
+    "reference": "journey",
+    "sections": [
+      {
+        "kind": "text",
+        "title": "우리의 장면",
+        "prompt": "함께했기에 더 기억나는 순간을 적어요."
+      },
+      {
+        "kind": "text",
+        "title": "상대에게 배운 것",
+        "prompt": "함께하는 동안 새로 알아본 모습은?"
+      },
+      {
+        "kind": "todo",
+        "title": "함께할 다음 약속",
+        "prompt": "부담 없이 함께하고 싶은 일을 적어요."
+      }
+    ]
+  },
+  {
+    "id": "kindness-log",
+    "name": "친절을 나눈 일기",
+    "description": "받고 건넨 작은 친절을 각각 남겨요.",
+    "style": "plain",
+    "category": "relationships",
+    "minutes": 5,
+    "layout": "compare",
+    "reference": "journey",
+    "sections": [
+      {
+        "kind": "text",
+        "title": "내가 받은 친절",
+        "prompt": "누가 어떤 수고를 해줬나요?"
+      },
+      {
+        "kind": "text",
+        "title": "내가 건넨 친절",
+        "prompt": "내가 누군가를 위해 해준 작은 일은?"
+      },
+      {
+        "kind": "text",
+        "title": "친절 뒤의 마음",
+        "prompt": "그 순간들에서 어떤 기분을 느꼈나요?"
+      }
+    ]
+  },
+  {
+    "id": "mentor-note",
+    "name": "조언을 만난 날",
+    "description": "들었던 조언과 내 해석을 구분해 기록해요.",
+    "style": "plain",
+    "category": "relationships",
+    "minutes": 7,
+    "layout": "cornell",
+    "reference": "cornell",
+    "sections": [
+      {
+        "kind": "text",
+        "title": "내가 물었던 질문",
+        "prompt": "어떤 고민이나 선택을 상담했나요?"
+      },
+      {
+        "kind": "text",
+        "title": "기억할 조언",
+        "prompt": "상대의 설명과 구체적인 예시를 적어요."
+      },
+      {
+        "kind": "todo",
+        "title": "내 방식으로 해볼 것",
+        "prompt": "내 상황에 맞게 시도할 행동을 골라요."
+      }
+    ]
+  },
+  {
+    "id": "idea-seed",
+    "name": "아이디어 씨앗",
+    "description": "떠오른 생각과 작은 시험 방법을 남겨요.",
+    "style": "dots",
+    "category": "creativity",
+    "minutes": 5,
+    "layout": "dashboard",
+    "reference": "creative",
+    "sections": [
+      {
+        "kind": "text",
+        "title": "오늘의 아이디어",
+        "prompt": "무엇을 새롭게 해보고 싶나요?"
+      },
+      {
+        "kind": "text",
+        "title": "떠오른 계기",
+        "prompt": "어떤 관찰이나 불편에서 생각이 시작됐나요?"
+      },
+      {
+        "kind": "todo",
+        "title": "작은 시험",
+        "prompt": "크게 만들기 전에 어떻게 한번 시험할까요?"
+      }
+    ]
+  },
+  {
+    "id": "brainstorm",
+    "name": "브레인스토밍 일기",
+    "description": "판단을 미루고 가능한 생각을 펼쳐요.",
+    "style": "dots",
+    "category": "creativity",
+    "minutes": 10,
+    "layout": "page",
+    "reference": "dayone",
+    "sections": [
+      {
+        "kind": "text",
+        "title": "생각을 펼칠 주제",
+        "prompt": "오늘 어떤 질문을 자유롭게 탐색할까요?"
+      },
+      {
+        "kind": "text",
+        "title": "가능한 생각들",
+        "prompt": "좋고 나쁨을 고르기 전에 여러 방향을 적어요."
+      },
+      {
+        "kind": "text",
+        "title": "더 이어갈 생각",
+        "prompt": "가장 흥미로운 방향 하나를 골라요."
+      }
+    ]
+  },
+  {
+    "id": "dream-log",
+    "name": "꿈 기록",
+    "description": "꿈의 장면과 깨어난 느낌을 보관해요.",
+    "style": "paper",
+    "category": "creativity",
+    "minutes": 5,
+    "layout": "split",
+    "reference": "dream",
+    "sections": [
+      {
+        "kind": "text",
+        "title": "기억나는 꿈",
+        "prompt": "장소·인물·순서를 떠오르는 만큼 써요."
+      },
+      {
+        "kind": "emotion",
+        "title": "깨어난 느낌",
+        "prompt": "눈을 뜬 뒤 어떤 감정이 남았나요?"
+      },
+      {
+        "kind": "text",
+        "title": "반복해서 떠오른 장면",
+        "prompt": "특히 선명하거나 익숙했던 장면은?"
+      }
+    ]
+  },
+  {
+    "id": "story-spark",
+    "name": "이야기 만들기 일기",
+    "description": "일상의 장면을 짧은 이야기로 바꿔봐요.",
+    "style": "paper",
+    "category": "creativity",
+    "minutes": 10,
+    "layout": "timeline",
+    "reference": "creative",
+    "sections": [
+      {
+        "kind": "text",
+        "title": "시작 장면",
+        "prompt": "주인공이 어디서 무엇을 하고 있나요?"
+      },
+      {
+        "kind": "text",
+        "title": "작은 변화",
+        "prompt": "예상과 다른 일이 하나 생긴다면?"
+      },
+      {
+        "kind": "text",
+        "title": "마지막 장면",
+        "prompt": "변화를 겪은 뒤 무엇이 달라졌나요?"
+      }
+    ]
+  },
+  {
+    "id": "music-note",
+    "name": "음악 감상 일기",
+    "description": "한 곡이 남긴 장면과 감정을 적어요.",
+    "style": "paper",
+    "category": "creativity",
+    "minutes": 5,
+    "layout": "cards",
+    "reference": "journey",
+    "sections": [
+      {
+        "kind": "text",
+        "title": "오늘의 곡",
+        "prompt": "제목과 들었던 상황을 적어요."
+      },
+      {
+        "kind": "text",
+        "title": "떠오른 장면",
+        "prompt": "음악을 들으며 어떤 풍경이 생각났나요?"
+      },
+      {
+        "kind": "emotion",
+        "title": "남아 있는 감정",
+        "prompt": "다 듣고 나서 기분이 어떻게 달라졌나요?"
+      }
+    ]
+  },
+  {
+    "id": "film-note",
+    "name": "영화 감상 일기",
+    "description": "줄거리보다 나에게 남은 장면을 살펴봐요.",
+    "style": "plain",
+    "category": "creativity",
+    "minutes": 10,
+    "layout": "split",
+    "reference": "journey",
+    "sections": [
+      {
+        "kind": "text",
+        "title": "영화가 남긴 이야기",
+        "prompt": "작품과 인상 깊은 장면을 내 말로 정리해요."
+      },
+      {
+        "kind": "text",
+        "title": "인물의 선택",
+        "prompt": "이해되거나 궁금했던 행동은 무엇인가요?"
+      },
+      {
+        "kind": "text",
+        "title": "내게 남은 질문",
+        "prompt": "영화를 보고 새로 생각하게 된 것은?"
+      }
+    ]
+  },
+  {
+    "id": "art-note",
+    "name": "전시 감상 일기",
+    "description": "작품에서 본 것과 내가 느낀 것을 나눠요.",
+    "style": "paper",
+    "category": "creativity",
+    "minutes": 7,
+    "layout": "compare",
+    "reference": "creative",
+    "sections": [
+      {
+        "kind": "text",
+        "title": "눈에 보인 것",
+        "prompt": "색·형태·재료 등 관찰한 특징을 적어요."
+      },
+      {
+        "kind": "text",
+        "title": "나에게 느껴진 것",
+        "prompt": "작품이 떠올리게 한 감정이나 경험은?"
+      },
+      {
+        "kind": "text",
+        "title": "기억할 작품",
+        "prompt": "다시 보고 싶은 작품과 이유를 남겨요."
+      }
+    ]
+  },
+  {
+    "id": "creative-process",
+    "name": "창작 과정 일기",
+    "description": "만들며 시도한 방법과 발견을 기록해요.",
+    "style": "dots",
+    "category": "creativity",
+    "minutes": 7,
+    "layout": "dashboard",
+    "reference": "creative",
+    "sections": [
+      {
+        "kind": "text",
+        "title": "오늘 만든 것",
+        "prompt": "어떤 작품이나 작은 조각을 만들었나요?"
+      },
+      {
+        "kind": "text",
+        "title": "시도한 방법",
+        "prompt": "새롭게 해본 표현이나 도구를 적어요."
+      },
+      {
+        "kind": "text",
+        "title": "예상 밖의 발견",
+        "prompt": "만드는 중 뜻밖에 좋아진 부분은?"
+      },
+      {
+        "kind": "todo",
+        "title": "다음에 이어갈 것",
+        "prompt": "다음 작업에서 해볼 한 가지는?"
+      }
+    ]
+  },
+  {
+    "id": "taste-collection",
+    "name": "취향 수집 일기",
+    "description": "마음에 든 것들의 공통점을 찾아봐요.",
+    "style": "plain",
+    "category": "creativity",
+    "minutes": 5,
+    "layout": "cards",
+    "reference": "creative",
+    "sections": [
+      {
+        "kind": "text",
+        "title": "오늘 마음에 든 것",
+        "prompt": "물건·색·글·음식 중 눈길이 간 것은?"
+      },
+      {
+        "kind": "text",
+        "title": "좋아한 이유",
+        "prompt": "어떤 특징이 내 취향과 만났나요?"
+      },
+      {
+        "kind": "text",
+        "title": "새로 발견한 취향",
+        "prompt": "이전에는 몰랐던 선호를 적어요."
+      }
+    ]
+  },
+  {
+    "id": "observation-note",
+    "name": "관찰 일기",
+    "description": "하나의 대상을 오래 바라보며 묘사해요.",
+    "style": "paper",
+    "category": "creativity",
+    "minutes": 7,
+    "layout": "page",
+    "reference": "creative",
+    "sections": [
+      {
+        "kind": "text",
+        "title": "오늘의 관찰 대상",
+        "prompt": "대상을 고르고 보이는 특징부터 적어요."
+      },
+      {
+        "kind": "text",
+        "title": "처음과 다시 본 모습",
+        "prompt": "조금 더 바라본 뒤 새로 눈에 들어온 점은?"
+      }
+    ]
+  },
+  {
+    "id": "travel-day",
+    "name": "여행 하루 기록",
+    "description": "낯선 장소에서 보낸 하루를 순서대로 남겨요.",
+    "style": "paper",
+    "category": "memories",
+    "minutes": 10,
+    "layout": "timeline",
+    "reference": "journey",
+    "sections": [
+      {
+        "kind": "text",
+        "title": "출발과 첫 장면",
+        "prompt": "어디에서 하루를 시작했나요?"
+      },
+      {
+        "kind": "text",
+        "title": "길에서 만난 것",
+        "prompt": "새롭게 본 사람·풍경·음식은?"
+      },
+      {
+        "kind": "text",
+        "title": "오늘의 하이라이트",
+        "prompt": "가장 오래 기억하고 싶은 순간을 적어요."
+      }
+    ]
+  },
+  {
+    "id": "travel-plan",
+    "name": "여행 준비 일기",
+    "description": "기대하는 경험과 준비할 것을 함께 모아요.",
+    "style": "dots",
+    "category": "memories",
+    "minutes": 10,
+    "layout": "dashboard",
+    "reference": "dayone",
+    "sections": [
+      {
+        "kind": "text",
+        "title": "이번 여행의 기대",
+        "prompt": "어떤 장소와 시간을 만나고 싶나요?"
+      },
+      {
+        "kind": "todo",
+        "title": "챙길 준비물",
+        "prompt": "꼭 가져갈 물건과 확인할 준비를 적어요."
+      },
+      {
+        "kind": "todo",
+        "title": "확인할 일정",
+        "prompt": "이동과 숙박에서 직접 확인할 것은?"
+      },
+      {
+        "kind": "text",
+        "title": "여유로운 계획",
+        "prompt": "계획 없이 남겨두고 싶은 시간은?"
+      }
+    ]
+  },
+  {
+    "id": "travel-return",
+    "name": "여행 후 회고",
+    "description": "떠나기 전 기대와 돌아온 뒤의 기억을 비교해요.",
+    "style": "paper",
+    "category": "memories",
+    "minutes": 10,
+    "layout": "compare",
+    "reference": "dayone",
+    "sections": [
+      {
+        "kind": "text",
+        "title": "가기 전의 기대",
+        "prompt": "어떤 여행을 상상했나요?"
+      },
+      {
+        "kind": "text",
+        "title": "돌아와 남은 기억",
+        "prompt": "실제로 가장 좋았거나 달랐던 순간은?"
+      },
+      {
+        "kind": "text",
+        "title": "다음 여행에 가져갈 것",
+        "prompt": "기억해둘 준비나 태도를 적어요."
+      }
+    ]
+  },
+  {
+    "id": "birthday-note",
+    "name": "생일 일기",
+    "description": "한 살의 끝과 새로운 한 살의 시작을 남겨요.",
+    "style": "paper",
+    "category": "memories",
+    "minutes": 10,
+    "layout": "compare",
+    "reference": "dayone",
+    "sections": [
+      {
+        "kind": "text",
+        "title": "지난 한 살의 나",
+        "prompt": "기억할 변화와 함께한 사람을 적어요."
+      },
+      {
+        "kind": "text",
+        "title": "새로운 한 살의 나",
+        "prompt": "지키고 싶은 마음과 해보고 싶은 일은?"
+      },
+      {
+        "kind": "text",
+        "title": "오늘 받은 마음",
+        "prompt": "축하와 내 마음의 장면을 기록해요."
+      }
+    ]
+  },
+  {
+    "id": "season-note",
+    "name": "계절 일기",
+    "description": "계절의 풍경과 그때의 나를 담아요.",
+    "style": "paper",
+    "category": "memories",
+    "minutes": 5,
+    "layout": "cards",
+    "reference": "dayone",
+    "sections": [
+      {
+        "kind": "text",
+        "title": "계절의 첫 느낌",
+        "prompt": "빛·온도·옷차림에서 어떤 변화가 보이나요?"
+      },
+      {
+        "kind": "text",
+        "title": "이 계절의 생활",
+        "prompt": "최근 자주 하는 일과 찾게 되는 것은?"
+      },
+      {
+        "kind": "text",
+        "title": "계절이 지나기 전",
+        "prompt": "한 번쯤 경험하고 싶은 장면을 적어요."
+      }
+    ]
+  },
+  {
+    "id": "year-end",
+    "name": "연말 일기",
+    "description": "한 해의 변화와 다음 해의 바람을 돌아봐요.",
+    "style": "paper",
+    "category": "memories",
+    "minutes": 15,
+    "layout": "dashboard",
+    "reference": "dayone",
+    "sections": [
+      {
+        "kind": "text",
+        "title": "올해의 이야기",
+        "prompt": "올해를 대표하는 경험을 적어요."
+      },
+      {
+        "kind": "text",
+        "title": "소중한 사람과 장면",
+        "prompt": "오래 간직할 만남과 기억은?"
+      },
+      {
+        "kind": "text",
+        "title": "놓고 갈 것",
+        "prompt": "다음 해에는 덜어내고 싶은 것은?"
+      },
+      {
+        "kind": "todo",
+        "title": "새해의 작은 시작",
+        "prompt": "첫 주에 해볼 행동 하나를 정해요."
+      }
+    ]
+  },
+  {
+    "id": "new-year",
+    "name": "새해 첫 페이지",
+    "description": "새로운 해에 남기고 싶은 방향을 적어요.",
+    "style": "dots",
+    "category": "memories",
+    "minutes": 10,
+    "layout": "split",
+    "reference": "dayone",
+    "sections": [
+      {
+        "kind": "text",
+        "title": "올해의 나에게",
+        "prompt": "어떤 마음으로 한 해를 보내고 싶나요?"
+      },
+      {
+        "kind": "text",
+        "title": "내가 지킬 기준",
+        "prompt": "선택할 때 기억할 가치 한 가지는?"
+      },
+      {
+        "kind": "todo",
+        "title": "첫 번째 작은 실천",
+        "prompt": "오늘 시작할 수 있는 일을 적어요."
+      }
+    ]
+  },
+  {
+    "id": "childhood-memory",
+    "name": "어린 날의 기억",
+    "description": "오래된 장면을 지금의 시선으로 써요.",
+    "style": "paper",
+    "category": "memories",
+    "minutes": 10,
+    "layout": "page",
+    "reference": "journey",
+    "sections": [
+      {
+        "kind": "text",
+        "title": "떠오르는 옛 장면",
+        "prompt": "장소와 사람, 그때의 모습을 적어요."
+      },
+      {
+        "kind": "text",
+        "title": "지금 다시 보는 마음",
+        "prompt": "지금의 나에게 그 장면은 어떤 의미인가요?"
+      }
+    ]
+  },
+  {
+    "id": "keepsake-story",
+    "name": "물건에 담긴 이야기",
+    "description": "간직한 물건 하나의 기억을 기록해요.",
+    "style": "paper",
+    "category": "memories",
+    "minutes": 7,
+    "layout": "split",
+    "reference": "creative",
+    "sections": [
+      {
+        "kind": "text",
+        "title": "이 물건의 이야기",
+        "prompt": "언제 어떻게 내 곁에 오게 됐나요?"
+      },
+      {
+        "kind": "text",
+        "title": "떠오르는 사람과 장소",
+        "prompt": "물건을 보면 어떤 장면이 생각나나요?"
+      },
+      {
+        "kind": "text",
+        "title": "간직하는 이유",
+        "prompt": "지금도 남겨두고 싶은 이유를 적어요."
+      }
+    ]
+  },
+  {
+    "id": "first-time",
+    "name": "처음 해본 날",
+    "description": "새로운 경험 전후의 생각을 비교해요.",
+    "style": "plain",
+    "category": "memories",
+    "minutes": 7,
+    "layout": "compare",
+    "reference": "journey",
+    "sections": [
+      {
+        "kind": "text",
+        "title": "처음 하기 전",
+        "prompt": "기대와 걱정은 무엇이었나요?"
+      },
+      {
+        "kind": "text",
+        "title": "처음 해본 뒤",
+        "prompt": "상상과 실제가 어떻게 달랐나요?"
+      },
+      {
+        "kind": "todo",
+        "title": "다음에는",
+        "prompt": "다시 해보고 싶거나 바꿔볼 것을 적어요."
+      }
+    ]
+  }
+]
