@@ -44,6 +44,8 @@ python tools/compare-desktop.py windows-report.json mac-report.json
 
 두 결과는 서로만 비교하지 않고 공통 원본의 기대값과도 비교합니다. `.github/workflows/chat-compatibility.yml`은 생성 누락 검사, 두 네이티브 앱 빌드·채팅 검사, 앱별 결과 비교, 실제 Mac 버전 4 백업을 현재 Windows 직렬화 코드로 읽는 검사를 실행합니다. 공개 저장소의 표준 러너에서만 실행하며 서버를 배포하지 않습니다.
 
+2026-10-19 소스 커밋 `11dff9d`의 [공통 개발 CI](https://github.com/parkhookjung-debug/myday-diary/actions/runs/39268012217)에서 서버, Windows, Apple Silicon Mac, 실제 결과 비교, Mac → Windows 백업 검사 5개 작업이 모두 통과했습니다. 실행 페이지의 Artifacts에서 두 앱의 빌드와 화면·검사 결과를 받을 수 있습니다. 산출물은 7일 보관하며 Intel Mac 빌드·실기기 실행은 별도 확인 대상입니다.
+
 ## 아직 플랫폼별로 다른 기능
 
 | 항목 | Windows | Mac |
