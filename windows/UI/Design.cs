@@ -26,12 +26,23 @@ namespace MyDay.Windows.UI
         public static readonly Color[] Backgrounds = System.Array.ConvertAll(DesktopContract.Backgrounds,ColorTranslator.FromHtml);
         public static readonly Color Sidebar = ColorTranslator.FromHtml(DesktopContract.Sidebar);
         public static readonly Color Olive = ColorTranslator.FromHtml(DesktopContract.Olive);
+        public static readonly Color FriendCard = ColorTranslator.FromHtml(DesktopContract.FriendCard);
+        public static readonly Color FriendHalo = ColorTranslator.FromHtml(DesktopContract.FriendHalo);
+        public static readonly Color Progress = ColorTranslator.FromHtml(DesktopContract.Progress);
+        public static readonly Color Selection = ColorTranslator.FromHtml(DesktopContract.Selection);
         private static readonly Dictionary<string, Font> Fonts = new Dictionary<string, Font>();
         public static Font Font(float size, bool bold = false)
         {
             string key = size.ToString(System.Globalization.CultureInfo.InvariantCulture) + (bold ? "b" : "r");
             Font font;
             if (!Fonts.TryGetValue(key, out font)) { font = new Font("맑은 고딕", size, bold ? FontStyle.Bold : FontStyle.Regular); Fonts.Add(key, font); }
+            return font;
+        }
+        public static Font DisplayFont(float size)
+        {
+            string key="serif"+size.ToString(System.Globalization.CultureInfo.InvariantCulture);
+            Font font;
+            if(!Fonts.TryGetValue(key,out font)) {font=new Font("바탕",size,FontStyle.Regular);Fonts.Add(key,font);}
             return font;
         }
         public static ChoiceButton Choice(int width) { return new ChoiceButton { Width = P(width) }; }

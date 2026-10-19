@@ -2,7 +2,7 @@
 import SwiftUI
 
 enum DesktopContract {
-    static let sourceDigest="20c50f2265e7bf652cef463c534fa66991ddddc0fbbdaee80dcb02e0feae9d69"
+    static let sourceDigest="04a4f5b142b03274cb233331985ef6c3a2a376dc053091b7bb0b028d1a25de06"
     static let maxDays=50000
     static let maxBlocks=200
     static let maxTextUtf16=100000
@@ -50,6 +50,10 @@ enum DesktopPalette {
     static let paper=Color(red: 255.0/255, green: 252.0/255, blue: 248.0/255)
     static let sidebar=Color(red: 247.0/255, green: 245.0/255, blue: 240.0/255)
     static let olive=Color(red: 96.0/255, green: 105.0/255, blue: 78.0/255)
+    static let friendCard=Color(red: 239.0/255, green: 238.0/255, blue: 227.0/255)
+    static let friendHalo=Color(red: 250.0/255, green: 248.0/255, blue: 237.0/255)
+    static let progress=Color(red: 162.0/255, green: 173.0/255, blue: 137.0/255)
+    static let selection=Color(red: 233.0/255, green: 236.0/255, blue: 223.0/255)
     static let chatBackground=Color(red: 255.0/255, green: 252.0/255, blue: 247.0/255)
     static let chatMine=Color(red: 232.0/255, green: 239.0/255, blue: 225.0/255)
     static let chatOther=Color(red: 245.0/255, green: 235.0/255, blue: 225.0/255)

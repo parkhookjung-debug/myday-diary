@@ -25,7 +25,8 @@ namespace MyDay.Windows.UI
             var name=Design.Label("✳  my day",22,true); name.ForeColor=Design.Olive; name.Location=Design.Point(4,0); brand.Controls.Add(name);
             var tagline=Design.Label("나를 위한 작은 기록",9); tagline.ForeColor=Design.Muted; tagline.Location=Design.Point(8,46); brand.Controls.Add(tagline);
             var space=Design.Label("MY SPACE",8,true); space.ForeColor=Design.Muted; space.Location=Design.Point(8,78); brand.Controls.Add(space); sidebarFlow.Controls.Add(brand);
-            var today=Design.Button("오늘로 돌아가기 ↗",true); today.Size=Design.Size(216,34); today.Click+=delegate { ChangeDate(DateTime.Today); }; sidebarFlow.Controls.Add(today);
+            var current=Design.Button("▤  나의 다이어리"); current.Size=Design.Size(216,36); current.BackColor=Design.Selection; current.ForeColor=Design.Olive; current.Click+=delegate {board.Focus();}; sidebarFlow.Controls.Add(current);
+            var today=Design.Button("오늘로 돌아가기 ↗"); today.Size=Design.Size(216,32); today.Margin=Design.Pad(0,12,0,0); today.Click+=delegate { ChangeDate(DateTime.Today); }; sidebarFlow.Controls.Add(today);
             sidebarCalendar=new MonthCalendar(book,date,picker.MinDate,picker.MaxDate,ChangeDate) {Size=Design.Size(216,262),Margin=Design.Pad(0,14,0,10)};
             sidebarFlow.Controls.Add(sidebarCalendar);
             browse.Size=Design.Size(216,32); browse.AccessibleName="달력과 일기 검색 열기"; browse.Click+=delegate { BrowseDiary(); }; sidebarFlow.Controls.Add(browse);
@@ -45,10 +46,10 @@ namespace MyDay.Windows.UI
         {
             companionRail=new Panel {Dock=DockStyle.Right,Width=Design.P(254),BackColor=Design.Sidebar};
             var stack=new FlowLayoutPanel {Dock=DockStyle.Fill,FlowDirection=FlowDirection.TopDown,WrapContents=false,AutoScroll=true,Padding=Design.Pad(16,20,8,16),BackColor=Design.Sidebar};
-            var friend=new CardPanel {Size=Design.Size(216,396),Fill=Design.Paper,Margin=Design.Pad(0,0,0,16)};
+            var friend=new CardPanel {Size=Design.Size(216,396),Fill=Design.FriendCard,Margin=Design.Pad(0,0,0,16)};
             var eyebrow=Design.Label("YOUR LITTLE FRIEND",8,true); eyebrow.ForeColor=Design.Muted; eyebrow.Location=Design.Point(18,18); friend.Controls.Add(eyebrow);
-            avatar.Location=Design.Point(38,48); avatar.Size=Design.Size(140,126); avatar.BackColor=friend.Fill; friend.Controls.Add(avatar);
-            var heading=Design.Label("오늘도 네 편이야",14,true); heading.Location=Design.Point(24,186); friend.Controls.Add(heading);
+            avatar.Location=Design.Point(18,48); avatar.Size=Design.Size(180,126); avatar.BackColor=friend.Fill; avatar.ShowScene=true; friend.Controls.Add(avatar);
+            var heading=Design.Label("오늘도 네 편이야",15); heading.Font=Design.DisplayFont(15); heading.Location=Design.Point(24,186); friend.Controls.Add(heading);
             var hint=Design.Label("많이 해내지 않아도 괜찮아.\n함께하는 작은 친구, 상몬.",9); hint.ForeColor=Design.Muted; hint.Location=Design.Point(24,220); friend.Controls.Add(hint);
             characterChoice.Location=Design.Point(18,270); characterChoice.Size=Design.Size(180,30); characterChoice.AccessibleName="캐릭터 버전";
             characterChoice.Items.AddRange(MonsterVariants.All.Select(v=>(object)MonsterVariants.Name(v)));
@@ -65,12 +66,13 @@ namespace MyDay.Windows.UI
             todoProgress.Location=Design.Point(18,84); habitProgress.Location=Design.Point(18,142);
             todoProgress.AccessibleName="할 일 완료 현황"; habitProgress.AccessibleName="습관 완료 현황";
             foreach(var bar in new[] {todoProgress,habitProgress}) {bar.Size=Design.Size(180,8); bar.Maximum=1; progress.Controls.Add(bar);} stack.Controls.Add(progress);
-            var settings=new CardPanel {Size=Design.Size(216,184),Margin=Design.Pad(0,0,0,16)};
+            var settings=new CardPanel {Size=Design.Size(216,222),Fill=Design.Paper,Margin=Design.Pad(0,0,0,16)};
             var settingsTitle=Design.Label("오늘의 분위기",11,true); settingsTitle.Location=Design.Point(18,18); settings.Controls.Add(settingsTitle);
             var themeLabel=Design.Label("나와 어울리는 배경",9); themeLabel.ForeColor=Design.Muted; themeLabel.Location=Design.Point(18,52); settings.Controls.Add(themeLabel);
-            theme.Items.AddRange(new object[] {"크림","숲","라벤더"}); theme.AccessibleName="배경 테마"; theme.Location=Design.Point(18,82); theme.Size=Design.Size(180,30);
+            theme.AccessibleName="배경 테마"; theme.Location=Design.Point(18,82); theme.Size=Design.Size(180,62);
             theme.SelectedIndexChanged+=delegate { if(!binding) {entry.Theme=theme.SelectedIndex; ApplyTheme(); QueueSave();} }; settings.Controls.Add(theme);
-            status.MaximumSize=Design.Size(180,0); status.Font=Design.Font(8); status.ForeColor=Design.Muted; status.Location=Design.Point(18,130); settings.Controls.Add(status); stack.Controls.Add(settings);
+            status.MaximumSize=Design.Size(180,0); status.Font=Design.Font(8); status.ForeColor=Design.Muted; status.Location=Design.Point(18,166); settings.Controls.Add(status); stack.Controls.Add(settings);
+            var footer=Design.Label("EVERY LITTLE MOMENT MATTERS\n나의 모든 하루는 소중하니까.",8); footer.ForeColor=Design.Muted; footer.Margin=Design.Pad(8,8,0,16); stack.Controls.Add(footer);
             companionRail.Controls.Add(stack); return companionRail;
         }
 
@@ -81,7 +83,7 @@ namespace MyDay.Windows.UI
             try {
                 bool narrow=ClientSize.Width<Design.P(1120);
                 if(narrow && companionRail.Parent==this) {
-                    Controls.Remove(companionRail); companionRail.Dock=DockStyle.None; companionRail.Size=Design.Size(216,796); companionRail.Controls[0].Padding=Design.Pad(0); sidebarFlow.Controls.Add(companionRail);
+                    Controls.Remove(companionRail); companionRail.Dock=DockStyle.None; companionRail.Size=Design.Size(216,906); companionRail.Controls[0].Padding=Design.Pad(0); sidebarFlow.Controls.Add(companionRail);
                 } else if(!narrow && companionRail.Parent!=this) {
                     sidebarFlow.Controls.Remove(companionRail); companionRail.Dock=DockStyle.Right; companionRail.Width=Design.P(254); companionRail.Controls[0].Padding=Design.Pad(16,20,8,16); Controls.Add(companionRail); companionRail.SendToBack();
                 }
@@ -118,7 +120,7 @@ namespace MyDay.Windows.UI
             sidebarCalendar.FindDay(target).PerformClick();
             if(date!=target) throw new Exception("Sidebar calendar click did not navigate");
             ChangeDate(originalDate);
-            foreach(int index in new[] {0,1,2}) {theme.SelectedIndex=index; if(content.BackColor!=Design.Backgrounds[index] || entry.Theme!=index) throw new Exception("Shared theme selection failed");}
+            foreach(int index in new[] {0,1,2}) {theme.ChooseForTest(index); if(content.BackColor!=Design.Backgrounds[index] || entry.Theme!=index) throw new Exception("Shared theme selection failed");}
             theme.SelectedIndex=0;
             var todo=entry.Blocks.First(b=>b.Kind=="todo"); bool previous=todo.Checked; todo.Checked=true; QueueSave();
             if(todoProgress.Value<1 || !todoCount.Text.Contains("1 /")) throw new Exception("Companion progress did not reflect diary checks");
@@ -136,7 +138,7 @@ namespace MyDay.Windows.UI
         {
             e.Graphics.Clear(BackColor);
             using(var track=new SolidBrush(Design.Soft)) e.Graphics.FillRectangle(track,ClientRectangle);
-            using(var fill=new SolidBrush(Design.Accent)) e.Graphics.FillRectangle(fill,0,0,Width*value/maximum,Height);
+            using(var fill=new SolidBrush(Design.Progress)) e.Graphics.FillRectangle(fill,0,0,Width*value/maximum,Height);
             base.OnPaint(e);
         }
     }

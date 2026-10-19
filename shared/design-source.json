@@ -1,0 +1,26 @@
+{
+  "format": "myday-design-source",
+  "version": 1,
+  "repository": "parkhookjung-debug/myday-diary",
+  "designer": "ceed3927",
+  "sourceDate": "2026-10-10",
+  "reviewedOn": "2026-10-19",
+  "sources": [
+    {"branch": "codex/share-web-design", "commit": "bc0aae0adad4b4403773fced46a27a9cde130683"},
+    {"branch": "codex/macos-and-web-preview", "commit": "fdf89561bebd5cbb8a5358fa9f8d9ce0488dfafa", "pullRequest": 8}
+  ],
+  "reviewedFiles": [
+    {"path": "web/desktop.css", "gitBlob": "71be43b555e53daf1b6e090ef48ccd89e7f73a50"},
+    {"path": "web/index.html", "gitBlob": "4e0b96319b7d257e61c802fc789e092d08818f06"}
+  ],
+  "windowsTargets": [
+    "shared/desktop.json",
+    "windows/UI/Design.cs",
+    "windows/UI/DiaryWindow.cs",
+    "windows/UI/DiaryWindow.Shell.cs",
+    "windows/UI/ThemePicker.cs",
+    "windows/UI/MonsterView.cs"
+  ],
+  "scope": "Native Windows adaptation of the shared web design; native controls and existing app features retained.",
+  "guide": "docs/DESIGN-SYNC.md"
+}

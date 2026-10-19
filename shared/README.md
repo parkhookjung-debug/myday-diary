@@ -10,6 +10,7 @@
 | 블록 수·본문·제목·질문 길이·좌표·크기 | [desktop.json](desktop.json)의 limits |
 | 채팅 메시지·닉네임·페이지·내역 제한 | [desktop.json](desktop.json)의 chat |
 | 두 OS에서 같아야 하는 이동·크기 결과 | [fixtures/layout.json](fixtures/layout.json) |
+| 공동 디자인의 원본 커밋·반영 기준 | [design-source.json](design-source.json), [디자인 반영 안내](../docs/DESIGN-SYNC.md) |
 
 원본을 수정한 뒤 저장소 루트에서 Python 3.11 이상으로 실행합니다.
 

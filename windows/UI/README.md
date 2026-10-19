@@ -4,9 +4,12 @@
 
 [전체 수정 가이드](../../docs/EDITING-GUIDE.md) · [프로젝트 첫 화면](../../README.md)
 
+[ceed3927 디자인 원본·Windows 반영 순서](../../docs/DESIGN-SYNC.md) · [반영 기준 커밋](../../shared/design-source.json)
+
 | 바꾸려는 것 | 파일 | 역할 |
 | --- | --- | --- |
 | 전체 색·글꼴·버튼 | [Design.cs](Design.cs) | Accent·Font·둥근 버튼·카드 |
+| 크림·숲·라벤더 색상 버튼 | [ThemePicker.cs](ThemePicker.cs) | 마우스·Tab/Space 선택, 날짜별 테마 연결 |
 | 3단 화면·달력·상몬·완료 현황·작은 창 | [DiaryWindow.Shell.cs](DiaryWindow.Shell.cs) | 웹 디자인의 Windows 구현, 너비에 따른 영역 이동 |
 | 일기 메뉴·버튼·날짜 연결 | [DiaryWindow.cs](DiaryWindow.cs) | 메인 창 구성과 기능 연결 |
 | 블록의 입력창·체크·사진 버튼 | [BlockCard.cs](BlockCard.cs) | 블록 카드의 표시와 입력 |
