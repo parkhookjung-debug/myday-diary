@@ -1,12 +1,12 @@
-name: Free chat and native Mac-Windows compatibility
+name: Desktop shared core and native chat
 
 on:
   push:
-    branches: [main, codex/windows-app]
-    paths: ['server/cloudflare/**', 'macos/**', 'windows/Chat/**', 'windows/ChatTests.cs', 'windows/UI/ChatWindow.cs', '.github/workflows/chat-compatibility.yml']
+    branches: [main]
+    paths: ['shared/**', 'tools/*desktop*', 'server/cloudflare/**', 'macos/**', 'windows/**', '.github/workflows/chat-compatibility.yml']
   pull_request:
     branches: [main]
-    paths: ['server/cloudflare/**', 'macos/**', 'windows/Chat/**', 'windows/ChatTests.cs', 'windows/UI/ChatWindow.cs', '.github/workflows/chat-compatibility.yml']
+    paths: ['shared/**', 'tools/*desktop*', 'server/cloudflare/**', 'macos/**', 'windows/**', '.github/workflows/chat-compatibility.yml']
   workflow_dispatch:
 
 permissions:
@@ -33,6 +33,12 @@ jobs:
       - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
         with:
           persist-credentials: false
+      - uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1 # v6
+        with:
+          python-version: '3.11'
+      - name: Verify shared originals and generated native files
+        working-directory: .
+        run: python -m unittest discover -s tools -p 'test_sync_desktop.py' -v
       - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
         with:
           node-version: '24'
@@ -68,17 +74,29 @@ jobs:
         if: runner.os == 'Windows'
         shell: pwsh
         run: ./windows/build.ps1
+      - name: Export Windows shared desktop behavior
+        if: runner.os == 'Windows'
+        shell: pwsh
+        run: |
+          $report = Join-Path $pwd 'windows/bin/desktop-contract.json'
+          $run = Start-Process -FilePath "$pwd/windows/bin/MyDay.exe" -ArgumentList @('--desktop-contract', ('"' + $report + '"')) -Wait -PassThru -WindowStyle Hidden
+          if ($run.ExitCode -ne 0) { throw 'Shared desktop contract failed' }
       - name: Verify Windows native transport and chat controls against Workers
         if: runner.os == 'Windows'
         working-directory: server/cloudflare
         run: npm run test:native -- ../../windows/bin/MyDay.exe ../../windows/bin/smoke-output
       - name: Build existing Mac diary and verify saved data
         if: runner.os == 'macOS'
+        env:
+          MYDAY_COMPAT_EXPORT: ${{ github.workspace }}/macos/build/mac-to-windows.json
         run: zsh macos/build.command
       - name: Verify Mac native transport against Workers
         if: runner.os == 'macOS'
         working-directory: server/cloudflare
         run: npm run test:native -- ../../macos/build/MyDay.app/Contents/MacOS/MyDay
+      - name: Export Mac shared desktop behavior
+        if: runner.os == 'macOS'
+        run: macos/build/MyDay.app/Contents/MacOS/MyDay --desktop-contract "$PWD/macos/build/desktop-contract.json"
       - name: Render native Mac chat in two sizes
         if: runner.os == 'macOS'
         run: macos/build/MyDay.app/Contents/MacOS/MyDay --render-chat
@@ -87,8 +105,49 @@ jobs:
           name: myday-chat-${{ runner.os }}-${{ runner.arch }}
           path: |
             windows/bin/MyDay.exe
+            windows/bin/desktop-contract.json
             windows/bin/smoke-output/windows-chat*.png
             macos/build/*.zip
+            macos/build/desktop-contract.json
+            macos/build/mac-to-windows.json
             macos/build/chat*.png
           if-no-files-found: error
           retention-days: 7
+
+  desktop-contract:
+    if: github.event.repository.private == false
+    needs: native
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1 # v6
+        with:
+          python-version: '3.11'
+      - uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4
+        with:
+          pattern: myday-chat-*
+          merge-multiple: true
+          path: contracts
+      - name: Compare real Windows and Mac templates, geometry, limits and colors
+        run: python tools/compare-desktop.py contracts/windows/bin/desktop-contract.json contracts/macos/build/desktop-contract.json
+
+  desktop-backup:
+    if: github.event.repository.private == false
+    needs: native
+    runs-on: windows-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          persist-credentials: false
+      - uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4
+        with:
+          pattern: myday-chat-macOS-*
+          merge-multiple: true
+          path: contracts
+      - name: Validate real Mac export using the current Windows serializer
+        shell: pwsh
+        run: ./macos/verification/check-windows.ps1 -WindowsSource ./windows -MacExport ./contracts/macos/build/mac-to-windows.json -Output ./contracts/windows-roundtrip.json

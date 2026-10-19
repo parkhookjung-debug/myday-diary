@@ -11,18 +11,18 @@ struct BlockRect: Equatable {
 enum DiaryLayout {
     static func clamp(_ value: Int, _ lower: Int, _ upper: Int) -> Int { min(upper, max(lower, value)) }
     static func defaultHeight(_ block: DiaryBlock) -> Int {
-        block.kind == .photo || block.kind == .photoSlot ? 360 : block.kind == .emotion ? 288 : 250
+        block.kind == .photo || block.kind == .photoSlot ? DesktopContract.photoHeight : block.kind == .emotion ? DesktopContract.emotionHeight : DesktopContract.textHeight
     }
     static func bounds(_ block: DiaryBlock) -> BlockRect {
-        BlockRect(x: block.x, y: block.y, width: block.width > 0 ? block.width : 340, height: block.height > 0 ? block.height : defaultHeight(block))
+        BlockRect(x: block.x, y: block.y, width: block.width > 0 ? block.width : DesktopContract.defaultWidth, height: block.height > 0 ? block.height : defaultHeight(block))
     }
     static func setBounds(_ rect: BlockRect, on block: inout DiaryBlock) {
-        block.x = clamp(rect.x, 0, 10_000); block.y = clamp(rect.y, 0, 10_000)
-        block.width = clamp(rect.width, 300, 1600); block.height = clamp(rect.height, 180, 1400)
+        block.x = clamp(rect.x, 0, DesktopContract.maxPosition); block.y = clamp(rect.y, 0, DesktopContract.maxPosition)
+        block.width = clamp(rect.width, DesktopContract.minWidth, DesktopContract.maxWidth); block.height = clamp(rect.height, DesktopContract.minHeight, DesktopContract.maxHeight)
     }
     static func dragged(_ original: BlockRect, dx: Int, dy: Int, resizing: Bool) -> BlockRect {
-        resizing ? BlockRect(x: original.x, y: original.y, width: clamp(original.width + dx, 300, 1600), height: clamp(original.height + dy, 180, 1400))
-            : BlockRect(x: clamp(original.x + dx, 0, 10_000), y: clamp(original.y + dy, 0, 10_000), width: original.width, height: original.height)
+        resizing ? BlockRect(x: original.x, y: original.y, width: clamp(original.width + dx, DesktopContract.minWidth, DesktopContract.maxWidth), height: clamp(original.height + dy, DesktopContract.minHeight, DesktopContract.maxHeight))
+            : BlockRect(x: clamp(original.x + dx, 0, DesktopContract.maxPosition), y: clamp(original.y + dy, 0, DesktopContract.maxPosition), width: original.width, height: original.height)
     }
     static func autoArrange(_ blocks: [DiaryBlock], width: Int) -> [BlockRect] {
         let available = max(312, min(1628, width) - 16)
@@ -40,22 +40,22 @@ enum DiaryLayout {
     static func enableFree(_ entry: inout DiaryEntry, width: Int) throws {
         let positions = autoArrange(entry.blocks, width: width)
         for index in entry.blocks.indices where entry.blocks[index].width == 0 || entry.blocks[index].height == 0 {
-            guard positions[index].y <= 10_000 else { throw WindowsCompatibility.fail("블록이 너무 많아 자유 배치 공간을 넘습니다. 블록 수를 줄여 주세요.") }
+            guard positions[index].y <= DesktopContract.maxPosition else { throw WindowsCompatibility.fail("블록이 너무 많아 자유 배치 공간을 넘습니다. 블록 수를 줄여 주세요.") }
             setBounds(positions[index], on: &entry.blocks[index])
         }
         entry.layoutMode = "free"
     }
     static func arrangeFree(_ entry: inout DiaryEntry, width: Int) throws {
         let positions = autoArrange(entry.blocks, width: width)
-        guard positions.allSatisfy({ $0.y <= 10_000 }) else { throw WindowsCompatibility.fail("자동 정렬 결과가 자유 배치 범위를 넘습니다.") }
+        guard positions.allSatisfy({ $0.y <= DesktopContract.maxPosition }) else { throw WindowsCompatibility.fail("자동 정렬 결과가 자유 배치 범위를 넘습니다.") }
         for index in entry.blocks.indices { setBounds(positions[index], on: &entry.blocks[index]) }
     }
     static func append(_ block: DiaryBlock, to entry: inout DiaryEntry) throws {
-        guard entry.blocks.count < 200 else { throw WindowsCompatibility.fail("한 날짜에 최대 200개 블록을 추가할 수 있습니다.") }
+        guard entry.blocks.count < DesktopContract.maxBlocks else { throw WindowsCompatibility.fail("한 날짜에 최대 \(DesktopContract.maxBlocks)개 블록을 추가할 수 있습니다.") }
         var block = block
         if entry.layoutMode == "free" {
             let bottom = entry.blocks.map { bounds($0).bottom }.max() ?? 0
-            guard bottom + 16 <= 10_000 else { throw WindowsCompatibility.fail("아래에 블록을 추가할 공간이 없습니다.") }
+            guard bottom + 16 <= DesktopContract.maxPosition else { throw WindowsCompatibility.fail("아래에 블록을 추가할 공간이 없습니다.") }
             setBounds(BlockRect(x: 12, y: bottom + 16, width: 340, height: defaultHeight(block)), on: &block)
         }
         entry.blocks.append(block)
@@ -90,7 +90,7 @@ enum DiaryLayout {
     static func apply(_ template: JournalTemplate, to entry: inout DiaryEntry, width: Int) throws {
         let fresh = entry.blocks.isEmpty || (entry.blocks.count == 1 && entry.layoutMode == "cards" && entry.blocks[0].kind == .text && entry.blocks[0].text.isEmpty && !entry.blocks[0].checked && entry.blocks[0].title == nil && entry.blocks[0].prompt == nil && entry.blocks[0].photo == nil && entry.blocks[0].width == 0)
         let original = fresh ? [] : entry.blocks
-        guard original.count + template.sections.count <= 200 else { throw WindowsCompatibility.fail("한 날짜에 최대 200개 블록을 추가할 수 있습니다.") }
+        guard original.count + template.sections.count <= DesktopContract.maxBlocks else { throw WindowsCompatibility.fail("한 날짜에 최대 \(DesktopContract.maxBlocks)개 블록을 추가할 수 있습니다.") }
         let positions = preset(template.layout, count: template.sections.count, width: width)
         let bottom = original.map { bounds($0).bottom }.max().map { $0 + 16 } ?? 0
         var added: [DiaryBlock] = []
@@ -101,7 +101,7 @@ enum DiaryLayout {
             if fresh || entry.layoutMode == "free" {
                 var rect = positions[index]
                 rect.y += fresh ? 0 : bottom
-                guard rect.y <= 10_000 else { throw WindowsCompatibility.fail("형식을 추가할 자유 배치 공간이 없습니다.") }
+                guard rect.y <= DesktopContract.maxPosition else { throw WindowsCompatibility.fail("형식을 추가할 자유 배치 공간이 없습니다.") }
                 setBounds(rect, on: &block)
             }
             added.append(block)

@@ -40,7 +40,7 @@ namespace MyDay.Windows.UI
             tools.Controls.AddRange(new Control[] { up,down,wide,del }); Controls.Add(tools);
             Editor = new TextBox { Multiline=true, AcceptsReturn=true, ScrollBars=ScrollBars.Vertical,
                 Font=Design.Font(11), ForeColor=Design.Ink, BackColor=Fill, BorderStyle=BorderStyle.None,
-                MaxLength=100000, Text=block.Text, AccessibleName=name+" 내용", Location=Design.Point(24,78),
+                MaxLength=DesktopContract.MaxTextUtf16, Text=block.Text, AccessibleName=name+" 내용", Location=Design.Point(24,78),
                 Anchor=AnchorStyles.Top|AnchorStyles.Bottom|AnchorStyles.Left|AnchorStyles.Right };
             Controls.Add(Editor);
             if(isPhoto) {

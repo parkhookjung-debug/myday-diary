@@ -31,7 +31,7 @@ final class LoungeModel: ObservableObject {
         if page.reset { messages.removeAll() }
         let last = messages.last?.id ?? 0
         messages.append(contentsOf: page.messages.filter { $0.id > last })
-        if messages.count > 200 { messages.removeFirst(messages.count - 200) }
+        if messages.count > DesktopContract.chatVisibleHistory { messages.removeFirst(messages.count - DesktopContract.chatVisibleHistory) }
         users = page.users
     }
     private func receive(_ client: LoungeClient, id: UUID) async {
@@ -81,7 +81,7 @@ final class LoungeModel: ObservableObject {
     }
     func send() async {
         guard let client = active, connected, !sending, !composer.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty,
-              composer.utf16.count <= 2000 else { return }
+              composer.utf16.count <= DesktopContract.chatMaxText else { return }
         let text = composer, id = generation
         if text != pendingText || pendingID.isEmpty { pendingText = text; pendingID = UUID().uuidString.replacingOccurrences(of: "-", with: "").lowercased() }
         sending = true
@@ -101,11 +101,11 @@ final class LoungeModel: ObservableObject {
 @MainActor
 struct LoungeView: View {
     @ObservedObject var model: LoungeModel
-    private let mint = Color(red: 0.86, green: 0.94, blue: 0.88)
+    private let mint = DesktopPalette.chatMine
     var body: some View {
         VStack(alignment: .leading, spacing: 18) {
             HStack {
-                Image(systemName: "bubble.left.and.bubble.right.fill").font(.title).foregroundStyle(.green)
+                Image(systemName: "bubble.left.and.bubble.right.fill").font(.title).foregroundStyle(DesktopPalette.olive)
                 VStack(alignment: .leading) {
                     Text("함께 쓰는 작은 이야기").font(.title2.bold())
                     Text("상몬 라운지 · Mac과 Windows 친구들이 만나는 곳").font(.caption).foregroundStyle(.secondary)
@@ -119,7 +119,7 @@ struct LoungeView: View {
                 if model.connected || model.busy {
                     Button("나가기") { Task { await model.disconnect() } }.disabled(model.busy && !model.connected)
                 } else {
-                    Button("입장하기") { model.connect() }.buttonStyle(.borderedProminent).tint(.green)
+                    Button("입장하기") { model.connect() }.buttonStyle(.borderedProminent).tint(DesktopPalette.olive)
                 }
             }
             HStack(alignment: .top, spacing: 16) {
@@ -137,7 +137,7 @@ struct LoungeView: View {
                                     VStack(alignment: .leading, spacing: 5) {
                                         Text(mine ? "나" : message.nickname).font(.caption).foregroundStyle(.secondary)
                                         Text(message.text).textSelection(.enabled).fixedSize(horizontal: false, vertical: true)
-                                    }.padding(12).background(mine ? mint : .white, in: RoundedRectangle(cornerRadius: 16))
+                                    }.padding(12).background(mine ? mint : DesktopPalette.chatOther, in: RoundedRectangle(cornerRadius: 16))
                                     if !mine { Spacer(minLength: 45) }
                                 }.id(message.id)
                             }
@@ -154,16 +154,16 @@ struct LoungeView: View {
                 TextEditor(text: $model.composer).font(.body).frame(height: 72).padding(6)
                     .background(.white, in: RoundedRectangle(cornerRadius: 12)).disabled(!model.connected)
                 Button(model.sending ? "전송 중…" : "보내기") { Task { await model.send() } }
-                    .buttonStyle(.borderedProminent).tint(.green).keyboardShortcut(.return, modifiers: .command)
-                    .disabled(!model.connected || model.sending || model.composer.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty || model.composer.utf16.count > 2000)
+                    .buttonStyle(.borderedProminent).tint(DesktopPalette.olive).keyboardShortcut(.return, modifiers: .command)
+                    .disabled(!model.connected || model.sending || model.composer.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty || model.composer.utf16.count > DesktopContract.chatMaxText)
             }
             HStack {
                 Text(model.status).foregroundStyle(.secondary)
                 Spacer()
-                Text("\(model.composer.utf16.count) / 2000").foregroundStyle(model.composer.utf16.count > 2000 ? .red : .secondary)
+                Text("\(model.composer.utf16.count) / \(DesktopContract.chatMaxText)").foregroundStyle(model.composer.utf16.count > DesktopContract.chatMaxText ? .red : .secondary)
             }.font(.caption)
         }.padding(24).frame(minWidth: 760, minHeight: 580)
-            .background(Color(red: 0.99, green: 0.97, blue: 0.93)).preferredColorScheme(.light)
+            .background(DesktopPalette.backgrounds[0]).preferredColorScheme(.light)
             .onDisappear { Task { await model.disconnect() } }
     }
     private func field<V: View>(_ label: String, @ViewBuilder input: () -> V) -> some View {

@@ -1,14 +1,15 @@
 import { DurableObject } from "cloudflare:workers";
+import { DesktopChat } from "./shared-chat.g";
 
 // This server speaks protocol 1 used by the native Windows and macOS apps.
 // Limits stop service; they are not a substitute for a verified Free account.
-const MAX_BODY = 16_384;
-const MAX_TEXT = 2_000;
-const HISTORY = 50;
+const MAX_BODY = DesktopChat.ChatMaxBody;
+const MAX_TEXT = DesktopChat.ChatMaxText;
+const HISTORY = DesktopChat.ChatHistory;
 const RETAIN = 1_000;
 const IDLE_MS = 90_000;
 const LIFE_MS = 8 * 60 * 60 * 1_000;
-const POLL_MS = 5_000;
+const POLL_MS = DesktopChat.ChatPollIntervalMs;
 const DAILY_REQUESTS = 30_000;
 const DAILY_MESSAGES = 1_500;
 const DAILY_JOINS = 500;
@@ -131,7 +132,7 @@ export class ChatRoom extends DurableObject<Env> {
     if (typeof joinCode !== "string" || !await sameSecret(joinCode, expected))
       throw new APIError(403, "초대코드를 확인해 주세요.");
     const nickname = typeof raw === "string" ? raw.normalize("NFKC").trim() : "";
-    if (Array.from(nickname).length < 2 || Array.from(nickname).length > 20 || !/^[\p{L}\p{N} _-]+$/u.test(nickname))
+    if (Array.from(nickname).length < 2 || Array.from(nickname).length > DesktopChat.ChatNicknameLimit || !/^[\p{L}\p{N} _-]+$/u.test(nickname))
       throw new APIError(400, "닉네임은 글자·숫자·공백·밑줄·하이픈으로 2~20자예요.");
     const token = crypto.randomUUID().replaceAll("-", "") + crypto.randomUUID().replaceAll("-", "");
     const [hash, invitation] = await Promise.all([digest(token), digest(expected)]);
@@ -193,7 +194,7 @@ export class ChatRoom extends DurableObject<Env> {
     const reset = input.after > range.latest || (input.after > 0 && input.after < range.oldest - 1);
     const rows = input.after === 0 || reset
       ? sql.exec<MessageRow>("SELECT * FROM messages ORDER BY id DESC LIMIT ?", HISTORY).toArray().reverse()
-      : sql.exec<MessageRow>("SELECT * FROM messages WHERE id>? ORDER BY id LIMIT 100", input.after).toArray();
+      : sql.exec<MessageRow>("SELECT * FROM messages WHERE id>? ORDER BY id LIMIT ?", input.after, DesktopChat.ChatMaxPage).toArray();
     const users = sql.exec<{ nickname: string }>("SELECT nickname FROM sessions ORDER BY nickname").toArray().map(r => r.nickname);
     return { status: 200, payload: { messages: rows.map(message), users, reset,
       cursor: rows.at(-1)?.id ?? (reset ? 0 : input.after), pollAfterMs: POLL_MS } };

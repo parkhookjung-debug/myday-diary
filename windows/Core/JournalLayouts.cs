@@ -6,14 +6,10 @@ namespace MyDay.Windows.Core
 {
     public static class JournalLayouts
     {
-        public static readonly string[] Ids={"page","cards","split","timeline","letter","dashboard","cornell","compare"};
+        public static readonly string[] Ids=DesktopContract.LayoutIds;
         public static string Name(string id)
         {
-            switch(id) {
-                case "page":return "긴 글"; case "cards":return "질문 카드"; case "split":return "본문 + 메모";
-                case "timeline":return "타임라인"; case "letter":return "편지"; case "dashboard":return "플래너";
-                case "cornell":return "코넬 노트"; case "compare":return "나란히 비교"; default:return "긴 글";
-            }
+            int i=Array.IndexOf(Ids,id);return DesktopContract.LayoutNames[i<0?0:i];
         }
         public static List<Rectangle> Arrange(string layout,int count,int width)
         {

@@ -56,6 +56,7 @@ namespace MyDay.Windows
                 RunCollectionTests(directory);
                 RunOwnershipTests(directory);
                 RunChatAddressTests();
+                RunSharedDesktopTests();
                 RunItemTests(directory);
                 RunClayTests();
                 var layout=DiaryEntry.FirstPage(); layout.Blocks[0].Text="이동해도 그대로"; layout.Blocks[1].Checked=true;

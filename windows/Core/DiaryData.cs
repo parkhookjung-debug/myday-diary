@@ -87,7 +87,7 @@ namespace MyDay.Windows.Core
         {
             if (book == null || book.Version < 1 || book.Version > 7 || book.Days == null)
                 throw new InvalidDataException("지원하지 않는 기록 파일입니다.");
-            if (book.Days.Count > 50000) throw new InvalidDataException("기록 파일이 너무 큽니다.");
+            if (book.Days.Count > DesktopContract.MaxDays) throw new InvalidDataException("기록 파일이 너무 큽니다.");
             book.CharacterStyle=MonsterVariants.Id(MonsterVariants.FromId(book.CharacterStyle));
             SangmonGrowth.Validate(book.Progress);
             SangmonItems.Validate(book.Equipment);
@@ -105,20 +105,20 @@ namespace MyDay.Windows.Core
                 if (!DateTime.TryParseExact(pair.Key, "yyyy-MM-dd", CultureInfo.InvariantCulture, DateTimeStyles.None, out date))
                     throw new InvalidDataException("기록의 날짜 형식이 올바르지 않습니다.");
                 var entry = pair.Value;
-                if (entry == null || entry.Blocks == null || entry.Blocks.Count > 200 || entry.Theme < 0 || entry.Theme > 2)
+                if (entry == null || entry.Blocks == null || entry.Blocks.Count > DesktopContract.MaxBlocks || entry.Theme < 0 || entry.Theme >= DesktopContract.Backgrounds.Length)
                     throw new InvalidDataException("일기 구성이 올바르지 않습니다.");
                 if(entry.LayoutMode!="free") entry.LayoutMode="cards";
-                if(!new[] {"plain","paper","dots"}.Contains(entry.PageStyle)) entry.PageStyle="plain";
+                if(!DesktopContract.PageStyles.Contains(entry.PageStyle)) entry.PageStyle="plain";
                 var ids = new HashSet<string>();
                 foreach (var block in entry.Blocks)
                 {
                     if (block == null || String.IsNullOrWhiteSpace(block.Id) || !ids.Add(block.Id) ||
-                        !new[] { "text", "todo", "habit", "emotion", "photo", "photo-slot" }.Contains(block.Kind) || block.Text == null || block.Text.Length > 100000)
+                        !DesktopContract.BlockKinds.Contains(block.Kind) || block.Text == null || block.Text.Length > DesktopContract.MaxTextUtf16)
                         throw new InvalidDataException("일기 블록 형식이 올바르지 않습니다.");
                     photoCharacters+=block.Photo==null?0:block.Photo.Length;
                     if(photoCharacters>DiaryPhoto.MaxBookCharacters) throw new InvalidDataException("전체 사진 저장 공간이 가득 찼어요. 백업 후 사용하지 않는 사진 블록을 정리해주세요.");
                     DiaryPhoto.Validate(block);
-                    if(block.Title!=null && block.Title.Length>80 || block.Prompt!=null && block.Prompt.Length>300)
+                    if(block.Title!=null && block.Title.Length>DesktopContract.MaxTitleUtf16 || block.Prompt!=null && block.Prompt.Length>DesktopContract.MaxPromptUtf16)
                         throw new InvalidDataException("일기 제목이나 질문이 너무 깁니다.");
                     if(block.X<0 || block.Y<0 || block.X>DiaryLayout.MaxPosition || block.Y>DiaryLayout.MaxPosition ||
                         block.Width<0 || block.Width>DiaryLayout.MaxWidth || block.Width>0 && block.Width<DiaryLayout.MinWidth ||

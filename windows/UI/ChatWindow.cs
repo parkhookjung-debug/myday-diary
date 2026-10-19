@@ -4,18 +4,19 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using MyDay.Windows.Chat;
+using MyDay.Windows.Core;
 
 namespace MyDay.Windows.UI
 {
     internal sealed class ChatWindow : Form
     {
         internal readonly TextBox ServerAddress=new TextBox {Text="http://127.0.0.1:8765/",AccessibleName="채팅 서버 주소"};
-        internal readonly TextBox Nickname=new TextBox {MaxLength=20,AccessibleName="채팅 닉네임"};
+        internal readonly TextBox Nickname=new TextBox {MaxLength=DesktopContract.ChatNicknameLimit,AccessibleName="채팅 닉네임"};
         internal readonly TextBox Invitation=new TextBox {UseSystemPasswordChar=true,MaxLength=200,AccessibleName="채팅 초대코드"};
-        internal readonly TextBox Composer=new TextBox {Multiline=true,MaxLength=2000,ScrollBars=ScrollBars.Vertical,AccessibleName="보낼 메시지"};
+        internal readonly TextBox Composer=new TextBox {Multiline=true,MaxLength=DesktopContract.ChatMaxText,ScrollBars=ScrollBars.Vertical,AccessibleName="보낼 메시지"};
         internal readonly Button ConnectButton=Design.Button("입장하기",true),DisconnectButton=Design.Button("나가기"),SendButton=Design.Button("보내기",true);
         internal readonly ChatTranscript Conversation=new ChatTranscript();
-        private readonly Label status=Design.Label("서버 주소·닉네임·초대코드를 입력하고 입장하세요.",9),count=Design.Label("0 / 2000",8);
+        private readonly Label status=Design.Label("서버 주소·닉네임·초대코드를 입력하고 입장하세요.",9),count=Design.Label("0 / "+DesktopContract.ChatMaxText,8);
         private readonly ListBox people=new ListBox {BorderStyle=BorderStyle.None,BackColor=Design.Paper,IntegralHeight=false,HorizontalScrollbar=true,AccessibleName="접속 중인 참여자"};
         private ChatClient client;
         private CancellationTokenSource lifetime;
@@ -47,7 +48,7 @@ namespace MyDay.Windows.UI
             footer.Resize+=delegate {status.Width=Math.Max(100,footer.ClientSize.Width-Design.P(140));count.Left=footer.ClientSize.Width-Design.P(105);};
             Controls.Add(messages);Controls.Add(participants);Controls.Add(footer);Controls.Add(connection);Controls.Add(header);
             ConnectButton.Click+=async delegate {await Connect();};DisconnectButton.Click+=async delegate {await Disconnect();};SendButton.Click+=async delegate {await Send();};
-            Composer.TextChanged+=delegate {count.Text=Composer.Text.Length+" / 2000";UpdateControls();};
+            Composer.TextChanged+=delegate {count.Text=Composer.Text.Length+" / "+DesktopContract.ChatMaxText;UpdateControls();};
             Composer.KeyDown+=async delegate(object sender,KeyEventArgs e) {if(e.KeyCode==Keys.Enter && !e.Shift){e.SuppressKeyPress=true;e.Handled=true;await Send();}};
             FormClosed+=async delegate {closing=true;await Disconnect();};UpdateControls();
         }

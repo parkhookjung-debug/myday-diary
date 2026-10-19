@@ -15,6 +15,7 @@ namespace MyDay.Windows
     {
         private static void RunChatAddressTests()
         {
+            Check(ChatClient.CodePointLength(string.Concat(Enumerable.Repeat("\ud835\udc00",20)))==20,"Mac non-BMP nicknames use Unicode code points rather than UTF-16 units");
             Check(ChatClient.ParseAddress("http://127.0.0.1:8765/").IsLoopback && ChatClient.ParseAddress("http://192.168.0.10:8765/").Port==8765,"Chat accepts loopback and private-network development servers");
             Check(ChatClient.ParseAddress("https://chat.example.invalid/").Scheme=="https","Internet chat uses HTTPS");
             foreach(string address in new[]{"http://example.com/","file:///C:/private","https://name:secret@example.com/","https://example.com/?token=secret","https://example.com/diary"}) {

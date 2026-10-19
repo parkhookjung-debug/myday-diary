@@ -42,7 +42,7 @@ Windows 내보내기는 사진당 JPEG 2MB·긴 변 1,600픽셀, 사진 Base64 �
 - 기존 일기에는 원래 글·사진·체크·좌표를 유지하고 빈 블록을 추가합니다. 자유 배치는 기존 블록 아래에 추가하고 자동 정렬은 순서대로 배치합니다. 종이는 선택한 형식의 스타일로 바뀝니다.
 - 추가할 공간이나 200블록 제한을 넘으면 적용 전에 중단합니다. 형식만 추가해도 XP가 생기지는 않습니다.
 
-제목·설명·질문은 Windows 릴리스 커밋 `9abf375745369fc9a45e0d5e918e0e8a8fb9c26b`의 원본 100종에서 추출했습니다. 목록은 앱에 포함되어 오프라인으로 동작합니다. 갱신 도구는 `tools/sync-windows-templates.py`이며 해당 커밋의 Git 객체가 있어야 실행할 수 있습니다.
+제목·설명·질문은 Windows와 같은 `shared/catalog/templates.json`에서 관리합니다. 공통 색상·제한은 `shared/desktop.json`입니다. 저장소 루트에서 `python tools/sync-desktop.py`로 두 앱용 코드를 생성합니다. 목록은 앱에 포함되어 오프라인으로 동작합니다. 이전 `macos/tools/sync-windows-templates.py`도 새 생성기로 연결되며 과거 Git 객체가 필요하지 않습니다. [공통 개발 안내](../docs/DESKTOP-SHARED.md).
 
 ## 자유 배치
 

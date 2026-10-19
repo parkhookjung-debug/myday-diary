@@ -21,7 +21,7 @@
 | 왼쪽 기록 목록 모양 | [HistoryRow.cs](../windows/UI/HistoryRow.cs) | 날짜·본문 미리보기·선택 상태 |
 | 글·할 일·습관·감정·사진 블록 | [BlockCard.cs](../windows/UI/BlockCard.cs) | 제목·입력창·체크·사진 교체 버튼 |
 | 블록 드래그·크기 조절 | [DiaryBoard.cs](../windows/UI/DiaryBoard.cs), [DiaryLayout.cs](../windows/Core/DiaryLayout.cs) | 마우스 입력과 좌표·크기 계산 |
-| 일기 형식의 제목·질문 | [분야별 Templates 폴더](../windows/Core/Templates/README.md) | 분야에 맞는 `*Formats.cs`의 형식·질문 |
+| 일기 형식의 제목·질문 | [공통 templates.json](../shared/catalog/templates.json) | category·id로 찾고 수정 후 `python tools/sync-desktop.py` |
 | 일기 형식 100종 선택 화면 | [TemplateGallery.cs](../windows/UI/TemplateGallery.cs), [TemplateOption.cs](../windows/UI/TemplateOption.cs) | 분류·검색·형식 카드·배치 그림 |
 | 코넬·편지·타임라인 등 기본 배치 | [JournalLayouts.cs](../windows/Core/JournalLayouts.cs) | 형식별 블록 위치 계산 |
 | 내 레이아웃 목록·이름·미리보기 | [MyLayoutsWindow.cs](../windows/UI/MyLayoutsWindow.cs), [LayoutNameDialog.cs](../windows/UI/LayoutNameDialog.cs), [SavedLayoutDiagram.cs](../windows/UI/SavedLayoutDiagram.cs) | 저장 목록·이름 입력·배치 그림 |
@@ -77,7 +77,7 @@
 
 **검 이름이나 설명 바꾸기:** [SangmonItems.cs](../windows/Core/SangmonItems.cs)의 `All`에서 `frost-sword` 항목의 이름·설명을 고칩니다. 그림은 [ItemPainter.cs](../windows/Character/ItemPainter.cs)의 `Sword`와 `Tone`에서 바꿉니다. 저장된 선택을 유지하려면 기존 ID는 유지합니다.
 
-**공부 일기의 질문 바꾸기:** [LearningFormats.cs](../windows/Core/Templates/LearningFormats.cs)의 해당 형식에서 제목과 질문을 수정합니다. 형식 목록을 추가·삭제하면 [Tests.cs](../windows/Tests.cs)의 개수 검증과 [100종 목록](JOURNAL-CATALOG.md)도 함께 갱신합니다.
+**공부 일기의 질문 바꾸기:** [공통 templates.json](../shared/catalog/templates.json)에서 `category: learning` 또는 `id: cornell-notes`를 찾아 제목·질문을 수정하고 `python tools/sync-desktop.py`를 실행합니다. 형식 목록을 추가·삭제하면 [Tests.cs](../windows/Tests.cs)의 개수 검증과 [100종 목록](JOURNAL-CATALOG.md)도 함께 갱신합니다.
 
 **경험치 규칙 바꾸기:** [SangmonGrowth.cs](../windows/Core/SangmonGrowth.cs)의 `DailyXP`·`LevelXP`와 보상 레벨 `Levels`를 수정하고 [GrowthTests.cs](../windows/GrowthTests.cs)를 확인합니다. 경험치는 지급 날짜 수에서 계산하므로 값 변경은 기존 사용자의 경험치·레벨에도 영향을 줍니다.
 

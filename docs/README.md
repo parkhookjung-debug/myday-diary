@@ -2,7 +2,7 @@
 
 코드를 수정하려면 수정 가이드부터, 설치와 사용은 플랫폼 안내부터 확인합니다.
 
-[전체 수정 가이드](EDITING-GUIDE.md) · [프로젝트 첫 화면](../README.md)
+[전체 수정 가이드](EDITING-GUIDE.md) · [프로젝트 첫 화면](../README.md) · [Mac·Windows 공통 개발](DESKTOP-SHARED.md)
 
 | 바꾸려는 것 | 파일 | 역할 |
 | --- | --- | --- |

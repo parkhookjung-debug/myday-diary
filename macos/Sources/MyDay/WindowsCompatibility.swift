@@ -40,9 +40,9 @@ enum WindowsCompatibility {
     static func remainder(_ fields: [String: JSONValue], excluding keys: [String]) -> [String: JSONValue] {
         fields.filter { !keys.contains($0.key) }
     }
-    static func checkBounds(_ x: Int, _ y: Int, _ width: Int, _ height: Int, maxY: Int = 10_000) throws {
-        guard (0...10_000).contains(x), (0...maxY).contains(y),
-              width == 0 || (300...1600).contains(width), height == 0 || (180...1400).contains(height) else {
+    static func checkBounds(_ x: Int, _ y: Int, _ width: Int, _ height: Int, maxY: Int = DesktopContract.maxPosition) throws {
+        guard (0...DesktopContract.maxPosition).contains(x), (0...maxY).contains(y),
+              width == 0 || (DesktopContract.minWidth...DesktopContract.maxWidth).contains(width), height == 0 || (DesktopContract.minHeight...DesktopContract.maxHeight).contains(height) else {
             throw fail("블록 위치 또는 크기가 허용 범위를 벗어났습니다.")
         }
     }

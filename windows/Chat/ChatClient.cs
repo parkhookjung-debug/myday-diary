@@ -8,6 +8,7 @@ using System.Runtime.Serialization.Json;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using MyDay.Windows.Core;
 
 namespace MyDay.Windows.Chat
 {
@@ -47,6 +48,12 @@ namespace MyDay.Windows.Chat
         public readonly Uri Address;
         private string token;
         public ChatClient(string address) {Address=ParseAddress(address);}
+        internal static int CodePointLength(string value)
+        {
+            int count=0;
+            for(int i=0;i<value.Length;i++) {if(char.IsHighSurrogate(value[i]) && i+1<value.Length && char.IsLowSurrogate(value[i+1]))i++;count++;}
+            return count;
+        }
         internal static Uri ParseAddress(string text)
         {
             Uri address;
@@ -67,7 +74,7 @@ namespace MyDay.Windows.Chat
         {
             using(var buffer=new MemoryStream()) {
                 var bytes=new byte[8192];int read;
-                while((read=input.Read(bytes,0,bytes.Length))>0) {if(buffer.Length+read>1024*1024)throw new IOException("서버 응답이 너무 커요.");buffer.Write(bytes,0,read);}
+                while((read=input.Read(bytes,0,bytes.Length))>0) {if(buffer.Length+read>DesktopContract.ChatMaxResponseBytes)throw new IOException("서버 응답이 너무 커요.");buffer.Write(bytes,0,read);}
                 buffer.Position=0;return (T)new DataContractJsonSerializer(typeof(T)).ReadObject(buffer);
             }
         }
@@ -109,7 +116,7 @@ namespace MyDay.Windows.Chat
         {
             if(token!=null)throw new InvalidOperationException("이미 입장한 연결이에요.");
             var session=await Request<ChatSession>("api/sessions","POST",new ChatJoinRequest {nickname=nickname,joinCode=code},cancel).ConfigureAwait(false);
-            if(session==null || string.IsNullOrEmpty(session.token) || session.token.Length>100 || string.IsNullOrWhiteSpace(session.nickname) || session.nickname.Length>20 || session.maxText!=2000)
+            if(session==null || string.IsNullOrEmpty(session.token) || session.token.Length>DesktopContract.ChatTokenLimit || string.IsNullOrWhiteSpace(session.nickname) || CodePointLength(session.nickname)>DesktopContract.ChatNicknameLimit || session.maxText!=DesktopContract.ChatMaxText)
                 throw new IOException("채팅 서버의 입장 응답이 올바르지 않아요.");
             token=session.token;return session;
         }
@@ -118,9 +125,9 @@ namespace MyDay.Windows.Chat
             var clock=Stopwatch.StartNew();
             while(true) {
                 var page=await Request<ChatPage>("api/messages?after="+cursor+"&wait="+wait,"GET",null,cancel).ConfigureAwait(false);
-                if(page==null || page.messages==null || page.users==null || page.messages.Count>100 || page.users.Count>64 || page.cursor<0 || page.pollAfterMs<0 || page.pollAfterMs>30000)throw new IOException("메시지 목록이 올바르지 않아요.");
+                if(page==null || page.messages==null || page.users==null || page.messages.Count>DesktopContract.ChatMaxPage || page.users.Count>DesktopContract.ChatMaxUsers || page.cursor<0 || page.pollAfterMs<0 || page.pollAfterMs>DesktopContract.ChatMaxPollDelayMs)throw new IOException("메시지 목록이 올바르지 않아요.");
                 foreach(var message in page.messages)ValidateMessage(message);
-                foreach(string name in page.users)if(name==null || name.Length>20)throw new IOException("참여자 목록이 올바르지 않아요.");
+                foreach(string name in page.users)if(name==null || CodePointLength(name)>DesktopContract.ChatNicknameLimit)throw new IOException("참여자 목록이 올바르지 않아요.");
                 if(page.pollAfterMs==0 || wait==0 || page.reset || page.messages.Count>0 || clock.ElapsedMilliseconds>=wait*1000)return page;
                 // Cloudflare Free does not hold an idle object awake for long polling.
                 int remaining=wait*1000-(int)clock.ElapsedMilliseconds;
@@ -129,7 +136,7 @@ namespace MyDay.Windows.Chat
         }
         private static void ValidateMessage(ChatMessage message)
         {
-            if(message==null || message.id<1 || message.nickname==null || message.nickname.Length>20 || message.text==null || message.text.Length>4000 || message.sentAt==null || message.sentAt.Length>40)throw new IOException("메시지 형식이 올바르지 않아요.");
+            if(message==null || message.id<1 || message.nickname==null || CodePointLength(message.nickname)>DesktopContract.ChatNicknameLimit || message.text==null || message.text.Length>DesktopContract.ChatMaxTextUtf16 || message.sentAt==null || message.sentAt.Length>40)throw new IOException("메시지 형식이 올바르지 않아요.");
         }
         public async Task<ChatMessage> Send(string text,string clientId,CancellationToken cancel)
         {

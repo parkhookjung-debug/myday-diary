@@ -17,15 +17,15 @@ struct JournalTemplate: Identifiable, Codable {
     var sections: [JournalSection]
 }
 enum TemplateCatalog {
-    static let categories = ["daily", "reflection", "gratitude", "emotions", "learning", "planning", "wellbeing", "relationships", "creativity", "memories"]
-    static let categoryNames = ["일상 기록", "회고·성장", "감사·행복", "마음 정리", "학습·독서", "목표·계획", "생활·루틴", "관계·편지", "창작·취향", "여행·추억"]
-    static let layoutNames = ["page": "긴 글", "cards": "질문 카드", "split": "본문 + 메모", "timeline": "타임라인", "letter": "편지", "dashboard": "플래너", "cornell": "코넬 노트", "compare": "나란히 비교"]
+    static let categories = DesktopContract.categories
+    static let categoryNames = DesktopContract.categoryNames
+    static let layoutNames = Dictionary(uniqueKeysWithValues: zip(DesktopContract.layoutIds, DesktopContract.layoutNames))
     static func categoryName(_ id: String) -> String { categories.firstIndex(of: id).map { categoryNames[$0] } ?? id }
     static func load() throws -> [JournalTemplate] {
         let url = Bundle.main.url(forResource: "templates", withExtension: "json") ?? Bundle.module.url(forResource: "templates", withExtension: "json")
         guard let url else { throw WindowsCompatibility.fail("일기 형식 파일을 찾지 못했습니다.") }
         let templates = try JSONDecoder().decode([JournalTemplate].self, from: Data(contentsOf: url))
-        guard templates.count == 100, Set(templates.map(\.id)).count == 100 else { throw WindowsCompatibility.fail("일기 형식 목록이 손상되었습니다.") }
+        guard templates.count == DesktopContract.templateCount, Set(templates.map(\.id)).count == DesktopContract.templateCount else { throw WindowsCompatibility.fail("일기 형식 목록이 손상되었습니다.") }
         return templates
     }
     static func find(_ templates: [JournalTemplate], category: String, query: String) -> [JournalTemplate] {

@@ -110,6 +110,10 @@ struct MyDayApp: App {
     @NSApplicationDelegateAdaptor(MyDayLifecycle.self) private var lifecycle
     @StateObject private var store = DiaryStore()
     init() {
+        if let index = CommandLine.arguments.firstIndex(of: "--desktop-contract"), CommandLine.arguments.count > index + 1 {
+            do { try DesktopVerification.export(to: CommandLine.arguments[index + 1]); exit(0) }
+            catch { fputs("Shared desktop verification failed: \(error)\n", stderr); exit(1) }
+        }
         if let index = CommandLine.arguments.firstIndex(of: "--chat-test"), CommandLine.arguments.count > index + 2 {
             let address = CommandLine.arguments[index + 1], code = CommandLine.arguments[index + 2]
             Task { @MainActor in
@@ -162,7 +166,7 @@ struct MyDayApp: App {
 
 struct DiaryView: View {
     @ObservedObject var store: DiaryStore
-    private let backgrounds: [Color] = [Color(red: 1, green: 0.97, blue: 0.95), Color(red: 0.94, green: 0.96, blue: 0.93), Color(red: 0.95, green: 0.94, blue: 0.98)]
+    private let backgrounds = DesktopPalette.backgrounds
 
     var body: some View {
         ScrollView {
@@ -181,7 +185,7 @@ struct DiaryView: View {
                     }.fixedSize()
                 }
                 Button("상몬 라운지 · 채팅") { LoungeWindow.shared.show() }
-                Text("MY DAY").font(.caption.bold()).foregroundStyle(.brown)
+                Text("MY DAY").font(.caption.bold()).foregroundStyle(DesktopPalette.accent)
                 Text("내 마음대로, 나의 하루").font(.largeTitle.bold())
                 Text("필요한 블록을 골라 나만의 일기를 만들어 보세요.").foregroundStyle(.secondary)
                 HStack {
@@ -250,6 +254,7 @@ struct DiaryView: View {
         .sheet(isPresented: $store.showingCompanion) { CompanionWardrobe(store: store) }
         .sheet(isPresented: $store.showingTemplates) { TemplateGallery(store: store) }
         .background(backgrounds[store.entry.theme])
+        .foregroundStyle(DesktopPalette.ink)
         .preferredColorScheme(.light)
 
     }
@@ -268,6 +273,6 @@ struct DiaryView: View {
 
 private extension View {
     func card() -> some View {
-        padding(20).background(.white.opacity(0.85), in: RoundedRectangle(cornerRadius: 20))
+        padding(20).background(DesktopPalette.paper, in: RoundedRectangle(cornerRadius: 20))
     }
 }

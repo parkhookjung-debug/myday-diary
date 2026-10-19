@@ -2,6 +2,7 @@ using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Windows.Forms;
 using System.Collections.Generic;
+using MyDay.Windows.Core;
 
 namespace MyDay.Windows.UI
 {
@@ -16,15 +17,15 @@ namespace MyDay.Windows.UI
         public static Size Size(int width, int height) { return new Size(P(width), P(height)); }
         public static Padding Pad(int all) { return new Padding(P(all)); }
         public static Padding Pad(int l, int t, int r, int b) { return new Padding(P(l), P(t), P(r), P(b)); }
-        public static readonly Color Ink = Color.FromArgb(67, 61, 54);
-        public static readonly Color Muted = Color.FromArgb(155, 149, 136);
-        public static readonly Color Accent = Color.FromArgb(128, 92, 73);
-        public static readonly Color Soft = Color.FromArgb(233, 228, 219);
-        public static readonly Color Tint = Color.FromArgb(243, 230, 223);
-        public static readonly Color Paper = Color.FromArgb(255, 252, 248);
-        public static readonly Color[] Backgrounds = { Color.FromArgb(255, 248, 243), Color.FromArgb(241, 245, 238), Color.FromArgb(247, 242, 250) };
-        public static readonly Color Sidebar = Color.FromArgb(247, 245, 240);
-        public static readonly Color Olive = Color.FromArgb(96, 105, 78);
+        public static readonly Color Ink = ColorTranslator.FromHtml(DesktopContract.Ink);
+        public static readonly Color Muted = ColorTranslator.FromHtml(DesktopContract.Muted);
+        public static readonly Color Accent = ColorTranslator.FromHtml(DesktopContract.Accent);
+        public static readonly Color Soft = ColorTranslator.FromHtml(DesktopContract.Soft);
+        public static readonly Color Tint = ColorTranslator.FromHtml(DesktopContract.Tint);
+        public static readonly Color Paper = ColorTranslator.FromHtml(DesktopContract.Paper);
+        public static readonly Color[] Backgrounds = System.Array.ConvertAll(DesktopContract.Backgrounds,ColorTranslator.FromHtml);
+        public static readonly Color Sidebar = ColorTranslator.FromHtml(DesktopContract.Sidebar);
+        public static readonly Color Olive = ColorTranslator.FromHtml(DesktopContract.Olive);
         private static readonly Dictionary<string, Font> Fonts = new Dictionary<string, Font>();
         public static Font Font(float size, bool bold = false)
         {

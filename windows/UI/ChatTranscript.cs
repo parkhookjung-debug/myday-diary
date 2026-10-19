@@ -5,6 +5,7 @@ using System.Drawing.Drawing2D;
 using System.Linq;
 using System.Windows.Forms;
 using MyDay.Windows.Chat;
+using MyDay.Windows.Core;
 
 namespace MyDay.Windows.UI
 {
@@ -14,13 +15,13 @@ namespace MyDay.Windows.UI
         private sealed class Row {public ChatMessage Message;public bool Mine;public Rectangle Bounds;public string Header;}
         private readonly List<Row> rows=new List<Row>();
         private const TextFormatFlags Wrap=TextFormatFlags.WordBreak|TextFormatFlags.NoPadding|TextFormatFlags.TextBoxControl|TextFormatFlags.NoPrefix;
-        public ChatTranscript() {DoubleBuffered=true;AutoScroll=true;BackColor=Color.FromArgb(255,252,247);AccessibleName="채팅 메시지";}
+        public ChatTranscript() {DoubleBuffered=true;AutoScroll=true;BackColor=ColorTranslator.FromHtml(DesktopContract.ChatBackground);AccessibleName="채팅 메시지";}
         public void Clear() {rows.Clear();Text="";AutoScrollMinSize=Size.Empty;Invalidate();}
         public void Append(ChatMessage message,bool mine)
         {
             DateTimeOffset time;string label=DateTimeOffset.TryParse(message.sentAt,out time)?time.ToLocalTime().ToString("HH:mm"):"";
             rows.Add(new Row {Message=message,Mine=mine,Header=message.nickname+" · "+label});
-            if(rows.Count>200)rows.RemoveAt(0);
+            if(rows.Count>DesktopContract.ChatVisibleHistory)rows.RemoveAt(0);
             Text=string.Join(Environment.NewLine,rows.Select(r=>r.Header+Environment.NewLine+r.Message.text));
             Reflow();AutoScrollPosition=new Point(0,AutoScrollMinSize.Height);Invalidate();
         }
@@ -52,7 +53,7 @@ namespace MyDay.Windows.UI
                 using(var path=new GraphicsPath()) {
                     path.AddArc(box.X,box.Y,diameter,diameter,180,90);path.AddArc(box.Right-diameter,box.Y,diameter,diameter,270,90);
                     path.AddArc(box.Right-diameter,box.Bottom-diameter,diameter,diameter,0,90);path.AddArc(box.X,box.Bottom-diameter,diameter,diameter,90,90);path.CloseFigure();
-                    using(var fill=new SolidBrush(row.Mine?Color.FromArgb(232,239,225):Color.FromArgb(245,235,225)))e.Graphics.FillPath(fill,path);
+                    using(var fill=new SolidBrush(ColorTranslator.FromHtml(row.Mine?DesktopContract.ChatMine:DesktopContract.ChatOther)))e.Graphics.FillPath(fill,path);
                 }
                 TextRenderer.DrawText(e.Graphics,row.Header,Font,new Rectangle(box.X+Design.P(14),box.Y+Design.P(10),box.Width-Design.P(28),Design.P(22)),row.Mine?Design.Accent:Design.Muted,TextFormatFlags.NoPadding|TextFormatFlags.NoPrefix);
                 TextRenderer.DrawText(e.Graphics,row.Message.text,Font,new Rectangle(box.X+Design.P(14),box.Y+Design.P(34),box.Width-Design.P(28),box.Height-Design.P(42)),Design.Ink,Wrap);

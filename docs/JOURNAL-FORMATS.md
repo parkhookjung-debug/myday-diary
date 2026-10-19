@@ -27,7 +27,7 @@ Windows 일기 위쪽 **일기 형식**을 누르면 **100종**을 고를 수 �
 
 새 날짜는 넓은 글 일기 한 칸으로 시작합니다. 이전 저장본에는 템플릿 필드가 없어도 기존 글·블록·체크·배치를 그대로 읽습니다. 상몬에게 편지는 로컬 감정 기록이며 AI 답변은 제공하지 않습니다.
 
-팀 수정: 기존 6종은 `windows/Core/DiaryTemplates.cs`, 추가 형식은 `windows/Core/Templates/`의 분야별 파일에서 바꿉니다. `JournalLayouts.cs`는 배치, `TemplateGallery.cs`는 검색·분야·선택 화면, `TemplateOption.cs`는 목록과 배치 그림입니다. 모델 선택 필드는 `PageStyle`, `DiaryBlock.Title`, `DiaryBlock.Prompt`이며 저장 검증은 `windows/Core/DiaryData.cs`에 있습니다.
+팀 수정: Windows·Mac 공통 원본 `shared/catalog/templates.json`에서 category·id로 형식을 찾고 `python tools/sync-desktop.py`를 실행합니다. `JournalLayouts.cs`는 배치, `TemplateGallery.cs`는 검색·분야·선택 화면, `TemplateOption.cs`는 목록과 배치 그림입니다. 모델 선택 필드는 `PageStyle`, `DiaryBlock.Title`, `DiaryBlock.Prompt`이며 저장 검증은 `windows/Core/DiaryData.cs`에 있습니다.
 
 웹 자료의 주제·구조를 참고하고 한국어 질문은 프로젝트에서 새로 작성했습니다. [Day One](https://dayoneapp.com/guides/tips-and-tutorials/templates/), [Journey](https://journey.cloud/types-of-diary), [Bullet Journal](https://bulletjournal.com/blogs/faq/collections), [에든버러대 회고 모델](https://reflection.ed.ac.uk/reflectors-toolkit/reflecting-on-experience/gibbs-reflective-cycle), [코넬대 노트](https://lsc.cornell.edu/how-to-study/taking-notes/cornell-note-taking-system/) 등을 참고했습니다. 개별 형식의 참고 링크는 전체 목록에 있습니다.
 

@@ -1,23 +1,17 @@
-# 분야별 일기 형식 수정
+# 일기 형식 공통 원본 안내
 
-제목·질문·설명·종이·배치를 분야별로 관리합니다. 화면 디자인은 UI/TemplateGallery.cs, 배치 알고리즘은 Core/JournalLayouts.cs에서 수정합니다.
+Windows·Mac의 일기 이름·질문·설명은 [shared/catalog/templates.json](../../../shared/catalog/templates.json)에서 함께 수정합니다. 이전 분야별 `*Formats.cs`와 기본 6종을 공통 원본으로 옮겼습니다. ID와 내용은 유지했습니다.
 
-[전체 수정 가이드](../../../docs/EDITING-GUIDE.md) · [프로젝트 첫 화면](../../../README.md)
+| 바꿀 내용 | 파일 |
+| --- | --- |
+| 전체 100종·분야별 질문 | [공통 templates.json](../../../shared/catalog/templates.json)의 category·id로 찾기 |
+| 분류 이름·배치 이름·참고 링크 | [shared/desktop.json](../../../shared/desktop.json) |
+| 원본 생성·검사 | [sync-desktop.py](../../../tools/sync-desktop.py) |
+| Windows 블록 적용 | [DiaryTemplates.cs](../DiaryTemplates.cs) |
+| Windows 배치 계산 | [JournalLayouts.cs](../JournalLayouts.cs) |
+| 검색·선택 화면 | [TemplateGallery.cs](../../UI/TemplateGallery.cs) |
+| 목록 문서 출력 | [CatalogExport.cs](CatalogExport.cs) |
 
-| 바꾸려는 것 | 파일 | 역할 |
-| --- | --- | --- |
-| 일상 기록 | [DailyFormats.cs](DailyFormats.cs) | Daily 형식 |
-| 회고·성장 | [ReflectionFormats.cs](ReflectionFormats.cs) | Reflection 형식 |
-| 감사·행복 | [GratitudeFormats.cs](GratitudeFormats.cs) | Gratitude 형식 |
-| 마음 정리 | [EmotionFormats.cs](EmotionFormats.cs) | Emotion 형식 |
-| 학습·독서 | [LearningFormats.cs](LearningFormats.cs) | 공부·코넬·독서 질문 |
-| 목표·계획 | [PlanningFormats.cs](PlanningFormats.cs) | Planning 형식 |
-| 생활·루틴 | [WellbeingFormats.cs](WellbeingFormats.cs) | Wellbeing 형식 |
-| 관계·편지 | [RelationshipFormats.cs](RelationshipFormats.cs) | Relationship 형식 |
-| 창작·취향 | [CreativeFormats.cs](CreativeFormats.cs) | Creative 형식 |
-| 여행·추억 | [MemoryFormats.cs](MemoryFormats.cs) | Memory 형식 |
-| 분류 이름·출처·생성 도우미 | [TemplateCatalog.cs](TemplateCatalog.cs) | 분류와 T·S·D·H 등 생성 함수 |
-| 전체 목록 문서 출력 | [CatalogExport.cs](CatalogExport.cs) | --template-catalog 연결 |
-| 기본 6종·전체 목록 결합 | [DiaryTemplates.cs](../DiaryTemplates.cs) | Originals와 All |
+수정 후 `python tools/sync-desktop.py`를 실행하고 생성 파일도 함께 커밋합니다. `Core/Shared/Templates.g.cs`를 직접 고치면 검사에서 거부합니다. Android 반영은 이후 기존 `tools/export-android-assets.ps1`을 실행합니다.
 
-기존 형식의 ID는 유지하고 이름·설명·질문을 바꿉니다. 형식을 추가하거나 제거하면 Tests.cs의 개수·분류 검증과 docs/JOURNAL-CATALOG.md도 갱신합니다.
+[공통 개발 구조·호환 범위](../../../docs/DESKTOP-SHARED.md) · [전체 수정 가이드](../../../docs/EDITING-GUIDE.md)

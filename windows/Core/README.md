@@ -12,7 +12,7 @@
 | 검색·월간 달력 데이터 | [DiaryBrowse.cs](DiaryBrowse.cs) | 검색 대상·날짜 범위·미리보기 |
 | 내 레이아웃 저장·적용 | [SavedLayouts.cs](SavedLayouts.cs) | 내용을 제외한 배치 캡처·이름·병합 |
 | 형식 생성·적용·검색 | [DiaryTemplates.cs](DiaryTemplates.cs) | 기본 형식과 전체 목록·블록 생성 |
-| 분야별 일기 제목·질문 | [README.md](Templates/README.md) | 분야별 *Formats.cs 찾기 |
+| 공통 일기 제목·질문 | [README.md](Templates/README.md) | shared/ 원본과 두 앱 생성 절차 |
 | 편지·코넬 등 배치 | [JournalLayouts.cs](JournalLayouts.cs) | 형식별 배치 계산 |
 | 출석·활동 점수·해금 조건 | [SangmonGrowth.cs](SangmonGrowth.cs) | 6가지 미션·LevelXP·보상 레벨·날짜/항목 중복 지급 방지 |
 | 아이템 이름·설명·슬롯 | [SangmonItems.cs](SangmonItems.cs) | 50가지 일상 소품×6가지 파스텔 색감·300종·8슬롯·장착·해제·백업 복원 |

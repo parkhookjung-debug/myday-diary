@@ -19,7 +19,7 @@ struct MacBackup: Codable {
     var windowsMetadata: WindowsMetadata?
 
     func validate() throws {
-        guard format == "myday-macos", (1...2).contains(version), days.count <= 50_000,
+        guard format == "myday-macos", (1...2).contains(version), days.count <= DesktopContract.maxDays,
               (0...7).contains(companion.color), (0...6).contains(companion.weapon),
               (0...6).contains(companion.orb), companion.activityDays.count <= 50_000,
               companion.color <= min(7, companion.level - 1) else { throw CocoaError(.fileReadCorruptFile) }
@@ -28,12 +28,12 @@ struct MacBackup: Codable {
             guard Self.validDate(key) else { throw CocoaError(.fileReadCorruptFile) }
         }
         for day in days.values {
-            guard (0...2).contains(day.theme), day.blocks.count <= 200,
+            guard DesktopPalette.backgrounds.indices.contains(day.theme), day.blocks.count <= DesktopContract.maxBlocks,
                   Set(day.blocks.map(\.id)).count == day.blocks.count else { throw CocoaError(.fileReadCorruptFile) }
-            guard ["cards", "free"].contains(day.layoutMode), ["plain", "paper", "dots"].contains(day.pageStyle) else { throw CocoaError(.fileReadCorruptFile) }
+            guard ["cards", "free"].contains(day.layoutMode), DesktopContract.pageStyles.contains(day.pageStyle) else { throw CocoaError(.fileReadCorruptFile) }
             for block in day.blocks {
                 try WindowsCompatibility.checkBounds(block.x, block.y, block.width, block.height)
-                guard block.text.utf16.count <= 100_000, (block.title?.utf16.count ?? 0) <= 80, (block.prompt?.utf16.count ?? 0) <= 300,
+                guard block.text.utf16.count <= DesktopContract.maxTextUtf16, (block.title?.utf16.count ?? 0) <= DesktopContract.maxTitleUtf16, (block.prompt?.utf16.count ?? 0) <= DesktopContract.maxPromptUtf16,
                       block.photo == nil || block.kind == .photo else { throw CocoaError(.fileReadCorruptFile) }
                 if let photo = block.photo {
                     guard photo.count <= 10_000_000, NSImage(data: photo) != nil else { throw CocoaError(.fileReadCorruptFile) }

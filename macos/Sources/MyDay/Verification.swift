@@ -43,6 +43,7 @@ enum MacVerification {
         try png.write(to: URL(fileURLWithPath: "macos/build/" + name + ".png"))
     }
     static func run() throws {
+        try DesktopVerification.verify()
         try LoungeVerification.addresses()
         let root = FileManager.default.temporaryDirectory.appendingPathComponent("MyDay-check-\(UUID())")
         defer { try? FileManager.default.removeItem(at: root) }

@@ -1,0 +1,67 @@
+"""Contract generation checks, without building apps or reading private diaries."""
+import importlib.util
+import json
+from pathlib import Path
+import tempfile
+import unittest
+
+ROOT=Path(__file__).resolve().parents[1]
+spec=importlib.util.spec_from_file_location('sync_desktop', ROOT/'tools/sync-desktop.py')
+sync=importlib.util.module_from_spec(spec)
+spec.loader.exec_module(sync)
+
+class DesktopGenerationTests(unittest.TestCase):
+    def fixture(self, directory):
+        root=Path(directory)
+        for relative in ['desktop.json','catalog/templates.json','fixtures/layout.json']:
+            target=root/'shared'/relative
+            target.parent.mkdir(parents=True,exist_ok=True)
+            target.write_bytes((ROOT/'shared'/relative).read_bytes())
+        return root
+
+    def test_committed_outputs_match_current_sources(self):
+        sync.sync(check=True)
+
+    def test_one_prompt_edit_reaches_both_native_apps(self):
+        with tempfile.TemporaryDirectory(prefix='myday-desktop-contract-') as directory:
+            root=self.fixture(directory)
+            path=root/'shared/catalog/templates.json'
+            templates=json.loads(path.read_text(encoding='utf-8'))
+            prompt='함께 고친 질문 🌱'
+            templates[0]['sections'][0]['prompt']=prompt
+            path.write_text(json.dumps(templates,ensure_ascii=False),encoding='utf-8')
+            sync.sync(root)
+            self.assertIn(prompt,(root/'windows/Core/Shared/Templates.g.cs').read_text(encoding='utf-8'))
+            self.assertEqual(prompt,json.loads((root/'macos/Sources/MyDay/Resources/templates.json').read_text(encoding='utf-8'))[0]['sections'][0]['prompt'])
+            self.assertEqual([],sync.sync(root))
+
+    def test_direct_edit_to_generated_native_file_fails_check(self):
+        with tempfile.TemporaryDirectory(prefix='myday-desktop-contract-') as directory:
+            root=self.fixture(directory)
+            sync.sync(root)
+            path=root/'macos/Sources/MyDay/SharedDesktop.g.swift'
+            path.write_text(path.read_text(encoding='utf-8').replace('chatMaxText=2000','chatMaxText=3000'),encoding='utf-8')
+            with self.assertRaises(ValueError): sync.sync(root,check=True)
+
+    def test_duplicate_ids_and_invalid_layouts_are_rejected_before_writing(self):
+        for mutation in ['duplicate','layout']:
+            with tempfile.TemporaryDirectory(prefix='myday-desktop-contract-') as directory:
+                root=self.fixture(directory)
+                path=root/'shared/catalog/templates.json'
+                templates=json.loads(path.read_text(encoding='utf-8'))
+                if mutation=='duplicate': templates[1]['id']=templates[0]['id']
+                else: templates[0]['layout']='unsupported-layout'
+                path.write_text(json.dumps(templates,ensure_ascii=False),encoding='utf-8')
+                with self.assertRaises(ValueError): sync.sync(root)
+                self.assertFalse((root/'windows').exists())
+
+    def test_utf16_title_limit_includes_surrogate_pairs(self):
+        with tempfile.TemporaryDirectory(prefix='myday-desktop-contract-') as directory:
+            root=self.fixture(directory)
+            path=root/'shared/catalog/templates.json'
+            templates=json.loads(path.read_text(encoding='utf-8'))
+            templates[0]['sections'][0]['title']='🌱'*41
+            path.write_text(json.dumps(templates,ensure_ascii=False),encoding='utf-8')
+            with self.assertRaises(ValueError): sync.sync(root)
+
+if __name__=='__main__': unittest.main()

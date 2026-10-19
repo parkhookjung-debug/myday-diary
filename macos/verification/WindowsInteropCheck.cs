@@ -1,4 +1,4 @@
-// Compile with the unmodified v0.3.9 Windows source and /main:WindowsInteropCheck.
+// Compile with the current Windows source and /main:WindowsInteropCheck.
 // Exercises its real DataContractJsonSerializer and DiaryStore.Validate, not a duplicate schema.
 using System;
 using System.IO;
@@ -25,7 +25,7 @@ public static class WindowsInteropCheck
             if(book.Layouts.Count != 1 || book.Layouts[0].Name != "사진과 한 줄" || book.Layouts[0].Blocks[0].Kind != "photo-slot" || book.Progress.AwardedDays.Count != 2 || book.Equipment.WeaponId != "frost-sword" || book.Equipment.CharmId != "astral-orb")
                 throw new Exception("Layouts, growth or equipment were not preserved");
             new DiaryStore(Path.GetDirectoryName(Path.GetFullPath(args[1]))).Export(args[1], book);
-            Console.WriteLine("Windows v0.3.9 real serializer / validator: passed");
+            Console.WriteLine("Actual Windows serializer / validator: passed");
             return 0;
         } catch(Exception error) { Console.Error.WriteLine(error); return 1; }
     }

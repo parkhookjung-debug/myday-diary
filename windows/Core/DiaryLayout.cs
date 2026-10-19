@@ -8,8 +8,8 @@ namespace MyDay.Windows.Core
     // Store logical units so placements survive a different Windows DPI.
     public static class DiaryLayout
     {
-        public const int MinWidth=300,MaxWidth=1600,MinHeight=180,MaxHeight=1400,MaxPosition=10000;
-        public static int DefaultHeight(DiaryBlock block) { return block.Kind=="photo" || block.Kind=="photo-slot"?360:block.Kind=="emotion"?288:250; }
+        public const int MinWidth=DesktopContract.MinWidth,MaxWidth=DesktopContract.MaxWidth,MinHeight=DesktopContract.MinHeight,MaxHeight=DesktopContract.MaxHeight,MaxPosition=DesktopContract.MaxPosition;
+        public static int DefaultHeight(DiaryBlock block) { return block.Kind=="photo" || block.Kind=="photo-slot"?DesktopContract.PhotoHeight:block.Kind=="emotion"?DesktopContract.EmotionHeight:DesktopContract.TextHeight; }
         public static List<Rectangle> AutoArrange(IList<DiaryBlock> blocks,int width)
         {
             int available=Math.Max(MinWidth+12,width-16),x=0,y=4,rowHeight=0;
@@ -44,7 +44,7 @@ namespace MyDay.Windows.Core
             SetBounds(block,new Rectangle(12,Math.Min(MaxPosition,bottom+16),340,DefaultHeight(block)));
         }
         public static Rectangle Bounds(DiaryBlock block)
-        { return new Rectangle(block.X,block.Y,block.Width>0?block.Width:340,block.Height>0?block.Height:DefaultHeight(block)); }
+        { return new Rectangle(block.X,block.Y,block.Width>0?block.Width:DesktopContract.DefaultWidth,block.Height>0?block.Height:DefaultHeight(block)); }
         public static Rectangle Drag(Rectangle original,Point delta,bool resize)
         {
             return resize?new Rectangle(original.X,original.Y,Clamp(original.Width+delta.X,MinWidth,MaxWidth),Clamp(original.Height+delta.Y,MinHeight,MaxHeight)):

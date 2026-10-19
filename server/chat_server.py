@@ -17,9 +17,14 @@ import time
 import unicodedata
 from urllib.parse import parse_qs, urlsplit
 
-MAX_TEXT = 2000
-MAX_BODY = 16384
-HISTORY = 50
+if __package__:
+    from .chat_contract_generated import ChatMaxText, ChatMaxBody, ChatHistory, ChatNicknameLimit, ChatMaxPage
+else:
+    from chat_contract_generated import ChatMaxText, ChatMaxBody, ChatHistory, ChatNicknameLimit, ChatMaxPage
+
+MAX_TEXT = ChatMaxText
+MAX_BODY = ChatMaxBody
+HISTORY = ChatHistory
 MAX_MESSAGES = 10000
 SESSION_IDLE = 90
 SESSION_LIFETIME = 8 * 60 * 60
@@ -77,7 +82,7 @@ class ChatState:
             if not isinstance(nickname, str):
                 raise APIError(400, "닉네임을 입력해 주세요.")
             nickname = unicodedata.normalize("NFKC", nickname).strip()
-            if not 2 <= len(nickname) <= 20 or not all(c.isalnum() or c in " _-" for c in nickname):
+            if not 2 <= len(nickname) <= ChatNicknameLimit or not all(c.isalnum() or c in " _-" for c in nickname):
                 raise APIError(400, "닉네임은 글자·숫자·공백·밑줄·하이픈으로 2~20자예요.")
             if len(self.sessions) >= 64:
                 raise APIError(503, "채팅방이 가득 찼어요. 잠시 후 다시 들어와 주세요.")
@@ -156,7 +161,7 @@ class ChatState:
                         if after == 0 or reset:
                             rows = db.execute("SELECT id,nickname,text,sent_at,client_id FROM messages ORDER BY id DESC LIMIT ?", (HISTORY,)).fetchall()[::-1]
                         else:
-                            rows = db.execute("SELECT id,nickname,text,sent_at,client_id FROM messages WHERE id>? ORDER BY id LIMIT 100", (after,)).fetchall()
+                            rows = db.execute("SELECT id,nickname,text,sent_at,client_id FROM messages WHERE id>? ORDER BY id LIMIT ?", (after, ChatMaxPage)).fetchall()
                     remaining = deadline - time.monotonic()
                     if rows or reset or remaining <= 0:
                         return dict(messages=[self.message(r) for r in rows],

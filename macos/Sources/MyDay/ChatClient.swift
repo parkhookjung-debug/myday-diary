@@ -73,7 +73,7 @@ actor LoungeClient {
         }
         var data = Data()
         for try await byte in bytes {
-            if data.count >= 1_048_576 { throw LoungeFailure(status: 0, message: "서버 응답이 너무 커요.") }
+            if data.count >= DesktopContract.chatMaxResponseBytes { throw LoungeFailure(status: 0, message: "서버 응답이 너무 커요.") }
             data.append(byte)
         }
         try Task.checkCancellation()
@@ -91,20 +91,20 @@ actor LoungeClient {
     func join(nickname: String, code: String) async throws -> LoungeSession {
         let joined: LoungeSession = try await request("/api/sessions", method: "POST", body: ["nickname": nickname, "joinCode": code])
         // Keep the token before validation so cleanup can leave even if a malformed reply is rejected.
-        if !joined.token.isEmpty && joined.token.utf8.count <= 100 { token = joined.token }
-        guard token != nil, !joined.nickname.isEmpty, joined.nickname.unicodeScalars.count <= 20, joined.maxText == 2000 else {
+        if !joined.token.isEmpty && joined.token.utf8.count <= DesktopContract.chatTokenLimit { token = joined.token }
+        guard token != nil, !joined.nickname.isEmpty, joined.nickname.unicodeScalars.count <= DesktopContract.chatNicknameLimit, joined.maxText == DesktopContract.chatMaxText else {
             throw LoungeFailure(status: 0, message: "입장 응답이 올바르지 않아요.")
         }
         return joined
     }
     private func validate(_ message: LoungeMessage) throws {
-        guard message.id > 0, message.nickname.unicodeScalars.count <= 20, message.text.utf16.count <= 4000,
+        guard message.id > 0, message.nickname.unicodeScalars.count <= DesktopContract.chatNicknameLimit, message.text.utf16.count <= DesktopContract.chatMaxTextUtf16,
               message.sentAt.utf8.count <= 40 else { throw LoungeFailure(status: 0, message: "메시지 형식이 올바르지 않아요.") }
     }
     func poll(after: Int64, wait: Int = 20) async throws -> LoungePage {
         let page: LoungePage = try await request("/api/messages?after=\(after)&wait=\(wait)")
-        guard page.messages.count <= 100, page.users.count <= 64, page.cursor >= 0,
-              (0...30000).contains(page.pollAfterMs ?? 0), page.users.allSatisfy({ $0.unicodeScalars.count <= 20 }) else {
+        guard page.messages.count <= DesktopContract.chatMaxPage, page.users.count <= DesktopContract.chatMaxUsers, page.cursor >= 0,
+              (0...DesktopContract.chatMaxPollDelayMs).contains(page.pollAfterMs ?? 0), page.users.allSatisfy({ $0.unicodeScalars.count <= DesktopContract.chatNicknameLimit }) else {
             throw LoungeFailure(status: 0, message: "메시지 목록이 올바르지 않아요.")
         }
         for message in page.messages { try validate(message) }
