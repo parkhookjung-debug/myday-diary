@@ -54,6 +54,8 @@ jobs:
   windows-interop:
     name: Android and Windows backup compatibility
     needs: android
+    # Core-test exports can be checked even if an unrelated emulator assertion fails.
+    if: ${{ !cancelled() && needs.android.result != 'skipped' }}
     runs-on: windows-2025
     timeout-minutes: 10
     steps:
@@ -87,3 +89,9 @@ jobs:
           if ($null -eq $v7) { throw 'Android v7 export fixture missing' }
           & ./interop/check.exe $v7.FullName ./interop/windows-v7-roundtrip.json
           if ($LASTEXITCODE -ne 0) { throw 'Android / Windows v7 compatibility failed' }
+          & $compiler /nologo /target:exe /main:WindowsAtelierInterop ('/out:'+(Join-Path $PWD 'interop/check-atelier.exe')) /reference:System.Drawing.dll /reference:System.Windows.Forms.dll /reference:System.Runtime.Serialization.dll (Join-Path $PWD 'tools/WindowsAtelierInterop.cs') @sources
+          if ($LASTEXITCODE -ne 0) { throw 'V8 interop harness build failed' }
+          $v8=Get-ChildItem interop -Filter 'android-v8-to-windows.json' -Recurse | Select-Object -First 1
+          if ($null -eq $v8) { throw 'Android v8 export fixture missing' }
+          & ./interop/check-atelier.exe check $v8.FullName
+          if ($LASTEXITCODE -ne 0) { throw 'Android / Windows v8 compatibility failed' }

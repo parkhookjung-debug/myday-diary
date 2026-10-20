@@ -2,7 +2,7 @@
 import SwiftUI
 
 enum DesktopContract {
-    static let sourceDigest="7ea539542b05b71cf3cf571c4462a8d89068fa1ef934def13566a7565b4722c2"
+    static let sourceDigest="cd2994beb904c9d48e1b713b6db243b408284fef32965440db84c59188951c2f"
     static let maxDays=50000
     static let maxBlocks=200
     static let maxTextUtf16=100000

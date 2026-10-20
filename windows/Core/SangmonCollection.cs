@@ -21,14 +21,17 @@ namespace MyDay.Windows.Core
     {
         public readonly HashSet<string> Owned=new HashSet<string>(StringComparer.Ordinal);
         public int Draws,Petals,Coins;
+        public readonly int[] Materials=new int[4];
+        public readonly HashSet<int> Milestones=new HashSet<int>();
+        public int Syntheses,SynthesisSuccesses,Crafts;
         public bool Closet;
     }
-    public static class SangmonCollection
+    public static partial class SangmonCollection
     {
         public static readonly string[] Starters={"frost-sword","astral-orb","solar-crown","frost-glasses","solar-scarf","solar-wings","solar-ring","frost-cloud"};
         private const string ClosetId="00000000000000000000000000000007";
         public static bool CanUse(DiaryBook book,string id) {return id=="none" || Starters.Contains(id) || State(book.Collection,book.Progress).Owned.Contains(id);}
-        private static bool Economic(CollectionAction a) {return a.Kind=="draw" || a.Kind=="exchange";}
+        private static bool Economic(CollectionAction a) {return a.Kind!="closet" && a.Kind!="legacy";}
         // Keep v6 paid events before the ownership marker to preserve their original rewards.
         public static void Migrate(DiaryBook book) {
             if(book.Version>=7)return;
@@ -58,25 +61,34 @@ namespace MyDay.Windows.Core
                     throw new InvalidDataException("수집 내역의 ID나 소품이 올바르지 않아요.");
                 if(action.Kind=="closet") {
                     if(result.Closet || action.Id!=ClosetId || action.ItemId!="")throw new InvalidDataException("기본 소품 지급 기록이 올바르지 않아요.");
-                    result.Closet=true;result.Owned.UnionWith(Starters);continue;
+                    result.Closet=true;result.Owned.UnionWith(Starters);ApplyMilestones(result);continue;
                 }
+                if(action.Kind=="synth") {ReplaySynthesis(result,action.ItemId);continue;}
                 if(SangmonItems.Find(action.ItemId)==null)throw new InvalidDataException("알 수 없는 소품이에요.");
                 bool duplicate=result.Owned.Contains(action.ItemId);
                 if(action.Kind=="legacy") {
                     if(!result.Closet || duplicate)throw new InvalidDataException("이전 착용 소품 기록이 올바르지 않아요.");
-                    result.Owned.Add(action.ItemId);continue;
+                    result.Owned.Add(action.ItemId);ApplyMilestones(result);continue;
                 }
-                if(action.Kind=="draw") {
+                int grade=Rarity(action.ItemId);
+                if(NeedsV8(action.Kind) && !result.Closet)throw new InvalidDataException("소품 소유권 기록이 필요해요.");
+                if(action.Kind=="draw" || action.Kind=="draw-tiered") {
                     if(result.Closet && Starters.Contains(action.ItemId))throw new InvalidDataException("기본 소품은 뽑기 대상이 아니에요.");
                     if(result.Coins<DrawCost)throw new InvalidDataException("클로버가 부족한 수집 기록이에요.");
                     result.Draws++;
                     if(result.Draws%10==0 && result.Owned.Count<SangmonItems.All.Length && duplicate)throw new InvalidDataException("10회 새 소품 보장 기록이 올바르지 않아요.");
-                    result.Coins-=DrawCost;if(duplicate)result.Petals+=DuplicatePetals;
-                } else if(action.Kind=="exchange") {
-                    if(duplicate || result.Petals<ExchangeCost)throw new InvalidDataException("꽃잎 교환 기록이 올바르지 않아요.");
-                    result.Petals-=ExchangeCost;
+                    result.Coins-=DrawCost;
+                    if(action.Kind=="draw-tiered")result.Materials[grade]++;
+                    if(duplicate)result.Petals+=action.Kind=="draw-tiered"?CollectionPolicy.DuplicatePetals[grade]:DuplicatePetals;
+                } else if(action.Kind=="exchange" || action.Kind=="exchange-tiered") {
+                    int cost=action.Kind=="exchange-tiered"?ExchangePrice(action.ItemId):ExchangeCost;
+                    if(duplicate || result.Petals<cost)throw new InvalidDataException("꽃잎 교환 기록이 올바르지 않아요.");
+                    result.Petals-=cost;
+                } else if(action.Kind=="craft") {
+                    if(duplicate || result.Materials[grade]<CollectionPolicy.CraftCost)throw new InvalidDataException("같은 등급 조각 5개와 미수집 소품이 필요해요.");
+                    result.Materials[grade]-=CollectionPolicy.CraftCost;result.Crafts++;
                 } else throw new InvalidDataException("알 수 없는 수집 기록이에요.");
-                result.Owned.Add(action.ItemId);
+                result.Owned.Add(action.ItemId);ApplyMilestones(result);
             }
             return result;
         }
@@ -94,11 +106,15 @@ namespace MyDay.Windows.Core
             current=EnsureCloset(current);var state=State(current,progress);
             if(state.Coins<DrawCost)throw new InvalidOperationException("클로버 20개가 필요해요. 출석하거나 일기를 기록해 보세요.");
             var pool=SangmonItems.All.Where(i=>!Starters.Contains(i.Id)).Where(i=>(state.Draws+1)%10!=0 || state.Owned.Count==SangmonItems.All.Length || !state.Owned.Contains(i.Id)).ToArray();
+            int[] weights=Enumerable.Range(0,4).Select(g=>pool.Any(i=>Rarity(i.Id)==g)?CollectionPolicy.Weights[g]:0).ToArray();
+            int roll=(choose??RandomIndex)(weights.Sum());if(roll<0 || roll>=weights.Sum())throw new ArgumentOutOfRangeException("choose");
+            int selected=0;while(roll>=weights[selected]){roll-=weights[selected++];}
+            pool=pool.Where(i=>Rarity(i.Id)==selected).ToArray();
             int index=(choose??RandomIndex)(pool.Length);
             if(index<0 || index>=pool.Length)throw new ArgumentOutOfRangeException("choose");
-            return Append(current,progress,"draw",pool[index].Id);
+            return Append(current,progress,"draw-tiered",pool[index].Id);
         }
-        public static CollectionBook Exchange(CollectionBook current,SangmonProgress progress,string itemId) {return Append(EnsureCloset(current),progress,"exchange",itemId);}
+        public static CollectionBook Exchange(CollectionBook current,SangmonProgress progress,string itemId) {return Append(EnsureCloset(current),progress,"exchange-tiered",itemId);}
         private static CollectionBook Append(CollectionBook current,SangmonProgress progress,string kind,string itemId)
         {
             var result=new CollectionBook {Actions=current==null?new List<CollectionAction>():current.Actions.ToList()};

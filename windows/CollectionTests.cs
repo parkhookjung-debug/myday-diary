@@ -35,7 +35,7 @@ namespace MyDay.Windows
             failed=false;try{SangmonCollection.Merge(first,SangmonCollection.Draw(null,null,n=>1));}catch(InvalidDataException){failed=true;}
             Check(failed,"Divergent offline draw histories are rejected instead of minting currency");
             var store=new DiaryStore(Path.Combine(directory,"collection"));var book=new DiaryBook {Progress=progress,Collection=exchanged};store.Save(book);
-            var loaded=store.Load();Check(loaded.Version==7 && SangmonCollection.State(loaded.Collection,loaded.Progress).Petals==9 && loaded.Collection.Actions.Select(a=>a.Id).SequenceEqual(exchanged.Actions.Select(a=>a.Id)),"Version-seven storage preserves all draws, exchanges and balances");
+            var loaded=store.Load();Check(loaded.Version==8 && SangmonCollection.State(loaded.Collection,loaded.Progress).Petals==9 && loaded.Collection.Actions.Select(a=>a.Id).SequenceEqual(exchanged.Actions.Select(a=>a.Id)),"Version-eight storage preserves all draws, exchanges and balances");
             var bytes=File.ReadAllBytes(store.FilePath);book.Collection.Actions.Add(book.Collection.Actions[0]);failed=false;try{store.Save(book);}catch(InvalidDataException){failed=true;}
             Check(failed && bytes.SequenceEqual(File.ReadAllBytes(store.FilePath)),"Duplicate transaction ID cannot overwrite a valid collection");
         }

@@ -23,7 +23,7 @@ object NotebookJson {
     }
     fun decode(raw: String): DiaryBook {
         require(raw.toByteArray(Charsets.UTF_8).size<=MAX_BYTES) {"백업은 128MB 이하로 선택해 주세요."}
-        val o=JSONObject(raw);val version=integer(o,"Version");require(version in 1..7) {"지원하지 않는 백업 버전이에요."}
+        val o=JSONObject(raw);val version=integer(o,"Version");require(version in 1..8) {"지원하지 않는 백업 버전이에요."}
         val days=linkedMapOf<String,DiaryEntry>()
         fun put(date: String,e: JSONObject) {
             require(!days.containsKey(date)) {"백업에 같은 날짜가 중복돼 있어요."}
@@ -63,7 +63,7 @@ object NotebookJson {
         NotebookRules.validate(book)
         return JSONObject().apply {
             val expanded=book.activities.isNotEmpty() || EquipmentCatalog.slots.any {val id=book.equipment.get(it);id!="none" && !id.endsWith("-sword") && !id.endsWith("-orb")}
-            put("Version",maxOf(book.version,if(book.collection!=null) {if(com.myday.diary.diary.CollectionRules.state(book).closet)7 else 6} else if(expanded)5 else 4));put("CharacterStyle",book.characterStyle)
+            put("Version",maxOf(book.version,if(book.collection!=null) {if(book.collection.actions.any {com.myday.diary.diary.CollectionRules.needsV8(it.kind)})8 else if(com.myday.diary.diary.CollectionRules.state(book).closet)7 else 6} else if(expanded)5 else 4));put("CharacterStyle",book.characterStyle)
             put("Days",JSONArray().apply {book.days.toSortedMap().forEach {(date,e)->put(JSONObject().put("Key",date).put("Value",JSONObject()
                 .put("Theme",e.theme).put("Mood",e.mood).put("Character",e.character).put("LayoutMode",e.layoutMode).put("PageStyle",e.pageStyle)
                 .put("Blocks",JSONArray(e.blocks.map {block(it)}))))}})

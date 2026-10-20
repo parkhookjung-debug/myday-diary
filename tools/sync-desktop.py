@@ -19,6 +19,16 @@ def load_sources(root=ROOT):
     contract = json.loads((root/'shared/desktop.json').read_text(encoding='utf-8'))
     templates = json.loads((root/'shared/catalog/templates.json').read_text(encoding='utf-8'))
     cases = json.loads((root/'shared/fixtures/layout.json').read_text(encoding='utf-8'))
+    policy=json.loads((root/'shared/collection.json').read_text(encoding='utf-8'))
+    if policy.get('version')!=1 or any(len(policy[k])!=4 for k in ['names','colors','weights','duplicatePetals','exchangePetals','forms']) or len(policy['synthesisPercent'])!=3:
+        raise ValueError('Invalid collection policy')
+    if sum(policy['weights'])!=10000 or any(type(x) is not int or x<=0 for k in ['weights','duplicatePetals','exchangePetals'] for x in policy[k]): raise ValueError('Invalid collection rates')
+    if any(not re.fullmatch(r'#[A-Fa-f0-9]{6}',v) for v in policy['colors']) or any(type(x) is not int or not 1<=x<=100 for x in policy['synthesisPercent']): raise ValueError('Invalid synthesis policy')
+    forms=[f for group in policy['forms'] for f in group]
+    if len(forms)!=50 or len(set(forms))!=50 or any(not re.fullmatch(r'[a-z]+',f) for f in forms): raise ValueError('Duplicate/missing collection form')
+    if not 0<=policy['failureRefund']<policy['synthesisCost'] or policy['craftCost']<1: raise ValueError('Invalid material cost')
+    goals=[m['owned'] for m in policy['milestones']]
+    if goals!=sorted(set(goals)) or any(not 1<=m['owned']<=300 or not 0<=m['grade']<4 or m['amount']<1 for m in policy['milestones']): raise ValueError('Invalid collection milestones')
     if contract.get('format') != 'myday-desktop-contract' or contract.get('version') != 1:
         raise ValueError('Unsupported shared contract')
     for group in ['limits', 'chat', 'growth']:
@@ -64,11 +74,26 @@ def load_sources(root=ROOT):
         if type(case['resize']) is not bool or [len(case[k]) for k in ['original','delta','expected']] != [4,2,4]:
             raise ValueError('Invalid layout fixture')
         if any(type(n) is not int for k in ['original','delta','expected'] for n in case[k]): raise ValueError('Invalid fixture coordinate')
-    digest = hashlib.sha256(json.dumps([contract,templates,cases],ensure_ascii=False,sort_keys=True,separators=(',',':')).encode()).hexdigest()
+    digest = hashlib.sha256(json.dumps([contract,templates,cases,policy],ensure_ascii=False,sort_keys=True,separators=(',',':')).encode()).hexdigest()
     return contract, templates, cases, digest
 
 def render(root=ROOT):
     c, templates, cases, digest = load_sources(root)
+    policy=json.loads((root/'shared/collection.json').read_text(encoding='utf-8'))
+    collection_cs=[HEADER,'namespace MyDay.Windows.Core {\n    public static class CollectionPolicy {\n']
+    collection_kt=[HEADER,'package com.myday.diary.diary\n\ninternal object SharedCollection {\n']
+    for key in ['names','colors','weights','duplicatePetals','exchangePetals','synthesisPercent']:
+        vals=policy[key];strings=isinstance(vals[0],str);args=','.join(quoted(x) if strings else str(x) for x in vals)
+        collection_cs.append('        public static readonly '+('string' if strings else 'int')+'[] '+key[0].upper()+key[1:]+'={'+args+'};\n')
+        collection_kt.append('    val '+key+'='+('arrayOf' if strings else 'intArrayOf')+'('+args+')\n')
+    for key in ['synthesisCost','failureRefund','craftCost']:
+        collection_cs.append('        public const int '+key[0].upper()+key[1:]+'='+str(policy[key])+';\n')
+        collection_kt.append('    const val '+key+'='+str(policy[key])+'\n')
+    collection_cs.append('        public static readonly string[][] Forms={'+','.join('new[]{'+','.join(map(quoted,group))+'}' for group in policy['forms'])+'};\n')
+    collection_kt.append('    val forms=arrayOf('+','.join('arrayOf('+','.join(map(quoted,group))+')' for group in policy['forms'])+')\n')
+    rows=[[m[k] for k in ['owned','grade','amount']] for m in policy['milestones']]
+    collection_cs.append('        public static readonly int[][] Milestones={'+','.join('new[]{'+','.join(map(str,row))+'}' for row in rows)+'};\n    }\n}\n')
+    collection_kt.append('    val milestones=arrayOf('+','.join('intArrayOf('+','.join(map(str,row))+')' for row in rows)+')\n}\n')
     numbers = dict(c['limits'], **c['chat'], **c['growth'], TemplateCount=len(templates))
     arrays = {'BlockKinds':c['blockKinds'], 'PageStyles':c['pageStyles']}
     for prefix, group, value in [('Categories','categories','id'),('CategoryNames','categories','name'),
@@ -104,6 +129,8 @@ def render(root=ROOT):
     swift += ['        ['+','.join(map(str,[int(case['resize']),*case['original'],*case['delta'],*case['expected']]))+'],\n' for case in cases]
     swift += ['    ]\n}\n']
     return {
+        'windows/Core/Shared/CollectionPolicy.g.cs':''.join(collection_cs),
+        'app/src/main/java/com/myday/diary/diary/SharedCollection.g.kt':''.join(collection_kt),
         'app/src/main/java/com/myday/diary/diary/SharedGrowth.g.kt': HEADER+'package com.myday.diary.diary\n\ninternal object SharedGrowth {\n'+''.join('    const val '+k+'='+str(v)+'\n' for k,v in c['growth'].items())+'    val profiles=arrayOf(\n'+''.join('        intArrayOf('+','.join(map(str,[p['expectedDays'],*p['week']]))+'),\n' for p in c['growthProfiles'])+'    )\n}\n',
         'windows/Core/Shared/DesktopContract.g.cs': ''.join(cs),
         'windows/Core/Shared/Templates.g.cs': ''.join(native_templates),

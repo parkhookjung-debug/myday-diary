@@ -13,7 +13,7 @@ spec.loader.exec_module(sync)
 class DesktopGenerationTests(unittest.TestCase):
     def fixture(self, directory):
         root=Path(directory)
-        for relative in ['desktop.json','catalog/templates.json','fixtures/layout.json']:
+        for relative in ['desktop.json','collection.json','catalog/templates.json','fixtures/layout.json']:
             target=root/'shared'/relative
             target.parent.mkdir(parents=True,exist_ok=True)
             target.write_bytes((ROOT/'shared'/relative).read_bytes())
@@ -74,5 +74,15 @@ class DesktopGenerationTests(unittest.TestCase):
             sync.sync(root)
             for name in ['windows/Core/Shared/DesktopContract.g.cs','app/src/main/java/com/myday/diary/diary/SharedGrowth.g.kt','macos/Sources/MyDay/SharedDesktop.g.swift']:
                 self.assertIn('growthattendanceweekxp=20',(root/name).read_text(encoding='utf-8').lower())
+
+    def test_collection_policy_reaches_both_platforms_and_rejects_duplicate_forms(self):
+        with tempfile.TemporaryDirectory(prefix='myday-collection-policy-') as directory:
+            root=self.fixture(directory);path=root/'shared/collection.json'
+            p=json.loads(path.read_text(encoding='utf-8'));p['synthesisPercent'][0]=61
+            path.write_text(json.dumps(p,ensure_ascii=False),encoding='utf-8');sync.sync(root)
+            self.assertIn('61,40,25',(root/'windows/Core/Shared/CollectionPolicy.g.cs').read_text(encoding='utf-8'))
+            self.assertIn('61,40,25',(root/'app/src/main/java/com/myday/diary/diary/SharedCollection.g.kt').read_text(encoding='utf-8'))
+            p['forms'][0][0]=p['forms'][0][1];path.write_text(json.dumps(p,ensure_ascii=False),encoding='utf-8')
+            with self.assertRaises(ValueError):sync.sync(root)
 
 if __name__=='__main__': unittest.main()

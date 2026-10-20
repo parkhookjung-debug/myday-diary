@@ -16,10 +16,11 @@ import com.myday.diary.platform.*
 @Composable fun PhoneCollection(controller: NotebookController,catalog: NotebookCatalog,haptics: DiaryHaptics,attempt: (TactileEvent?,()->Unit)->Unit,modifier: Modifier=Modifier) {
     val book=controller.book;val state=remember(book) {CollectionRules.state(book)}
     var query by remember {mutableStateOf("")};var ownedOnly by remember {mutableStateOf(false)}
-    var seen by remember {mutableStateOf(book.collection?.actions?.lastOrNull {it.kind=="draw" || it.kind=="exchange"}?.id)}
+    var seen by remember {mutableStateOf(book.collection?.actions?.lastOrNull {it.kind in setOf("draw","exchange","draw-tiered","exchange-tiered","craft")}?.id)}
     var reveal by remember {mutableStateOf<CollectionAction?>(null)}
     var exchange by remember {mutableStateOf<SangmonItem?>(null)};var rules by remember {mutableStateOf(false)}
-    val last=book.collection?.actions?.lastOrNull {it.kind=="draw" || it.kind=="exchange"}
+    var atelier by remember {mutableStateOf(false)}
+    val last=book.collection?.actions?.lastOrNull {it.kind in setOf("draw","exchange","draw-tiered","exchange-tiered","craft")}
     LaunchedEffect(last?.id) {if(last!=null && last.id!=seen){seen=last.id;reveal=last;haptics.perform(TactileEvent.EQUIP)}}
     Column(modifier,verticalArrangement=Arrangement.spacedBy(6.dp)) {
         Text("상몬의 선물 상자",style=MaterialTheme.typography.titleMedium)
@@ -28,6 +29,8 @@ import com.myday.diary.platform.*
             Button({attempt(null) {controller.draw()}},Modifier.testTag("collection-draw"),enabled=controller.saved && state.coins>=20 && (book.collection?.actions?.size ?: 0)<CollectionRules.MAX_ACTIONS) {Text("클로버 20 · 선물 뽑기")}
             TextButton({rules=true}) {Text("받는 방법·확률")}
         }
+        TextButton({atelier=true}) {Text("조각 합성 · 성취 도감")}
+        Text((0..3).joinToString(" · ") {SharedCollection.names[it]+" "+state.materials[it]},style=MaterialTheme.typography.labelSmall)
         Text(if(state.owned.size==catalog.items.size)"모든 소품 수집 완료 · 일반 뽑기" else "${10-state.draws%10}회 후 새 소품 보장 · 기본 소품 8종은 무료",style=MaterialTheme.typography.labelSmall)
         Row(verticalAlignment=Alignment.CenterVertically) {
             OutlinedTextField(query,{query=it},Modifier.weight(1f).testTag("collection-search"),label={Text("수집 소품 검색")},singleLine=true)
@@ -40,7 +43,8 @@ import com.myday.diary.platform.*
                 Card(colors=CardDefaults.cardColors(containerColor=if(owned)Color(0xffeff5e8) else Color(0xfffffcf7))) {
                     Column(Modifier.fillMaxWidth().padding(10.dp),horizontalAlignment=Alignment.CenterHorizontally) {
                         AssetIcon("items/${item.id}.png",item.name,Modifier.height(76.dp));Text(item.name,style=MaterialTheme.typography.labelLarge)
-                        TextButton({exchange=item},Modifier.testTag("exchange-${item.id}"),enabled=!owned && state.petals>=15 && controller.saved && (book.collection?.actions?.size ?: 0)<CollectionRules.MAX_ACTIONS) {Text(if(owned)"수집 완료" else "꽃잎 15개로 교환")}
+                        Text(CollectionRules.rarityName(item.id),style=MaterialTheme.typography.labelSmall)
+                        TextButton({exchange=item},Modifier.testTag("exchange-${item.id}"),enabled=!owned && state.petals>=CollectionRules.exchangePrice(item.id) && controller.saved && (book.collection?.actions?.size ?: 0)<CollectionRules.MAX_ACTIONS) {Text(if(owned)"수집 완료" else "꽃잎 ${CollectionRules.exchangePrice(item.id)}개로 교환")}
                     }
                 }
             }
@@ -49,9 +53,10 @@ import com.myday.diary.platform.*
     reveal?.let {action->
         val item=catalog.items.first {it.id==action.itemId}
         val prior=CollectionRules.state(book.copy(collection=CollectionBook(book.collection!!.actions.takeWhile {it.id!=action.id})))
-        val duplicate=action.kind=="draw" && action.itemId in prior.owned
-        AlertDialog(onDismissRequest={reveal=null},title={Text(if(action.kind=="exchange")"꽃잎으로 데려왔어요" else if(duplicate)"또 만났어요 · 꽃잎 +3" else "새 소품을 만났어요!")},text={Column(horizontalAlignment=Alignment.CenterHorizontally) {AssetIcon("items/${item.id}.png",item.name,Modifier.fillMaxWidth().height(150.dp));Text(item.name);Text("옷장에서 이 소품을 입힐 수 있어요.")}},confirmButton={TextButton({reveal=null},Modifier.testTag("collection-result-close")) {Text("도감에 보관")}})
+        val duplicate=action.kind in setOf("draw","draw-tiered") && action.itemId in prior.owned
+        AlertDialog(onDismissRequest={reveal=null},title={Text(if(action.kind=="craft")"직접 만들었어요!" else if(action.kind in setOf("exchange","exchange-tiered"))"꽃잎으로 데려왔어요" else if(duplicate)"또 만났어요 · 꽃잎 +${if(action.kind=="draw")3 else SharedCollection.duplicatePetals[CollectionRules.rarity(item.id)]}" else "새 소품을 만났어요!")},text={Column(horizontalAlignment=Alignment.CenterHorizontally) {AssetIcon("items/${item.id}.png",item.name,Modifier.fillMaxWidth().height(150.dp));Text("[${CollectionRules.rarityName(item.id)}] ${item.name}");val achieved=state.milestones-prior.milestones;if(achieved.isNotEmpty())Text("${achieved.max()}종 수집 달성 · 조각 보상!");Text("옷장에서 이 소품을 입힐 수 있어요.")}},confirmButton={TextButton({reveal=null},Modifier.testTag("collection-result-close")) {Text("도감에 보관")}})
     }
-    exchange?.let {item->AlertDialog(onDismissRequest={exchange=null},title={Text("${item.name} 데려오기")},text={Text("꽃잎 15개로 교환할까요? 교환은 뽑기 횟수에 포함하지 않아요.")},confirmButton={TextButton({exchange=null;attempt(null) {controller.exchange(item.id)}}) {Text("교환하기")}},dismissButton={TextButton({exchange=null}) {Text("닫기")}})}
-    if(rules)AlertDialog(onDismissRequest={rules=false},title={Text("선물 상자 안내")},text={Text("환영 클로버 40개\n1 XP = 클로버 1개\n레벨 업마다 +5개\n연속 출석 7일마다 +10개\n\n1회 클로버 20개. 일반 뽑기는 기본 제외 292종 각각 1/292이에요. 10번째마다 미수집 소품 중 동일 확률로 뽑아요. 전부 모았다면 일반 확률로 돌아가요.\n\n중복은 꽃잎 3개, 꽃잎 15개로 원하는 미수집 소품을 교환해요. 현금 결제는 없고 나머지 소품은 뽑기나 교환으로 얻어야 입힐 수 있어요.")},confirmButton={TextButton({rules=false}) {Text("닫기")}})
+    exchange?.let {item->AlertDialog(onDismissRequest={exchange=null},title={Text("${item.name} 데려오기")},text={Text("꽃잎 ${CollectionRules.exchangePrice(item.id)}개로 교환할까요? 교환은 뽑기 횟수에 포함하지 않아요.")},confirmButton={TextButton({exchange=null;attempt(null) {controller.exchange(item.id)}}) {Text("교환하기")}},dismissButton={TextButton({exchange=null}) {Text("닫기")}})}
+    if(atelier)PhoneAtelier(controller,catalog,haptics,attempt) {atelier=false}
+    if(rules)AlertDialog(onDismissRequest={rules=false},title={Text("선물 상자 안내")},text={Text("1회 클로버 20개 · 기본 8종 무료\n등급 확률: 일상 65% / 반짝 25% / 별빛 9% / 꿈빛 1%\n등급 안에서는 소품마다 같은 확률이에요. 10번째는 미수집만 뽑고 비어 있는 등급의 확률은 남은 등급에 비례 배분해요.\n\n소품과 같은 등급 조각 1개를 함께 받아요. 중복 꽃잎은 등급별 3/6/12/24개, 선택 교환은 15/30/60/120개예요.\n조각 3개 합성: 60%/40%/25%로 상위 조각 1개. 실패하면 원래 조각 1개 반환. 조각 5개로 같은 등급 소품을 골라 만들어요.\n\n수집 10/25/50/100/200/300종 성취 보상은 자동 지급해요. 현금 결제는 없어요.")},confirmButton={TextButton({rules=false}) {Text("닫기")}})
 }

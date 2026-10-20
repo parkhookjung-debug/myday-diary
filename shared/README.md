@@ -12,6 +12,7 @@
 | 두 OS에서 같아야 하는 이동·크기 결과 | [fixtures/layout.json](fixtures/layout.json) |
 | 공동 디자인의 원본 커밋·반영 기준 | [design-source.json](design-source.json), [디자인 반영 안내](../docs/DESIGN-SYNC.md) |
 | Windows·Android 만렙·주간 보너스·99/200/295일 검증 패턴 | [desktop.json](desktop.json)의 growth·growthProfiles, [성장 안내](../docs/SANGMON-GROWTH.md) |
+| 등급·뽑기 확률·조각·합성·제작·수집 성취 보상 | [collection.json](collection.json), [공방 안내](../docs/SANGMON-ATELIER.md) |
 
 원본을 수정한 뒤 저장소 루트에서 Python 3.11 이상으로 실행합니다.
 
