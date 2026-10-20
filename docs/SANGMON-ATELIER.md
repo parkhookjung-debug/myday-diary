@@ -52,6 +52,8 @@ Windows는 **옷장 → 소품 뽑기 → 조각 합성·성취 도감**, Androi
 
 새 뽑기·등급 교환·합성·제작은 **버전 8**에 저장합니다. 행동 종류와 결과로 재화·조각을 재계산하고 임의 잔액 필드를 신뢰하지 않습니다. 같은 백업을 다시 가져와 재료를 복구할 수 없으며 두 기기에서 따로 진행한 뽑기·합성·제작 이력은 병합을 거부합니다. Windows·Android 모두 이 버전을 지원하는 최신 앱을 사용하세요. Mac 앱의 버전 1~4 백업 호환 범위는 별도입니다.
 
+개발 시 확률·표시 색을 바꿔도 이미 저장한 결과는 다시 뽑지 않습니다. 등급 분류·교환 비용·합성 소모/환급·성취 보상은 이력 재계산에 영향을 주므로, 배포 이후 변경할 때는 이전 정책을 보존하는 새 정책 버전과 마이그레이션을 함께 구현해야 합니다. 같은 정책 버전의 값을 덮어써 이전 지출을 소급 변경하지 마세요.
+
 ## 수정 파일
 
 | 바꿀 내용 | 원본/연결 |
@@ -64,3 +66,9 @@ Windows는 **옷장 → 소품 뽑기 → 조각 합성·성취 도감**, Androi
 | Android 같은 규칙·화면·저장 연결 | [CollectionRules.kt](../app/src/main/java/com/myday/diary/diary/CollectionRules.kt), [PhoneCollection.kt](../app/src/main/java/com/myday/diary/ui/diary/PhoneCollection.kt), [PhoneAtelier.kt](../app/src/main/java/com/myday/diary/ui/diary/PhoneAtelier.kt), [NotebookController.kt](../app/src/main/java/com/myday/diary/diary/NotebookController.kt) |
 | 확률 경계·소모·환급·중복 지급·예전 이력·저장 검사 | [AtelierTests.cs](../windows/AtelierTests.cs), [AtelierTest.kt](../app/src/test/java/com/myday/diary/diary/AtelierTest.kt) |
 | 실제 Windows → Android → Windows 버전 8 검사 | [WindowsAtelierInterop.cs](../tools/WindowsAtelierInterop.cs), [windows-v8.json](../app/src/test/resources/windows-v8.json) |
+
+## 검증 결과
+
+소스 `e68d4e6`의 [Windows 전체 CI](https://github.com/parkhookjung-debug/myday-diary/actions/runs/39445233044)와 [공통 Mac·Windows CI](https://github.com/parkhookjung-debug/myday-diary/actions/runs/39445233055)가 통과했습니다. Windows 기본 검사 241개, 공통 원본 생성 검사 7개, 실제 공방의 합성·제작·실패 환급·파일 잠금 시 복구·작은 창 검사를 확인했습니다.
+
+[Android CI](https://github.com/parkhookjung-debug/myday-diary/actions/runs/39445233123)의 APK·Lint·JVM 단계도 통과했습니다. 새 `AtelierTest` 5개는 확률 경계·합성·보존·실패 복구와 실제 Windows 버전 8 fixture를 확인합니다. Android가 내보낸 `android-v8-to-windows.json`을 실제 Windows 직렬화 도구로 읽어 조각 `[1,1,1,0]`, 클로버 10,975, 꽃잎 24, 합성 2회·제작 1회·성취 10종이 일치하는 왕복 검사도 통과했습니다. 문서 작성 시점의 Android 에뮬레이터 전체 화면 검사는 진행 중입니다.

@@ -21,7 +21,7 @@ python tools/sync-desktop.py
 python tools/sync-desktop.py --check
 ```
 
-생성된 `windows/Core/Shared/*.g.cs`, `macos/Sources/MyDay/SharedDesktop.g.swift`, `macos/Sources/MyDay/Resources/templates.json`, Android의 `diary/SharedGrowth.g.kt`, 서버의 `shared-chat.g.ts`·`chat_contract_generated.py`는 직접 고치지 않습니다. 원본을 수정하고 생성기를 다시 실행하세요. 생성 결과를 빼먹거나 생성 파일만 고치면 CI에서 거부합니다. 기존 일기·형식 ID는 유지하세요.
+생성된 `windows/Core/Shared/*.g.cs`, `macos/Sources/MyDay/SharedDesktop.g.swift`, `macos/Sources/MyDay/Resources/templates.json`, Android의 `diary/SharedGrowth.g.kt`·`diary/SharedCollection.g.kt`, 서버의 `shared-chat.g.ts`·`chat_contract_generated.py`는 직접 고치지 않습니다. 원본을 수정하고 생성기를 다시 실행하세요. 생성 결과를 빼먹거나 생성 파일만 고치면 CI에서 거부합니다. 기존 일기·형식 ID는 유지하세요.
 
 Windows만의 배치·버튼은 `windows/UI/`, Mac만의 배치·버튼은 `macos/Sources/MyDay/`에서 수정합니다. 공통 생성기는 일기 파일·초대코드·DB·사용자 사진에 접근하지 않습니다. Android 자산은 기존 `tools/export-android-assets.ps1`에서 생성된 C# 목록을 이용하며, 이 도구는 Android의 사진·캐릭터 자산을 변경하지 않습니다.
 
