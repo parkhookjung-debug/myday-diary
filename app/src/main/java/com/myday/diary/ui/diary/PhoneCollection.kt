@@ -21,7 +21,7 @@ import com.myday.diary.platform.*
     var exchange by remember {mutableStateOf<SangmonItem?>(null)};var rules by remember {mutableStateOf(false)}
     var atelier by remember {mutableStateOf(false)}
     val last=book.collection?.actions?.lastOrNull {it.kind in setOf("draw","exchange","draw-tiered","exchange-tiered","craft")}
-    LaunchedEffect(last?.id) {if(last!=null && last.id!=seen){seen=last.id;reveal=last;haptics.perform(TactileEvent.EQUIP)}}
+    LaunchedEffect(last?.id) {if(last!=null && last.id!=seen){seen=last.id;if(last.kind=="craft")atelier=false;reveal=last;haptics.perform(TactileEvent.EQUIP)}}
     Column(modifier,verticalArrangement=Arrangement.spacedBy(6.dp)) {
         Text("상몬의 선물 상자",style=MaterialTheme.typography.titleMedium)
         Text("클로버 ${state.coins} · 꽃잎 ${state.petals} · 보유 ${state.owned.size}/300",Modifier.testTag("collection-balance"))
@@ -58,5 +58,5 @@ import com.myday.diary.platform.*
     }
     exchange?.let {item->AlertDialog(onDismissRequest={exchange=null},title={Text("${item.name} 데려오기")},text={Text("꽃잎 ${CollectionRules.exchangePrice(item.id)}개로 교환할까요? 교환은 뽑기 횟수에 포함하지 않아요.")},confirmButton={TextButton({exchange=null;attempt(null) {controller.exchange(item.id)}}) {Text("교환하기")}},dismissButton={TextButton({exchange=null}) {Text("닫기")}})}
     if(atelier)PhoneAtelier(controller,catalog,haptics,attempt) {atelier=false}
-    if(rules)AlertDialog(onDismissRequest={rules=false},title={Text("선물 상자 안내")},text={Text("1회 클로버 20개 · 기본 8종 무료\n등급 확률: 일상 65% / 반짝 25% / 별빛 9% / 꿈빛 1%\n등급 안에서는 소품마다 같은 확률이에요. 10번째는 미수집만 뽑고 비어 있는 등급의 확률은 남은 등급에 비례 배분해요.\n\n소품과 같은 등급 조각 1개를 함께 받아요. 중복 꽃잎은 등급별 3/6/12/24개, 선택 교환은 15/30/60/120개예요.\n조각 3개 합성: 60%/40%/25%로 상위 조각 1개. 실패하면 원래 조각 1개 반환. 조각 5개로 같은 등급 소품을 골라 만들어요.\n\n수집 10/25/50/100/200/300종 성취 보상은 자동 지급해요. 현금 결제는 없어요.")},confirmButton={TextButton({rules=false}) {Text("닫기")}})
+    if(rules)AlertDialog(onDismissRequest={rules=false},title={Text("선물 상자 안내")},text={Text("1회 클로버 20개 · 기본 8종 무료\n등급 확률: ${CollectionRules.oddsText()}\n등급 안에서는 소품마다 같은 확률이에요. 10번째는 미수집만 뽑고 비어 있는 등급의 확률은 남은 등급에 비례 배분해요.\n\n소품과 같은 등급 조각 1개를 함께 받아요. 중복 꽃잎은 등급별 ${SharedCollection.duplicatePetals.joinToString("/")}개, 선택 교환은 ${SharedCollection.exchangePetals.joinToString("/")}개예요.\n조각 ${SharedCollection.synthesisCost}개 합성: ${SharedCollection.synthesisPercent.joinToString("/")}%로 상위 조각 1개. 실패하면 원래 조각 ${SharedCollection.failureRefund}개 반환. 조각 ${SharedCollection.craftCost}개로 같은 등급 소품을 골라 만들어요.\n\n수집 10/25/50/100/200/300종 성취 보상은 자동 지급해요. 현금 결제는 없어요.")},confirmButton={TextButton({rules=false}) {Text("닫기")}})
 }

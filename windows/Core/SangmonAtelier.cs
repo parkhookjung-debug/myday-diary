@@ -17,6 +17,7 @@ namespace MyDay.Windows.Core
         }
         public static string RarityName(string itemId) {return CollectionPolicy.Names[Rarity(itemId)];}
         public static int ExchangePrice(string itemId) {return CollectionPolicy.ExchangePetals[Rarity(itemId)];}
+        public static string OddsText() {return string.Join(" · ",Enumerable.Range(0,4).Select(g=>CollectionPolicy.Names[g]+" "+(CollectionPolicy.Weights[g]/100.0).ToString("0.##",System.Globalization.CultureInfo.InvariantCulture)+"%"));}
         private static void ApplyMilestones(CollectionState state)
         {
             foreach(var m in CollectionPolicy.Milestones)if(state.Owned.Count>=m[0] && state.Milestones.Add(m[0]))state.Materials[m[1]]+=m[2];

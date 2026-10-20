@@ -34,7 +34,7 @@ namespace MyDay.Windows.UI
             var workshop=Design.Button("조각 합성 · 성취 도감");workshop.Location=Design.Point(440,143);workshop.Size=Design.Size(210,34);workshop.Enabled=atelier!=null;workshop.Click+=delegate {atelier();RefreshItems();};hero.Controls.Add(workshop);
             pity.Location=Design.Point(186,184);hero.Controls.Add(pity);
             materials.Location=Design.Point(24,218);hero.Controls.Add(materials);
-            var rules=Design.Label("기본 등급 확률: 일상 65% · 반짝 25% · 별빛 9% · 꿈빛 1%\n10번째는 미수집 보장 · 비어 있는 등급은 제외하고 확률을 다시 나눠요\n소품 + 같은 등급 조각 1개 · 중복 꽃잎 3/6/12/24개 · 조각 5개로 같은 등급 소품 선택 제작",8);
+            var rules=Design.Label("기본 등급 확률: "+SangmonCollection.OddsText()+"\n10번째는 미수집 보장 · 비어 있는 등급은 제외하고 확률을 다시 나눠요\n소품 + 같은 등급 조각 1개 · 중복 꽃잎 "+string.Join("/",CollectionPolicy.DuplicatePetals)+"개 · 조각 "+CollectionPolicy.CraftCost+"개로 같은 등급 소품 선택 제작",8);
             rules.Location=Design.Point(24,242);rules.AutoSize=false;rules.Size=Design.Size(810,56);hero.Controls.Add(rules);
             hero.Resize+=delegate {rules.Width=Math.Max(100,hero.ClientSize.Width-Design.P(48));};
             var filters=new FlowLayoutPanel {Dock=DockStyle.Top,Height=Design.P(44),Padding=Design.Pad(20,7,12,0)};

@@ -16,6 +16,7 @@ object CollectionRules {
     fun rarity(id: String): Int {require(id in EquipmentCatalog.items);if(id in starters)return 0;return SharedCollection.forms.indexOfFirst {id.substringAfter('-') in it}.also {require(it>=0)}}
     fun rarityName(id: String)=SharedCollection.names[rarity(id)]
     fun exchangePrice(id: String)=SharedCollection.exchangePetals[rarity(id)]
+    fun oddsText()=(0..3).joinToString(" / ") {SharedCollection.names[it]+" "+(SharedCollection.weights[it]/100.0).toString().removeSuffix(".0")+"%"}
     fun canUse(book: DiaryBook,id: String)=id=="none" || id in starters || id in state(book).owned
     private fun ensureCloset(current: CollectionBook?): CollectionBook {
         val actions=current?.actions ?: emptyList()
