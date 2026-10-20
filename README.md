@@ -10,6 +10,8 @@
 
 **세분화한 성장·선물 상자:** 초반 10 XP부터 성장 구간별로 레벨 업하고 클로버로 소품을 뽑습니다. [레벨·보상 표](docs/SANGMON-GROWTH.md) · [확률·10회 보장·중복 교환·수정 파일](docs/SANGMON-COLLECTION.md). **기본 소품 8종은 무료, 나머지 292종은 획득 후 착용**합니다. 미보유 잠금·보유 필터와 이전 착용 소품 보존을 제공합니다.
 
+**만렙 기간 조정:** Windows·Android는 Lv.100 / 3,590 XP가 만렙입니다. 매일 루틴 **99일**, 주 5일 기록 **200일**, 여유로운 사용 **295일**의 실제 활동 검사로 확인합니다. 연속 7일 출석 보너스 +10 XP, 만렙 이후 기록·클로버·뽑기를 지원합니다. [활동 패턴·점수·공통 수정 위치](docs/SANGMON-GROWTH.md).
+
 **새 캐릭터 적용:** [기본 상몬의 3D풍 클레이 외형·실제 렌더링·수정 파일 안내](previews/applied/sangmon-clay/README.md). 기본 상몬에 먼저 적용했으며 Windows와 Android 자산에 함께 반영했습니다. 기존 Releases 파일에는 아직 포함되지 않습니다.
 
 **Windows·Mac 채팅 / 현재 로컬 개발:** 일기 앱의 **상몬 라운지 · 채팅**에서 같은 서버에 접속하도록 구현했습니다. [계정 없이 실행·같은 Wi-Fi·무료 배포 차단·수정 파일](docs/FREE-CHAT.md) · [Mac 일기 앱](macos/README.md) · [기존 Python 서버](server/README.md) · [공통 API](docs/CHAT.md). [자동 검사](https://github.com/parkhookjung-debug/myday-diary/actions/runs/39037445085)에서 서버·Windows·Mac 빌드와 실제 앱 통신이 통과했습니다. 해당 화면 아래 **Artifacts**에서 Windows 실행 파일과 Apple Silicon Mac 앱을 받습니다(7일 보관). 무료 계정을 준비하기 전까지 외부 서버는 배포하지 않습니다. Android 채팅은 후속입니다.

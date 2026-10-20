@@ -64,4 +64,15 @@ class DesktopGenerationTests(unittest.TestCase):
             path.write_text(json.dumps(templates,ensure_ascii=False),encoding='utf-8')
             with self.assertRaises(ValueError): sync.sync(root)
 
+    def test_growth_bonus_change_reaches_windows_android_and_mac_constants(self):
+        with tempfile.TemporaryDirectory(prefix='myday-growth-contract-') as directory:
+            root=self.fixture(directory)
+            path=root/'shared/desktop.json'
+            contract=json.loads(path.read_text(encoding='utf-8'))
+            contract['growth']['GrowthAttendanceWeekXP']=20
+            path.write_text(json.dumps(contract,ensure_ascii=False),encoding='utf-8')
+            sync.sync(root)
+            for name in ['windows/Core/Shared/DesktopContract.g.cs','app/src/main/java/com/myday/diary/diary/SharedGrowth.g.kt','macos/Sources/MyDay/SharedDesktop.g.swift']:
+                self.assertIn('growthattendanceweekxp=20',(root/name).read_text(encoding='utf-8').lower())
+
 if __name__=='__main__': unittest.main()

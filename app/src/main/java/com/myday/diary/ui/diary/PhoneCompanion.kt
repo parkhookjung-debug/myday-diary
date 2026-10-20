@@ -49,13 +49,15 @@ import com.myday.diary.ui.components.SangmonAvatar
                         Text("Lv.$level · ${NotebookRules.chapter(level)}",style=MaterialTheme.typography.titleLarge)
                         Text("총 $xp XP · 기록 ${book.awardedDays.size}일",style=MaterialTheme.typography.bodySmall)
                         LinearProgressIndicator(progress={NotebookRules.intoLevel(book).toFloat()/NotebookRules.neededXp(level)},modifier=Modifier.fillMaxWidth().padding(vertical=8.dp))
-                        Text("다음 레벨까지 ${NotebookRules.neededXp(level)-NotebookRules.intoLevel(book)} XP · 레벨 업 클로버 +5",style=MaterialTheme.typography.labelSmall)
+                        Text(if(level>=NotebookRules.MAX_LEVEL) "만렙 달성! 이후 50 XP마다 클로버 +5" else "다음 레벨까지 ${NotebookRules.neededXp(level)-NotebookRules.intoLevel(book)} XP · 레벨 업 클로버 +5",style=MaterialTheme.typography.labelSmall)
                     }
                 }
                 Row(Modifier.fillMaxWidth(),verticalAlignment=Alignment.CenterVertically,horizontalArrangement=Arrangement.SpaceBetween) {
-                    TextButton({missions=true}) {Text("오늘 ${NotebookRules.todayXp(book,today)}/40 XP · 미션")}
+                    TextButton({missions=true}) {Text("오늘 ${NotebookRules.todayActivityXp(book,today)}/40 XP · 미션")}
                     Button({attempt(TactileEvent.CHECK) {controller.checkIn()}},enabled=!attended && controller.saved) {Text(if(attended) "출석 완료" else "출석 +5 XP")}
                 }
+                Text("만렙 Lv.100 · 3,590 XP · 매일 루틴 약 100일 / 주 5일 약 200일 / 여유롭게 약 300일",style=MaterialTheme.typography.labelSmall)
+                Text("연속 7일 출석마다 +10 XP · 오늘 보너스 ${NotebookRules.todayBonusXp(book,today)} XP",style=MaterialTheme.typography.labelSmall)
             }
         }
         Row(horizontalArrangement=Arrangement.spacedBy(8.dp)) {
@@ -114,7 +116,7 @@ import com.myday.diary.ui.components.SangmonAvatar
                 val done=if(flag==0)today.toString() in book.awardedDays else flags and flag!=0
                 Text((if(done) "✓ " else "○ ")+name+" XP")
             }
-            Text("각 항목 하루 한 번 · 최대 40 XP\n글자 수는 글·감정 블록의 공백을 제외해 합산해요. 저장에 성공한 활동만 지급해요. 새싹(1~9) 10 XP · 일상(10~29) 20 XP · 동행(30~49) 30 XP · 단짝(50~) 50 XP씩 레벨 업해요. 기존 경험치와 외형 해금 XP는 유지돼요.",style=MaterialTheme.typography.bodySmall)
+            Text("각 항목 하루 한 번 · 기본 최대 40 XP · 연속 7일 출석마다 별도 +10 XP\n글자 수는 글·감정 블록의 공백을 제외해 합산해요. 저장에 성공한 활동만 지급해요. 새싹(1~9) 10 XP · 일상(10~29) 20 XP · 동행(30~49) 30 XP · 단짝(50~99) 50 XP씩 레벨 업해요. Lv.100은 3,590 XP이며 이후에도 기록과 클로버 보상은 계속돼요. 기존 경험치와 외형 해금 XP는 유지돼요.",style=MaterialTheme.typography.bodySmall)
         }
     },confirmButton={TextButton({missions=false}) {Text("닫기")}})
 }

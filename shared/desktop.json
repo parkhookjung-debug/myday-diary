@@ -15,6 +15,12 @@
     "ChatMaxResponseBytes": 1048576, "ChatVisibleHistory": 200,
     "ChatMaxBody": 16384, "ChatHistory": 50, "ChatPollIntervalMs": 5000
   },
+  "growth": {"GrowthMaxLevel":100,"GrowthMaxXP":3590,"GrowthAttendanceWeekXP":10,"GrowthDailyActivityXP":40},
+  "growthProfiles": [
+    {"id":"active","name":"매일 루틴","expectedDays":99,"week":[59,59,59,59,59,59,59]},
+    {"id":"balanced","name":"주 5일 기록","expectedDays":200,"week":[35,35,35,35,35,0,0]},
+    {"id":"casual","name":"여유로운 기록","expectedDays":295,"week":[35,1,35,0,35,0,1]}
+  ],
   "blockKinds": ["text", "todo", "habit", "emotion", "photo", "photo-slot"],
   "pageStyles": ["plain", "paper", "dots"],
   "categories": [

@@ -11,14 +11,14 @@ namespace MyDay.Windows
         {
             int[] xp={0,9,10,89,90,109,110,489,490,1089,1090,1140},levels={1,1,2,9,10,10,11,29,30,49,50,51};
             Check(xp.Select(SangmonGrowth.LevelFromXP).SequenceEqual(levels),"Granular levels use exact 10/20/30/50-XP boundaries");
-            Check(Enumerable.Range(1,200).All(l=>SangmonGrowth.LevelFromXP(SangmonGrowth.FloorXP(l))==l && SangmonGrowth.LevelFromXP(SangmonGrowth.FloorXP(l)+SangmonGrowth.NeededXP(l)-1)==l),"Every level floor and final XP agrees with its progress meter");
+            Check(Enumerable.Range(1,SangmonGrowth.MaxLevel).All(l=>SangmonGrowth.LevelFromXP(SangmonGrowth.FloorXP(l))==l && SangmonGrowth.LevelFromXP(SangmonGrowth.FloorXP(l)+SangmonGrowth.NeededXP(l)-1)==l),"Every capped level floor and final XP agrees with its progress meter");
             var progress=new SangmonProgress();var day=new DateTime(2026,1,1);
             for(int i=0;i<20;i++)progress.AwardedDays.Add(DiaryStore.Key(day.AddDays(i)));
             var nearReward=new SangmonProgress {AwardedDays=progress.AwardedDays.Take(9).ToList()};
             Check(!SangmonGrowth.CanUse(nearReward,Character.MonsterVariant.Bookmark) && SangmonGrowth.Level(nearReward)==10,"Reaching the reward's displayed level does not unlock below its original 100-XP threshold");
             nearReward.AwardedDays.Add(DiaryStore.Key(day.AddDays(9)));Check(SangmonGrowth.CanUse(nearReward,Character.MonsterVariant.Bookmark),"Existing reward still unlocks at exactly 100 XP");
             var attended=new SangmonProgress();for(int i=0;i<14;i++)attended=SangmonGrowth.CheckIn(attended,day.AddDays(i));
-            Check(SangmonGrowth.AttendanceWeeks(attended)==2 && SangmonCollection.Earned(attended)==40+70+7*5+20,"Two consecutive attendance weeks add two clover bonuses");
+            Check(SangmonGrowth.AttendanceWeeks(attended)==2 && SangmonGrowth.XP(attended)==90 && SangmonCollection.Earned(attended)==40+90+9*5+20,"Two consecutive attendance weeks grant XP and preserve clover bonuses");
             var broken=new SangmonProgress();foreach(int i in new[]{0,1,2,3,4,5,7})broken=SangmonGrowth.CheckIn(broken,day.AddDays(i));
             Check(SangmonGrowth.AttendanceWeeks(broken)==0,"A missed attendance day breaks only the streak bonus");
             var first=SangmonCollection.Draw(null,null,n=>0);var second=SangmonCollection.Draw(first,null,n=>0);var empty=SangmonCollection.State(second,null);

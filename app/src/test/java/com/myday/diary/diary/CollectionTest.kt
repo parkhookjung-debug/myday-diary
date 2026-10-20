@@ -10,7 +10,7 @@ class CollectionTest {
     private fun rich()=DiaryBook(awardedDays=(0 until 20).map {LocalDate.of(2026,1,1).plusDays(it.toLong()).toString()}.toSet())
     @Test fun granularBoundariesAndOriginalRewardThresholds() {
         assertEquals(listOf(1,1,2,9,10,10,11,29,30,49,50,51),listOf(0,9,10,89,90,109,110,489,490,1089,1090,1140).map(NotebookRules::levelFromXp))
-        (1..200).forEach {assertEquals(it,NotebookRules.levelFromXp(NotebookRules.floorXp(it)));assertEquals(it,NotebookRules.levelFromXp(NotebookRules.floorXp(it)+NotebookRules.neededXp(it)-1))}
+        (1..NotebookRules.MAX_LEVEL).forEach {assertEquals(it,NotebookRules.levelFromXp(NotebookRules.floorXp(it)));assertEquals(it,NotebookRules.levelFromXp(NotebookRules.floorXp(it)+NotebookRules.neededXp(it)-1))}
         assertEquals(100,SangmonUnlockXP.values.getValue("growth-bookmark"))
     }
     @Test fun welcomeDrawsDuplicatesAndInsufficientFunds() {
@@ -33,7 +33,7 @@ class CollectionTest {
     @Test fun consecutiveAttendanceBonusesDoNotRewardGaps() {
         val day=LocalDate.of(2026,1,1)
         val book=DiaryBook(activities=(0 until 14).associate {day.plusDays(it.toLong()).toString() to NotebookRules.ATTENDANCE})
-        assertEquals(2,NotebookRules.attendanceWeeks(book));assertEquals(165,CollectionRules.earned(book))
+        assertEquals(2,NotebookRules.attendanceWeeks(book));assertEquals(90,NotebookRules.xp(book));assertEquals(195,CollectionRules.earned(book))
         assertEquals(0,NotebookRules.attendanceWeeks(book.copy(activities=(0..5).plus(7).associate {day.plusDays(it.toLong()).toString() to NotebookRules.ATTENDANCE})))
     }
     @Test fun failedAndQueuedDrawsNeverConsumeCommittedCurrencyTwice() {

@@ -44,7 +44,7 @@ namespace MyDay.Windows.Core
             if(!result.Actions.Any(a=>a.Kind=="closet"))result.Actions.Add(new CollectionAction {Id=ClosetId,Kind="closet",ItemId=""});return result;
         }
         public const int DrawCost=20,ExchangeCost=15,DuplicatePetals=3,MaxActions=50301;
-        public static int Earned(SangmonProgress progress) {return 40+SangmonGrowth.XP(progress)+(SangmonGrowth.Level(progress)-1)*5+SangmonGrowth.AttendanceWeeks(progress)*10;}
+        public static int Earned(SangmonProgress progress) {int xp=SangmonGrowth.XP(progress);return 40+xp+(SangmonGrowth.CurrencyLevelFromXP(xp)-1)*5+SangmonGrowth.AttendanceWeeks(progress)*10;}
         // Replay the ledger instead of trusting a mutable balance in the backup.
         public static CollectionState State(CollectionBook collection,SangmonProgress progress)
         {

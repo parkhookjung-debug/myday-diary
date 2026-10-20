@@ -12,7 +12,7 @@ namespace MyDay.Windows.UI
     {
         private void UpdateGrowth()
         {
-            growth.Text="성장 · Lv."+SangmonGrowth.Level(book.Progress)+" · "+SangmonGrowth.IntoLevel(book.Progress)+"/"+SangmonGrowth.NeededXP(SangmonGrowth.Level(book.Progress));
+            growth.Text=SangmonGrowth.Level(book.Progress)>=SangmonGrowth.MaxLevel?"Lv.100 · 만렙":"성장 · Lv."+SangmonGrowth.Level(book.Progress)+" · "+SangmonGrowth.IntoLevel(book.Progress)+"/"+SangmonGrowth.NeededXP(SangmonGrowth.Level(book.Progress));
             if(pet!=null) pet.SetAvailability(v=>SangmonGrowth.CanUse(book.Progress,v));
         }
         private void OpenGrowth()
@@ -26,7 +26,7 @@ namespace MyDay.Windows.UI
             var previous=book.Progress;int version=book.Version,level=SangmonGrowth.Level(previous);
             book.Progress=SangmonGrowth.CheckIn(previous,DateTime.Today);
             if(ReferenceEquals(previous,book.Progress))return true;
-            try {store.Save(book);UpdateGrowth();status.Text="오늘 출석 +5 XP";if(SangmonGrowth.Level(book.Progress)>level && pet!=null)pet.Celebrate();return true;}
+            try {store.Save(book);UpdateGrowth();status.Text="오늘 출석 +"+(SangmonGrowth.XP(book.Progress)-SangmonGrowth.XP(previous))+" XP";if(SangmonGrowth.Level(book.Progress)>level && pet!=null)pet.Celebrate();return true;}
             catch(Exception ex){book.Progress=previous;book.Version=version;UpdateGrowth();if(testMode)throw new IOException("Attendance save failed",ex);MessageBox.Show(this,"출석을 저장하지 못했어요. 다시 시도해 주세요.\n"+ex.Message);return false;}
         }
         private bool EquipReward(MonsterVariant variant)
@@ -82,7 +82,17 @@ namespace MyDay.Windows.UI
                 ((ToolStripMenuItem)menu.DropDownItems[(int)v]).PerformClick(); FlushSave();
                 if(pet.Variant!=v || avatar.Variant!=v || store.Load().CharacterStyle!=MonsterVariants.Id(v)) throw new Exception("Unlocked desktop reward failed: "+v);
             }
-            Console.WriteLine("Smoke: daily growth, failure rollback, locked menus, all eight reward equips and disk reload passed.");
+            var cappedBook=new DiaryBook {Progress=new SangmonProgress {AwardedDays=Enumerable.Range(0,359).Select(i=>DiaryStore.Key(new DateTime(2025,1,1).AddDays(i))).ToList()}};
+            using(var capped=new GrowthWindow(cappedBook,v=>false)) {
+                capped.StartPosition=FormStartPosition.Manual;capped.Location=new Point(-30000,-30000);capped.Show(this);Application.DoEvents();
+                var meter=capped.Controls.OfType<CardPanel>().SelectMany(h=>h.Controls.OfType<JournalProgress>()).Single();
+                if(meter.Value!=meter.Maximum || SangmonGrowth.Level(cappedBook.Progress)!=100)throw new Exception("Maximum level meter is not full");
+                using(var image=new Bitmap(capped.Width,capped.Height)) {capped.DrawToBitmap(image,new Rectangle(Point.Empty,image.Size));image.Save(Path.Combine(directory,"windows-sangmon-max.png"));}
+                capped.Size=capped.MinimumSize;capped.PerformLayout();Application.DoEvents();
+                using(var image=new Bitmap(capped.Width,capped.Height)) {capped.DrawToBitmap(image,new Rectangle(Point.Empty,image.Size));image.Save(Path.Combine(directory,"windows-sangmon-max-compact.png"));}
+                capped.Close();
+            }
+            Console.WriteLine("Smoke: daily growth, failure rollback, locked menus, all eight reward equips, max-level meter and disk reload passed.");
         }
     }
 }

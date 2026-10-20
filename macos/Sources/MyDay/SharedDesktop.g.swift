@@ -2,7 +2,7 @@
 import SwiftUI
 
 enum DesktopContract {
-    static let sourceDigest="04a4f5b142b03274cb233331985ef6c3a2a376dc053091b7bb0b028d1a25de06"
+    static let sourceDigest="7ea539542b05b71cf3cf571c4462a8d89068fa1ef934def13566a7565b4722c2"
     static let maxDays=50000
     static let maxBlocks=200
     static let maxTextUtf16=100000
@@ -30,6 +30,10 @@ enum DesktopContract {
     static let chatMaxBody=16384
     static let chatHistory=50
     static let chatPollIntervalMs=5000
+    static let growthMaxLevel=100
+    static let growthMaxXP=3590
+    static let growthAttendanceWeekXP=10
+    static let growthDailyActivityXP=40
     static let templateCount=100
     static let blockKinds=["text","todo","habit","emotion","photo","photo-slot"]
     static let pageStyles=["plain","paper","dots"]

@@ -53,6 +53,7 @@ namespace MyDay.Windows
                 RunSavedLayoutTests(directory);
                 RunGrowthTests(directory);
                 RunActivityTests(directory);
+                RunGrowthPaceTests(directory);
                 RunCollectionTests(directory);
                 RunOwnershipTests(directory);
                 RunChatAddressTests();

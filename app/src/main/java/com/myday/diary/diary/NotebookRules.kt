@@ -20,12 +20,15 @@ object NotebookRules {
     val goals=listOf(ATTENDANCE,WRITING,PHOTO,TODO,HABIT)
     fun points(flag: Int)=if(flag==WRITING) 10 else 5
     fun bonus(flags: Int)=goals.filter {flags and it!=0}.sumOf(::points)
-    fun levelFromXp(xp: Int)=when {xp<90->1+xp/10;xp<490->10+(xp-90)/20;xp<1090->30+(xp-490)/30;else->50+(xp-1090)/50}
+    const val MAX_LEVEL=SharedGrowth.GrowthMaxLevel
+    const val MAX_XP=SharedGrowth.GrowthMaxXP
+    fun currencyLevelFromXp(xp: Int)=when {xp<0->1;xp<90->1+xp/10;xp<490->10+(xp-90)/20;xp<1090->30+(xp-490)/30;else->50+(xp-1090)/50}
+    fun levelFromXp(xp: Int)=minOf(MAX_LEVEL,currencyLevelFromXp(xp))
     fun level(book: DiaryBook)=levelFromXp(xp(book))
     fun neededXp(level: Int)=when {level<10->10;level<30->20;level<50->30;else->50}
     fun floorXp(level: Int)=when {level<10->(level-1)*10;level<30->90+(level-10)*20;level<50->490+(level-30)*30;else->1090+(level-50)*50}
-    fun intoLevel(book: DiaryBook)=xp(book)-floorXp(level(book))
-    fun chapter(level: Int)=when {level<10->"새싹 친구";level<30->"일상 친구";level<50->"다정한 동행";else->"오래된 단짝"}
+    fun intoLevel(book: DiaryBook)=if(level(book)>=MAX_LEVEL) neededXp(MAX_LEVEL) else xp(book)-floorXp(level(book))
+    fun chapter(level: Int)=when {level>=MAX_LEVEL->"평생의 단짝 · 만렙";level<10->"새싹 친구";level<30->"일상 친구";level<50->"다정한 동행";else->"오래된 단짝"}
     fun attendanceWeeks(book: DiaryBook): Int {
         var previous: LocalDate?=null;var run=0;var weeks=0
         book.activities.filterValues {it and ATTENDANCE!=0}.keys.sorted().forEach {
@@ -33,8 +36,15 @@ object NotebookRules {
             if(run%7==0)weeks++;previous=day
         };return weeks
     }
-    fun xp(book: DiaryBook) = book.awardedDays.size * 10+book.activities.values.sumOf(::bonus)
-    fun todayXp(book: DiaryBook,day: LocalDate)= (if(day.toString() in book.awardedDays) 10 else 0)+bonus(book.activities[day.toString()] ?: 0)
+    fun xp(book: DiaryBook) = book.awardedDays.size * 10+book.activities.values.sumOf(::bonus)+attendanceWeeks(book)*SharedGrowth.GrowthAttendanceWeekXP
+    fun streak(book: DiaryBook,day: LocalDate): Int {
+        var current=day;var run=0
+        while((book.activities[current.toString()] ?: 0) and ATTENDANCE!=0) {run++;if(current==LocalDate.MIN)break;current=current.minusDays(1)}
+        return run
+    }
+    fun todayBonusXp(book: DiaryBook,day: LocalDate)=streak(book,day).let {if(it>0 && it%7==0) SharedGrowth.GrowthAttendanceWeekXP else 0}
+    fun todayActivityXp(book: DiaryBook,day: LocalDate)= (if(day.toString() in book.awardedDays) 10 else 0)+bonus(book.activities[day.toString()] ?: 0)
+    fun todayXp(book: DiaryBook,day: LocalDate)=todayActivityXp(book,day)+todayBonusXp(book,day)
     fun award(candidate: DiaryBook,prior: DiaryEntry,next: DiaryEntry,day: LocalDate): DiaryBook {
         if(record(prior)==record(next) || next.blocks.none(::meaningful))return candidate
         val old=prior.blocks.associateBy {it.id};var flags=0

@@ -21,7 +21,7 @@ def load_sources(root=ROOT):
     cases = json.loads((root/'shared/fixtures/layout.json').read_text(encoding='utf-8'))
     if contract.get('format') != 'myday-desktop-contract' or contract.get('version') != 1:
         raise ValueError('Unsupported shared contract')
-    for group in ['limits', 'chat']:
+    for group in ['limits', 'chat', 'growth']:
         for key, number in contract[group].items():
             if not re.fullmatch(r'[A-Z][A-Za-z0-9]*', key) or type(number) is not int or not 1 <= number <= 10_000_000:
                 raise ValueError('Invalid numeric rule: '+key)
@@ -30,6 +30,13 @@ def load_sources(root=ROOT):
         if len(ids) != len(set(ids)) or not ids:
             raise ValueError('Duplicate/empty metadata group: '+group)
     limits = contract['limits']
+    growth=contract['growth']
+    if growth['GrowthMaxLevel'] != 100 or growth['GrowthMaxXP'] != 3590:
+        raise ValueError('Growth curve and cap require coordinated native changes')
+    if len(contract['growthProfiles']) != 3: raise ValueError('Expected three growth pace profiles')
+    for profile in contract['growthProfiles']:
+        if len(profile['week']) != 7 or any(type(f) is not int or not 0 <= f <= 63 for f in profile['week']) or not 1 <= profile['expectedDays'] <= 1000:
+            raise ValueError('Invalid growth pace profile')
     for lower, upper in [('MinWidth','MaxWidth'),('MinHeight','MaxHeight')]:
         if limits[lower] > limits[upper]: raise ValueError('Inverted geometry bounds')
     for value in contract['design'].values():
@@ -62,7 +69,7 @@ def load_sources(root=ROOT):
 
 def render(root=ROOT):
     c, templates, cases, digest = load_sources(root)
-    numbers = dict(c['limits'], **c['chat'], TemplateCount=len(templates))
+    numbers = dict(c['limits'], **c['chat'], **c['growth'], TemplateCount=len(templates))
     arrays = {'BlockKinds':c['blockKinds'], 'PageStyles':c['pageStyles']}
     for prefix, group, value in [('Categories','categories','id'),('CategoryNames','categories','name'),
             ('LayoutIds','layouts','id'),('LayoutNames','layouts','name'),('ReferenceIds','references','id'),('ReferenceUrls','references','url')]:
@@ -76,6 +83,8 @@ def render(root=ROOT):
     cs += ['        public static readonly string[] '+key+'={'+','.join(map(quoted,values))+'};\n' for key,values in arrays.items()]
     cs += ['    }\n    public static class DesktopFixtures {\n        public static readonly int[][] Layouts={\n']
     cs += ['            new[]{'+','.join(map(str,[int(case['resize']),*case['original'],*case['delta'],*case['expected']]))+'},\n' for case in cases]
+    cs += ['        };\n        public static readonly int[][] GrowthProfiles={\n']
+    cs += ['            new[]{'+','.join(map(str,[p['expectedDays'],*p['week']]))+'},\n' for p in c['growthProfiles']]
     cs += ['        };\n    }\n}\n']
     native_templates = [HEADER, 'namespace MyDay.Windows.Core {\n    internal static class SharedTemplateCatalog {\n        internal static readonly JournalTemplate[] All={\n']
     for t in templates:
@@ -95,6 +104,7 @@ def render(root=ROOT):
     swift += ['        ['+','.join(map(str,[int(case['resize']),*case['original'],*case['delta'],*case['expected']]))+'],\n' for case in cases]
     swift += ['    ]\n}\n']
     return {
+        'app/src/main/java/com/myday/diary/diary/SharedGrowth.g.kt': HEADER+'package com.myday.diary.diary\n\ninternal object SharedGrowth {\n'+''.join('    const val '+k+'='+str(v)+'\n' for k,v in c['growth'].items())+'    val profiles=arrayOf(\n'+''.join('        intArrayOf('+','.join(map(str,[p['expectedDays'],*p['week']]))+'),\n' for p in c['growthProfiles'])+'    )\n}\n',
         'windows/Core/Shared/DesktopContract.g.cs': ''.join(cs),
         'windows/Core/Shared/Templates.g.cs': ''.join(native_templates),
         'macos/Sources/MyDay/SharedDesktop.g.swift': ''.join(swift),

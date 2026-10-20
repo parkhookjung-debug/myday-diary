@@ -22,6 +22,7 @@ namespace MyDay.Windows.Core
     public static class SangmonGrowth
     {
         public const int DailyXP=10;
+        public const int MaxLevel=DesktopContract.GrowthMaxLevel,MaxXP=DesktopContract.GrowthMaxXP;
         public const int Attendance=1, Writing=2, Photo=4, Todo=8, Habit=16;
         public static readonly int[] Goals={Attendance,Writing,Photo,Todo,Habit};
         public static readonly string[] GoalNames={"출석","글 20자 이상","사진 첨부","할 일 완료","습관 완료"};
@@ -29,20 +30,29 @@ namespace MyDay.Windows.Core
         public static readonly MonsterVariant[] Rewards={MonsterVariant.Apprentice,MonsterVariant.Bookmark,MonsterVariant.JournalKnight,
             MonsterVariant.MemoryMage,MonsterVariant.StarExplorer,MonsterVariant.JournalAlchemist,MonsterVariant.PageSovereign,MonsterVariant.MemoryHero};
         private static readonly int[] Levels={2,3,4,5,6,7,8,10};
-        public static int XP(SangmonProgress progress) { return progress==null?0:progress.AwardedDays.Count*DailyXP+(progress.Activities==null?0:progress.Activities.Sum(d=>Goals.Where(f=>(d.Flags&f)!=0).Sum(f=>Points(f)))); }
+        public static int XP(SangmonProgress progress) { return progress==null?0:progress.AwardedDays.Count*DailyXP+(progress.Activities==null?0:progress.Activities.Sum(d=>Goals.Where(f=>(d.Flags&f)!=0).Sum(f=>Points(f))))+AttendanceWeeks(progress)*DesktopContract.GrowthAttendanceWeekXP; }
         public static int Flags(SangmonProgress progress,DateTime date) {var day=progress==null || progress.Activities==null?null:progress.Activities.FirstOrDefault(d=>d.Date==DiaryStore.Key(date));return day==null?0:day.Flags;}
-        public static int TodayXP(SangmonProgress p,DateTime date) {return (p!=null && p.AwardedDays.Contains(DiaryStore.Key(date))?DailyXP:0)+Goals.Where(f=>(Flags(p,date)&f)!=0).Sum(f=>Points(f));}
-        public static int LevelFromXP(int xp) {
+        public static int TodayActivityXP(SangmonProgress p,DateTime date) {return (p!=null && p.AwardedDays.Contains(DiaryStore.Key(date))?DailyXP:0)+Goals.Where(f=>(Flags(p,date)&f)!=0).Sum(f=>Points(f));}
+        public static int Streak(SangmonProgress p,DateTime day) {
+            var dates=new HashSet<string>(p==null || p.Activities==null?Enumerable.Empty<string>():p.Activities.Where(d=>(d.Flags&Attendance)!=0).Select(d=>d.Date));
+            int run=0;while(dates.Contains(DiaryStore.Key(day))) {run++;if(day==DateTime.MinValue.Date)break;day=day.AddDays(-1);}return run;
+        }
+        public static int TodayBonusXP(SangmonProgress p,DateTime day) {int run=Streak(p,day);return run>0 && run%7==0?DesktopContract.GrowthAttendanceWeekXP:0;}
+        public static int TodayXP(SangmonProgress p,DateTime date) {return TodayActivityXP(p,date)+TodayBonusXP(p,date);}
+        // Currency keeps the uncapped historical steps, preserving spent/earned clovers after Lv.100.
+        public static int CurrencyLevelFromXP(int xp) {
+            xp=Math.Max(0,xp);
             if(xp<90)return 1+xp/10;
             if(xp<490)return 10+(xp-90)/20;
             if(xp<1090)return 30+(xp-490)/30;
             return 50+(xp-1090)/50;
         }
+        public static int LevelFromXP(int xp) {return Math.Min(MaxLevel,CurrencyLevelFromXP(xp));}
         public static int Level(SangmonProgress progress) {return LevelFromXP(XP(progress));}
         public static int NeededXP(int level) {return level<10?10:level<30?20:level<50?30:50;}
         public static int FloorXP(int level) {return level<10?(level-1)*10:level<30?90+(level-10)*20:level<50?490+(level-30)*30:1090+(level-50)*50;}
-        public static int IntoLevel(SangmonProgress p) {return XP(p)-FloorXP(Level(p));}
-        public static string Chapter(int level) {return level<10?"새싹 친구":level<30?"일상 친구":level<50?"다정한 동행":"오래된 단짝";}
+        public static int IntoLevel(SangmonProgress p) {return Level(p)>=MaxLevel?NeededXP(MaxLevel):XP(p)-FloorXP(Level(p));}
+        public static string Chapter(int level) {return level>=MaxLevel?"평생의 단짝 · 만렙":level<10?"새싹 친구":level<30?"일상 친구":level<50?"다정한 동행":"오래된 단짝";}
         public static int AttendanceWeeks(SangmonProgress p) {
             int weeks=0,run=0;DateTime previous=DateTime.MinValue;
             foreach(var day in (p==null || p.Activities==null?new List<GrowthDay>():p.Activities).Where(d=>(d.Flags&Attendance)!=0).OrderBy(d=>d.Date,StringComparer.Ordinal)) {

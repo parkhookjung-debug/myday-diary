@@ -24,7 +24,7 @@ object CollectionRules {
         state(book.copy(collection=result));return result
     }
     private val random=SecureRandom()
-    fun earned(book: DiaryBook)=40+NotebookRules.xp(book)+(NotebookRules.level(book)-1)*5+NotebookRules.attendanceWeeks(book)*10
+    fun earned(book: DiaryBook): Int {val xp=NotebookRules.xp(book);return 40+xp+(NotebookRules.currencyLevelFromXp(xp)-1)*5+NotebookRules.attendanceWeeks(book)*10}
     fun state(book: DiaryBook): CollectionState {
         var coins=earned(book);var petals=0;var draws=0;var closet=false;val owned=mutableSetOf<String>();val ids=mutableSetOf<String>()
         val actions=book.collection?.actions ?: emptyList();require(actions.size<=MAX_ACTIONS)
