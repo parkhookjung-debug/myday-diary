@@ -21,6 +21,7 @@ enum MacVerification {
         try render(DiaryView(store: store), name: "preview-wide", width: 1320, height: 860)
         try render(CompanionContent(store: store), name: "preview-companion", width: 820, height: 700)
         try render(JournalToolsView(store: store), name: "preview-journal-tools", width: 820, height: 700)
+        try render(JournalToolsView(store: store,startingSection: 1), name: "preview-monthly-report", width: 820, height: 700)
         let templates = try TemplateCatalog.load()
         store.entry = DiaryEntry()
         store.applyTemplate(templates.first { $0.id == "cornell-notes" }!)

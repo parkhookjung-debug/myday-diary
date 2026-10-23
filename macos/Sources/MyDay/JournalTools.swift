@@ -111,37 +111,48 @@ struct JournalToolsView: View {
     @State private var pendingDelete: JournalRevision?
     @State private var deletingDay=false
     @State private var restoring=false
+    @State private var section=0
+    init(store: DiaryStore,startingSection: Int=0) { self.store=store;_section=State(initialValue:startingSection) }
     var body: some View {
         VStack {
             HStack { Text("나의 기록 도구 · \(JournalPolicy.appVersion)").font(.title2); Spacer(); Button("닫기") { dismiss() } }.padding()
             if !message.isEmpty { Text(message).foregroundStyle(DesktopPalette.olive).textSelection(.enabled).padding(.horizontal) }
-            TabView {
+            Picker("기록 도구",selection: $section) {
+                Text("1. 복구").tag(0);Text("2. 리포트").tag(1);Text("3. 알림").tag(2);Text("4. Wi-Fi·QR").tag(3);Text("6. 업데이트").tag(4)
+            }.pickerStyle(.segmented).padding(.horizontal)
+            Group { switch section {
+                case 0:
                 VStack(alignment: .leading) {
                     Text("수정 전 기록을 5분 간격으로 보관해요. 블록·사진 삭제 전에는 바로 보관해요.").font(.caption)
-                    List(items) { item in Button { selected=item } label: { Text("\(item.date) · \(item.reason) · \(item.captured.formatted())") } }
+                    if items.isEmpty { Text("아직 보관된 이전 버전이 없어요.").foregroundStyle(.secondary).frame(maxWidth: .infinity,maxHeight: .infinity) }
+                    else {List(items) { item in Button { selected=item } label: { Text("\(item.date) · \(item.reason) · \(item.captured.formatted())") } }}
                     if let item=selected {
                         ScrollView { Text(item.entry.blocks.map {$0.text+($0.photo == nil ? "" : " [사진 보관됨]")}.joined(separator: "\n")).textSelection(.enabled).frame(maxWidth: .infinity,alignment: .leading) }.frame(height: 100)
                         HStack { Button("이 버전 복원") { restoring=true }; Button("이력 영구 삭제") { pendingDelete=item } }
                     }
                     Button("현재 날짜의 일기를 휴지통으로") { deletingDay=true }
-                }.padding().tabItem { Text("1. 휴지통·이력") }
+                }.padding()
+                case 1:
                 VStack(alignment: .leading,spacing: 20) {
                     DatePicker("집계할 달",selection: $month,displayedComponents: .date).onChange(of: month) { _ in refreshReport() }
                     Text(report).font(.title3).textSelection(.enabled); Spacer()
-                }.padding(24).tabItem { Text("2. 월간 리포트") }
+                }.padding(24)
+                case 2:
                 VStack(alignment: .leading,spacing: 20) {
                     Toggle("매일 일기 알림",isOn: $enabled)
                     HStack { Stepper("\(hour)시",value: $hour,in: 0...23); Stepper("\(minute)분",value: $minute,in: 0...59) }
                     Button("알림 설정 적용") { applyReminder() }
                     Text("사용자가 켠 시간에 하루 한 번 알려줘요. macOS 알림 허용이 필요해요. 앱이 종료돼도 OS가 예약한 알림을 표시해요.")
                     Spacer()
-                }.padding(24).tabItem { Text("3. 알림") }
+                }.padding(24)
+                case 3:
                 VStack(alignment: .leading,spacing: 20) {
                     Text("같은 Wi-Fi에서 기록 이동").font(.title2)
                     Text("공통 백업을 저장한 뒤 tools/lan-transfer.py를 실행하세요. QR 또는 임시 주소로 다른 기기에서 백업을 받고, 설정·백업에서 가져오세요. 10분 후 전송이 닫혀요.")
                     Button("전송할 공통 백업 저장") { store.exportWindowsBackup() }
                     Button("Wi-Fi 전송 도구 안내") { openGuide() }; Spacer()
-                }.padding(24).tabItem { Text("4. Wi-Fi · QR") }
+                }.padding(24)
+                default:
                 VStack(alignment: .leading,spacing: 20) {
                     Text("현재 버전 \(JournalPolicy.appVersion)").font(.title2)
                     Text("휴지통·변경 이력, 월간 리포트, 알림, Wi-Fi 전송 도구, 상몬 반응을 추가했어요.")
@@ -149,8 +160,8 @@ struct JournalToolsView: View {
                     Button("1. 업데이트 전 백업 저장") { store.exportWindowsBackup() }
                     Button("2. 다운로드·설치 페이지 열기") { NSWorkspace.shared.open(URL(string:"https://github.com/parkhookjung-debug/myday-diary/releases")!) }
                     Text("새 앱을 Applications에 교체해도 Application Support의 개인 기록은 유지해요. 개발 빌드는 Actions에서 받아요."); Spacer()
-                }.padding(24).tabItem { Text("6. 업데이트") }
-            }
+                }.padding(24)
+            }}.frame(maxWidth: .infinity,maxHeight: .infinity)
         }.frame(minWidth: 760,minHeight: 600).background(DesktopPalette.sidebar).onAppear { refresh(); refreshReport() }
         .alert("선택한 복구 사본을 영구 삭제할까요?",isPresented: Binding(get: {pendingDelete != nil},set: {if !$0 {pendingDelete=nil}})) {
             Button("삭제",role: .destructive) { if let item=pendingDelete { do { try JournalHistory.remove(store.directory,item: item); selected=nil; refresh() } catch {message=error.localizedDescription} } }; Button("취소",role: .cancel) {}
