@@ -2,7 +2,8 @@
 
 | 할 일 | 실행/수정 파일 | 용도 |
 | --- | --- | --- |
-| Mac·Windows 공통 형식·색상·제한 수정 | [sync-desktop.py](sync-desktop.py) | shared/에서 두 앱과 서버용 파일 생성, --check로 생성 누락 확인 |
+| 세 앱의 공통 메뉴·성장·공방과 PC 형식·색상·제한 수정 | [sync-desktop.py](sync-desktop.py) | shared/에서 네이티브 앱과 서버용 파일 생성, --check로 생성 누락 확인 |
+| Mac 앱에 같은 캐릭터 그림 묶기 | [prepare-mac-assets.py](prepare-mac-assets.py) | Windows 원본에서 만든 Android 그림을 Mac 리소스로 staging, Mac 빌드에서 자동 실행 |
 | 두 앱의 실제 공통 동작 비교 | [compare-desktop.py](compare-desktop.py) | 네이티브 앱 보고서를 공통 원본·좌표 사례와 비교 |
 | 공통 상몬·장비·일기 형식을 Android에 반영 | [export-android-assets.ps1](export-android-assets.ps1) · [ExportAndroidAssets.cs](ExportAndroidAssets.cs) | Windows 원본에서 PNG·썸네일·catalog·해금 목록·검사 자료 생성 |
 | 이전 Android debug 앱의 개인 기록 백업 | [backup-android.ps1](backup-android.ps1) | USB/ADB로 읽기 전용 백업, 설치·삭제는 하지 않음 |

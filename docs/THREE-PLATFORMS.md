@@ -19,7 +19,7 @@
 
 | 원하는 변경 | 수정할 원본 |
 |---|---|
-| 메뉴 이름·순서·인사말 | `shared/app-shell.json` |
+| 메뉴 이름·인사말 | `shared/app-shell.json` (메뉴 추가·재배치는 OS별 화면 연결도 함께 수정) |
 | 배경·카드·채팅·강조 색 | `shared/desktop.json`의 `design` |
 | 성장 점수·기간·검증 패턴 | `shared/desktop.json`, Windows `SangmonGrowth.cs`, Android `NotebookRules.kt`, Mac `SharedCompanion.swift` |
 | 뽑기 등급·확률·합성·성취 | `shared/collection.json` |
@@ -51,3 +51,16 @@
 - 공통: `python -m unittest discover -s tools -p test_sync_desktop.py -v`.
 
 GitHub **Actions → 해당 커밋의 완료된 실행 → Artifacts**에서 Windows EXE, Mac 앱 ZIP, Android APK를 받습니다. Mac ZIP은 CPU 종류(arm64/x86_64)를 확인하세요. CI에서 제공하는 Mac은 Apple Silicon이며 Intel용은 Intel Mac에서 소스로 빌드해야 합니다. 별도 서명 키·Apple 공증·스토어 출시는 이번 변경에 포함하지 않습니다.
+
+
+## 2026-10-23 검증 기록
+
+| 플랫폼 | 검증한 소스 | 확인한 내용 |
+|---|---|---|
+| Windows | `d1e8e42` · [Windows CI](https://github.com/parkhookjung-debug/myday-diary/actions/runs/39930302745) | 241개 검사·네이티브 일기·64종 갤러리·설정·기존 기능·저장 실패·서버 통신 |
+| Mac | `31b9ff4` · [공통 개발 CI](https://github.com/parkhookjung-debug/myday-diary/actions/runs/39930827996) | Mac 빌드·기존 기록·64종/300소품·성장 3패턴·공방·빈 배치/크기 보존·장비 없는 백업 가져오기·실제 Windows 직렬화 검사·화면 렌더링. 5개 작업 모두 성공 |
+| Android | `2a576d2` · [Android CI](https://github.com/parkhookjung-debug/myday-diary/actions/runs/39931391809) | APK·lint·JVM(채팅 주소/세션/전송/수신/나가기/응답 제한 포함)·Android 35 기기 검사 14개·Windows 백업 호환 검사 모두 성공 |
+
+빌드별 마지막 플랫폼 소스 커밋이 다르며 해당 플랫폼의 디렉터리는 이후 변경하지 않았습니다. [파일별 SHA-256·실제 빌드 출처](builds/myday-0.8.0.json) · [세 앱의 실제 화면](../previews/three-platforms/README.md).
+
+Windows 산출물은 `myday-windows-52`, Mac은 `myday-chat-macOS-ARM64`, Android는 `myday-debug-55`입니다. 각 실행 링크에서 Artifacts를 펼쳐 받습니다. GitHub 자동 보관 기간이 지나면 소스에서 다시 빌드하세요. 이번 변경은 작업 브랜치와 PR에 올렸으며 main 병합·새 Releases 배포는 하지 않았습니다.
