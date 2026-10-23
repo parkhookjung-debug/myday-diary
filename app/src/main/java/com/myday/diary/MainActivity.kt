@@ -8,6 +8,7 @@ import com.myday.diary.ui.diary.PhoneNotebookRoute
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        com.myday.diary.platform.JournalReminder.schedule(this)
         setContent { PhoneNotebookRoute() }
     }
 }

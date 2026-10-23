@@ -28,6 +28,13 @@ jobs:
       - name: Build native Windows app
         shell: pwsh
         run: ./windows/build.ps1
+      - name: Verify journal policy and temporary LAN transfer
+        shell: pwsh
+        run: |
+          python tools/sync-journal.py --check
+          if ($LASTEXITCODE -ne 0) { throw 'Journal policy out of date' }
+          python -m unittest discover -s tools -p test_lan_transfer.py -v
+          if ($LASTEXITCODE -ne 0) { throw 'Local transfer tests failed' }
       - name: Validate storage and character animation
         shell: pwsh
         run: |

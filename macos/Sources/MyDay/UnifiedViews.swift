@@ -22,7 +22,9 @@ enum SangmonImages {
 
 struct SharedSangmonView: View {
     var companion: SharedCompanion
+    var reactionTick=0
     @State private var fireAt = Date.distantPast
+    @State private var hopAt=Date.distantPast
     var body: some View {
         TimelineView(.animation(minimumInterval: 1.0 / 24)) { timeline in
             Canvas { context, size in
@@ -31,7 +33,9 @@ struct SharedSangmonView: View {
                 let phase = time.truncatingRemainder(dividingBy: 42)
                 let row = age < 0.7 ? 2 : (30..<31.6).contains(phase) ? 3 : (34..<36.4).contains(phase) ? 6 : 0
                 let frame = row == 2 ? min(6, Int(age * 10)) : row == 3 ? Int((phase - 30) * 5) : Int(time * (row == 6 ? 3.33 : 1.9)) % 8
-                let side = min(size.width, size.height), bounds = CGRect(x: (size.width - side) / 2, y: (size.height - side) / 2, width: side, height: side)
+                let hopAge=timeline.date.timeIntervalSince(hopAt)
+                let offset=hopAge<0.9 ? -abs(sin(hopAge*Double.pi*2/0.9))*9 : 0
+                let side = min(size.width, size.height), bounds = CGRect(x: (size.width - side) / 2, y: (size.height - side) / 2+offset, width: side, height: side)
                 func overlay(_ slot: String) {
                     let id = companion.item(slot)
                     if id != "none", let image = SangmonImages.image("equipment/\(id).png") { context.draw(Image(nsImage: image), in: bounds) }
@@ -43,6 +47,7 @@ struct SharedSangmonView: View {
                 for slot in ["neck", "head", "face", "weapon", "charm"] { overlay(slot) }
             }
         }.contentShape(Rectangle()).onTapGesture { fireAt = Date() }
+            .onChange(of: reactionTick) { _ in hopAt=Date() }
             .accessibilityLabel("상몬 \(companion.style), 레벨 \(companion.level). 누르면 불꽃 반응")
     }
 }
@@ -50,6 +55,7 @@ struct SharedSangmonView: View {
 struct DiaryView: View {
     @ObservedObject var store: DiaryStore
     @State private var tab = 0
+    @State private var tools=false
     @StateObject private var lounge = LoungeModel()
     var body: some View {
         GeometryReader { geometry in
@@ -70,6 +76,7 @@ struct DiaryView: View {
             .sheet(isPresented: $store.showingCompanion) { CompanionWardrobe(store: store) }
             .sheet(isPresented: $store.showingTemplates) { TemplateGallery(store: store) }
             .sheet(isPresented: $store.showingLayouts) { SavedLayoutsView(store: store) }
+            .sheet(isPresented: $tools) { JournalToolsView(store: store) }
             .onDisappear { Task { await lounge.disconnect() } }
     }
     private var sidebar: some View {
@@ -93,6 +100,7 @@ struct DiaryView: View {
                 Button("↓ 백업 다운로드") { store.exportWindowsBackup() }
                 Button("↥ 백업 복원") { store.importBackup() }
                 Button("바탕화면 친구") { DesktopCompanion.shared.show(store: store) }
+                Button("기록 도구 · 복구 / 리포트") { store.save();if store.error==nil {tools=true} }
             }.padding(16)
         }.background(DesktopPalette.sidebar)
     }
@@ -125,13 +133,14 @@ struct DiaryView: View {
             Text("YOUR LITTLE FRIEND").font(.caption2).foregroundStyle(.secondary)
             let layout = vertical ? AnyLayout(VStackLayout(alignment: .leading)) : AnyLayout(HStackLayout())
             layout {
-                SharedSangmonView(companion: store.sharedCompanion).frame(width: 116, height: 120)
+                SharedSangmonView(companion: store.sharedCompanion,reactionTick: store.reactionTick).frame(width: 116, height: 120)
                 VStack(alignment: .leading, spacing: 6) {
                     Text(AppShell.friendTitle).font(.system(size: 19, design: .serif))
                     Text("Lv.\(store.sharedCompanion.level) · \(store.sharedCompanion.xp) XP").font(.caption)
                 }
             }
             Button("상몬·공방 열기") { tab = 2 }
+            if !store.reaction.isEmpty {Text(store.reaction).font(.caption).foregroundStyle(DesktopPalette.olive)}
             ForEach([BlockKind.todo, .habit], id: \.rawValue) { kind in
                 let tasks = store.entry.blocks.filter { $0.kind == kind }
                 Text("\(kind == .todo ? "할 일" : "습관")   \(tasks.filter(\.checked).count) / \(tasks.count)").font(.caption)
@@ -145,6 +154,7 @@ struct DiaryView: View {
     private var settings: some View {
         ScrollView { VStack(alignment: .leading, spacing: 20) {
             Text(AppShell.titles[4]).font(.largeTitle)
+            Button("기록 도구 · 복구 / 리포트 / 알림 / 기기 이동 / 업데이트") { store.save();if store.error==nil {tools=true} }
             errorBanner
             Text("오늘의 분위기").font(.headline)
             Picker("배경", selection: Binding(get: { store.entry.theme }, set: { v in store.update { $0.theme = v } })) { Text("크림").tag(0); Text("숲").tag(1); Text("라벤더").tag(2) }.pickerStyle(.segmented)

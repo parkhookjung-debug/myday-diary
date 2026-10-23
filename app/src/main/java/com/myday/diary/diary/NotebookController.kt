@@ -12,6 +12,9 @@ class NotebookController(private val repository: NotebookRepository,private val 
     var entry by mutableStateOf(book.days[date.toString()] ?: DiaryEntry());private set
     var error by mutableStateOf<String?>(null);private set
     var saving by mutableStateOf(false);private set
+    var reaction by mutableStateOf("");private set
+    var reactionTick by mutableLongStateOf(0L);private set
+    private var reactionAt=0L
     private var pending: DiaryBook?=null
     private var revision=0L
     val saved get()=pending==null && !saving
@@ -30,6 +33,12 @@ class NotebookController(private val repository: NotebookRepository,private val 
         try {
             NotebookRules.validate(candidate);saving=true;pending=candidate;error=null
             val done: (Result<DiaryBook>)->Unit = {result->result.onSuccess {savedBook->
+                val old=book.days[date.toString()];val next=savedBook.days[date.toString()]
+                if(draft && next!=null && System.currentTimeMillis()-reactionAt>4000) {
+                    val habit=next.blocks.any {b->b.type=="habit" && b.checked && old?.blocks?.any {it.id==b.id && it.checked}!=true}
+                    val text=next.blocks.any {b->(b.text.isNotBlank() || b.photo!=null) && old?.blocks?.any {it.id==b.id && it.text==b.text && it.photo==b.photo}!=true}
+                    if(habit || text) {reaction=if(habit) JournalPolicy.habitReaction else JournalPolicy.recordReaction;reactionTick++;reactionAt=System.currentTimeMillis()}
+                }
                 book=savedBook
                 if(generation==revision) {pending=null;saving=false;error=null;onSuccess()}
             }.onFailure {e->if(generation==revision) {saving=false;pending=if(draft) candidate else null;error=e.message ?: "저장하지 못했어요."}}}
@@ -62,6 +71,8 @@ class NotebookController(private val repository: NotebookRepository,private val 
     fun applyLayout(layout: SavedLayout)=edit(NotebookRules.apply(entry,layout))
     fun applyTemplate(template: DiaryTemplate) {val base=if(entry.blocks.isEmpty()) entry.copy(layoutMode="free",pageStyle=template.style) else entry
         edit(NotebookRules.append(base,template.blocks.map {it.copy(id=java.util.UUID.randomUUID().toString())}))}
+    fun restoreRevision(date: String,old: DiaryEntry): Boolean {if(!saved){error="먼저 저장을 완료해 주세요.";return false};return commit(book.copy(days=book.days+(date to old)),onSuccess={entry=book.days[this.date.toString()] ?: DiaryEntry()})}
+    fun deleteDay(): Boolean {if(!saved){error="먼저 저장을 완료해 주세요.";return false};return commit(book.copy(days=book.days-date.toString()),onSuccess={entry=DiaryEntry()})}
     fun importBook(incoming: DiaryBook): Boolean {if(!saved) {error="먼저 일기를 다시 저장해 주세요.";return false}
         return commit(NotebookRules.merge(book,incoming),onSuccess={entry=book.days[date.toString()] ?: DiaryEntry()})}
 }

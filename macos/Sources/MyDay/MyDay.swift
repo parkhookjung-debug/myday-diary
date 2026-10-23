@@ -27,6 +27,9 @@ final class DiaryStore: ObservableObject {
     @Published var showingCompanion = false
     @Published var showingTemplates = false
     @Published var showingLayouts = false
+    @Published var reaction=""
+    @Published var reactionTick=0
+    var lastReaction=Date.distantPast
     @Published var windowsMetadata: WindowsMetadata?
     var metadataLoaded = false
     var pendingActivity = false
@@ -71,8 +74,15 @@ final class DiaryStore: ObservableObject {
             let encoder = JSONEncoder()
             encoder.outputFormatting = [.prettyPrinted, .sortedKeys]
             try MacBackup(days: ["2000-01-01": entry], companion: companion, windowsMetadata: windowsMetadata).validate()
-            try encoder.encode(entry).write(to: file(for: date), options: .atomic)
+            let url=file(for: date)
+            let previous=FileManager.default.fileExists(atPath: url.path) ? try JSONDecoder().decode(DiaryEntry.self,from: Data(contentsOf: url)) : DiaryEntry()
+            try JournalHistory.beforeSave(directory,date: url.deletingPathExtension().lastPathComponent,previous: previous,next: entry)
+            try encoder.encode(entry).write(to: url, options: .atomic)
             error = nil
+            if pendingActivity && Date().timeIntervalSince(lastReaction)>4 {
+                let habit=entry.blocks.contains { b in b.kind == .habit && b.checked && !previous.blocks.contains {$0.id==b.id && $0.checked} }
+                reaction=habit ? JournalPolicy.habitReaction : JournalPolicy.recordReaction; reactionTick+=1; lastReaction=Date()
+            }
             rewardActivity()
         } catch {
             self.error = "저장하지 못했습니다. 다시 저장해 주세요. \(error.localizedDescription)"

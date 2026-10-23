@@ -1,0 +1,13 @@
+{
+  "version": 1,
+  "appVersion": "0.9.0",
+  "historyLimitBytes": 268435456,
+  "historyLimitFiles": 2000,
+  "historyIntervalSeconds": 300,
+  "transferLifetimeSeconds": 600,
+  "reactions": {
+    "record": "오늘의 한 조각을 남겼네. 잘 보관해 둘게!",
+    "habit": "작은 실천 하나, 같이 기뻐할게!",
+    "welcome": "다시 만나서 반가워. 한 줄부터 시작해 볼까?"
+  }
+}

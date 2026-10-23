@@ -31,6 +31,8 @@ namespace MyDay.Windows.UI
             var chat=Design.Button(AppShell.Symbols[3]+"  "+AppShell.Titles[3]);chat.Size=Design.Size(216,32);chat.AccessibleName="서버 채팅 열기";chat.Click+=delegate {OpenChat();};sidebarFlow.Controls.Add(chat);
             var preferences=Design.Button(AppShell.Symbols[4]+"  "+AppShell.Titles[4]);preferences.Size=Design.Size(216,32);preferences.Click+=delegate {using(var settings=new PreferencesWindow(entry.Theme,SetThemeFromSettings,ExportBook,ImportBook,TogglePet)) settings.ShowDialog(this);};sidebarFlow.Controls.Add(preferences);
             var today=Design.Button("오늘로 돌아가기 ↗"); today.Size=Design.Size(216,32); today.Margin=Design.Pad(0,12,0,0); today.Click+=delegate { ChangeDate(DateTime.Today); }; sidebarFlow.Controls.Add(today);
+            var tools=Design.Button("기록 도구 · 복구 / 리포트");tools.Size=Design.Size(216,34);tools.Click+=delegate {OpenJournalTools();};sidebarFlow.Controls.Add(tools);
+            var delete=Design.Button("이 날짜 일기 휴지통으로");delete.Size=Design.Size(216,30);delete.Click+=delegate {DeleteCurrentDay();};sidebarFlow.Controls.Add(delete);
             sidebarCalendar=new MonthCalendar(book,date,picker.MinDate,picker.MaxDate,ChangeDate) {Size=Design.Size(216,262),Margin=Design.Pad(0,14,0,10)};
             sidebarFlow.Controls.Add(sidebarCalendar);
             var title=Design.Label("차곡차곡 쌓인 기록",10,true); title.Margin=Design.Pad(6,20,0,8); sidebarFlow.Controls.Add(title);

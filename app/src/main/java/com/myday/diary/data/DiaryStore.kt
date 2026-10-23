@@ -27,6 +27,7 @@ class DiaryStore(context: Context) : DiaryRepository, NotebookRepository {
     override fun saveBook(book: DiaryBook): Unit = synchronized(lock) {
         NotebookPhoto.validate(book)
         val encoded=NotebookJson.encode(book).toByteArray(Charsets.UTF_8)
+        if(file.baseFile.exists() || File(file.baseFile.path+".bak").exists()) JournalHistory(appContext.filesDir).beforeSave(loadBook(),book)
         val output=file.startWrite()
         try {output.write(encoded);file.finishWrite(output)} catch(e: Exception) {file.failWrite(output);throw e}
         runCatching {DiaryHomeCache(appContext).update(book);DiaryWidgetProvider.refreshAll(appContext)}

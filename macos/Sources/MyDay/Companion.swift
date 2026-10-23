@@ -194,6 +194,7 @@ extension DiaryStore {
 
     func restore(_ backup: MacBackup) throws {
         try backup.validate()
+        for (key,previous) in try allDays() { try JournalHistory.beforeSave(directory,date: key,previous: previous,next: backup.days[key]) }
         let manager = FileManager.default
         let parent = directory.deletingLastPathComponent()
         let staged = parent.appendingPathComponent("MyDay-restore-\(UUID().uuidString)")
@@ -250,7 +251,7 @@ struct DesktopPetView: View {
     @Environment(\.openWindow) private var openWindow
     var body: some View {
         VStack(spacing: 0) {
-            SharedSangmonView(companion: store.sharedCompanion).frame(width: 126, height: 126)
+            SharedSangmonView(companion: store.sharedCompanion,reactionTick: store.reactionTick).frame(width: 126, height: 126)
             Button("일기 열기") {
                 NSApp.activate(ignoringOtherApps: true)
                 openWindow(id: "diary")

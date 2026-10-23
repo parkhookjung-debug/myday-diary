@@ -122,6 +122,8 @@ namespace MyDay.Windows.UI
                 if(!exitRequested && e.CloseReason==CloseReason.UserClosing) { e.Cancel=true; Hide(); }
             };
             LoadDate(); UpdateGrowth();
+            StartReminder();
+            Disposed+=delegate {reminderTimer.Dispose();};
         }
         public void StartOnDesktop()
         {
@@ -347,10 +349,10 @@ namespace MyDay.Windows.UI
             if(entryDirty) book.Progress=SangmonGrowth.Award(previous,entry,actualDay,savedRecord);
             bool awarded=!ReferenceEquals(previous,book.Progress);
             try {
-                store.Save(book); dirty=false; entryDirty=false; savedRecord=SangmonGrowth.CaptureRecord(entry); UpdateGrowth();
+                store.Save(book); var before=savedRecord;dirty=false; entryDirty=false; savedRecord=SangmonGrowth.CaptureRecord(entry); UpdateGrowth();
                 status.Text=awarded?"저장됨 · 상몬 +"+(SangmonGrowth.XP(book.Progress)-SangmonGrowth.XP(previous))+" XP":"저장됨 · "+DateTime.Now.ToString("HH:mm");
                 if(SangmonGrowth.Level(book.Progress)>previousLevel) { status.Text="저장됨 · Lv."+SangmonGrowth.Level(book.Progress)+" 달성!"; if(pet!=null) pet.Celebrate(); }
-                status.ForeColor=Design.Accent; RefreshHistory(); return true;
+                ReactToSavedRecord(before);status.ForeColor=Design.Accent; RefreshHistory(); return true;
             }
             catch(Exception ex)
             {

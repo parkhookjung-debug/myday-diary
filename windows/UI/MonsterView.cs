@@ -12,6 +12,7 @@ namespace MyDay.Windows.UI
         private readonly Timer timer = new Timer { Interval = 50 };
         private readonly Stopwatch clock = Stopwatch.StartNew();
         private double happyUntil, happyStarted;
+        private double celebrateUntil,celebrateStarted;
         public event EventHandler Fired;
         public bool ShowScene;
         private MonsterVariant variant;
@@ -28,6 +29,7 @@ namespace MyDay.Windows.UI
             Click += delegate { Fire(); if (Fired != null) Fired(this, EventArgs.Empty); };
         }
         public void Fire() { happyStarted=clock.Elapsed.TotalSeconds; happyUntil=happyStarted + PetBehavior.TouchFireSeconds; Invalidate(); }
+        public void Celebrate() {celebrateStarted=clock.Elapsed.TotalSeconds;celebrateUntil=celebrateStarted+1.6;Invalidate();}
         protected override void OnPaint(PaintEventArgs e)
         {
             base.OnPaint(e);
@@ -40,8 +42,8 @@ namespace MyDay.Windows.UI
                 TextRenderer.DrawText(e.Graphics,"✧",Design.Font(15),new Point(Width-Design.P(22),Height-Design.P(38)),Design.Progress);
             }
             double now=clock.Elapsed.TotalSeconds;
-            var activity=now<happyUntil?PetActivity.Fire:PetActivity.Rest;
-            MonsterPainter.Draw(e.Graphics, ClientRectangle, MonsterPose.ForActivity(now,activity,now<happyUntil?now-happyStarted:now,0,0), true,variant,equipment);
+            var activity=now<happyUntil?PetActivity.Fire:now<celebrateUntil?PetActivity.Hop:PetActivity.Rest;
+            MonsterPainter.Draw(e.Graphics, ClientRectangle, MonsterPose.ForActivity(now,activity,now<happyUntil?now-happyStarted:now<celebrateUntil?now-celebrateStarted:now,0,0), true,variant,equipment);
         }
         protected override void Dispose(bool disposing) { if (disposing) timer.Dispose(); base.Dispose(disposing); }
     }

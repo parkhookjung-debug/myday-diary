@@ -133,6 +133,7 @@ namespace MyDay.Windows.Core
             Validate(book);
             UpgradeVersion(book);
             var directory = Path.GetDirectoryName(FilePath);
+            if(File.Exists(FilePath)) new JournalHistory(directory).BeforeSave(Load(),book);
             Directory.CreateDirectory(directory);
             var pending = FilePath + "." + Guid.NewGuid().ToString("N") + ".tmp";
             try

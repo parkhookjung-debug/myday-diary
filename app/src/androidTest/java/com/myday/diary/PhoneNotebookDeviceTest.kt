@@ -57,6 +57,14 @@ class PhoneNotebookDeviceTest {
         ui.onNodeWithTag("nav-0").performClick()
         ui.runOnIdle {assertEquals("예시 기록",c.entry.blocks.first().text);assertEquals(0,NotebookRules.xp(c.book))}
     }
+    @Test fun journalToolsMonthlyReportAndRecoveryNavigation() {
+        start();ui.onNodeWithTag("nav-4").performClick();ui.onNodeWithTag("journal-tools-open").performClick()
+        ui.onNodeWithText("1. 복구").assertExists();ui.onNodeWithText("2. 리포트").performClick()
+        ui.onNodeWithText("기록한 날  1일",substring=true).assertExists();screenshot("android-monthly-report")
+        ui.onNodeWithText("3. 알림").performClick();ui.onNodeWithText("알림 설정 적용").assertExists();screenshot("android-reminder")
+        ui.onNodeWithText("4. Wi-Fi·QR").performClick();ui.onNodeWithText("전송할 공통 백업 저장").assertExists()
+        ui.onNodeWithText("6. 업데이트").performClick();ui.onNodeWithText("현재 버전 0.9.0").assertExists();screenshot("android-journal-updates")
+    }
     @Test fun giftDrawRevealsOnlySavedResultsAndDisablesWhenEmpty() {
         start();ui.onNodeWithTag("nav-2").performClick();ui.onNodeWithText("소품 뽑기").performClick()
         ui.onNodeWithTag("collection-draw").performClick();ui.onNodeWithText("새 소품을 만났어요!").assertExists();screenshot("android-collection-result")
