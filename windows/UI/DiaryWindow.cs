@@ -64,8 +64,8 @@ namespace MyDay.Windows.UI
             grid.RowStyles.Add(new RowStyle(SizeType.Percent,100)); grid.RowStyles.Add(new RowStyle(SizeType.Absolute,Design.P(86)));
             var header=new JournalCover { Dock=DockStyle.Fill, Margin=Design.Pad(0,0,0,12) }; dayTitle.Location=Design.Point(8,34); dayTitle.ForeColor=Design.Accent; header.Controls.Add(dayTitle);
             var eyebrow=Design.Label("A LITTLE SPACE FOR YOUR DAY",8,true); eyebrow.ForeColor=Design.Accent; eyebrow.Location=Design.Point(8,8); header.Controls.Add(eyebrow);
-            var greeting=Design.Label("오늘은 어떤 하루였나요?",22); greeting.Font=Design.DisplayFont(22); greeting.AutoSize=false; greeting.AutoEllipsis=true; greeting.Location=Design.Point(6,58); greeting.Height=Design.P(38); header.Controls.Add(greeting);
-            var subtitle=Design.Label("완벽하지 않아도 괜찮아요. 나의 속도로, 한 줄씩.",9); subtitle.AutoSize=false; subtitle.AutoEllipsis=true; subtitle.ForeColor=Design.Muted; subtitle.Location=Design.Point(8,101); subtitle.Height=Design.P(20); header.Controls.Add(subtitle);
+            var greeting=Design.Label(AppShell.Greeting,22); greeting.Font=Design.DisplayFont(22); greeting.AutoSize=false; greeting.AutoEllipsis=true; greeting.Location=Design.Point(6,58); greeting.Height=Design.P(38); header.Controls.Add(greeting);
+            var subtitle=Design.Label(AppShell.Subtitle,9); subtitle.AutoSize=false; subtitle.AutoEllipsis=true; subtitle.ForeColor=Design.Muted; subtitle.Location=Design.Point(8,101); subtitle.Height=Design.P(20); header.Controls.Add(subtitle);
             var dates=new FlowLayoutPanel { FlowDirection=FlowDirection.LeftToRight, Top=Design.P(130), Width=Design.P(320), Height=Design.P(30), WrapContents=false, Anchor=AnchorStyles.Top|AnchorStyles.Left, BackColor=Color.Transparent };
             header.Resize+=delegate { dates.Left=Design.P(6); int width=Math.Max(Design.P(100),header.ClientSize.Width-Design.P(24)); greeting.Width=subtitle.Width=width; dayTitle.MaximumSize=new Size(width,Design.P(22)); };
             var prev=Design.Button("‹"); prev.Size=Design.Size(30,26); prev.AccessibleName="이전 날짜"; prev.Click+=delegate { ChangeDate(date.AddDays(-1)); };

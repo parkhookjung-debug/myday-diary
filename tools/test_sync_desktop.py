@@ -13,7 +13,7 @@ spec.loader.exec_module(sync)
 class DesktopGenerationTests(unittest.TestCase):
     def fixture(self, directory):
         root=Path(directory)
-        for relative in ['desktop.json','collection.json','catalog/templates.json','fixtures/layout.json']:
+        for relative in ['desktop.json','collection.json','app-shell.json','catalog/templates.json','fixtures/layout.json']:
             target=root/'shared'/relative
             target.parent.mkdir(parents=True,exist_ok=True)
             target.write_bytes((ROOT/'shared'/relative).read_bytes())

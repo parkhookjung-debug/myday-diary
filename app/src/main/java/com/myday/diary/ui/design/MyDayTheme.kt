@@ -11,11 +11,11 @@ import com.myday.diary.R
 fun MyDayTheme(content: @Composable () -> Unit) {
     MaterialTheme(
         colorScheme = lightColorScheme(
-            primary = colorResource(R.color.myday_primary),
-            secondary = colorResource(R.color.myday_secondary),
+            primary = AppPalette.olive,
+            secondary = AppPalette.accent,
             primaryContainer=Color(0xfff3e6df),onPrimaryContainer=Color(0xff433d36),
             secondaryContainer=Color(0xffe9ecdf),onSecondaryContainer=Color(0xff60694e),
-            surface=Color(0xfffffcf8),onSurface=Color(0xff433d36),onSurfaceVariant=Color(0xff716b60),
+            surface=AppPalette.paper,onSurface=AppPalette.ink,onSurfaceVariant=Color(0xff716b60),
             surfaceVariant=Color(0xfff3e6df),outline=Color(0xffb6aa9c)
         ),
         typography = DiaryTypography,

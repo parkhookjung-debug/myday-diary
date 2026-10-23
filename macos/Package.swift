@@ -5,5 +5,5 @@ let package = Package(
     name: "MyDay",
     platforms: [.macOS(.v13)],
     products: [.executable(name: "MyDay", targets: ["MyDay"])],
-    targets: [.executableTarget(name: "MyDay", resources: [.process("Resources")])]
+    targets: [.executableTarget(name: "MyDay", resources: [.process("Resources/templates.json"), .copy("Resources/Art")])]
 )

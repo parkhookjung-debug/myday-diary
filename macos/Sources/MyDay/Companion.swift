@@ -89,16 +89,15 @@ extension DiaryStore {
         guard profileLoaded, pendingActivity else { return }
         let active = entry.blocks.contains { !$0.text.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty || $0.photo != nil || (($0.kind == .todo || $0.kind == .habit) && $0.checked) }
         guard active else { return }
-        let formatter = DateFormatter()
-        formatter.locale = Locale(identifier: "en_US_POSIX")
-        formatter.calendar = Calendar(identifier: .gregorian)
-        formatter.dateFormat = "yyyy-MM-dd"
-        let today = formatter.string(from: Date())
-        guard !companion.activityDays.contains(today) else { pendingActivity = false; return }
-        var next = companion
-        next.activityDays.insert(today)
-        do { try persistCompanion(next); pendingActivity = false }
-        catch { self.error = "일기는 저장했지만 성장 저장에 실패했습니다. 다시 저장해 주세요. \(error.localizedDescription)" }
+        let prior = Dictionary(uniqueKeysWithValues: (pendingBaseline ?? []).map { ($0.id, $0) })
+        var flags = 0
+        let text = entry.blocks.filter { $0.kind == .text || $0.kind == .emotion }
+        if text.reduce(0, { $0 + $1.text.unicodeScalars.filter { !CharacterSet.whitespacesAndNewlines.contains($0) }.reduce(0) { $0 + ($1.value > 0xffff ? 2 : 1) } }) >= 20 && text.contains(where: { prior[$0.id]?.text != $0.text }) { flags |= 2 }
+        if entry.blocks.contains(where: { $0.photo != nil && prior[$0.id]?.photo != $0.photo }) { flags |= 4 }
+        if entry.blocks.contains(where: { $0.kind == .todo && $0.checked && prior[$0.id]?.checked != true }) { flags |= 8 }
+        if entry.blocks.contains(where: { $0.kind == .habit && $0.checked && prior[$0.id]?.checked != true }) { flags |= 16 }
+        commitShared { try $0.addFlags(flags, date: Self.todayKey(), record: true) }
+        if error == nil { pendingActivity = false; pendingBaseline = nil }
     }
 
     func choosePhoto(_ id: UUID) {
@@ -225,63 +224,6 @@ extension DiaryStore {
     }
 }
 
-struct SangmonView: View {
-    var profile: CompanionProfile
-    private let colors: [Color] = [.orange, .pink, .mint, .cyan, .purple, .yellow, .indigo, .green]
-    private let gear: [Color] = [.clear, .yellow, .red, .cyan, .yellow, .purple, .mint]
-    var body: some View {
-        TimelineView(.animation(minimumInterval: 1.0 / 24)) { time in
-            let wave = sin(time.date.timeIntervalSinceReferenceDate * 2.5)
-            ZStack {
-                Ellipse().fill(.black.opacity(0.09)).frame(width: 62, height: 9).offset(y: 37)
-                ZStack {
-                    RoundedRectangle(cornerRadius: 29).fill(colors[profile.color].gradient).frame(width: 69, height: 72)
-                    HStack(spacing: 16) {
-                        Capsule().fill(.white).frame(width: 13, height: 23).overlay(Circle().fill(.black).frame(width: 6).offset(y: 2))
-                        Capsule().fill(.white).frame(width: 13, height: 23).overlay(Circle().fill(.black).frame(width: 6).offset(y: 2))
-                    }.offset(y: -6)
-                    Capsule().fill(.brown).frame(width: 13, height: 4).rotationEffect(.degrees(-12)).offset(x: 20, y: 17)
-                    if profile.weapon > 0 {
-                        Image(systemName: "wand.and.stars").font(.system(size: 35)).foregroundStyle(gear[profile.weapon]).shadow(color: .brown, radius: 1).rotationEffect(.degrees(-25)).offset(x: -36, y: 10)
-                    }
-                    if profile.orb > 0 {
-                        Circle().fill(gear[profile.orb].gradient).frame(width: 20).overlay(Circle().stroke(.white, lineWidth: 2)).shadow(color: gear[profile.orb], radius: 7).offset(x: 43, y: -10 + wave * 4)
-                    }
-                }.rotationEffect(.degrees(wave * 3)).offset(y: wave * 3)
-            }.frame(maxWidth: .infinity, maxHeight: .infinity)
-        }.accessibilityLabel("상몬 레벨 \(profile.level)")
-    }
-}
-
-struct CompanionWardrobe: View {
-    @ObservedObject var store: DiaryStore
-    @Environment(\.dismiss) var dismiss
-    let names = ["해제", "태양", "화염", "빙결", "번개", "그림자", "별빛"]
-    var body: some View {
-        VStack(alignment: .leading, spacing: 18) {
-            HStack { Text("나의 작은 친구, 상몬").font(.title.bold()); Spacer(); Button("닫기") { dismiss() } }
-            SangmonView(profile: store.companion).frame(height: 140)
-            Text("Lv.\(store.companion.level) · \(store.companion.xp) XP · 기록 \(store.companion.activityDays.count)일").font(.headline)
-            ProgressView(value: Double(store.companion.activityDays.count % 5), total: 5)
-            Text("기록을 저장한 실제 날짜에 하루 10 XP. 5일마다 레벨이 올라요. 쉬어도 성장은 유지됩니다.").foregroundStyle(.secondary)
-            Picker("상몬 색", selection: Binding(get: { store.companion.color }, set: { store.equip(color: $0) })) {
-                ForEach(0..<8) { index in
-                    Text(["살구", "장미", "민트", "하늘", "라벤더", "햇살", "밤하늘", "숲"][index] + (index > min(7, store.companion.level - 1) ? " · Lv.\(index + 1)" : ""))
-                        .tag(index).disabled(index > min(7, store.companion.level - 1))
-                }
-            }
-            Picker("마법 무기", selection: Binding(get: { store.companion.weapon }, set: { store.equip(weapon: $0) })) {
-                ForEach(0..<names.count, id: \.self) { Text(names[$0]).tag($0) }
-            }
-            Picker("마법 보주", selection: Binding(get: { store.companion.orb }, set: { store.equip(orb: $0) })) {
-                ForEach(0..<names.count, id: \.self) { Text(names[$0]).tag($0) }
-            }
-            Text("맥 전용 상몬과 장비 디자인입니다. 장비 선택은 경험치를 주지 않습니다.").font(.caption).foregroundStyle(.secondary)
-            if let error = store.error { Text(error).foregroundStyle(.red) }
-        }.padding(28).frame(width: 520).disabled(!store.profileLoaded)
-    }
-}
-
 @MainActor
 final class DesktopCompanion {
     static let shared = DesktopCompanion()
@@ -308,7 +250,7 @@ struct DesktopPetView: View {
     @Environment(\.openWindow) private var openWindow
     var body: some View {
         VStack(spacing: 0) {
-            SangmonView(profile: store.companion)
+            SharedSangmonView(companion: store.sharedCompanion).frame(width: 126, height: 126)
             Button("일기 열기") {
                 NSApp.activate(ignoringOtherApps: true)
                 openWindow(id: "diary")

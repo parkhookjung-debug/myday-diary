@@ -14,6 +14,9 @@ import com.myday.diary.data.*
 import com.myday.diary.diary.*
 import com.myday.diary.platform.*
 import com.myday.diary.ui.design.DiaryOptions
+import com.myday.diary.ui.design.AppShell
+import com.myday.diary.ui.design.AppPalette
+import com.myday.diary.ui.components.SangmonAvatar
 import java.time.LocalDate
 
 @OptIn(ExperimentalLayoutApi::class)
@@ -35,13 +38,13 @@ import java.time.LocalDate
         if(event!=null) haptics.perform(if(controller.error==null && (controller.saved || controller.saving)) event else TactileEvent.REJECT)
     }
     LaunchedEffect(date) {opening=null;deleting=null;editing=false}
-    Scaffold(containerColor=when(entry.theme) {1->Color(0xfff1f5ee);2->Color(0xfff7f2fa);else->Color(0xfffff8f3)},
+    Scaffold(containerColor=AppPalette.backgrounds[entry.theme],
         topBar={Surface(color=Color(0xfff7f5f0)) {Row(Modifier.fillMaxWidth().statusBarsPadding().padding(horizontal=20.dp,vertical=12.dp),horizontalArrangement=Arrangement.SpaceBetween) {
-            Column {Text("✳  my day",style=MaterialTheme.typography.titleLarge,color=Color(0xff60694e));Text("나를 위한 작은 기록",style=MaterialTheme.typography.labelSmall)}
+            Column {Text(AppShell.brand,style=MaterialTheme.typography.titleLarge,color=AppPalette.olive);Text(AppShell.tagline,style=MaterialTheme.typography.labelSmall)}
             TextButton({attempt(TactileEvent.SELECT) {controller.selectDate(LocalDate.now());tab=0}},enabled=controller.saved && !busy) {Text("오늘로 ↗")}
         }}},
-        bottomBar={NavigationBar(containerColor=Color(0xfff7f5f0)) {listOf("일기","달력","상몬","설정").forEachIndexed {i,title->
-            NavigationBarItem(selected=tab==i,onClick={tab=i;haptics.perform(TactileEvent.SELECT)},icon={Text(listOf("▤","▦","✦","⚙")[i])},label={Text(title)})
+        bottomBar={NavigationBar(containerColor=AppPalette.sidebar) {AppShell.titles.forEachIndexed {i,title->
+            NavigationBarItem(modifier=Modifier.testTag("nav-$i"),selected=tab==i,onClick={tab=i;haptics.perform(TactileEvent.SELECT)},icon={Text(AppShell.symbols[i])},label={Text(title,maxLines=1)})
         }}},
         floatingActionButton={if(tab==0) ExtendedFloatingActionButton(modifier=Modifier.testTag("add-block"),onClick={add=true;haptics.perform(TactileEvent.SELECT)},text={Text("하루 조각 추가")},icon={Text("＋")},containerColor=MaterialTheme.colorScheme.primary,contentColor=Color.White)}) {padding->
         Column(Modifier.fillMaxSize().padding(padding).imePadding()) {
@@ -55,7 +58,8 @@ import java.time.LocalDate
                     item {
                         Text("A LITTLE SPACE FOR YOUR DAY",style=MaterialTheme.typography.labelSmall,color=MaterialTheme.colorScheme.primary)
                         Text("${date.monthValue}월 ${date.dayOfMonth}일",style=MaterialTheme.typography.headlineLarge)
-                        Text("완벽하지 않아도 괜찮아요. 나의 속도로, 한 줄씩.",style=MaterialTheme.typography.bodySmall)
+                        Text(AppShell.greeting,style=MaterialTheme.typography.titleLarge)
+                        Text(AppShell.subtitle,style=MaterialTheme.typography.bodySmall)
                         Row(Modifier.fillMaxWidth(),horizontalArrangement=Arrangement.SpaceBetween) {
                             TextButton({attempt(TactileEvent.SELECT) {controller.selectDate(date.minusDays(1))}},enabled=controller.saved && date>LocalDate.of(1,1,1)) {Text("‹ 이전")}
                             TextButton({tab=1;haptics.perform(TactileEvent.SELECT)}) {Text(date.toString())}
@@ -69,7 +73,12 @@ import java.time.LocalDate
                         AssistChip(onClick={templates=true},label={Text("일기 형식 100종")})
                         AssistChip(onClick={layouts=true},label={Text("내 레이아웃")})
                     }}
-                    item {Card(colors=CardDefaults.cardColors(containerColor=Color.White)) {Column(Modifier.padding(14.dp)) {
+                    item {Card(colors=CardDefaults.cardColors(containerColor=AppPalette.friendCard)) {Column(Modifier.padding(14.dp)) {
+                        Text("YOUR LITTLE FRIEND",style=MaterialTheme.typography.labelSmall)
+                        Row(verticalAlignment=androidx.compose.ui.Alignment.CenterVertically) {
+                            SangmonAvatar(controller.book.characterStyle,controller.book.equipment,Modifier.size(92.dp),haptics)
+                            Column(Modifier.weight(1f)) {Text(AppShell.friendTitle,style=MaterialTheme.typography.titleMedium);Text("Lv.${NotebookRules.level(controller.book)} · ${NotebookRules.xp(controller.book)} XP",style=MaterialTheme.typography.labelSmall);TextButton({tab=2}) {Text("상몬·공방 열기")}}
+                        }
                         Text("차곡차곡, 오늘의 실천",style=MaterialTheme.typography.titleSmall)
                         listOf("todo" to "할 일","habit" to "습관").forEach {(kind,title)->val tasks=entry.blocks.filter {it.type==kind}
                             Row(Modifier.fillMaxWidth(),horizontalArrangement=Arrangement.SpaceBetween) {Text(title);Text("${tasks.count {it.checked}} / ${tasks.size}")}
@@ -92,6 +101,7 @@ import java.time.LocalDate
                 }
                 1->PhoneCalendar(controller.book,date) {next->attempt(TactileEvent.SELECT) {controller.selectDate(next);if(controller.saved) tab=0}}
                 2->PhoneCompanion(controller,catalog,haptics,attempt)
+                3->PhoneLounge()
                 else->LazyColumn(Modifier.fillMaxSize().padding(horizontal=20.dp),verticalArrangement=Arrangement.spacedBy(14.dp),contentPadding=PaddingValues(top=14.dp,bottom=24.dp)) {
                     item {Text("오늘의 분위기",style=MaterialTheme.typography.headlineSmall);FlowRow(horizontalArrangement=Arrangement.spacedBy(8.dp)) {DiaryOptions.themes.forEach {theme->FilterChip(entry.theme==theme.id,{attempt(TactileEvent.SELECT) {controller.edit(entry.copy(theme=theme.id))}},label={Text(theme.name)})}}}
                     item {Card(colors=CardDefaults.cardColors(containerColor=Color.White)) {Row(Modifier.fillMaxWidth().padding(16.dp),horizontalArrangement=Arrangement.SpaceBetween) {

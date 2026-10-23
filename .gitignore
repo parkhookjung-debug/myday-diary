@@ -34,3 +34,4 @@ node_modules/
 .dev.vars.*
 /server/cloudflare/.test-worker/
 /macos/.build/
+/macos/Sources/MyDay/Resources/Art/

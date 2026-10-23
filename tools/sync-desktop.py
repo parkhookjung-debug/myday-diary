@@ -79,19 +79,44 @@ def load_sources(root=ROOT):
 
 def render(root=ROOT):
     c, templates, cases, digest = load_sources(root)
+    shell=json.loads((root/'shared/app-shell.json').read_text(encoding='utf-8'))
+    if shell['version']!=1 or [n['id'] for n in shell['navigation']]!=['diary','calendar','companion','chat','settings']:
+        raise ValueError('Invalid common app navigation')
+    shell_cs=[HEADER,'namespace MyDay.Windows.Core { public static class AppShell {\n']
+    shell_swift=[HEADER,'enum AppShell {\n']
+    shell_kt=[HEADER,'package com.myday.diary.ui.design\n\nobject AppShell {\n']
+    for key in ['brand','tagline','greeting','subtitle','friendTitle']:
+        shell_cs.append('    public const string '+key[0].upper()+key[1:]+'='+quoted(shell[key])+';\n')
+        shell_swift.append('    static let '+key+'='+quoted(shell[key])+'\n')
+        shell_kt.append('    const val '+key+'='+quoted(shell[key])+'\n')
+    for key,values in [('titles',[n['title'] for n in shell['navigation']]),('symbols',[n['symbol'] for n in shell['navigation']])]:
+        args=','.join(map(quoted,values))
+        shell_cs.append('    public static readonly string[] '+key.title()+'={'+args+'};\n')
+        shell_swift.append('    static let '+key+'=['+args+']\n')
+        shell_kt.append('    val '+key+'=listOf('+args+')\n')
+    shell_cs.append('}}\n');shell_swift.append('}\n');shell_kt.append('}\n')
+    shell_kt.append('\nobject AppPalette {\n')
+    for key,value in c['design'].items():
+        if isinstance(value,str): shell_kt.append('    val '+key[0].lower()+key[1:]+'=androidx.compose.ui.graphics.Color(0xff'+value[1:]+')\n')
+    shell_kt.append('    val backgrounds=listOf('+','.join('androidx.compose.ui.graphics.Color(0xff'+v[1:]+')' for v in c['design']['Backgrounds'])+')\n}\n')
     policy=json.loads((root/'shared/collection.json').read_text(encoding='utf-8'))
+    collection_swift=[HEADER,'enum CollectionPolicy {\n']
     collection_cs=[HEADER,'namespace MyDay.Windows.Core {\n    public static class CollectionPolicy {\n']
     collection_kt=[HEADER,'package com.myday.diary.diary\n\ninternal object SharedCollection {\n']
     for key in ['names','colors','weights','duplicatePetals','exchangePetals','synthesisPercent']:
         vals=policy[key];strings=isinstance(vals[0],str);args=','.join(quoted(x) if strings else str(x) for x in vals)
         collection_cs.append('        public static readonly '+('string' if strings else 'int')+'[] '+key[0].upper()+key[1:]+'={'+args+'};\n')
         collection_kt.append('    val '+key+'='+('arrayOf' if strings else 'intArrayOf')+'('+args+')\n')
+        collection_swift.append('    static let '+key+'=['+args+']\n')
     for key in ['synthesisCost','failureRefund','craftCost']:
         collection_cs.append('        public const int '+key[0].upper()+key[1:]+'='+str(policy[key])+';\n')
         collection_kt.append('    const val '+key+'='+str(policy[key])+'\n')
+        collection_swift.append('    static let '+key+'='+str(policy[key])+'\n')
     collection_cs.append('        public static readonly string[][] Forms={'+','.join('new[]{'+','.join(map(quoted,group))+'}' for group in policy['forms'])+'};\n')
     collection_kt.append('    val forms=arrayOf('+','.join('arrayOf('+','.join(map(quoted,group))+')' for group in policy['forms'])+')\n')
     rows=[[m[k] for k in ['owned','grade','amount']] for m in policy['milestones']]
+    collection_swift.append('    static let forms='+json.dumps(policy['forms'])+'\n')
+    collection_swift.append('    static let milestones='+json.dumps(rows)+'\n}\n')
     collection_cs.append('        public static readonly int[][] Milestones={'+','.join('new[]{'+','.join(map(str,row))+'}' for row in rows)+'};\n    }\n}\n')
     collection_kt.append('    val milestones=arrayOf('+','.join('intArrayOf('+','.join(map(str,row))+')' for row in rows)+')\n}\n')
     numbers = dict(c['limits'], **c['chat'], **c['growth'], TemplateCount=len(templates))
@@ -127,8 +152,13 @@ def render(root=ROOT):
     swift += ['    static let '+key[0].lower()+key[1:]+'='+swift_color(value)+'\n' for key,value in colors.items()]
     swift += ['    static let backgrounds=['+','.join(map(swift_color,c['design']['Backgrounds']))+']\n}\n\nenum DesktopFixtures {\n    static let layouts: [[Int]]=[\n']
     swift += ['        ['+','.join(map(str,[int(case['resize']),*case['original'],*case['delta'],*case['expected']]))+'],\n' for case in cases]
-    swift += ['    ]\n}\n']
+    swift += ['    ]\n    static let growthProfiles: [[Int]]='+json.dumps([[p['expectedDays'],*p['week']] for p in c['growthProfiles']])+'\n}\n']
     return {
+        'windows/Core/Shared/AppShell.g.cs':''.join(shell_cs),
+        'app/src/main/java/com/myday/diary/ui/design/AppShell.g.kt':''.join(shell_kt),
+        'macos/Sources/MyDay/AppShell.g.swift':''.join(shell_swift),
+        'macos/Sources/MyDay/CollectionPolicy.g.swift':''.join(collection_swift),
+        'app/src/main/java/com/myday/diary/chat/ChatContract.g.kt':HEADER+'package com.myday.diary.chat\n\nobject ChatContract {\n'+''.join('    const val '+k+'='+str(v)+'\n' for k,v in c['chat'].items())+'}\n',
         'windows/Core/Shared/CollectionPolicy.g.cs':''.join(collection_cs),
         'app/src/main/java/com/myday/diary/diary/SharedCollection.g.kt':''.join(collection_kt),
         'app/src/main/java/com/myday/diary/diary/SharedGrowth.g.kt': HEADER+'package com.myday.diary.diary\n\ninternal object SharedGrowth {\n'+''.join('    const val '+k+'='+str(v)+'\n' for k,v in c['growth'].items())+'    val profiles=arrayOf(\n'+''.join('        intArrayOf('+','.join(map(str,[p['expectedDays'],*p['week']]))+'),\n' for p in c['growthProfiles'])+'    )\n}\n',

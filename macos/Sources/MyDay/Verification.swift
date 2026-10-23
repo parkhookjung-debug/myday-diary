@@ -18,6 +18,8 @@ enum MacVerification {
         }
         try render(DiaryView(store: store), name: "preview", width: 920, height: 860)
         try render(DiaryView(store: store), name: "preview-narrow", width: 620, height: 800)
+        try render(DiaryView(store: store), name: "preview-wide", width: 1320, height: 860)
+        try render(CompanionContent(store: store), name: "preview-companion", width: 820, height: 700)
         let templates = try TemplateCatalog.load()
         store.entry = DiaryEntry()
         store.applyTemplate(templates.first { $0.id == "cornell-notes" }!)
@@ -83,6 +85,7 @@ enum MacVerification {
         let entry = try JSONDecoder().decode(DiaryEntry.self, from: legacy)
         try check(entry.blocks[0].photo == nil && entry.blocks[0].text == "old", "legacy diary")
         try CompatibilityVerification.run(root: root)
+        try UnifiedVerification.run(root: root)
         // A failed write must retain the unsaved editor and prevent date navigation.
         let blocked = root.appendingPathComponent("blocked")
         try Data().write(to: blocked)

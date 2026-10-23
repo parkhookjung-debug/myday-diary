@@ -24,10 +24,10 @@ struct DiaryBoard: View {
                 })) {
                     Text("자동 정렬").tag("cards")
                     Text("자유 배치").tag("free")
-                }.pickerStyle(.segmented).frame(width: 240)
+                }.pickerStyle(.segmented).frame(width: 180)
                 Picker("종이", selection: Binding(get: { store.entry.pageStyle }, set: { value in store.update { $0.pageStyle = value } })) {
                     Text("기본").tag("plain"); Text("줄 노트").tag("paper"); Text("도트").tag("dots")
-                }.frame(width: 180)
+                }.frame(width: 140)
                 Spacer()
             }
             if free {

@@ -95,16 +95,17 @@ enum WindowsCompatibility {
     static func validateMetadata(_ metadata: WindowsMetadata?) throws {
         guard let metadata else { return }
         let version = try integer(metadata.fields["Version"], fallback: 1)
-        guard (1...4).contains(version) else { throw fail("Windows 기록 버전 1~4만 지원합니다.") }
+        guard (1...8).contains(version) else { throw fail("기록 버전 1~8만 지원합니다.") }
         try validateLayouts(metadata.fields)
         _ = try awardedDays(metadata.fields)
         if let equipment = metadata.fields["Equipment"], equipment != .null, equipment.object == nil { throw fail("장비 형식이 올바르지 않습니다.") }
         _ = try optionalString(metadata.fields["CharacterStyle"])
+        try SharedCompanion(metadata.fields).validate()
     }
     static func decode(_ data: Data, companion existing: CompanionProfile = CompanionProfile()) throws -> MacBackup {
         guard data.count <= maxBytes else { throw fail("백업은 128MB 이하만 가져올 수 있습니다.") }
         guard let root = try JSONDecoder().decode(JSONValue.self, from: data).object else { throw fail("Windows 백업 형식이 아닙니다.") }
-        guard let version = root["Version"]?.int, (1...4).contains(version), let rawDays = root["Days"] else { throw fail("Windows 기록 버전 1~4만 지원합니다.") }
+        guard let version = root["Version"]?.int, (1...8).contains(version), let rawDays = root["Days"] else { throw fail("기록 버전 1~8만 지원합니다.") }
         var pairs: [(String, JSONValue)] = []
         if let array = rawDays.array {
             for value in array {
@@ -176,7 +177,7 @@ enum WindowsCompatibility {
     static func encode(_ backup: MacBackup) throws -> Data {
         try backup.validate()
         var root = backup.windowsMetadata?.fields ?? [:]
-        root["Version"] = .number(4)
+        root["Version"] = .number(Double(max(4, root["Version"]?.int ?? 4)))
         if root["CharacterStyle"] == nil { root["CharacterStyle"] = .string("original") }
         if root["Layouts"] == nil { root["Layouts"] = .array([]) }
         var progress = root["Progress"]?.object ?? [:]
@@ -184,8 +185,10 @@ enum WindowsCompatibility {
         progress["AwardedDays"] = .array(awarded.sorted().map(JSONValue.string))
         root["Progress"] = .object(progress)
         var gear = root["Equipment"]?.object ?? [:]
-        gear["WeaponId"] = .string(equipmentID(backup.companion.weapon, suffix: "sword"))
-        gear["CharmId"] = .string(equipmentID(backup.companion.orb, suffix: "orb"))
+        if (root["Version"]?.int ?? 4) < 5 {
+            gear["WeaponId"] = .string(equipmentID(backup.companion.weapon, suffix: "sword"))
+            gear["CharmId"] = .string(equipmentID(backup.companion.orb, suffix: "orb"))
+        }
         root["Equipment"] = .object(gear)
         var totalPhotos = 0
         root["Days"] = .array(try backup.days.keys.sorted().map { key in
@@ -245,7 +248,8 @@ enum WindowsCompatibility {
     static func mergeMetadata(_ current: WindowsMetadata?, _ incoming: WindowsMetadata?) throws -> WindowsMetadata? {
         guard let incoming else { return current }
         var fields = current?.fields ?? [:]
-        for (key, value) in incoming.fields where key != "Layouts" && key != "Progress" { fields[key] = value }
+        for (key, value) in incoming.fields where !["Layouts", "Progress", "Collection", "Version"].contains(key) { fields[key] = value }
+        fields["Collection"] = try SharedCompanion.mergeCollection(current?.fields["Collection"], incoming.fields["Collection"])
         var layouts = current?.fields["Layouts"]?.array ?? []
         for value in incoming.fields["Layouts"]?.array ?? [] {
             var layout = value.object!
@@ -265,8 +269,11 @@ enum WindowsCompatibility {
         var progress = incoming.fields["Progress"]?.object ?? current?.fields["Progress"]?.object ?? [:]
         let days = try awardedDays(current?.fields ?? [:]).union(awardedDays(incoming.fields))
         progress["AwardedDays"] = .array(days.sorted().map(JSONValue.string))
+        var activities = SharedCompanion(current?.fields ?? [:]).activities
+        for (date, flags) in SharedCompanion(incoming.fields).activities { activities[date] = (activities[date] ?? 0) | flags }
+        progress["Activities"] = .array(activities.keys.sorted().map { .object(["Date": .string($0), "Flags": .number(Double(activities[$0]!))]) })
         fields["Progress"] = .object(progress)
-        fields["Version"] = .number(4)
+        fields["Version"] = .number(Double(max(current?.fields["Version"]?.int ?? 4, incoming.fields["Version"]?.int ?? 4)))
         let metadata = WindowsMetadata(fields: fields)
         try validateMetadata(metadata)
         return metadata
@@ -281,6 +288,7 @@ extension DiaryStore {
                 ? try JSONDecoder().decode(WindowsMetadata.self, from: Data(contentsOf: url)) : nil
             try WindowsCompatibility.validateMetadata(metadata)
             windowsMetadata = metadata
+            companion.activityDays.formUnion(try WindowsCompatibility.awardedDays(metadata?.fields ?? [:]))
             metadataLoaded = true
         } catch {
             metadataLoaded = false

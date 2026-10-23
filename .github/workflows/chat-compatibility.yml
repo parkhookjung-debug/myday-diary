@@ -100,6 +100,9 @@ jobs:
       - name: Render native Mac chat in two sizes
         if: runner.os == 'macOS'
         run: macos/build/MyDay.app/Contents/MacOS/MyDay --render-chat
+      - name: Render the common diary and companion screens on Mac
+        if: runner.os == 'macOS'
+        run: macos/build/MyDay.app/Contents/MacOS/MyDay --render-preview
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         with:
           name: myday-chat-${{ runner.os }}-${{ runner.arch }}
@@ -111,6 +114,8 @@ jobs:
             macos/build/desktop-contract.json
             macos/build/mac-to-windows.json
             macos/build/chat*.png
+            macos/build/preview*.png
+            macos/build/mac-v8-to-windows.json
           if-no-files-found: error
           retention-days: 7
 
@@ -151,3 +156,12 @@ jobs:
       - name: Validate real Mac export using the current Windows serializer
         shell: pwsh
         run: ./macos/verification/check-windows.ps1 -WindowsSource ./windows -MacExport ./contracts/macos/build/mac-to-windows.json -Output ./contracts/windows-roundtrip.json
+      - name: Validate current Mac version 8 economy using the Windows serializer
+        shell: pwsh
+        run: |
+          $compiler=Join-Path $env:WINDIR 'Microsoft.NET/Framework64/v4.0.30319/csc.exe'
+          $sources=Get-ChildItem windows -Filter '*.cs' -Recurse | ForEach-Object { $_.FullName }
+          & $compiler /nologo /target:exe /main:WindowsAtelierInterop ('/out:'+(Join-Path $PWD 'contracts/check-atelier.exe')) /reference:System.Drawing.dll /reference:System.Windows.Forms.dll /reference:System.Runtime.Serialization.dll (Join-Path $PWD 'tools/WindowsAtelierInterop.cs') @sources
+          if ($LASTEXITCODE -ne 0) { throw 'V8 interop harness build failed' }
+          & ./contracts/check-atelier.exe check ./contracts/macos/build/mac-v8-to-windows.json
+          if ($LASTEXITCODE -ne 0) { throw 'Mac / Windows v8 compatibility failed' }

@@ -22,15 +22,17 @@ namespace MyDay.Windows.UI
             var side=new Panel { Dock=DockStyle.Left,Width=Design.P(256),BackColor=Design.Sidebar };
             sidebarFlow=new FlowLayoutPanel { Dock=DockStyle.Fill,FlowDirection=FlowDirection.TopDown,WrapContents=false,AutoScroll=true,Padding=Design.Pad(16,20,8,12),BackColor=Design.Sidebar };
             var brand=new Panel {Size=Design.Size(216,98),Margin=Design.Pad(0)};
-            var name=Design.Label("✳  my day",22,true); name.ForeColor=Design.Olive; name.Location=Design.Point(4,0); brand.Controls.Add(name);
-            var tagline=Design.Label("나를 위한 작은 기록",9); tagline.ForeColor=Design.Muted; tagline.Location=Design.Point(8,46); brand.Controls.Add(tagline);
+            var name=Design.Label(AppShell.Brand,22,true); name.ForeColor=Design.Olive; name.Location=Design.Point(4,0); brand.Controls.Add(name);
+            var tagline=Design.Label(AppShell.Tagline,9); tagline.ForeColor=Design.Muted; tagline.Location=Design.Point(8,46); brand.Controls.Add(tagline);
             var space=Design.Label("MY SPACE",8,true); space.ForeColor=Design.Muted; space.Location=Design.Point(8,78); brand.Controls.Add(space); sidebarFlow.Controls.Add(brand);
-            var current=Design.Button("▤  나의 다이어리"); current.Size=Design.Size(216,36); current.BackColor=Design.Selection; current.ForeColor=Design.Olive; current.Click+=delegate {board.Focus();}; sidebarFlow.Controls.Add(current);
+            var current=Design.Button(AppShell.Symbols[0]+"  "+AppShell.Titles[0]); current.Size=Design.Size(216,36); current.BackColor=Design.Selection; current.ForeColor=Design.Olive; current.Click+=delegate {board.Focus();}; sidebarFlow.Controls.Add(current);
+            browse.Text=AppShell.Symbols[1]+"  "+AppShell.Titles[1]; browse.Size=Design.Size(216,32); browse.AccessibleName="달력과 일기 검색 열기"; browse.Click+=delegate { BrowseDiary(); }; sidebarFlow.Controls.Add(browse);
+            var wardrobe=Design.Button(AppShell.Symbols[2]+"  "+AppShell.Titles[2]); wardrobe.Size=Design.Size(216,32); wardrobe.Click+=delegate {OpenItems();}; sidebarFlow.Controls.Add(wardrobe);
+            var chat=Design.Button(AppShell.Symbols[3]+"  "+AppShell.Titles[3]);chat.Size=Design.Size(216,32);chat.AccessibleName="서버 채팅 열기";chat.Click+=delegate {OpenChat();};sidebarFlow.Controls.Add(chat);
+            var preferences=Design.Button(AppShell.Symbols[4]+"  "+AppShell.Titles[4]);preferences.Size=Design.Size(216,32);preferences.Click+=delegate {using(var settings=new PreferencesWindow(entry.Theme,SetThemeFromSettings,ExportBook,ImportBook,TogglePet)) settings.ShowDialog(this);};sidebarFlow.Controls.Add(preferences);
             var today=Design.Button("오늘로 돌아가기 ↗"); today.Size=Design.Size(216,32); today.Margin=Design.Pad(0,12,0,0); today.Click+=delegate { ChangeDate(DateTime.Today); }; sidebarFlow.Controls.Add(today);
             sidebarCalendar=new MonthCalendar(book,date,picker.MinDate,picker.MaxDate,ChangeDate) {Size=Design.Size(216,262),Margin=Design.Pad(0,14,0,10)};
             sidebarFlow.Controls.Add(sidebarCalendar);
-            browse.Size=Design.Size(216,32); browse.AccessibleName="달력과 일기 검색 열기"; browse.Click+=delegate { BrowseDiary(); }; sidebarFlow.Controls.Add(browse);
-            var chat=Design.Button("상몬 라운지 · 채팅");chat.Size=Design.Size(216,32);chat.AccessibleName="서버 채팅 열기";chat.Click+=delegate {OpenChat();};sidebarFlow.Controls.Add(chat);
             var title=Design.Label("차곡차곡 쌓인 기록",10,true); title.Margin=Design.Pad(6,20,0,8); sidebarFlow.Controls.Add(title);
             history.Dock=DockStyle.None; history.Size=Design.Size(216,190); history.Padding=Design.Pad(0); history.BackColor=Design.Sidebar; history.Margin=Design.Pad(0); sidebarFlow.Controls.Add(history);
             var backup=new Panel {Size=Design.Size(216,190),Margin=Design.Pad(0,20,0,0)};
@@ -49,7 +51,7 @@ namespace MyDay.Windows.UI
             var friend=new CardPanel {Size=Design.Size(216,396),Fill=Design.FriendCard,Margin=Design.Pad(0,0,0,16)};
             var eyebrow=Design.Label("YOUR LITTLE FRIEND",8,true); eyebrow.ForeColor=Design.Muted; eyebrow.Location=Design.Point(18,18); friend.Controls.Add(eyebrow);
             avatar.Location=Design.Point(18,48); avatar.Size=Design.Size(180,126); avatar.BackColor=friend.Fill; avatar.ShowScene=true; friend.Controls.Add(avatar);
-            var heading=Design.Label("오늘도 네 편이야",15); heading.Font=Design.DisplayFont(15); heading.Location=Design.Point(24,186); friend.Controls.Add(heading);
+            var heading=Design.Label(AppShell.FriendTitle,15); heading.Font=Design.DisplayFont(15); heading.Location=Design.Point(24,186); friend.Controls.Add(heading);
             var hint=Design.Label("많이 해내지 않아도 괜찮아.\n함께하는 작은 친구, 상몬.",9); hint.ForeColor=Design.Muted; hint.Location=Design.Point(24,220); friend.Controls.Add(hint);
             characterChoice.Location=Design.Point(18,270); characterChoice.Size=Design.Size(180,30); characterChoice.AccessibleName="캐릭터 버전";
             characterChoice.Items.AddRange(MonsterVariants.All.Select(v=>(object)MonsterVariants.Name(v)));
@@ -92,6 +94,8 @@ namespace MyDay.Windows.UI
                 content.BringToFront(); PerformLayout(); ArrangeCards();
             } finally {arrangingShell=false;}
         }
+
+        private void SetThemeFromSettings(int value) {theme.SelectedIndex=value;}
 
         private void RefreshSidebarCalendar()
         {

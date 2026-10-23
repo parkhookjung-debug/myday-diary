@@ -46,7 +46,7 @@ class PhoneNotebookDeviceTest {
         File(folder,"$name.png").outputStream().use {image.compress(Bitmap.CompressFormat.PNG,100,it)};image.recycle()
     }
     @Test fun giftDrawRevealsOnlySavedResultsAndDisablesWhenEmpty() {
-        start();ui.onNodeWithText("상몬").performClick();ui.onNodeWithText("소품 뽑기").performClick()
+        start();ui.onNodeWithTag("nav-2").performClick();ui.onNodeWithText("소품 뽑기").performClick()
         ui.onNodeWithTag("collection-draw").performClick();ui.onNodeWithText("새 소품을 만났어요!").assertExists();screenshot("android-collection-result")
         ui.onNodeWithTag("collection-result-close").performClick()
         ui.runOnIdle {assertEquals(20,CollectionRules.state(c.book).coins);assertEquals(1,CollectionRules.state(c.book).draws);assertEquals(Equipment(),c.book.equipment)}
@@ -55,7 +55,7 @@ class PhoneNotebookDeviceTest {
         ui.runOnIdle {val state=CollectionRules.state(c.book);assertEquals(0,state.coins);assertEquals(2,state.draws);assertEquals(state,CollectionRules.state(NotebookJson.decode(NotebookJson.encode(c.book))))}
     }
     @Test fun lockedAccessoriesRequireAcquisitionBeforeEquipping() {
-        start();ui.onNodeWithText("상몬").performClick();ui.onNodeWithText("소품 300종").performClick()
+        start();ui.onNodeWithTag("nav-2").performClick();ui.onNodeWithText("소품 300종").performClick()
         ui.onNodeWithTag("equipment-solar-sword").assertIsNotEnabled()
         ui.runOnIdle {assertFalse(c.equip("weapon","solar-sword"));assertEquals("none",c.book.equipment.weaponId);c.clearError()}
         ui.onNodeWithText("소품 뽑기").performClick();ui.onNodeWithTag("collection-draw").performClick();ui.onNodeWithTag("collection-result-close").performClick()
@@ -75,14 +75,14 @@ class PhoneNotebookDeviceTest {
         ui.runOnIdle {assertEquals("휴대폰에서 쓴 기록",c.book.days.getValue(day.toString()).blocks.first().text);assertEquals(10,NotebookRules.xp(c.book))}
         ui.onNodeWithTag("add-block").performClick();ui.onNodeWithText("사진").performClick()
         ui.onNodeWithTag("diary-list").performScrollToNode(hasContentDescription("일기에 첨부한 사진"));screenshot("android-photo")
-        ui.onNodeWithText("달력").performClick();screenshot("android-calendar")
+        ui.onNodeWithTag("nav-1").performClick();screenshot("android-calendar")
         ui.onNodeWithText("본문·사진 설명 검색").performTextInput("휴대폰")
-        ui.onNodeWithText("휴대폰에서 쓴 기록").assertExists()
-        ui.onNodeWithText("설정").performClick();ui.onNodeWithText("라벤더").performClick();screenshot("android-settings")
+        ui.onNodeWithText("본문·사진 설명 검색").performImeAction();ui.onNodeWithText("휴대폰에서 쓴 기록").assertExists()
+        ui.onNodeWithTag("nav-4").performClick();ui.onNodeWithText("라벤더").performClick();screenshot("android-settings")
         ui.runOnIdle {assertEquals(2,c.entry.theme);NotebookPhoto.validate(c.book)}
     }
     @Test fun exactCharacterEquipmentAndGrowthMenus() {
-        start();ui.onNodeWithText("상몬").performClick();screenshot("android-sangmon")
+        start();ui.onNodeWithTag("nav-2").performClick();screenshot("android-sangmon")
         ui.onNodeWithTag("sangmon-grid").performScrollToNode(hasText("빙결 상몬"));ui.onNodeWithText("빙결 상몬").performClick()
         ui.runOnIdle {assertEquals("frost",c.book.characterStyle)}
         ui.onNodeWithText("소품 300종").performClick();ui.onNodeWithTag("equipment-grid").performScrollToNode(hasTestTag("equipment-frost-sword"));ui.onNodeWithTag("equipment-frost-sword").performClick()
@@ -106,7 +106,7 @@ class PhoneNotebookDeviceTest {
         ui.runOnIdle {assertEquals("휴대폰 배치",c.book.layouts.single().name);assertTrue(c.book.layouts.single().blocks.all {it.text.isEmpty() && !it.checked})}
     }
     @Test fun attendanceAndSearchableExtraSlotsKeepIndependentSelections() {
-        start();ui.onNodeWithText("상몬").performClick();ui.onNodeWithText("출석 +5 XP").performClick()
+        start();ui.onNodeWithTag("nav-2").performClick();ui.onNodeWithText("출석 +5 XP").performClick()
         ui.onNodeWithText("출석 완료").assertIsNotEnabled();ui.runOnIdle {assertEquals(5,NotebookRules.xp(c.book))}
         ui.onNodeWithText("소품 300종").performClick()
         listOf(Triple("머리","크림 리본 머리띠","solar-crown"),Triple("얼굴","하늘 동그란 안경","frost-glasses"),Triple("발밑","하늘 폭신 구름","frost-cloud")).forEach {(slot,name,id)->
