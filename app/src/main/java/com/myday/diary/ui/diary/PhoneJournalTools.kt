@@ -35,6 +35,7 @@ import org.json.JSONObject
     fun saveReminder() {runCatching {val h=hour.toInt();val m=minute.toInt();require(h in 0..23 && m in 0..59);JournalReminder.configure(context,enabled,h*60+m);message="알림 설정을 저장했어요."}.onFailure {message=it.message ?: "시간을 확인해 주세요."}}
     val permission=rememberLauncherForActivityResult(ActivityResultContracts.RequestPermission()) {granted->if(granted) saveReminder() else {enabled=false;message="알림 권한이 꺼져 있어요. 시스템 설정에서 허용할 수 있어요."}}
     LaunchedEffect(Unit) {refresh()}
+    LaunchedEffect(controller.book,controller.saving) {if(!controller.saving) refresh()}
     PhoneFullDialog("나의 기록 도구 · ${JournalPolicy.appVersion}",onDismiss,controller.error) {
         ScrollableTabRow(tab) {listOf("1. 복구","2. 리포트","3. 알림","4. Wi-Fi·QR","6. 업데이트").forEachIndexed {i,title->Tab(tab==i,{tab=i},text={Text(title)})}}
         if(message.isNotEmpty()) Text(message,Modifier.padding(12.dp),style=MaterialTheme.typography.bodySmall)

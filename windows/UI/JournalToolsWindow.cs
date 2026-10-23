@@ -48,6 +48,7 @@ namespace MyDay.Windows.UI
         private void Report() {
             var page=Page("2. 월간 리포트");var picker=new DateTimePicker {Format=DateTimePickerFormat.Custom,CustomFormat="yyyy년 MM월",ShowUpDown=true};var summary=new TextBox {Multiline=true,ReadOnly=true,Width=Design.P(460),Height=Design.P(380),ScrollBars=ScrollBars.Vertical,BorderStyle=BorderStyle.None,BackColor=Design.Sidebar,Font=Design.Font(12)};
             picker.ValueChanged+=delegate{summary.Text=JournalReport.ForMonth(book,picker.Value).ToString().Replace("\n","\r\n");};page.Controls.Add(picker);page.Controls.Add(summary);summary.Text=JournalReport.ForMonth(book,picker.Value).ToString().Replace("\n","\r\n");
+            tabs.SelectedIndexChanged+=delegate {if(tabs.SelectedTab==page.Parent)summary.Text=JournalReport.ForMonth(book,picker.Value).ToString().Replace("\n","\r\n");};
         }
         private void Reminder() {
             var page=Page("3. 일기 알림");Note(page,"원하는 시간에 하루 한 번 상몬이 알려줘요.\nWindows에서는 앱이 트레이에서 실행 중일 때 알림을 표시해요.\n놓친 날의 알림을 한꺼번에 보내지 않아요.");
