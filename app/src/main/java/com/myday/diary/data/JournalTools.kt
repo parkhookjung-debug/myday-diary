@@ -7,15 +7,19 @@ import java.time.Instant
 import java.util.UUID
 import org.json.JSONObject
 
-data class JournalRevision(val file: File,val date: String,val captured: String,val reason: String,val entry: DiaryEntry)
+data class JournalRevision(val file: File,val date: String,val captured: String,val reason: String) {
+    val entry: DiaryEntry get() {
+        require(file.length()<=NotebookJson.MAX_BYTES)
+        return NotebookJson.decode(JSONObject(file.readText()).getString("book")).also(NotebookPhoto::validate).days.getValue(date)
+    }
+}
 class JournalHistory(root: File) {
     private val directory=File(root,"journal-history")
     fun list(): List<JournalRevision> = directory.listFiles {f->f.extension=="json"}?.sortedByDescending {it.name}?.map(::read) ?: emptyList()
     fun read(file: File): JournalRevision {
         require(file.length()<=NotebookJson.MAX_BYTES)
         val json=JSONObject(file.readText());val date=json.getString("date");LocalDate.parse(date)
-        val book=NotebookJson.decode(json.getString("book")).also(NotebookPhoto::validate)
-        return JournalRevision(file,date,json.getString("captured"),json.getString("reason"),book.days.getValue(date))
+        return JournalRevision(file,date,json.getString("captured"),json.getString("reason"))
     }
     fun beforeSave(previous: DiaryBook,next: DiaryBook) {
         previous.days.forEach {(date,entry)->val target=next.days[date]

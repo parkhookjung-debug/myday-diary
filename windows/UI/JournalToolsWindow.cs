@@ -33,7 +33,7 @@ namespace MyDay.Windows.UI
             Text="나의 기록 도구 · "+JournalPolicy.AppVersion;Size=Design.Size(780,640);MinimumSize=Design.Size(600,460);StartPosition=FormStartPosition.CenterParent;Font=Design.Font(10);BackColor=Design.Sidebar;
             Controls.Add(tabs);History();Report();Reminder();Transfer();Updates();
         }
-        private FlowLayoutPanel Page(string title) {var page=new TabPage(title);var flow=new FlowLayoutPanel {Dock=DockStyle.Fill,AutoScroll=true,FlowDirection=FlowDirection.TopDown,WrapContents=false,Padding=Design.Pad(20)};page.Controls.Add(flow);tabs.TabPages.Add(page);return flow;}
+        private FlowLayoutPanel Page(string title) {var page=new TabPage(title);var flow=new FlowLayoutPanel {Dock=DockStyle.Fill,AutoScroll=true,FlowDirection=FlowDirection.TopDown,WrapContents=false,Padding=Design.Pad(20),BackColor=Design.Sidebar};page.Controls.Add(flow);tabs.TabPages.Add(page);return flow;}
         private static void Note(Control page,string text) {var label=Design.Label(text,10);label.MaximumSize=Design.Size(650,0);label.Margin=Design.Pad(0,0,0,16);page.Controls.Add(label);}
         private static Button Add(Control page,string title,Action action) {var b=Design.Button(title);b.Size=Design.Size(320,36);b.Click+=delegate{try {action();}catch(Exception ex){MessageBox.Show(ex.Message,"MyDay");}};page.Controls.Add(b);return b;}
         private void RefreshRevisions() {revisions.DataSource=archive.List();}
@@ -46,12 +46,13 @@ namespace MyDay.Windows.UI
             page.Controls.Add(revisions);page.Controls.Add(preview);page.Controls.Add(top);RefreshRevisions();
         }
         private void Report() {
-            var page=Page("2. 월간 리포트");var picker=new DateTimePicker {Format=DateTimePickerFormat.Custom,CustomFormat="yyyy년 MM월",ShowUpDown=true};var summary=new TextBox {Multiline=true,ReadOnly=true,Width=540,Height=300,BorderStyle=BorderStyle.None,BackColor=Design.Sidebar,Font=Design.Font(12)};
+            var page=Page("2. 월간 리포트");var picker=new DateTimePicker {Format=DateTimePickerFormat.Custom,CustomFormat="yyyy년 MM월",ShowUpDown=true};var summary=new TextBox {Multiline=true,ReadOnly=true,Width=Design.P(460),Height=Design.P(380),ScrollBars=ScrollBars.Vertical,BorderStyle=BorderStyle.None,BackColor=Design.Sidebar,Font=Design.Font(12)};
             picker.ValueChanged+=delegate{summary.Text=JournalReport.ForMonth(book,picker.Value).ToString().Replace("\n","\r\n");};page.Controls.Add(picker);page.Controls.Add(summary);summary.Text=JournalReport.ForMonth(book,picker.Value).ToString().Replace("\n","\r\n");
         }
         private void Reminder() {
             var page=Page("3. 일기 알림");Note(page,"원하는 시간에 하루 한 번 상몬이 알려줘요.\nWindows에서는 앱이 트레이에서 실행 중일 때 알림을 표시해요.\n놓친 날의 알림을 한꺼번에 보내지 않아요.");
-            var value=JournalPreferences.Load(root);var enabled=new CheckBox {Text="일기 알림 켜기",AutoSize=true,Checked=value.Enabled};var time=new DateTimePicker {Format=DateTimePickerFormat.Custom,CustomFormat="HH:mm",ShowUpDown=true,Value=DateTime.Today.AddMinutes(value.Minute)};
+            JournalPreferences value;try {value=JournalPreferences.Load(root);}catch(Exception ex){value=new JournalPreferences();Note(page,"기존 알림 설정을 읽지 못했어요. 아래에서 다시 저장하면 새 설정을 적용해요.\n"+ex.Message);}
+            var enabled=new CheckBox {Text="일기 알림 켜기",AutoSize=true,Checked=value.Enabled};var time=new DateTimePicker {Format=DateTimePickerFormat.Custom,CustomFormat="HH:mm",ShowUpDown=true,Value=DateTime.Today.AddMinutes(value.Minute)};
             page.Controls.Add(enabled);page.Controls.Add(time);Add(page,"알림 설정 저장",delegate{value.Enabled=enabled.Checked;value.Minute=time.Value.Hour*60+time.Value.Minute;value.Save(root);MessageBox.Show("알림 설정을 저장했어요.");});
         }
         private void Transfer() {

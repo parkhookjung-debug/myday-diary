@@ -31,6 +31,11 @@ namespace MyDay.Windows {
             try {badStore.Save(book);}catch(IOException){rejected=true;}
             Check(rejected && File.ReadAllText(badStore.FilePath)==before,"Archive write failure cannot overwrite or delete original diary");
             var prefs=new JournalPreferences {Enabled=true,Minute=1291};prefs.Save(path);var roundtrip=JournalPreferences.Load(path);Check(roundtrip.Enabled && roundtrip.Minute==1291,"Optional reminder settings survive atomic save");
+            string photoPath=Path.Combine(directory,"history-photo.png");WritePhotoFixture(photoPath);string photo=DiaryPhoto.FromFile(photoPath);File.Delete(photoPath);
+            var photoEntry=DiaryEntry.Empty();var image=DiaryBlock.Create("photo");image.Photo=photo;image.Text="사진 설명";image.X=80;image.Width=420;image.Height=320;photoEntry.Blocks.Add(image);
+            var photoStore=new DiaryStore(Path.Combine(directory,"history-photos"));var photoBook=new DiaryBook();photoBook.Days["2024-02-29"]=photoEntry;photoStore.Save(photoBook);photoEntry.Blocks.Clear();photoStore.Save(photoBook);
+            var recovered=new JournalHistory(Path.GetDirectoryName(photoStore.FilePath)).List().Single().Entry.Blocks.Single();
+            Check(recovered.Photo==photo && recovered.Text=="사진 설명" && recovered.X==80 && recovered.Width==420,"Deleted photos retain bytes, caption and free placement after original image removal");
         }
     }
 }

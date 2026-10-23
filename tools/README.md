@@ -3,6 +3,8 @@
 | 할 일 | 실행/수정 파일 | 용도 |
 | --- | --- | --- |
 | 세 앱의 공통 메뉴·성장·공방과 PC 형식·색상·제한 수정 | [sync-desktop.py](sync-desktop.py) | shared/에서 네이티브 앱과 서버용 파일 생성, --check로 생성 누락 확인 |
+| 기록 도구 버전·보관 한도·응원 문구 수정 | [sync-journal.py](sync-journal.py) | shared/journal-tools.json에서 세 네이티브 앱 정책 생성, --check로 검증 |
+| 같은 Wi-Fi에서 QR로 공통 백업 전달 | [lan-transfer.py](lan-transfer.py) | Python 표준 라이브러리·묶인 MIT QR만 사용, 10분 임시 세션·양방향 파일 전달. [사용법](../docs/JOURNAL-TOOLS.md) |
 | Mac 앱에 같은 캐릭터 그림 묶기 | [prepare-mac-assets.py](prepare-mac-assets.py) | Windows 원본에서 만든 Android 그림을 Mac 리소스로 staging, Mac 빌드에서 자동 실행 |
 | 두 앱의 실제 공통 동작 비교 | [compare-desktop.py](compare-desktop.py) | 네이티브 앱 보고서를 공통 원본·좌표 사례와 비교 |
 | 공통 상몬·장비·일기 형식을 Android에 반영 | [export-android-assets.ps1](export-android-assets.ps1) · [ExportAndroidAssets.cs](ExportAndroidAssets.cs) | Windows 원본에서 PNG·썸네일·catalog·해금 목록·검사 자료 생성 |

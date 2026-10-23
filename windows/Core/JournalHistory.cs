@@ -29,7 +29,7 @@ namespace MyDay.Windows.Core
             foreach(var pair in previous.Days) {
                 DiaryEntry target; next.Days.TryGetValue(pair.Key,out target);
                 if(Same(pair.Value,target)) continue;
-                bool destructive=target==null || pair.Value.Blocks.Any(b=>!target.Blocks.Any(n=>n.Id==b.Id && n.Photo==b.Photo));
+                bool destructive=target==null || pair.Value.Blocks.Any(b=>!target.Blocks.Any(n=>n.Id==b.Id && n.Photo==b.Photo && !(String.IsNullOrWhiteSpace(n.Text) && !String.IsNullOrWhiteSpace(b.Text))));
                 Capture(pair.Key,pair.Value,destructive?"삭제·교체 전":"수정 전",destructive);
             }
         }

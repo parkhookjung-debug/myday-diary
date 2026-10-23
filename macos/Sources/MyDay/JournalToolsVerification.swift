@@ -23,6 +23,18 @@ enum JournalToolsVerification {
         let days=try store.allDays()
         try MacVerification.check(store.error==nil && days[revision.date]?.blocks[0].text=="보관할 하루" && store.sharedCompanion.xp==xp,"restore retains diary without awarding XP")
         try JournalHistory.remove(path,item:first[0]);let purged=try JournalHistory.list(path);try MacVerification.check(purged.count==1,"explicit history purge")
+        let fixture=try WindowsCompatibility.decode(CompatibilityVerification.data(CompatibilityVerification.fixture()))
+        let photo=fixture.days.values.first!.blocks.first {$0.kind == .photo}!
+        var photoEntry=DiaryEntry();photoEntry.blocks=[photo]
+        let photoRoot=root.appendingPathComponent("history-photo")
+        try JournalHistory.beforeSave(photoRoot,date:"2024-02-29",previous:photoEntry,next:nil)
+        let recovered=try JournalHistory.list(photoRoot).first!.entry.blocks.first!
+        try MacVerification.check(recovered.photo==photo.photo && recovered.text==photo.text && recovered.width==photo.width,"deleted photo data and layout remain recoverable")
+        let blocked=DiaryStore(directory:root.appendingPathComponent("blocked-history/MyDay"));blocked.update {$0=original}
+        let before=try blocked.allDays();try Data("blocked".utf8).write(to:blocked.directory.appendingPathComponent("journal-history"))
+        blocked.update {$0.blocks=[]}
+        let retained=try blocked.allDays()
+        try MacVerification.check(blocked.error != nil && retained.values.first?.blocks.first?.text==before.values.first?.blocks.first?.text,"history write failure retains original diary")
         print("Journal tools: history, recovery, report and XP invariants passed")
     }
 }

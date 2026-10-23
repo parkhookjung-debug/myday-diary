@@ -65,6 +65,17 @@ class PhoneNotebookDeviceTest {
         ui.onNodeWithText("4. Wi-Fi·QR").performClick();ui.onNodeWithText("전송할 공통 백업 저장").assertExists()
         ui.onNodeWithText("6. 업데이트").performClick();ui.onNodeWithText("현재 버전 0.9.0").assertExists();screenshot("android-journal-updates")
     }
+    @Test fun deletedPhotoCanBeRecoveredWithCaptionAndPlacement() {
+        val root=File(context.cacheDir,"journal-history-test-${java.util.UUID.randomUUID()}");root.mkdirs()
+        try {
+            val image=Bitmap.createBitmap(16,8,Bitmap.Config.ARGB_8888);val bytes=ByteArrayOutputStream();image.compress(Bitmap.CompressFormat.JPEG,85,bytes);image.recycle()
+            val data=Base64.encodeToString(bytes.toByteArray(),Base64.NO_WRAP)
+            val original=DiaryEntry(blocks=listOf(DiaryBlock(type="photo",text="사진 설명",photo=data,x=80,width=420,height=320)))
+            val archive=JournalHistory(root);val book=DiaryBook(days=mapOf(day.toString() to original));archive.beforeSave(book,book.copy(days=emptyMap()))
+            val recovered=archive.list().single().entry.blocks.single()
+            assertEquals(data,recovered.photo);assertEquals("사진 설명",recovered.text);assertEquals(80,recovered.x);assertEquals(420,recovered.width)
+        }finally {root.deleteRecursively()}
+    }
     @Test fun giftDrawRevealsOnlySavedResultsAndDisablesWhenEmpty() {
         start();ui.onNodeWithTag("nav-2").performClick();ui.onNodeWithText("소품 뽑기").performClick()
         ui.onNodeWithTag("collection-draw").performClick();ui.onNodeWithText("새 소품을 만났어요!").assertExists();screenshot("android-collection-result")

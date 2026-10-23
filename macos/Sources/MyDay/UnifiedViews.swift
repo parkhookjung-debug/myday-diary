@@ -100,7 +100,7 @@ struct DiaryView: View {
                 Button("↓ 백업 다운로드") { store.exportWindowsBackup() }
                 Button("↥ 백업 복원") { store.importBackup() }
                 Button("바탕화면 친구") { DesktopCompanion.shared.show(store: store) }
-                Button("기록 도구 · 복구 / 리포트") { store.save();if store.error==nil {tools=true} }
+                Button("기록 도구 · 복구 / 리포트") { store.save();tools=true }
             }.padding(16)
         }.background(DesktopPalette.sidebar)
     }
@@ -154,7 +154,7 @@ struct DiaryView: View {
     private var settings: some View {
         ScrollView { VStack(alignment: .leading, spacing: 20) {
             Text(AppShell.titles[4]).font(.largeTitle)
-            Button("기록 도구 · 복구 / 리포트 / 알림 / 기기 이동 / 업데이트") { store.save();if store.error==nil {tools=true} }
+            Button("기록 도구 · 복구 / 리포트 / 알림 / 기기 이동 / 업데이트") { store.save();tools=true }
             errorBanner
             Text("오늘의 분위기").font(.headline)
             Picker("배경", selection: Binding(get: { store.entry.theme }, set: { v in store.update { $0.theme = v } })) { Text("크림").tag(0); Text("숲").tag(1); Text("라벤더").tag(2) }.pickerStyle(.segmented)

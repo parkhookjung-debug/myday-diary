@@ -316,7 +316,7 @@ namespace MyDay.Windows.UI
         }
         private void RemoveBlock(DiaryBlock block)
         {
-            if(MessageBox.Show(this,"이 블록을 삭제할까요? 적은 내용도 함께 삭제됩니다.","블록 삭제",MessageBoxButtons.YesNo,MessageBoxIcon.Question)!=DialogResult.Yes) return;
+            if(MessageBox.Show(this,"이 블록을 삭제할까요? 이전 글과 사진은 기록 도구의 휴지통·이력에 보관해요.","블록 삭제",MessageBoxButtons.YesNo,MessageBoxIcon.Question)!=DialogResult.Yes) return;
             entry.Blocks.Remove(block); QueueSave(); RenderCards();
         }
         private void QueueSave()

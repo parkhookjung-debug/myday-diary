@@ -35,6 +35,8 @@ jobs:
           if ($LASTEXITCODE -ne 0) { throw 'Journal policy out of date' }
           python -m unittest discover -s tools -p test_lan_transfer.py -v
           if ($LASTEXITCODE -ne 0) { throw 'Local transfer tests failed' }
+          python -m unittest discover -s tools -p test_sync_journal.py -v
+          if ($LASTEXITCODE -ne 0) { throw 'Journal policy tests failed' }
       - name: Validate storage and character animation
         shell: pwsh
         run: |

@@ -44,7 +44,7 @@ import org.json.JSONObject
                     item {Text("수정 전 기록을 5분 간격으로 보관하고 블록·사진 삭제 전에는 바로 보관해요. 이력은 이 기기에 남아요.");OutlinedButton({confirm="day"},enabled=controller.saved) {Text("현재 날짜 일기를 휴지통으로")}}
                     items(revisions,key={it.file.name}) {item->OutlinedCard {Column(Modifier.padding(12.dp)) {
                         Text("${item.date} · ${item.reason}",style=MaterialTheme.typography.titleMedium);Text(item.captured,style=MaterialTheme.typography.labelSmall)
-                        Text(item.entry.blocks.joinToString("\n") {it.text+(if(it.photo!=null) " [사진 보관됨]" else "")}.take(400))
+                        Text("이 시점의 글·사진·배치를 복원할 수 있어요.",style=MaterialTheme.typography.bodySmall)
                         Row {TextButton({selected=item;confirm="restore"},enabled=controller.saved) {Text("이 버전 복원")};TextButton({selected=item;confirm="remove"}) {Text("이력 영구 삭제")}}
                     }}}
                     if(revisions.isEmpty()) item {Text("아직 보관된 이전 버전이 없어요.")}
@@ -70,7 +70,7 @@ import org.json.JSONObject
         }
     }
     if(confirm.isNotEmpty()) AlertDialog(onDismissRequest={confirm=""},title={Text(when(confirm){"day"->"일기를 휴지통으로 옮길까요?";"remove"->"이 복구 사본을 영구 삭제할까요?";else->"이 버전으로 복원할까요?"})},text={Text(if(confirm=="remove") "이 사본은 다시 복원할 수 없어요." else "이전 글·사진을 보관해요. 성장 점수와 재화는 바뀌지 않아요.")},confirmButton={TextButton({val action=confirm;confirm="";scope.launch {try {
-        when(action) {"day"->controller.deleteDay();"restore"->selected?.let {item->withContext(Dispatchers.IO) {controller.book.days[item.date]?.let {archive.capture(item.date,it,"복원 전",true)}};controller.restoreRevision(item.date,item.entry)};"remove"->selected?.let {withContext(Dispatchers.IO) {archive.remove(it)}}};refresh()
+        when(action) {"day"->controller.deleteDay();"restore"->selected?.let {item->val restored=withContext(Dispatchers.IO) {controller.book.days[item.date]?.let {archive.capture(item.date,it,"복원 전",true)};item.entry};controller.restoreRevision(item.date,restored)};"remove"->selected?.let {withContext(Dispatchers.IO) {archive.remove(it)}}};refresh()
     }catch(e: Exception){message=e.message ?: "처리하지 못했어요."}}}) {Text("확인")}},dismissButton={TextButton({confirm=""}) {Text("취소")}})
 }
 internal fun checkJournalRelease(): String {

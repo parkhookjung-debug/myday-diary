@@ -8,13 +8,16 @@ namespace MyDay.Windows.UI {
         private readonly Timer reminderTimer=new Timer {Interval=30000};
         private DateTime lastReaction=DateTime.MinValue;
         private void OpenJournalTools() {
-            board.CancelPlacement();if(!FlushSave())return;
-            using(var tools=new JournalToolsWindow(store,book,delegate(JournalRevision revision) {
+            board.CancelPlacement();
+            // Recovery remains accessible when an archive quota or disk error blocks saving.
+            if(dirty) FlushSave();
+            try {using(var tools=new JournalToolsWindow(store,book,delegate(JournalRevision revision) {
+                if(!FlushSave())throw new IOException("먼저 필요 없는 이력을 정리하고 현재 일기를 다시 저장해 주세요.");
                 DiaryEntry current;if(book.Days.TryGetValue(revision.Date,out current))new JournalHistory(Path.GetDirectoryName(store.FilePath)).Capture(revision.Date,current,"복원 전",true);
                 DiaryEntry old;bool existed=book.Days.TryGetValue(revision.Date,out old);book.Days[revision.Date]=revision.Entry;
                 try {store.Save(book);} catch {if(existed)book.Days[revision.Date]=old;else book.Days.Remove(revision.Date);throw;}
                 ChangeDate(DateTime.ParseExact(revision.Date,"yyyy-MM-dd",System.Globalization.CultureInfo.InvariantCulture));LoadDate();
-            })) tools.ShowDialog(this);
+            })) tools.ShowDialog(this);} catch(Exception ex) {MessageBox.Show(this,"기록 도구를 열지 못했어요. 저장 폴더의 journal-history 사본을 보관한 뒤 손상된 파일을 확인해 주세요.\n"+ex.Message,"기록 도구");}
         }
         private void DeleteCurrentDay() {
             if(!FlushSave() || !book.Days.ContainsKey(DiaryStore.Key(date)))return;
