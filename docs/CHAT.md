@@ -1,10 +1,12 @@
-# Windows 서버 채팅 · Android 연결을 위한 공통 API
+# Windows·Mac·Android 라운지 공통 API
 
 **Mac 일기 앱과 무료 서버용 구현:** [로컬 실행·플랫폼 호환 범위·수정 파일](FREE-CHAT.md). 같은 프로토콜 1을 사용하며 Windows와 Mac의 채팅 소스를 추가했습니다. 두 OS의 빌드와 실제 앱 통신이 [자동 검사](https://github.com/parkhookjung-debug/myday-diary/actions/runs/39037445085)에서 통과했습니다. 외부 서버는 배포하지 않았습니다.
 
 **Windows 먼저 구현한 기능**입니다. 일기 왼쪽의 **상몬 라운지 · 채팅**으로 엽니다. 채팅 창을 열거나 서버가 꺼져 있는 동안에도 일기는 별도로 작동합니다. 일기·사진·성장·장비 정보는 채팅 API로 전송하지 않습니다. 채팅 입력창에 직접 적고 보내기 버튼을 누른 내용만 보냅니다.
 
 [서버 실행·다른 PC 접속](../server/README.md) · [실제 채팅 창](../previews/applied/chat-v1/README.md)
+
+2026-10-23부터 Android도 `chat/LoungeClient.kt`와 `ui/diary/PhoneLounge.kt`로 같은 API에 연결합니다. 다섯 공통 메뉴의 라운지에서 열고, 기기가 배경으로 이동하면 연결을 정리합니다. [공통 UI·수정 파일](THREE-PLATFORMS.md).
 
 ## 현재 기능
 

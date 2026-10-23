@@ -1,8 +1,10 @@
-# MyDay Android 0.7.0 소스
+# MyDay Android 0.8.0 소스
 
-Windows의 일기·상몬·성장·장비 기능을 갤럭시용 Kotlin / Jetpack Compose 앱으로 옮겼습니다. 일기·달력·상몬·설정 네 탭과 Windows의 크림·숲·라벤더, 갈색·올리브 색을 사용합니다.
+Windows의 일기·상몬·성장·장비 기능을 갤럭시용 Kotlin / Jetpack Compose 앱으로 옮겼습니다. 일기 / 달력·검색 / 상몬·공방 / 라운지 / 설정·백업의 다섯 탭과 Windows·Mac의 크림·숲·라벤더, 갈색·올리브 색을 사용합니다.
 
 [APK·설치 안내](https://github.com/parkhookjung-debug/myday-diary/releases/tag/v0.4.0-android-preview) · [기능별 수정 파일](../app/src/main/java/com/myday/diary/README.md) · [플랫폼 비교·햅틱](ANDROID-PARITY.md)
+
+[Windows·Mac·Android 같은 메뉴·화면·수정 파일](THREE-PLATFORMS.md). 라운지는 같은 Wi-Fi의 로컬 PC 서버에 초대코드로 접속하며 기기 배경 이동 시 연결을 정리합니다.
 
 ## 기능
 
@@ -49,7 +51,7 @@ Android 8.0 이상에서 실행됩니다. Releases → Assets → `MyDay-Android
 
 ## 성장·위젯·배경화면
 
-실제 내용을 바꿔 **저장에 성공한 날** 하루 한 번 +10 XP를 받습니다. 과거 날짜에 써도 오늘 지급하며 빈 블록·테마·좌표·장비 변경은 지급하지 않습니다. 지급 날짜 5개마다 레벨이 오르고 성장 보상 8종이 열립니다. 백업의 지급 날짜를 합쳐 중복 보상을 방지합니다.
+출석 +5, 첫 기록 +10, 글 20자 +10, 사진 +5, 할 일 +5, 습관 +5 XP를 실제 저장에 성공한 날 한 번씩 받습니다. 기본 하루 최대 40 XP에 연속 7일 출석 보너스 +10 XP를 별도로 지급합니다. Lv.100·3,590 XP가 만렙이며 백업의 지급 날짜와 미션 비트를 합쳐 중복 보상을 막습니다. 테마·좌표·장비 변경은 XP를 주지 않습니다.
 
 설정에서 홈 위젯 추가·라이브 배경화면 설정을 엽니다. 적용은 Android 시스템 화면에서 확정합니다. 선택한 상몬·장비는 전역으로 유지하며 테마는 오늘 날짜의 것을 사용합니다.
 

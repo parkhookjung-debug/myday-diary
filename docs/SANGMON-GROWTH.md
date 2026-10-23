@@ -14,7 +14,7 @@ Windows는 **상몬 성장**, Android는 **상몬 탭 → 오늘의 미션**에�
 
 위 기간은 새 기록에서 같은 7일 패턴을 반복한 달력 일수이며 Windows와 Android에서 실제 활동 지급 함수를 사용해 검사합니다. 참여량에 따라 성장 속도가 달라집니다. 기존 XP가 있거나 사진 등 추가 미션을 하면 빨라지고, 더 오래 쉬면 기간이 늘어납니다. ‘매일 연락’은 상몬 출석과 기록·체크 루틴으로 반영했습니다. 채팅 전송에는 XP를 주지 않습니다.
 
-이번 조정은 **Windows·Android**에 적용합니다. Mac 앱은 기존 별도 성장 체계를 유지하며, 공통 원본의 상수만 준비했습니다. [플랫폼별 범위](DESKTOP-SHARED.md)
+2026-10-23 공통화부터 **Windows·Mac·Android**에 같은 성장 규칙을 적용합니다. Mac의 기존 지급 날짜와 XP는 보존합니다. [세 플랫폼 구현·수정 위치](THREE-PLATFORMS.md)
 
 검증 소스 `c9fea68`: [Windows 전체 CI](https://github.com/parkhookjung-debug/myday-diary/actions/runs/39408289256)와 [공통 Mac·Windows CI](https://github.com/parkhookjung-debug/myday-diary/actions/runs/39408289285)가 통과했습니다. Windows 기본 검사 220개·실제 UI/만렙 검사와 공통 원본 검사 6개를 확인했습니다. [Android CI](https://github.com/parkhookjung-debug/myday-diary/actions/runs/39408289409)의 APK 빌드·Lint·JVM 검사(세 성장 패턴 포함) 단계도 통과했습니다. 문서 기록 시점에 Android 에뮬레이터 전체 검사는 진행 중이며 기존 화면 검사 실패 이력은 별도 확인 대상입니다. 로컬 Android Gradle 대기는 종료했고 Android 빌드 검증은 CI에서 수행했습니다.
 

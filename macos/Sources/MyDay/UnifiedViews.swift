@@ -140,7 +140,7 @@ struct DiaryView: View {
         }.padding(18).frame(maxWidth: .infinity, alignment: .leading).background(DesktopPalette.friendCard, in: RoundedRectangle(cornerRadius: 20))
     }
     private var errorBanner: some View {
-        Group { if let error = store.error { VStack(alignment: .leading) { Text(error).foregroundStyle(.red); Button("다시 저장") { store.save() } }.padding(12).background(DesktopPalette.tint, in: RoundedRectangle(cornerRadius: 12)) } }
+        Group { if let error = store.error { VStack(alignment: .leading) { Text(error).foregroundStyle(.red); Button(store.loaded ? "다시 저장" : "다시 불러오기") { store.retrySaveOrLoad() } }.padding(12).background(DesktopPalette.tint, in: RoundedRectangle(cornerRadius: 12)) } }
     }
     private var settings: some View {
         ScrollView { VStack(alignment: .leading, spacing: 20) {
@@ -190,7 +190,7 @@ struct CompanionContent: View {
                 }.padding(16).background(DesktopPalette.friendCard, in: RoundedRectangle(cornerRadius: 20))
                 Text("출석 5 · 첫 기록 10 · 글 20자 10 · 사진 5 · 할 일 5 · 습관 5 XP").font(.caption)
                 Text("연속 7일 출석 +10 XP · 매일 루틴 약 100일 / 주 5일 약 200일 / 여유롭게 약 300일").font(.caption).foregroundStyle(.secondary)
-                if let error = store.error { Text(error).foregroundStyle(.red) }
+                if let error = store.error { Text(error).foregroundStyle(.red); Button("다시 저장·불러오기") { store.retrySaveOrLoad() } }
                 Picker("상몬 메뉴", selection: $tab) { Text("상몬 64종").tag(0); Text("소품 300종").tag(1); Text("소품 뽑기").tag(2); Text("조각 합성·성취").tag(3) }.pickerStyle(.segmented)
                 if tab < 2 { TextField("이름·종류 검색", text: $query).textFieldStyle(.roundedBorder) }
                 if tab == 0 { skins }

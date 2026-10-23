@@ -40,12 +40,14 @@ enum UnifiedVerification {
         var fork = s; fork.appendRaw("draw-tiered", "solar-bottle"); var other = s; other.appendRaw("draw-tiered", "solar-bottle")
         do { _ = try SharedCompanion.mergeCollection(fork.fields["Collection"], other.fields["Collection"]); throw MacVerification.Failure.check("divergent ledger accepted") } catch is CompatibilityError { }
         let store = DiaryStore(directory: root.appendingPathComponent("unified/MyDay"))
-        store.update { $0.blocks = [DiaryBlock(kind: .text, text: "This private text must not appear in a reusable layout.")] }
+        store.update { $0.blocks = [DiaryBlock(kind: .text, text: "This private text must not appear in a reusable layout.")]; $0.blocks[0].height = 400; $0.pageStyle = "dots" }
         store.saveLayout("나의 배치"); try check(store.error == nil && store.savedLayouts.count == 1, "save personal layout")
         let layout = store.savedLayouts[0]; let json = try JSONEncoder().encode(JSONValue.object(layout))
         try check(!String(decoding: json, as: UTF8.self).contains("private text"), "layout excludes private content")
         store.select(Date().addingTimeInterval(86400)); let xp = store.sharedCompanion.xp; store.applySavedLayout(layout)
-        try check(store.entry.blocks.count == 1 && store.entry.blocks[0].text.isEmpty && store.sharedCompanion.xp == xp, "reusable blank layout without XP")
+        try check(store.entry.blocks.count == 1 && store.entry.blocks[0].text.isEmpty && store.entry.blocks[0].height == 400 && store.sharedCompanion.xp == xp, "reusable blank layout and card size without XP")
+        store.update { $0.pageStyle = "paper" }; store.applySavedLayout(layout)
+        try check(store.entry.pageStyle == "paper" && store.entry.blocks.count == 2, "append layout keeps existing page settings")
         let metadata = store.windowsMetadata; let file = store.directory.appendingPathComponent("windows-metadata.json")
         try FileManager.default.removeItem(at: file); try FileManager.default.createDirectory(at: file, withIntermediateDirectories: false)
         store.collect("draw-tiered"); try check(store.error != nil && store.windowsMetadata == metadata, "failed metadata write retains currency and ownership")

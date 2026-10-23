@@ -24,7 +24,7 @@
 | 성장 점수·기간·검증 패턴 | `shared/desktop.json`, Windows `SangmonGrowth.cs`, Android `NotebookRules.kt`, Mac `SharedCompanion.swift` |
 | 뽑기 등급·확률·합성·성취 | `shared/collection.json` |
 | 일기 형식과 질문 100종 | `shared/catalog/templates.json` |
-| Windows 화면 | `windows/UI/DiaryWindow.Shell.cs`, `PreferencesWindow.cs` |
+| Windows 화면 | `windows/UI/DiaryWindow.Shell.cs`, `PreferencesWindow.cs`, `CompanionHubWindow.cs` |
 | Mac 화면 | `macos/Sources/MyDay/UnifiedViews.swift`, `SavedLayouts.swift` |
 | Android 화면·햅틱 | `app/src/main/java/com/myday/diary/ui/diary/PhoneNotebookScreen.kt`, `PhoneCompanion.kt`, `PhoneLounge.kt`, `platform/` |
 | 같은 캐릭터·소품 그림 | Windows `Character/` 원본 → `tools/export-android-assets.ps1` → Android assets. Mac 빌드 시 `tools/prepare-mac-assets.py`가 같은 파일을 묶음에 넣음 |

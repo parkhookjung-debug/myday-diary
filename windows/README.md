@@ -3,6 +3,8 @@
 Windows에서 실행하는 C# / Windows Forms 일기 앱과 투명한 바탕화면 캐릭터입니다.
 Android 프로젝트와 별도 폴더에서 개발하며 외부 패키지, 브라우저, Node.js가 필요하지 않습니다.
 
+**Windows·Mac·Android 공통 화면:** [메뉴·공통 원본·백업·실행 파일](../docs/THREE-PLATFORMS.md). 좌측 상몬·공방은 64종 갤러리·300소품·선물·합성·출석으로 연결되고 설정·백업에서 같은 기록을 옮깁니다.
+
 ## 수정할 파일 찾기
 
 [전체 기능별 수정 가이드](../docs/EDITING-GUIDE.md) · [화면/UI](UI/README.md) · [기능·저장/Core](Core/README.md) · [상몬·아이템/Character](Character/README.md) · [분야별 일기 형식](Core/Templates/README.md)

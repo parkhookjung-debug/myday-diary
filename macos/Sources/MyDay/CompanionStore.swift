@@ -2,6 +2,11 @@ import Foundation
 
 @MainActor
 extension DiaryStore {
+    func retrySaveOrLoad() {
+        if !profileLoaded { loadCompanion() }
+        if !metadataLoaded { loadWindowsMetadata() }
+        if loaded { save() } else { load() }
+    }
     var sharedCompanion: SharedCompanion {
         var result = SharedCompanion(windowsMetadata?.fields ?? [:])
         // All inputs have already been validated on load/restore. Keep failures visible there.

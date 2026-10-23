@@ -9,7 +9,10 @@ extension DiaryStore {
             let name = name.trimmingCharacters(in: .whitespacesAndNewlines)
             var list = s.fields["Layouts"]?.array?.compactMap(\.object) ?? []
             guard !name.isEmpty, name.utf16.count <= 40, !list.contains(where: { $0["Id"]?.string != id && $0["Name"]?.string?.lowercased() == name.lowercased() }) else { throw WindowsCompatibility.fail("중복되지 않는 이름을 40자 이내로 입력해 주세요.") }
-            if let id, let index = list.firstIndex(where: { $0["Id"]?.string == id }) { list[index]["Name"] = .string(name) }
+            if let id {
+                guard let index = list.firstIndex(where: { $0["Id"]?.string == id }) else { throw WindowsCompatibility.fail("이 레이아웃은 더 이상 없어요.") }
+                list[index]["Name"] = .string(name)
+            }
             else {
                 guard !entry.blocks.isEmpty, list.count < 50 else { throw WindowsCompatibility.fail("빈 일기는 배치로 저장할 수 없고 최대 50개까지 보관해요.") }
                 let positions = entry.layoutMode == "free" ? entry.blocks.map(DiaryLayout.bounds) : DiaryLayout.autoArrange(entry.blocks, width: 900)
@@ -22,7 +25,7 @@ extension DiaryStore {
             s.fields["Layouts"] = .array(list.map(JSONValue.object))
         }
     }
-    func deleteLayout(_ id: String) { commitShared { s in s.fields["Layouts"] = .array((s.fields["Layouts"]?.array ?? []).filter { $0.object?["Id"]?.string != id }) } }
+    func deleteLayout(_ id: String) { save(); guard error == nil else { return }; commitShared { s in s.fields["Layouts"] = .array((s.fields["Layouts"]?.array ?? []).filter { $0.object?["Id"]?.string != id }) } }
     func applySavedLayout(_ layout: [String: JSONValue]) {
         do {
             try WindowsCompatibility.validateLayouts(["Layouts": .array([.object(layout)])])
@@ -30,8 +33,7 @@ extension DiaryStore {
             guard raw.count + entry.blocks.count <= 200 else { throw WindowsCompatibility.fail("하루 최대 200개 블록을 넘습니다.") }
             var next = entry
             let empty = next.blocks.isEmpty
-            if empty { next.layoutMode = layout["Mode"]!.string!; next.theme = layout["Theme"]!.int! }
-            next.pageStyle = layout["Style"]!.string!
+            if empty { next.layoutMode = layout["Mode"]!.string!; next.theme = layout["Theme"]!.int!; next.pageStyle = layout["Style"]!.string! }
             let offset = empty ? 0 : (next.blocks.map { DiaryLayout.bounds($0).bottom }.max() ?? 0) + 16
             for value in raw {
                 let f = value.object!
@@ -39,7 +41,7 @@ extension DiaryStore {
                 b.title = f["Title"]?.string; b.prompt = f["Prompt"]?.string; b.wide = f["Wide"]?.bool ?? false
                 b.x = f["X"]!.int!; b.y = f["Y"]!.int! + offset; b.width = f["Width"]!.int!; b.height = f["Height"]!.int!
                 if next.layoutMode == "free" { try WindowsCompatibility.checkBounds(b.x, b.y, b.width, b.height) }
-                else { b.x = 0; b.y = 0; b.width = 0; b.height = 0 }
+                else { b.x = 0; b.y = 0; b.width = 0 }
                 next.blocks.append(b)
             }
             update { $0 = next }
