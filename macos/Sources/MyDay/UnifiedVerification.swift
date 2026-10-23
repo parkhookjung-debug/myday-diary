@@ -23,6 +23,14 @@ enum UnifiedVerification {
         let roundTripState = try SharedCompanion(restored.windowsMetadata!.fields).state()
         try check(roundTripState.materials == after.materials && roundTripState.owned == after.owned && roundTripState.coins == after.coins && roundTripState.petals == after.petals && roundTripState.syntheses == after.syntheses, "v8 economy round trip")
         if let path = ProcessInfo.processInfo.environment["MYDAY_COMPAT_EXPORT"] { try exported.write(to: URL(fileURLWithPath: path).deletingLastPathComponent().appendingPathComponent("mac-v8-to-windows.json"), options: .atomic) }
+        var localGear = CompanionProfile(); localGear.weapon = 5
+        let gearless = try WindowsCompatibility.decode(fixture, companion: localGear)
+        let retained = try WindowsCompatibility.decode(WindowsCompatibility.encode(gearless))
+        let retainedState = SharedCompanion(retained.windowsMetadata!.fields)
+        let retainedItems = try retainedState.state()
+        try check(retainedState.item("weapon") == "shadow-sword" && retainedItems.owned.contains("shadow-sword") && retainedState.xp == s.xp, "gearless import retains legacy worn item and ownership")
+        var locked = s; locked.fields["Equipment"] = .object(["WeaponId": .string("astral-bottle")])
+        do { try locked.validate(); throw MacVerification.Failure.check("unowned equipped item accepted") } catch is CompatibilityError { }
         for profile in DesktopFixtures.growthProfiles {
             var growth = SharedCompanion(); var day = "2025-01-01"; var count = 0
             while growth.level < 100 && count < 1000 {

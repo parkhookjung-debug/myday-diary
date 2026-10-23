@@ -177,6 +177,9 @@ enum WindowsCompatibility {
     static func encode(_ backup: MacBackup) throws -> Data {
         try backup.validate()
         var root = backup.windowsMetadata?.fields ?? [:]
+        if (root["Version"]?.int ?? 4) >= 7 {
+            var unified = SharedCompanion(root); try unified.prepare(legacy: backup.companion); root = unified.fields
+        }
         root["Version"] = .number(Double(max(4, root["Version"]?.int ?? 4)))
         if root["CharacterStyle"] == nil { root["CharacterStyle"] = .string("original") }
         if root["Layouts"] == nil { root["Layouts"] = .array([]) }

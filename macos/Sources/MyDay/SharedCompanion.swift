@@ -91,17 +91,18 @@ struct SharedCompanion {
         setProgress(awarded: Array(days), activities: a)
     }
     mutating func prepare(legacy: CompanionProfile) throws {
+        let missingGear = fields["Equipment"] == nil || fields["Equipment"] == .null
         var a = Set(awarded); a.formUnion(legacy.activityDays)
         if fields["Progress"] == nil || a.count != awarded.count { setProgress(awarded: Array(a), activities: activities) }
         if fields["CharacterStyle"] == nil { fields["CharacterStyle"] = .string("original") }
-        if fields["Equipment"] == nil {
+        if missingGear {
             fields["Equipment"] = .object(["WeaponId": .string(WindowsCompatibility.equipmentID(legacy.weapon, suffix: "sword")), "CharmId": .string(WindowsCompatibility.equipmentID(legacy.orb, suffix: "orb"))])
         }
-        if (fields["Version"]?.int ?? 4) < 7 {
+        if (fields["Version"]?.int ?? 4) < 7 || missingGear {
             if !actions.contains(where: { $0["Kind"]?.string == "closet" }) { appendRaw("closet", "", id: Self.closetID) }
             var owned = try state().owned
             for slot in SharedArtCatalog.slots { let id = item(slot); if id != "none" && owned.insert(id).inserted { appendRaw("legacy", id) } }
-            fields["Version"] = .number(7)
+            fields["Version"] = .number(Double(max(7, fields["Version"]?.int ?? 4)))
         }
         try validate()
     }
@@ -119,7 +120,10 @@ struct SharedCompanion {
         if let collection = fields["Collection"], collection != .null {
             guard let array = collection.object?["Actions"]?.array, array.count == actions.count else { throw WindowsCompatibility.fail("수집 기록 형식이 올바르지 않습니다.") }
         }
-        _ = try state()
+        let replay = try state()
+        if (fields["Version"]?.int ?? 4) >= 7 || actions.contains(where: { $0["Kind"]?.string == "closet" }) {
+            guard actions.contains(where: { $0["Kind"]?.string == "closet" }), SharedArtCatalog.slots.allSatisfy({ item($0) == "none" || replay.owned.contains(item($0)) }) else { throw WindowsCompatibility.fail("아직 얻지 않은 소품을 착용한 기록이에요.") }
+        }
     }
     func state() throws -> SharedCollectionState {
         var s = SharedCollectionState(); s.coins = 40 + xp + (Self.currencyLevel(xp) - 1) * 5 + weeks * 10
