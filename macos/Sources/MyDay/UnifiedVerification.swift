@@ -19,7 +19,9 @@ enum UnifiedVerification {
         var edited = incoming; edited.windowsMetadata = WindowsMetadata(fields: s.fields)
         let exported = try WindowsCompatibility.encode(edited)
         let restored = try WindowsCompatibility.decode(exported)
-        try check(restored.windowsMetadata?.fields == edited.windowsMetadata?.fields, "v8 root and ledger round trip")
+        for (key, value) in s.fields { try check(restored.windowsMetadata?.fields[key] == value, "v8 original field retained: \(key)") }
+        let roundTripState = try SharedCompanion(restored.windowsMetadata!.fields).state()
+        try check(roundTripState.materials == after.materials && roundTripState.owned == after.owned && roundTripState.coins == after.coins && roundTripState.petals == after.petals && roundTripState.syntheses == after.syntheses, "v8 economy round trip")
         if let path = ProcessInfo.processInfo.environment["MYDAY_COMPAT_EXPORT"] { try exported.write(to: URL(fileURLWithPath: path).deletingLastPathComponent().appendingPathComponent("mac-v8-to-windows.json"), options: .atomic) }
         for profile in DesktopFixtures.growthProfiles {
             var growth = SharedCompanion(); var day = "2025-01-01"; var count = 0

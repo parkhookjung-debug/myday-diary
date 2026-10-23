@@ -82,7 +82,17 @@ class DesktopGenerationTests(unittest.TestCase):
             path.write_text(json.dumps(p,ensure_ascii=False),encoding='utf-8');sync.sync(root)
             self.assertIn('61,40,25',(root/'windows/Core/Shared/CollectionPolicy.g.cs').read_text(encoding='utf-8'))
             self.assertIn('61,40,25',(root/'app/src/main/java/com/myday/diary/diary/SharedCollection.g.kt').read_text(encoding='utf-8'))
+            self.assertIn('61,40,25',(root/'macos/Sources/MyDay/CollectionPolicy.g.swift').read_text(encoding='utf-8'))
             p['forms'][0][0]=p['forms'][0][1];path.write_text(json.dumps(p,ensure_ascii=False),encoding='utf-8')
             with self.assertRaises(ValueError):sync.sync(root)
+
+    def test_navigation_and_palette_reach_all_three_apps(self):
+        with tempfile.TemporaryDirectory(prefix='myday-shell-') as directory:
+            root=self.fixture(directory);path=root/'shared/app-shell.json'
+            shell=json.loads(path.read_text(encoding='utf-8'));shell['greeting']='같은 하루, 같은 질문'
+            path.write_text(json.dumps(shell,ensure_ascii=False),encoding='utf-8');sync.sync(root)
+            for name in ['windows/Core/Shared/AppShell.g.cs','macos/Sources/MyDay/AppShell.g.swift','app/src/main/java/com/myday/diary/ui/design/AppShell.g.kt']:
+                self.assertIn(shell['greeting'],(root/name).read_text(encoding='utf-8'))
+            self.assertIn('Color(0xff60694E)',(root/'app/src/main/java/com/myday/diary/ui/design/AppShell.g.kt').read_text(encoding='utf-8'))
 
 if __name__=='__main__': unittest.main()
