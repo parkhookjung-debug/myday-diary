@@ -45,6 +45,18 @@ class PhoneNotebookDeviceTest {
         val folder=File(context.getExternalFilesDir(null),"previews");folder.mkdirs()
         File(folder,"$name.png").outputStream().use {image.compress(Bitmap.CompressFormat.PNG,100,it)};image.recycle()
     }
+    @Test fun commonNavigationAndLoungeValidateBeforeNetwork() {
+        start();ui.onNodeWithTag("nav-3").performClick()
+        ui.onNodeWithTag("chat-address").performTextInput("http://example.org/")
+        ui.onNodeWithTag("chat-nickname").performTextInput("상몬친구")
+        ui.onNodeWithTag("chat-code").performTextInput("local-test-only")
+        ui.onNodeWithTag("chat-join").performScrollTo().performClick()
+        ui.onNodeWithText("HTTP는 로컬·사설 IP에서만 사용할 수 있어요.").assertExists()
+        screenshot("android-lounge")
+        ui.onNodeWithTag("nav-4").performClick();ui.onNodeWithText("소중한 하루 보관하기").assertExists()
+        ui.onNodeWithTag("nav-0").performClick()
+        ui.runOnIdle {assertEquals("예시 기록",c.entry.blocks.first().text);assertEquals(0,NotebookRules.xp(c.book))}
+    }
     @Test fun giftDrawRevealsOnlySavedResultsAndDisablesWhenEmpty() {
         start();ui.onNodeWithTag("nav-2").performClick();ui.onNodeWithText("소품 뽑기").performClick()
         ui.onNodeWithTag("collection-draw").performClick();ui.onNodeWithText("새 소품을 만났어요!").assertExists();screenshot("android-collection-result")

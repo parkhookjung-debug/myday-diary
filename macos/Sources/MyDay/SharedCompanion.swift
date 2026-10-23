@@ -65,6 +65,11 @@ struct SharedCompanion {
         if xp < 90 { return 1 + xp / 10 }; if xp < 490 { return 10 + (xp - 90) / 20 }; if xp < 1090 { return 30 + (xp - 490) / 30 }; return 50 + (xp - 1090) / 50
     }
     var level: Int { min(DesktopContract.growthMaxLevel, Self.currencyLevel(xp)) }
+    var neededXP: Int { level < 10 ? 10 : level < 30 ? 20 : level < 50 ? 30 : 50 }
+    var intoLevel: Int {
+        let floor = level < 10 ? (level-1)*10 : level < 30 ? 90+(level-10)*20 : level < 50 ? 490+(level-30)*30 : 1090+(level-50)*50
+        return level == 100 ? neededXP : xp - floor
+    }
     var style: String { fields["CharacterStyle"]?.string ?? "original" }
     var equipment: [String: JSONValue] { fields["Equipment"]?.object ?? [:] }
     func item(_ slot: String) -> String { equipment[SharedArtCatalog.field(slot)]?.string ?? "none" }

@@ -1,6 +1,14 @@
 import SwiftUI
 import AppKit
 
+struct PaperButtonStyle: ButtonStyle {
+    func makeBody(configuration: Configuration) -> some View {
+        configuration.label.padding(.horizontal, 12).padding(.vertical, 8).foregroundStyle(DesktopPalette.olive)
+            .background(configuration.isPressed ? DesktopPalette.selection : DesktopPalette.paper, in: RoundedRectangle(cornerRadius: 10))
+            .overlay(RoundedRectangle(cornerRadius: 10).stroke(DesktopPalette.soft, lineWidth: 1))
+    }
+}
+
 enum SangmonImages {
     static let cache = NSCache<NSString, NSImage>()
     static func image(_ path: String) -> NSImage? {
@@ -55,9 +63,9 @@ struct DiaryView: View {
                     default: diary(showFriend: geometry.size.width < 1120)
                     }
                 }.frame(maxWidth: .infinity, maxHeight: .infinity)
-                if tab == 0 && geometry.size.width >= 1120 { ScrollView { friend.padding(18) }.frame(width: 246).background(DesktopPalette.sidebar) }
+                if tab == 0 && geometry.size.width >= 1120 { ScrollView { friend(vertical: true).padding(18) }.frame(width: 246).background(DesktopPalette.sidebar) }
             }.background(DesktopPalette.backgrounds[store.entry.theme]).foregroundStyle(DesktopPalette.ink)
-        }.preferredColorScheme(.light).tint(DesktopPalette.olive)
+        }.preferredColorScheme(.light).tint(DesktopPalette.olive).buttonStyle(PaperButtonStyle())
             .sheet(isPresented: $store.showingSearch) { JournalSearch(store: store) }
             .sheet(isPresented: $store.showingCompanion) { CompanionWardrobe(store: store) }
             .sheet(isPresented: $store.showingTemplates) { TemplateGallery(store: store) }
@@ -105,17 +113,18 @@ struct DiaryView: View {
                     Button("일기 형식 100종") { store.showingTemplates = true }
                     Button("내 레이아웃") { store.showingLayouts = true }
                 }
-                if showFriend { friend }
+                if showFriend { friend(vertical: false) }
                 DiaryBoard(store: store)
                 Text("감정처리반은 마음을 적어 보관하는 공간이에요.").font(.caption).foregroundStyle(.secondary)
             }.padding(24)
         }
     }
     private func shift(_ amount: Int) { if let d = Calendar.current.date(byAdding: .day, value: amount, to: store.date) { store.select(d) } }
-    private var friend: some View {
+    private func friend(vertical: Bool) -> some View {
         VStack(alignment: .leading, spacing: 12) {
             Text("YOUR LITTLE FRIEND").font(.caption2).foregroundStyle(.secondary)
-            HStack {
+            let layout = vertical ? AnyLayout(VStackLayout(alignment: .leading)) : AnyLayout(HStackLayout())
+            layout {
                 SharedSangmonView(companion: store.sharedCompanion).frame(width: 116, height: 120)
                 VStack(alignment: .leading, spacing: 6) {
                     Text(AppShell.friendTitle).font(.system(size: 19, design: .serif))
@@ -126,7 +135,7 @@ struct DiaryView: View {
             ForEach([BlockKind.todo, .habit], id: \.rawValue) { kind in
                 let tasks = store.entry.blocks.filter { $0.kind == kind }
                 Text("\(kind == .todo ? "할 일" : "습관")   \(tasks.filter(\.checked).count) / \(tasks.count)").font(.caption)
-                ProgressView(value: Double(tasks.filter(\.checked).count), total: Double(max(1, tasks.count)))
+                ProgressView(value: Double(tasks.filter(\.checked).count), total: Double(max(1, tasks.count))).tint(DesktopPalette.progress)
             }
         }.padding(18).frame(maxWidth: .infinity, alignment: .leading).background(DesktopPalette.friendCard, in: RoundedRectangle(cornerRadius: 20))
     }
@@ -174,7 +183,8 @@ struct CompanionContent: View {
                     VStack(alignment: .leading, spacing: 8) {
                         Text("Lv.\(s.level) · 나의 작은 친구").font(.title2)
                         Text("총 \(s.xp) XP · 만렙 100 · 3,590 XP").font(.caption)
-                        ProgressView(value: Double(min(3590, s.xp)), total: 3590)
+                        ProgressView(value: Double(s.intoLevel), total: Double(s.neededXP)).tint(DesktopPalette.progress)
+                        Text(s.level == 100 ? "만렙 달성!" : "다음 레벨까지 \(s.neededXP - s.intoLevel) XP").font(.caption)
                         Button(s.activities[DiaryStore.todayKey(), default: 0] & 1 != 0 ? "출석 완료" : "출석 +5 XP") { store.checkIn() }.disabled(s.activities[DiaryStore.todayKey(), default: 0] & 1 != 0)
                     }
                 }.padding(16).background(DesktopPalette.friendCard, in: RoundedRectangle(cornerRadius: 20))
@@ -188,7 +198,7 @@ struct CompanionContent: View {
                 else if tab == 2 { gifts }
                 else { atelier }
             }.padding(24)
-        }.tint(DesktopPalette.olive)
+        }.tint(DesktopPalette.olive).buttonStyle(PaperButtonStyle())
     }
     private var skins: some View {
         LazyVGrid(columns: [GridItem(.adaptive(minimum: 130))], spacing: 12) {

@@ -1,11 +1,15 @@
 package com.myday.diary
 
 import com.myday.diary.chat.*
-import com.sun.net.httpserver.HttpServer
 import org.json.JSONObject
 import org.junit.Test
 import org.junit.Assert.*
-import java.net.InetSocketAddress
+import java.net.ServerSocket
+import java.net.InetAddress
+import java.io.DataInputStream
+import java.util.concurrent.atomic.AtomicReference
+import java.util.concurrent.atomic.AtomicBoolean
+import kotlin.concurrent.thread
 
 class LoungeClientTest {
     @Test fun addressValidationKeepsPlainHttpOnPrivateNetworks() {
@@ -15,29 +19,43 @@ class LoungeClientTest {
         }
     }
     @Test fun sessionSendPollCleanupAndResponseLimits() {
-        val server=HttpServer.create(InetSocketAddress("127.0.0.1",0),0)
-        var sent="";var left=false;var mode="normal"
-        server.createContext("/api/") {e->
-            val payload=e.requestBody.bufferedReader().use {it.readText()}
-            if(e.requestURI.path!="/api/sessions")assertEquals("Bearer test-token",e.requestHeaders.getFirst("Authorization"))
-            val response=when {
-                e.requestURI.path=="/api/sessions"->{assertEquals("local-test-only",JSONObject(payload).getString("joinCode"));"""{"token":"test-token","nickname":"친구","room":"라운지","maxText":2000}"""}
-                e.requestMethod=="DELETE"->{left=true;"""{"ok":true}"""}
-                e.requestMethod=="POST"->{sent=JSONObject(payload).getString("text");"""{"id":1,"nickname":"친구","text":${JSONObject.quote(sent)}}"""}
-                mode=="large"->"x".repeat(ChatContract.ChatMaxResponseBytes+1)
-                else->"""{"messages":[{"id":1,"nickname":"친구","text":${JSONObject.quote(sent)}}],"users":["친구"],"cursor":1,"reset":false,"pollAfterMs":0}"""
+        val server=ServerSocket(0,8,InetAddress.getByName("127.0.0.1"))
+        val sent=AtomicReference("");val left=AtomicBoolean(false);val mode=AtomicReference("normal")
+        val failure=AtomicReference<Throwable?>(null)
+        thread(isDaemon=true,name="myday-test-http") {
+            while(!server.isClosed) {
+                val socket=runCatching {server.accept()}.getOrNull() ?: break
+                socket.use {
+                    try {
+                        it.soTimeout=5000
+                        val input=it.getInputStream().buffered()
+                        fun line(): String {val out=StringBuilder();while(true){val b=input.read();if(b<0 || b==10)break;if(b!=13)out.append(b.toChar())};return out.toString()}
+                        val request=line().split(' ');val headers=mutableMapOf<String,String>()
+                        while(true) {val row=line();if(row.isEmpty())break;headers[row.substringBefore(':').lowercase()]=row.substringAfter(':').trim()}
+                        val bytes=ByteArray(headers["content-length"]?.toInt() ?: 0);DataInputStream(input).readFully(bytes)
+                        val payload=String(bytes,Charsets.UTF_8);val path=request[1];val method=request[0]
+                        if(path!="/api/sessions")assertEquals("Bearer test-token",headers["authorization"])
+                        val response=when {
+                            path=="/api/sessions"->{assertEquals("local-test-only",JSONObject(payload).getString("joinCode"));"""{"token":"test-token","nickname":"친구","room":"라운지","maxText":2000}"""}
+                            method=="DELETE"->{left.set(true);"""{"ok":true}"""}
+                            method=="POST"->{sent.set(JSONObject(payload).getString("text"));"""{"id":1,"nickname":"친구","text":${JSONObject.quote(sent.get())}}"""}
+                            mode.get()=="large"->"x".repeat(ChatContract.ChatMaxResponseBytes+1)
+                            else->"""{"messages":[{"id":1,"nickname":"친구","text":${JSONObject.quote(sent.get())}}],"users":["친구"],"cursor":1,"reset":false,"pollAfterMs":0}"""
+                        }
+                        val body=response.toByteArray(Charsets.UTF_8)
+                        val head="HTTP/1.1 200 OK\r\nContent-Type: application/json\r\nContent-Length: ${body.size}\r\nConnection: close\r\n\r\n"
+                        runCatching {it.getOutputStream().apply {write(head.toByteArray());write(body);flush()}}
+                    } catch(e: Throwable) {failure.set(e)}
+                }
             }
-            e.responseHeaders.set("Content-Type","application/json")
-            val bytes=response.toByteArray();e.sendResponseHeaders(200,bytes.size.toLong());runCatching {e.responseBody.use {it.write(bytes)}};e.close()
         }
-        server.start()
         try {
-            val c=LoungeClient("http://127.0.0.1:${server.address.port}/")
+            val c=LoungeClient("http://127.0.0.1:${server.localPort}/")
             assertEquals("친구",c.join("친구","local-test-only"));c.send("세 기기에서 안녕 👋","a".repeat(32))
-            val page=c.poll(0);assertEquals(sent,page.messages.single().text);assertEquals(1L,page.cursor)
-            mode="large";try{c.poll(1);fail("Unbounded response accepted")}catch(_:IllegalArgumentException){}
-            c.leave();assertTrue(left)
+            val page=c.poll(0);assertEquals(sent.get(),page.messages.single().text);assertEquals(1L,page.cursor)
+            mode.set("large");try{c.poll(1);fail("Unbounded response accepted")}catch(_:IllegalArgumentException){}
+            c.leave();assertTrue(left.get());failure.get()?.let {throw it}
             try{c.poll(0);fail("Disconnected session used")}catch(_:java.util.concurrent.CancellationException){}
-        }finally {server.stop(0)}
+        }finally {server.close()}
     }
 }
