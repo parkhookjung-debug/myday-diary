@@ -1,10 +1,12 @@
-# MyDay macOS 0.8.0 · 세 플랫폼 공통 앱
+# MyDay macOS 0.9.0 · 세 플랫폼 공통 앱
 
 Windows·Android와 같은 메뉴, 일기 100종, 상몬 64종·300소품·8슬롯, Lv.100 성장·출석·등급 선물 공방을 제공하는 SwiftUI 앱입니다. [전체 기능·공통 원본·수정할 파일·기기별 차이](../docs/THREE-PLATFORMS.md).
 
+사이드바 또는 설정의 **기록 도구**에서 휴지통·변경 이력, 월간 리포트, 매일 알림, Wi-Fi 전송 안내, 업데이트 확인을 엽니다. [6단계 사용법·수정 파일](../docs/JOURNAL-TOOLS.md). 글·사진 저장·습관 실천에는 상몬이 작은 점프로 반응합니다.
+
 ## 실행 파일 받기
 
-GitHub **Actions → 해당 소스 커밋의 Mac·Windows 검사 → Artifacts → myday-chat-macOS-ARM64**에서 ZIP을 받습니다. 안의 `MyDay-macOS-arm64-v0.8.0-preview.zip`을 풀고 `MyDay.app`을 응용 프로그램 폴더로 복사합니다. 기존 Releases의 이전 Mac ZIP에는 최신 기능이 포함되지 않습니다.
+GitHub **Actions → 해당 소스 커밋의 Mac·Windows 검사 → Artifacts → myday-chat-macOS-ARM64**에서 ZIP을 받습니다. 안의 `MyDay-macOS-arm64-v0.9.0-preview.zip`을 풀고 `MyDay.app`을 응용 프로그램 폴더로 복사합니다. 기존 Releases의 이전 Mac ZIP에는 최신 기능이 포함되지 않습니다.
 
 macOS 13 이상을 지원합니다. CI 파일은 Apple Silicon용입니다. Intel Mac은 해당 Mac에서 빌드하세요. 로컬 개발 서명이며 Apple 공증은 적용하지 않았습니다. 기존 일기는 앱을 종료한 뒤 백업하고 새 앱을 실행합니다.
 

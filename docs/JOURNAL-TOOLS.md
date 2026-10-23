@@ -84,3 +84,16 @@ Mac에서 `python3`을 사용해도 됩니다. `--file`을 생략하면 파일 �
 | 검증 | `windows/JournalToolsTests.cs`, `macos/Sources/MyDay/JournalToolsVerification.swift`, Android `JournalToolsTest.kt`, `tools/test_lan_transfer.py` |
 
 공통 백업은 계속 버전 8이며 앱 버전 0.9.0과 별개입니다. 파일명·상몬 ID·기존 경제 규칙을 바꾸지 않습니다.
+
+## 최종 검증 · 2026-10-23
+
+| 대상 | 검증 결과 | 실제 빌드 |
+|---|---|---|
+| Windows | 253개 검사·사진 삭제 전 보관과 복구·XP 미지급·쓰기 실패 시 원본 유지·실제 5개 도구 화면·기존 기능 검사 성공 | [`4d2d1cd` · Windows CI](https://github.com/parkhookjung-debug/myday-diary/actions/runs/39940071544), `myday-windows-55` |
+| Mac | 네이티브 빌드·이력·사진·복구·월간 집계·쓰기 실패 보호·기존 성장/경제·실제 메뉴/리포트 렌더링·Windows 백업 검사 성공 | [`eda4506` · 공통 CI](https://github.com/parkhookjung-debug/myday-diary/actions/runs/39940531857), `myday-chat-macOS-ARM64` |
+| Android | APK·lint·JVM 검사, Android 35 기기 검사 **16개 / 실패 0**, 사진 데이터·설명·배치 복구, 도구 메뉴·리포트·알림·업데이트 화면, 실제 Windows 백업 검사 성공 | [`4d2d1cd` · Android CI](https://github.com/parkhookjung-debug/myday-diary/actions/runs/39940071701), `myday-debug-58` |
+| 공통·로컬 도구 | 기존 생성기 8개·기록 정책 생성기 2개·실제 HTTP 전송 5개 검사 성공. QR 관리 화면 브라우저 검토 완료 | Windows CI에도 기록 도구 검사를 포함 |
+
+[실제 화면](../previews/journal-tools/README.md) · [파일별 SHA-256와 빌드 출처](builds/myday-0.9.0.json). Windows EXE 파일 버전 `0.9.0.0`, Mac 앱 버전 `0.9.0`, Android `versionCode=9 / versionName=0.9.0`을 확인했습니다.
+
+알림 시간 도래·절전/재부팅 동작·실물 Galaxy 햅틱·실제 두 기기의 같은 Wi-Fi 연결은 사용자 기기에서 추가 확인할 항목입니다. 현재 검증은 네이티브 앱·CI 기기·루프백 전송 기준입니다. 새 정식 릴리스가 없는 GitHub API 404 응답도 확인했으며 앱에서 개발 빌드 안내로 처리합니다.

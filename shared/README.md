@@ -7,6 +7,7 @@
 | 바꾸려는 내용 | 수정할 원본 |
 | --- | --- |
 | 메뉴 이름·인사말 | [app-shell.json](app-shell.json), 메뉴 추가·재배치는 네이티브 연결도 함께 수정 |
+| 앱 버전·복구 보관 한도·상몬 응원 문구 | [journal-tools.json](journal-tools.json) → `python tools/sync-journal.py`, [6단계 기록 도구](../docs/JOURNAL-TOOLS.md) |
 | 일기 100종의 이름·질문·설명·배치 | [catalog/templates.json](catalog/templates.json) |
 | 분류 이름·배치 이름·참고 링크 | [desktop.json](desktop.json)의 categories·layouts·references |
 | 공통 색상·종이·배경·채팅 말풍선 | [desktop.json](desktop.json)의 design |
