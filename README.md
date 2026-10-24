@@ -6,7 +6,9 @@
 
 Windows·Mac·Android용 커스터마이즈 일기 앱입니다. 세 버전에서 사진과 일기 블록을 자유롭게 배치하고 상몬 64종을 키우며 장비 300종을 8개 슬롯에 조합합니다. Android는 손가락 조작과 짧은 햅틱, Windows는 바탕화면 캐릭터를 제공합니다. MIT 라이선스로 공개하며 5명이 화면·저장·캐릭터·통합·검증을 나눠 개발합니다.
 
-**0.9.0 기록 도구:** [휴지통·이력 → 월간 리포트 → 알림 → Wi-Fi·QR 이동 → 상몬 반응 → 업데이트](docs/JOURNAL-TOOLS.md) · [실제 화면](previews/journal-tools/README.md) · [변경 내역](CHANGELOG.md). 각 앱의 **기록 도구**에서 시작하세요. 실행 위치와 기능별 수정 파일을 안내 첫 화면에 정리했습니다. Wi-Fi 전송은 별도 로컬 Python 도구를 사용하고 업데이트 설치는 백업 후 OS에서 진행합니다.
+**0.10.0 기기 연결·사진 앨범·작은 자동 백업:** 각 앱의 **기록 도구**에서 시작하세요. 앱 안에서 Wi-Fi 연결 QR을 만들고 기록을 확인해 가져옵니다. Python은 필요 없습니다. 월별 사진을 누르면 원래 일기로 이동하며, 자동 백업은 하루 한 번·최근 3개·256MiB로 제한합니다. [사용법·수정 파일](docs/DEVICE-ALBUM-BACKUP.md) · [실제 화면·검사·실행 파일](previews/device-album-backup/README.md) · [변경 내역](CHANGELOG.md).
+
+기존 [휴지통·이력·월간 리포트·알림·상몬 반응·업데이트 안내](docs/JOURNAL-TOOLS.md)도 유지합니다. 업데이트 설치는 백업 후 OS에서 진행합니다.
 
 **세 플랫폼 같은 화면·기능:** [메뉴·화면·공통 백업·OS 차이·바로 수정할 파일](docs/THREE-PLATFORMS.md). 메뉴는 일기 / 달력·검색 / 상몬·공방 / 라운지 / 설정·백업으로 통일했습니다. Mac에도 64종·300소품·Lv.100·등급 뽑기·합성·내 레이아웃을 적용합니다. 컴퓨터는 사이드바, 휴대폰은 하단 탭과 햅틱을 사용합니다.
 
@@ -34,6 +36,7 @@ Windows·Mac·Android용 커스터마이즈 일기 앱입니다. 세 버전에�
 
 | 바꾸려는 기능 | Windows에서 열 파일 | Android에서 열 파일 |
 | --- | --- | --- |
+| 기기 연결·월별 사진·자동 백업 (Mac 포함) | [세 플랫폼 수정 파일 표](docs/DEVICE-ALBUM-BACKUP.md#수정할-파일) · [공통 전송 화면](shared/device-link.html) | [PhoneDeviceLink.kt](app/src/main/java/com/myday/diary/ui/diary/PhoneDeviceLink.kt) · [PhonePhotoAlbum.kt](app/src/main/java/com/myday/diary/ui/diary/PhonePhotoAlbum.kt) · [PhoneAutomaticBackup.kt](app/src/main/java/com/myday/diary/ui/diary/PhoneAutomaticBackup.kt) |
 | 서버 채팅·메시지·접속자·초대코드 | [ChatClient.cs](windows/Chat/ChatClient.cs) · [ChatWindow.cs](windows/UI/ChatWindow.cs) · [chat_server.py](server/chat_server.py) | [LoungeClient.kt](app/src/main/java/com/myday/diary/chat/LoungeClient.kt) · [PhoneLounge.kt](app/src/main/java/com/myday/diary/ui/diary/PhoneLounge.kt) |
 | 무료 서버·Mac 채팅 화면·공통 통신 | [무료 서버 원본](server/cloudflare/src/index.ts) · [배포 차단](server/cloudflare/tools/free-deploy.mjs) · [Mac 화면](macos/Sources/MyDay/ChatView.swift) · [Mac 통신](macos/Sources/MyDay/ChatClient.swift) | [공통 프로토콜](docs/CHAT.md) |
 | 색·글꼴·버튼·카드 디자인 | [Design.cs](windows/UI/Design.cs) | [MyDayTheme.kt](app/src/main/java/com/myday/diary/ui/design/MyDayTheme.kt) · [colors.xml](app/src/main/res/values/colors.xml) |
@@ -59,6 +62,8 @@ Windows·Mac·Android용 커스터마이즈 일기 앱입니다. 세 버전에�
 > **최신 코드 위치:** [codex/windows-app 브랜치](https://github.com/parkhookjung-debug/myday-diary/tree/codex/windows-app). 기본 main 화면에서 왔다면 이 링크로 이동하세요. 통합 변경 내역은 [PR #7](https://github.com/parkhookjung-debug/myday-diary/pull/7)에서 확인합니다. 현재 main의 필수 리뷰·필수 상태 검사 제한은 해제되어 있습니다.
 
 ## 실행 파일 받기
+
+**최신 0.10.0 개발 빌드:** [완료된 Actions와 플랫폼별 다운로드 위치](previews/device-album-backup/README.md). 아래 Releases 파일은 이전 버전이며 새 기능이 포함되지 않습니다.
 
 | 사용할 환경 | 다운로드 | 실행·개발 안내 |
 | --- | --- | --- |

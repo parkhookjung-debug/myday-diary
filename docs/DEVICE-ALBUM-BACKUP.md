@@ -2,6 +2,8 @@
 
 Windows·Mac·Android에서 **설정·백업 또는 사이드바 → 기록 도구**를 엽니다. 기존 일기·사진·상몬·성장·소품·버전 1~8 백업을 보존합니다. 이번 기능도 계정·결제·클라우드 서버 없이 사용합니다.
 
+[실행 파일 받기·실제 화면·검사 결과](../previews/device-album-backup/README.md) · [빌드 출처·SHA-256](builds/myday-0.10.0.json)
+
 ## 1. 앱 안에서 기기 연결
 
 1. 두 기기를 같은 Wi-Fi에 연결합니다.
@@ -40,3 +42,5 @@ Python이나 별도 서버 실행은 필요 없습니다. 네이티브 앱이 �
 | Android 화면 | `ui/diary/PhoneDeviceLink.kt`, `PhonePhotoAlbum.kt`, `PhoneAutomaticBackup.kt` |
 
 Windows QR은 Project Nayuki MIT 알고리즘의 제한된 v6-L 포트이며 독립 기준 행렬과 비교합니다. Android QR은 [ZXing 3.5.3](https://github.com/zxing/zxing/releases/tag/zxing-3.5.3) Apache 2.0 라이브러리, Mac은 OS의 Core Image를 사용합니다. 세 플랫폼 모두 QR을 기기 안에서 생성·해석합니다.
+
+검사는 `windows/DeviceToolsTests.cs`, `macos/Sources/MyDay/DeviceToolsVerification.swift`, Android `DeviceToolsTest.kt`와 `PhoneNotebookDeviceTest.kt`에 있습니다. [제3자 라이선스](licenses/README.md)도 실행 파일과 함께 보관합니다.

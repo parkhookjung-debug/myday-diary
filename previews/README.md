@@ -2,6 +2,8 @@
 
 플랫폼별로 나눠 보관합니다. 실행 파일은 GitHub Releases에서 받습니다.
 
+[0.10.0 기기 연결·사진 앨범·자동 백업의 실제 화면·검사·개발 실행 파일](device-album-backup/README.md)
+
 ## Windows 서버 채팅
 
 [실제 서버에 연결한 Windows 채팅 창](applied/chat-v1/README.md). 서버 실행과 Android용 공통 API를 함께 정리했습니다.
