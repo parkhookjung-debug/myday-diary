@@ -1,0 +1,10 @@
+[
+  {"name":"move within page","resize":false,"original":[12,18,340,250],"delta":[61,127],"expected":[73,145,340,250]},
+  {"name":"move clamps left and bottom","resize":false,"original":[12,18,340,250],"delta":[-10000,50000],"expected":[0,10000,340,250]},
+  {"name":"move clamps right and top","resize":false,"original":[12,18,340,250],"delta":[50000,-10000],"expected":[10000,0,340,250]},
+  {"name":"resize preserves position","resize":true,"original":[73,145,410,330],"delta":[90,70],"expected":[73,145,500,400]},
+  {"name":"resize clamps narrow and tall","resize":true,"original":[12,18,340,250],"delta":[-10000,50000],"expected":[12,18,300,1400]},
+  {"name":"resize clamps wide and short","resize":true,"original":[12,18,340,250],"delta":[50000,-10000],"expected":[12,18,1600,180]},
+  {"name":"minimum size is stable","resize":true,"original":[0,10000,300,180],"delta":[0,0],"expected":[0,10000,300,180]},
+  {"name":"maximum size is stable","resize":true,"original":[10000,0,1600,1400],"delta":[0,0],"expected":[10000,0,1600,1400]}
+]

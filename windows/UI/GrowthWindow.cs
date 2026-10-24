@@ -1,0 +1,85 @@
+using System;
+using System.Drawing;
+using System.Linq;
+using System.Windows.Forms;
+using MyDay.Windows.Character;
+using MyDay.Windows.Core;
+
+namespace MyDay.Windows.UI
+{
+    internal sealed class GrowthWindow : Form
+    {
+        private readonly DiaryBook book;
+        private readonly Func<MonsterVariant,bool> equip;
+        private readonly FlowLayoutPanel rewards=new FlowLayoutPanel {Dock=DockStyle.Fill,AutoScroll=true,WrapContents=true,Padding=Design.Pad(16,8,16,8)};
+        internal readonly Button[] EquipButtons=new Button[8];
+        private readonly Label[] badges=new Label[8];
+        internal GrowthWindow(DiaryBook book,Func<MonsterVariant,bool> equip,Func<bool> checkIn=null)
+        {
+            this.book=book; this.equip=equip;
+            Text="MyDay · 상몬 성장"; Font=Design.Font(10); ForeColor=Design.Ink; BackColor=Design.Backgrounds[0];
+            AutoScaleMode=AutoScaleMode.None; StartPosition=FormStartPosition.CenterParent;
+            var work=Screen.PrimaryScreen.WorkingArea;
+            ClientSize=new Size(Math.Min(Design.P(960),work.Width-64),Math.Min(Design.P(720),work.Height-80));
+            MinimumSize=Design.Size(700,520);
+            var hero=new CardPanel {Dock=DockStyle.Top,Height=Design.P(238),Fill=Design.Paper};
+            var avatar=new MonsterView {Location=Design.Point(24,20),Size=Design.Size(160,140),Variant=MonsterVariants.FromId(book.CharacterStyle),Equipment=book.Equipment,BackColor=hero.Fill}; hero.Controls.Add(avatar);
+            var eyebrow=Design.Label("SANGMON · GROWTH JOURNAL",8,true); eyebrow.ForeColor=Design.Accent; eyebrow.Location=Design.Point(204,19); hero.Controls.Add(eyebrow);
+            var title=Design.Label("Lv."+SangmonGrowth.Level(book.Progress)+"  함께 쌓아가는 하루",20,true); title.Location=Design.Point(202,42); hero.Controls.Add(title);
+            int xp=SangmonGrowth.XP(book.Progress), days=book.Progress==null?0:book.Progress.AwardedDays.Count;
+            var meter=new JournalProgress {Maximum=SangmonGrowth.NeededXP(SangmonGrowth.Level(book.Progress)),Value=SangmonGrowth.IntoLevel(book.Progress),Location=Design.Point(204,91),Size=Design.Size(390,9),BackColor=hero.Fill}; hero.Controls.Add(meter);
+            var detail=Design.Label(SangmonGrowth.IntoLevel(book.Progress)+" / "+SangmonGrowth.NeededXP(SangmonGrowth.Level(book.Progress))+" XP  ·  기록한 날 "+days+"일  ·  총 "+xp+" XP",9); detail.Location=Design.Point(204,110); detail.ForeColor=Design.Muted; hero.Controls.Add(detail);
+            var next=SangmonGrowth.Rewards.FirstOrDefault(v=>!SangmonGrowth.CanUse(book.Progress,v));
+            var hint=Design.Label(next==MonsterVariant.Original?"모든 성장 외형을 모았어요. 다음 기록도 함께해요!":"다음 보상  ·  Lv."+SangmonGrowth.RequiredLevel(next)+" · "+SangmonGrowth.RequiredXP(next)+" XP · "+MonsterVariants.Name(next),9,true); hint.ForeColor=Design.Accent; hint.Location=Design.Point(204,140); hero.Controls.Add(hint);
+            var pace=Design.Label("",9);pace.AutoSize=false;pace.Location=Design.Point(204,184);pace.Height=Design.P(46);pace.ForeColor=Design.Olive;hero.Controls.Add(pace);
+            hero.Resize+=delegate {pace.Width=Math.Max(Design.P(100),hero.ClientSize.Width-Design.P(228));};
+            hero.Resize+=delegate { meter.Width=Math.Max(Design.P(100),Math.Min(Design.P(520),hero.ClientSize.Width-Design.P(238))); title.MaximumSize=new Size(hero.ClientSize.Width-Design.P(220),Design.P(40)); hint.MaximumSize=new Size(hero.ClientSize.Width-Design.P(220),Design.P(32)); };
+            var footer=new Panel {Dock=DockStyle.Bottom,Height=Design.P(128),Padding=Design.Pad(24,10,20,0)};
+            var rule=Design.Label("",9);rule.AutoSize=false;rule.Height=Design.P(110);rule.ForeColor=Design.Muted;footer.Controls.Add(rule);
+            var attendance=Design.Button("오늘 출석 +5 XP",true);attendance.Size=Design.Size(142,36);footer.Controls.Add(attendance);
+            var close=Design.Button("닫기"); close.Size=Design.Size(80,36); close.DialogResult=DialogResult.Cancel; footer.Controls.Add(close); CancelButton=close;
+            Action refresh=delegate {
+                xp=SangmonGrowth.XP(book.Progress);title.Text="Lv."+SangmonGrowth.Level(book.Progress)+" · "+SangmonGrowth.Chapter(SangmonGrowth.Level(book.Progress));meter.Value=0;meter.Maximum=SangmonGrowth.NeededXP(SangmonGrowth.Level(book.Progress));meter.Value=SangmonGrowth.IntoLevel(book.Progress);
+                detail.Text=SangmonGrowth.IntoLevel(book.Progress)+" / "+SangmonGrowth.NeededXP(SangmonGrowth.Level(book.Progress))+" XP · 기록 "+(book.Progress==null?0:book.Progress.AwardedDays.Count)+"일 · 총 "+xp+" XP";
+                if(SangmonGrowth.Level(book.Progress)>=SangmonGrowth.MaxLevel) detail.Text="만렙 달성! · 총 "+xp+" XP · 기록과 클로버 보상은 계속돼요";
+                pace.Text="만렙 Lv.100 · 3,590 XP · 남은 "+Math.Max(0,SangmonGrowth.MaxXP-xp)+" XP\n매일 루틴 약 100일 · 주 5일 약 200일 · 여유롭게 약 300일";
+                bool attended=(SangmonGrowth.Flags(book.Progress,DateTime.Today)&SangmonGrowth.Attendance)!=0;
+                attendance.Enabled=checkIn!=null && !attended;attendance.Text=attended?"오늘 출석 완료":"오늘 출석 +5 XP";
+                rule.Text="오늘 기본 "+SangmonGrowth.TodayActivityXP(book.Progress,DateTime.Today)+" / 40 XP · 연속 7일 +10 XP\n출석 +5 · 첫 기록 +10 · 글 20자 이상 +10\n사진 · 할 일 · 습관 각각 +5 · 오늘 보너스 "+SangmonGrowth.TodayBonusXP(book.Progress,DateTime.Today)+" XP\n레벨 업 클로버 +5 · 만렙 후 50 XP마다 +5\n보유 클로버 "+SangmonCollection.State(book.Collection,book.Progress).Coins;
+                var reward=SangmonGrowth.Rewards.FirstOrDefault(v=>!SangmonGrowth.CanUse(book.Progress,v));hint.Text=reward==MonsterVariant.Original?"모든 성장 외형을 모았어요!":"다음 보상 · Lv."+SangmonGrowth.RequiredLevel(reward)+" · "+SangmonGrowth.RequiredXP(reward)+" XP · "+MonsterVariants.Name(reward);
+            };
+            footer.Resize+=delegate {rule.Location=Design.Point(24,8);rule.Width=Math.Max(100,footer.ClientSize.Width-Design.P(300));close.Location=new Point(footer.ClientSize.Width-Design.P(100),Design.P(20));attendance.Location=new Point(close.Left-Design.P(152),Design.P(20));};
+            attendance.Click+=delegate {if(checkIn!=null && checkIn()){refresh();RefreshButtons();}};
+            Controls.Add(rewards); Controls.Add(hero); Controls.Add(footer);
+            for(int i=0;i<SangmonGrowth.Rewards.Length;i++) {
+                var v=SangmonGrowth.Rewards[i]; bool unlocked=SangmonGrowth.CanUse(book.Progress,v);
+                var card=new CardPanel {Size=Design.Size(212,218),Margin=Design.Pad(6),Fill=unlocked?Color.White:Color.FromArgb(241,242,237)};
+                var badge=Design.Label("총 "+SangmonGrowth.RequiredXP(v)+" XP · "+(unlocked?"해금 완료":"성장 보상"),8,true); badges[i]=badge;badge.ForeColor=unlocked?Design.Accent:Design.Muted; badge.Location=Design.Point(16,12); card.Controls.Add(badge);
+                var preview=new MonsterView {Variant=v,Location=Design.Point(16,32),Size=Design.Size(176,116),BackColor=card.Fill}; card.Controls.Add(preview);
+                var name=Design.Label(MonsterVariants.Name(v),10,true); name.Location=Design.Point(16,149); card.Controls.Add(name);
+                var button=Design.Button("",unlocked); button.Location=Design.Point(16,180); button.Size=Design.Size(176,28); button.Font=Design.Font(8); button.Enabled=unlocked;
+                button.AccessibleName=MonsterVariants.Name(v)+" 장착"; EquipButtons[i]=button;
+                button.Click+=delegate { if(equip(v)) { avatar.Variant=v; RefreshButtons(); } }; card.Controls.Add(button);
+                card.Resize+=delegate { preview.Width=card.ClientSize.Width-Design.P(32); button.Width=card.ClientSize.Width-Design.P(32); };
+                rewards.Controls.Add(card);
+            }
+            rewards.Resize+=delegate { LayoutCards(); }; LayoutCards(); RefreshButtons();refresh();
+        }
+        private void LayoutCards()
+        {
+            int width=rewards.ClientSize.Width-Design.P(32)-SystemInformation.VerticalScrollBarWidth;
+            int columns=width>=Design.P(840)?4:3;
+            foreach(Control card in rewards.Controls) card.Width=Math.Max(Design.P(180),width/columns-Design.P(12));
+        }
+        private void RefreshButtons()
+        {
+            for(int i=0;i<EquipButtons.Length;i++) {
+                var v=SangmonGrowth.Rewards[i]; bool unlocked=SangmonGrowth.CanUse(book.Progress,v);
+                badges[i].Text="총 "+SangmonGrowth.RequiredXP(v)+" XP · "+(unlocked?"해금 완료":"성장 보상");badges[i].ForeColor=unlocked?Design.Accent:Design.Muted;
+                EquipButtons[i].Text=!unlocked?"Lv."+SangmonGrowth.RequiredLevel(v)+" · 총 "+SangmonGrowth.RequiredXP(v)+" XP":book.CharacterStyle==MonsterVariants.Id(v)?"장착 중":"이 모습으로 함께하기";
+                EquipButtons[i].Enabled=unlocked && book.CharacterStyle!=MonsterVariants.Id(v);
+                EquipButtons[i].BackColor=unlocked?(EquipButtons[i].Enabled?Design.Accent:Design.Tint):Color.White;
+            }
+        }
+    }
+}

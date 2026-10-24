@@ -1,0 +1,110 @@
+# 미리보기 자료
+
+플랫폼별로 나눠 보관합니다. 실행 파일은 GitHub Releases에서 받습니다.
+
+[0.10.0 기기 연결·사진 앨범·자동 백업의 실제 화면·검사·개발 실행 파일](device-album-backup/README.md)
+
+## Windows 서버 채팅
+
+[실제 서버에 연결한 Windows 채팅 창](applied/chat-v1/README.md). 서버 실행과 Android용 공통 API를 함께 정리했습니다.
+
+## 소품 소유권·잠금·기본 지급
+
+[기본 8종·미보유 잠금·보유 필터·선물 상자 실제 화면](applied/ownership-v1/README.md)
+
+## 세분화한 성장·소품 뽑기
+
+[Windows의 실제 선물 상자와 성장 화면](applied/collection-v1/README.md). [규칙과 수정 파일](../docs/SANGMON-COLLECTION.md)
+
+## 파스텔 일상 소품 300종
+
+[상몬의 작은 옷장 · 50가지 형태와 8가지 조합](applied/cozy-v1/README.md). 현재 적용한 아기자기한 소품 디자인입니다.
+
+## 이전 RPG 장비 시안·출석·성장 화면
+
+[50가지 장비 형태·6재질·8슬롯 조합과 실제 Windows 장비함/성장 화면](applied/wardrobe-v1/README.md). 목록·도형·착용 위치·점수 규칙의 수정 파일도 안내합니다.
+
+## 기본 상몬 클레이 외형 실제 적용
+
+[Windows 렌더러로 그린 9가지 모습과 수정 파일 안내](applied/sangmon-clay/README.md). 투명 PNG와 Android용 64프레임 자산까지 반영했습니다. 아래의 이미지 시안과 구분합니다.
+
+## 상몬 3D풍 캐릭터 시안
+
+[기본·걷기·점프·하품·잠·터치 불꽃 등 9가지 키포즈](concepts/sangmon-3d/README.md)를 볼 수 있습니다. 상몬의 기존 윤곽을 입체 재질로 표현한 외형 검토용 이미지이며, 제작 사양과 프롬프트를 함께 보관합니다.
+
+## Android 0.4.0 실제 화면
+
+Android 35 에뮬레이터에서 실제 Compose UI를 실행하고 격리된 예시 기록으로 캡처했습니다. 초기 HTML 모형이나 실제 갤럭시 캡처와 구분합니다.
+
+| 화면 | 파일 |
+| --- | --- |
+| 네 탭 일기·완료 현황 | [android-diary.png](android/android-diary.png) |
+| 상몬 64종·성장 | [android-sangmon.png](android/android-sangmon.png) |
+| 빙결 상몬·검/보주 장착 | [android-equipment.png](android/android-equipment.png) |
+| 자유 배치·크기 조절 | [android-free-layout.png](android/android-free-layout.png) |
+| 100종 형식·코넬 검색 | [android-templates.png](android/android-templates.png) |
+| 저장한 레이아웃 | [android-my-layouts.png](android/android-my-layouts.png) |
+| 사진 | [android-photo.png](android/android-photo.png) |
+| 달력·검색 | [android-calendar.png](android/android-calendar.png) |
+| 테마·햅틱·백업 설정 | [android-settings.png](android/android-settings.png) |
+
+## Android와 초기 화면
+
+`android/`의 `monster-motion`과 `character-motion`은 앱의 캐릭터 그림·포즈 코드를 렌더링한 PNG/GIF입니다. `myday-example.html`과 PNG는 초기 일기 화면을 재현한 예시입니다. 실제 갤럭시 화면 캡처가 아닙니다.
+
+## Windows
+
+| 파일 | 내용 |
+| --- | --- |
+| `windows/windows-example.png` | v0.3.10 웹 디자인을 적용한 실제 Windows UI에 격리된 예시 기록을 넣은 화면 |
+| `windows/windows-photos.png` | 사진·설명과 글 블록을 자유롭게 배치한 실제 Windows UI (풍경은 검증용 생성 이미지) |
+| `windows/windows-calendar.png` | 월간 달력·기록한 날·사진 있는 날·이달의 기록 목록 |
+| `windows/windows-diary-search.png` | 사진 설명을 전체 날짜에서 검색한 실제 Windows UI |
+| `windows/windows-my-layouts.png` | 직접 저장한 레이아웃 목록·검색·관리와 실제 배치 미리보기 |
+| `windows/windows-saved-layout-applied.png` | 새 날짜에 저장한 레이아웃을 빈 사진 자리·글 칸으로 불러온 화면 |
+| `windows/windows-free-layout.png` | 블록을 자유롭게 옮기고 크기를 조절하는 편집 화면 |
+| `windows/windows-journal-templates.png` | 일기 형식 100종의 분류·검색·미리보기 화면 |
+| `windows/windows-template-learning.png` | 학습 분야 10종 |
+| `windows/windows-template-search.png` | 코넬 학습 형식 검색 |
+| `windows/windows-cornell.png` | 실제 코넬 배치로 작성한 예시 |
+| `windows/windows-reflection.png` | 하루 회고 형식으로 작성한 일기 예시 |
+| `windows/windows-pet.png` | 초기 투명 바탕화면 캐릭터 예시 |
+| `windows/windows-lively.gif` | 캐릭터 포즈·생동감 있는 동작 예시 |
+| `windows/windows-variants-first.gif` | 상몬 1–16번 |
+| `windows/windows-variants-second.gif` | 상몬 17–32번 |
+| `windows/windows-variants-third.gif` | 상몬 33–48번 |
+| `windows/windows-game-styles.gif` | RPG 속성 8종 |
+| `windows/windows-variants.gif` | 기존 자유 선택 56종 |
+| `windows/windows-sangmon-growth.png` | 레벨·경험치·다음 보상·8종 장착 화면 |
+| `windows/windows-growth-rewards.gif` | 추가 성장 보상 8종 |
+
+캐릭터 GIF는 실제 앱 렌더러로 그렸습니다. 바탕화면에서 돌아다니는 위치 이동 대신 포즈와 재질 움직임을 보여줍니다. 실제 사용자 일기와 원본 참고 사진은 포함하지 않습니다.
+
+새 미리보기는 Android 자료를 `android/`, Windows 자료를 `windows/`에 넣고 해당 문서 링크를 갱신합니다.
+
+## Windows GIF 다시 만들기
+
+앱은 `--game-preview`, `--growth-preview`, `--variants-first`, `--variants-second`, `--variants-third`, `--variant-preview`로 번호가 붙은 PNG 프레임을 생성합니다. 이를 GIF로 묶는 선택 개발 도구는 `tools/package-preview.py`입니다. 이 도구에만 Python과 Pillow가 필요하며 앱 실행에는 필요하지 않습니다.
+
+```powershell
+./windows/build.ps1
+$render = Start-Process windows/bin/MyDay.exe -ArgumentList '--game-preview','.bootstrap/game-frames' -Wait -PassThru -WindowStyle Hidden
+if ($render.ExitCode -ne 0) { throw 'Render failed' }
+python -m pip install Pillow
+python tools/package-preview.py .bootstrap/game-frames previews/windows/windows-game-styles.gif
+```
+
+명령은 저장소 루트에서 실행합니다. `.bootstrap/`의 중간 프레임은 커밋하지 않고 최종 GIF를 해당 플랫폼 폴더에 넣습니다.
+
+## 상몬 성장
+
+- [성장 화면](windows/windows-sangmon-growth.png): 실제 Windows 창을 격리된 기록으로 검증한 예시
+- [성장 보상 8종](windows/windows-growth-rewards.gif): 새 의상을 네이티브 캐릭터 렌더러로 움직인 예시
+- 기존 56종 미리보기는 기존 외형을 보여주며, 새 8종은 성장 보상 미리보기에서 확인합니다.
+
+## 상몬 아이템
+
+- [아이템 12종](windows/windows-item-catalog.png): 실제 벡터 렌더러의 검 6종·보주 6종
+- [움직이는 아이템](windows/windows-items.gif): 빛과 잔광이 변하는 예시
+- [장비함](windows/windows-items.png), [보주 선택](windows/windows-item-orbs.png): 격리된 실제 Windows 창
+- `--item-preview`로 프레임을 생성하고 기존 `tools/package-preview.py`로 묶습니다.

@@ -1,0 +1,80 @@
+name: Windows CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: windows-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  windows:
+    name: Windows checks
+    runs-on: windows-2025
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1 # v6
+        with:
+          python-version: '3.11'
+      - name: Build native Windows app
+        shell: pwsh
+        run: ./windows/build.ps1
+      - name: Verify journal policy and temporary LAN transfer
+        shell: pwsh
+        run: |
+          python tools/sync-journal.py --check
+          python tools/sync-device-link.py --check
+          if ($LASTEXITCODE -ne 0) { throw 'Journal policy out of date' }
+          python -m unittest discover -s tools -p test_lan_transfer.py -v
+          if ($LASTEXITCODE -ne 0) { throw 'Local transfer tests failed' }
+          python -m unittest discover -s tools -p test_sync_journal.py -v
+          if ($LASTEXITCODE -ne 0) { throw 'Journal policy tests failed' }
+      - name: Validate storage and character animation
+        shell: pwsh
+        run: |
+          $testRun = Start-Process -FilePath "$pwd/windows/bin/MyDay.exe" -ArgumentList '--self-test' -Wait -PassThru -WindowStyle Hidden -RedirectStandardOutput 'windows/bin/test-results.txt' -RedirectStandardError 'windows/bin/test-errors.txt'
+          Get-Content windows/bin/test-results.txt
+          Get-Content windows/bin/test-errors.txt
+          if ($testRun.ExitCode -ne 0) { throw "Tests failed: $($testRun.ExitCode)" }
+      - name: Verify native diary layout and interactions
+        shell: pwsh
+        run: |
+          $preview = Join-Path $pwd 'windows/bin/smoke-output'
+          $smokeRun = Start-Process -FilePath "$pwd/windows/bin/MyDay.exe" -ArgumentList @('--smoke-test', ('"' + $preview + '"')) -Wait -PassThru -WindowStyle Hidden -RedirectStandardOutput 'windows/bin/native-results.txt' -RedirectStandardError 'windows/bin/native-errors.txt'
+          Get-Content windows/bin/native-results.txt
+          Get-Content windows/bin/native-errors.txt
+          if ($smokeRun.ExitCode -ne 0) { throw "Native smoke failed: $($smokeRun.ExitCode)" }
+      - name: Verify chat server and native Windows clients
+        shell: pwsh
+        run: |
+          $env:PYTHONUTF8='1'
+          python -m unittest discover -s server -p 'test_*.py' -v
+          if ($LASTEXITCODE -ne 0) { throw 'Chat server tests failed' }
+          python server/test_windows_chat.py --exe windows/bin/MyDay.exe --output windows/bin/smoke-output
+          if ($LASTEXITCODE -ne 0) { throw 'Windows chat integration failed' }
+      - name: Upload app and validation results
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: myday-windows-${{ github.run_number }}
+          path: |
+            windows/bin/MyDay.exe
+            windows/bin/test-results.txt
+            windows/bin/test-errors.txt
+            windows/bin/native-results.txt
+            windows/bin/native-errors.txt
+            windows/bin/smoke-output/windows-*.png
+            windows/bin/smoke-output/smoke-result.txt
+            windows/README.md
+            windows/Core/DeviceQr.LICENSE.txt
+          if-no-files-found: error
+          retention-days: 14

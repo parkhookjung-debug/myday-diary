@@ -1,0 +1,56 @@
+{
+  "format": "myday-desktop-contract",
+  "version": 1,
+  "limits": {
+    "MaxDays": 50000, "MaxBlocks": 200, "MaxTextUtf16": 100000,
+    "MaxTitleUtf16": 80, "MaxPromptUtf16": 300,
+    "MinWidth": 300, "MaxWidth": 1600, "MinHeight": 180, "MaxHeight": 1400,
+    "MaxPosition": 10000, "DefaultWidth": 340,
+    "PhotoHeight": 360, "EmotionHeight": 288, "TextHeight": 250
+  },
+  "chat": {
+    "ChatProtocol": 1, "ChatMaxText": 2000, "ChatMaxTextUtf16": 4000,
+    "ChatNicknameLimit": 20, "ChatTokenLimit": 100, "ChatMaxPage": 100,
+    "ChatMaxUsers": 64, "ChatMaxPollDelayMs": 30000,
+    "ChatMaxResponseBytes": 1048576, "ChatVisibleHistory": 200,
+    "ChatMaxBody": 16384, "ChatHistory": 50, "ChatPollIntervalMs": 5000
+  },
+  "growth": {"GrowthMaxLevel":100,"GrowthMaxXP":3590,"GrowthAttendanceWeekXP":10,"GrowthDailyActivityXP":40},
+  "growthProfiles": [
+    {"id":"active","name":"매일 루틴","expectedDays":99,"week":[59,59,59,59,59,59,59]},
+    {"id":"balanced","name":"주 5일 기록","expectedDays":200,"week":[35,35,35,35,35,0,0]},
+    {"id":"casual","name":"여유로운 기록","expectedDays":295,"week":[35,1,35,0,35,0,1]}
+  ],
+  "blockKinds": ["text", "todo", "habit", "emotion", "photo", "photo-slot"],
+  "pageStyles": ["plain", "paper", "dots"],
+  "categories": [
+    {"id":"daily","name":"일상 기록"}, {"id":"reflection","name":"회고·성장"},
+    {"id":"gratitude","name":"감사·행복"}, {"id":"emotions","name":"마음 정리"},
+    {"id":"learning","name":"학습·독서"}, {"id":"planning","name":"목표·계획"},
+    {"id":"wellbeing","name":"생활·루틴"}, {"id":"relationships","name":"관계·편지"},
+    {"id":"creativity","name":"창작·취향"}, {"id":"memories","name":"여행·추억"}
+  ],
+  "layouts": [
+    {"id":"page","name":"긴 글"}, {"id":"cards","name":"질문 카드"},
+    {"id":"split","name":"본문 + 메모"}, {"id":"timeline","name":"타임라인"},
+    {"id":"letter","name":"편지"}, {"id":"dashboard","name":"플래너"},
+    {"id":"cornell","name":"코넬 노트"}, {"id":"compare","name":"나란히 비교"}
+  ],
+  "references": [
+    {"id":"dayone","url":"https://dayoneapp.com/guides/tips-and-tutorials/templates/"},
+    {"id":"journey","url":"https://journey.cloud/types-of-diary"},
+    {"id":"bullet","url":"https://bulletjournal.com/blogs/faq/collections"},
+    {"id":"gibbs","url":"https://reflection.ed.ac.uk/reflectors-toolkit/reflecting-on-experience/gibbs-reflective-cycle"},
+    {"id":"what","url":"https://reflection.ed.ac.uk/reflectors-toolkit/reflecting-on-experience/what-so-what-now-what"},
+    {"id":"cornell","url":"https://lsc.cornell.edu/how-to-study/taking-notes/cornell-note-taking-system/"},
+    {"id":"creative","url":"https://blog.journey.cloud/how-to-start-a-creative-journal/"},
+    {"id":"dream","url":"https://journey.cloud/dream-journal"}
+  ],
+  "design": {
+    "Ink":"#433D36", "Muted":"#9B9588", "Accent":"#805C49", "Soft":"#E9E4DB",
+    "Tint":"#F3E6DF", "Paper":"#FFFCF8", "Sidebar":"#F7F5F0", "Olive":"#60694E",
+    "FriendCard":"#EFEEE3", "FriendHalo":"#FAF8ED", "Progress":"#A2AD89", "Selection":"#E9ECDF",
+    "ChatBackground":"#FFFCF7", "ChatMine":"#E8EFE1", "ChatOther":"#F5EBE1",
+    "Backgrounds":["#FFF8F3", "#F1F5EE", "#F7F2FA"]
+  }
+}

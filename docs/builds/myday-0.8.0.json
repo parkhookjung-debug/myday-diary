@@ -1,0 +1,35 @@
+{
+  "version": "0.8.0-preview",
+  "verifiedOn": "2026-10-23",
+  "repository": "parkhookjung-debug/myday-diary",
+  "branch": "codex/windows-app",
+  "platforms": [
+    {
+      "platform": "windows",
+      "file": "MyDay-Windows.exe",
+      "bytes": 497664,
+      "sha256": "65740bbe70651cfaad9fd723604e7ef79f09f0465db580bc3b63ca028dda87c2",
+      "sourceCommit": "d1e8e42ddfda843a136f7f91676da3e66fb28b1a",
+      "ci": "https://github.com/parkhookjung-debug/myday-diary/actions/runs/39930302745",
+      "ciResult": "success"
+    },
+    {
+      "platform": "macos-arm64",
+      "file": "MyDay-macOS-arm64.zip",
+      "bytes": 16736712,
+      "sha256": "e39c285ddd9dd5d4ef8d31eb171caf0b4e31bcfeeef991ef121c7425435420ec",
+      "sourceCommit": "31b9ff498805466083c551801a7cd28499548f57",
+      "ci": "https://github.com/parkhookjung-debug/myday-diary/actions/runs/39930827996",
+      "ciResult": "success"
+    },
+    {
+      "platform": "android",
+      "file": "MyDay-Android.apk",
+      "bytes": 27414889,
+      "sha256": "a20bfb0dee2a948bf88fac6e7ee3f6ba52e871bc8402185ca08be13a7d78b54f",
+      "sourceCommit": "2a576d2394705f6400b09285a9a8ef3fef27b281",
+      "ci": "https://github.com/parkhookjung-debug/myday-diary/actions/runs/39931391809",
+      "ciResult": "success"
+    }
+  ]
+}

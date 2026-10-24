@@ -1,0 +1,23 @@
+{
+  "version": 1,
+  "names": ["일상", "반짝", "별빛", "꿈빛"],
+  "colors": ["#7B8566", "#539C97", "#9980B8", "#B58946"],
+  "weights": [6500, 2500, 900, 100],
+  "duplicatePetals": [3, 6, 12, 24],
+  "exchangePetals": [15, 30, 60, 120],
+  "synthesisPercent": [60, 40, 25],
+  "synthesisCost": 3,
+  "failureRefund": 1,
+  "craftCost": 5,
+  "forms": [
+    ["sword","dagger","axe","hammer","staff","spear","bow","wand","book","fan","orb","crystal","bell","bottle","crown","hood","wizardhat","glasses","mask","cheeks","scarf","bowtie","tie","backpack","board"],
+    ["umbrella","lantern","compass","helmet","beret","flower","monocle","visor","starpatch","pendant","collar","headphones","cape","leaf","banner"],
+    ["scythe","halo","antlers","wings","rocket","ring","runes","bubbles"],
+    ["stars","cloud"]
+  ],
+  "milestones": [
+    {"owned":10,"grade":1,"amount":2}, {"owned":25,"grade":1,"amount":3},
+    {"owned":50,"grade":2,"amount":2}, {"owned":100,"grade":2,"amount":3},
+    {"owned":200,"grade":3,"amount":2}, {"owned":300,"grade":3,"amount":5}
+  ]
+}
