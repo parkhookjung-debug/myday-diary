@@ -12,6 +12,7 @@ struct NativeDeviceLinkView:View {
     @State private var invitation=""
     @State private var message="연결할 때만 같은 Wi-Fi에 임시로 열려요."
     @State private var busy=false
+    @State private var receiveTask:Task<Void,Never>?
     var body:some View {
         ScrollView {VStack(alignment:.leading,spacing:16){
             Text("같은 Wi-Fi에서 기기 연결").font(.title2)
@@ -29,10 +30,10 @@ struct NativeDeviceLinkView:View {
             Divider();Text("다른 기기의 연결 주소로 받기").font(.headline)
             TextField("http://192.168.…/#…",text:$address).textFieldStyle(.roundedBorder)
             HStack{Button("주소 붙여넣기"){address=NSPasteboard.general.string(forType:.string) ?? ""};Button("QR 이미지 읽기"){readQR()}}
-            Button("이 주소에서 기록 받기"){let text=address;busy=true;Task{@MainActor in defer{busy=false};do{let data=try await DeviceAddress.download(text);store.importLinkedData(data);message=store.error ?? "가져오기를 확인했어요."}catch{message=error.localizedDescription}}}.disabled(busy)
+            Button("이 주소에서 기록 받기"){let text=address;busy=true;receiveTask=Task{@MainActor in defer{busy=false};do{let data=try await DeviceAddress.download(text);try Task.checkCancellation();store.importLinkedData(data);message=store.error ?? "가져오기를 확인했어요."}catch{if !(error is CancellationError){message=error.localizedDescription}}}}.disabled(busy)
             Text(message).font(.callout).foregroundStyle(DesktopPalette.olive)
             Text("연결 창을 닫으면 전송도 닫혀요. 신뢰하는 같은 Wi-Fi에서 사용하세요.").font(.caption)
-        }.padding(24).frame(maxWidth:.infinity,alignment:.leading)}.onAppear{addresses=DeviceAddress.addresses();host=addresses.first ?? ""}.onDisappear{stop()}
+        }.padding(24).frame(maxWidth:.infinity,alignment:.leading)}.onAppear{addresses=DeviceAddress.addresses();host=addresses.first ?? ""}.onDisappear{stop();receiveTask?.cancel()}
     }
     private func start(){store.save();guard store.error==nil else{message=store.error!;return};stop();busy=true
         Task{@MainActor in defer{busy=false};do{let data=try WindowsCompatibility.encode(MacBackup(days:store.allDays(),companion:store.companion,windowsMetadata:store.windowsMetadata));let candidate=try MacDeviceLink(host:host,data:data);server=candidate;invitation=try await candidate.start();message="다른 기기에서 QR을 스캔하거나 주소를 입력해 주세요."}catch{stop();message=error.localizedDescription}}
@@ -57,7 +58,7 @@ struct PhotoAlbumView:View {
             HStack{Button("‹ 이전 달"){shift(-1)};Text(month.formatted(.dateTime.year().month())).font(.headline);Button("다음 달 ›"){shift(1)};Spacer();Text("사진 \(photos.count)장")}
             if !error.isEmpty{Text(error).foregroundStyle(.red)}
             if photos.isEmpty{Text("이번 달은 아직 사진이 없어요. 일기에 사진을 추가해 보세요.").frame(maxWidth:.infinity,maxHeight:.infinity)}
-            else{ScrollView{LazyVGrid(columns:columns,spacing:14){ForEach(photos){item in Button{let f=DateFormatter();f.locale=Locale(identifier:"en_US_POSIX");f.calendar=Calendar(identifier:.gregorian);f.dateFormat="yyyy-MM-dd";if let date=f.date(from:item.date){onOpen(date);if store.error==nil{dismiss()}}}label:{VStack(alignment:.leading,spacing:8){if let data=item.block.photo,let image=NSImage(data:data){Image(nsImage:image).resizable().scaledToFill().frame(height:145).clipped()};Text(item.date).font(.caption);Text(item.block.text).lineLimit(2).font(.caption)}.padding(10).frame(maxWidth:.infinity,alignment:.leading).background(DesktopPalette.paper,in:RoundedRectangle(cornerRadius:16))}.buttonStyle(.plain)}}}}
+            else{ScrollView{LazyVGrid(columns:columns,spacing:14){ForEach(photos){item in Button{let f=DateFormatter();f.locale=Locale(identifier:"en_US_POSIX");f.calendar=Calendar(identifier:.gregorian);f.dateFormat="yyyy-MM-dd";if let date=f.date(from:item.date){onOpen(date);if store.error==nil{dismiss()}}}label:{VStack(alignment:.leading,spacing:8){if let data=item.block.photo,let image=NSImage(data:data){GeometryReader{geometry in Image(nsImage:image).resizable().scaledToFill().frame(width:geometry.size.width,height:145).clipped()}.frame(height:145)};Text(item.date).font(.caption);Text(item.block.text).lineLimit(2).font(.caption)}.padding(10).frame(maxWidth:.infinity,alignment:.leading).background(DesktopPalette.paper,in:RoundedRectangle(cornerRadius:16))}.buttonStyle(.plain)}}}}
         }.padding(22).frame(minWidth:700,minHeight:580).background(DesktopPalette.sidebar).onAppear{month=store.date;refresh()}
     }
     private func shift(_ amount:Int){if let next=Calendar(identifier:.gregorian).date(byAdding:.month,value:amount,to:month),Calendar(identifier:.gregorian).component(.year,from:next)>0{month=next;refresh()}}

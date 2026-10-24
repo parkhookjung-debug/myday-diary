@@ -30,7 +30,7 @@ private final class DeviceDownload:NSObject,URLSessionDataDelegate,URLSessionTas
     private var data=Data();private var result:CheckedContinuation<Data,Error>?;private var session:URLSession?
     func load(_ url: URL,token: String)async throws->Data {
         try await withCheckedThrowingContinuation {continuation in
-            result=continuation;let config=URLSessionConfiguration.ephemeral;config.timeoutIntervalForRequest=30;config.timeoutIntervalForResource=120;config.httpCookieStorage=nil
+            result=continuation;let config=URLSessionConfiguration.ephemeral;config.timeoutIntervalForRequest=30;config.timeoutIntervalForResource=120;config.httpCookieStorage=nil;config.connectionProxyDictionary=[:]
             let session=URLSession(configuration:config,delegate:self,delegateQueue:nil);self.session=session
             var request=URLRequest(url:url);request.setValue("Bearer "+token,forHTTPHeaderField:"Authorization");session.dataTask(with:request).resume()
         }

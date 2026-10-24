@@ -30,13 +30,13 @@ namespace MyDay.Windows.UI {
             Add(stack,"연결 닫기",Stop);
             stack.Controls.Add(Design.Label("다른 기기의 연결 주소로 받기",12,true));stack.Controls.Add(remote);
             var receive=Add(stack,"이 주소에서 기록 받기",delegate {});
-            receive.Click+=async delegate {receive.Enabled=false;try {string link=remote.Text;var bytes=await Task.Run(()=>DeviceLink.Download(link));Review(DeviceLink.Validate(bytes));}catch(Exception ex){state.Text="받지 못했어요. "+ex.Message;}finally {if(!IsDisposed)receive.Enabled=true;}};
+            receive.Click+=async delegate {receive.Enabled=false;try {string link=remote.Text;var bytes=await Task.Run(()=>DeviceLink.Download(link));if(!IsDisposed)Review(DeviceLink.Validate(bytes));}catch(Exception ex){if(!IsDisposed)state.Text="받지 못했어요. "+ex.Message;}finally {if(!IsDisposed)receive.Enabled=true;}};
             state.MaximumSize=Design.Size(550,0);stack.Controls.Add(state);timer.Tick+=delegate {if(server!=null){state.Text=server.Active?"남은 연결 시간 "+server.Remaining/60+":"+(server.Remaining%60).ToString("D2")+(server.Incoming()!=null?" · 기록이 도착했어요":""):"연결 시간이 끝났어요. 새 QR을 만들어 주세요.";if(!server.Active)Stop();}};
             FormClosed+=delegate {Stop();timer.Dispose();};
         }
         private static Button Add(Control page,string title,Action action){var button=Design.Button(title);button.Size=Design.Size(340,34);button.Click+=delegate {try{action();}catch(Exception ex){MessageBox.Show(ex.Message);}};page.Controls.Add(button);return button;}
         private void Review(DiaryBook incoming){int photos=incoming.Days.Values.Sum(e=>e.Blocks.Count(b=>b.Photo!=null));int conflicts=incoming.Days.Keys.Count(book.Days.ContainsKey);if(MessageBox.Show(this,incoming.Days.Count+"일 · 사진 "+photos+"장\n겹치는 날짜 "+conflicts+"일\n가져오기 검토를 계속할까요? 아직 기록을 변경하지 않았어요.","도착한 기록",MessageBoxButtons.YesNo)!=DialogResult.Yes)return;Incoming=incoming;DialogResult=DialogResult.OK;}
-        internal void StartForTest(){server=new DeviceLink(IPAddress.Loopback,DeviceLink.Encode(book));invitation.Text=server.Invitation;qr.Image=new DeviceQr(server.Invitation).Image();timer.Start();}
+        internal void StartForTest(){address.Items.Clear();address.Items.Add(IPAddress.Loopback);address.SelectedIndex=0;server=new DeviceLink(IPAddress.Loopback,DeviceLink.Encode(book));invitation.Text=server.Invitation;qr.Image=new DeviceQr(server.Invitation).Image();timer.Start();}
         private void Stop(){timer.Stop();if(server!=null){server.Dispose();server=null;}invitation.Text="";if(qr.Image!=null){qr.Image.Dispose();qr.Image=null;}state.Text="기기 연결을 닫았어요.";}
     }
 }

@@ -75,5 +75,6 @@ jobs:
             windows/bin/smoke-output/windows-*.png
             windows/bin/smoke-output/smoke-result.txt
             windows/README.md
+            windows/Core/DeviceQr.LICENSE.txt
           if-no-files-found: error
           retention-days: 14
