@@ -84,6 +84,7 @@ final class DiaryStore: ObservableObject {
                 reaction=habit ? JournalPolicy.habitReaction : JournalPolicy.recordReaction; reactionTick+=1; lastReaction=Date()
             }
             rewardActivity()
+            captureAutomaticBackup()
         } catch {
             self.error = "저장하지 못했습니다. 다시 저장해 주세요. \(error.localizedDescription)"
         }

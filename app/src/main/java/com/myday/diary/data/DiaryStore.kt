@@ -30,6 +30,7 @@ class DiaryStore(context: Context) : DiaryRepository, NotebookRepository {
         if(file.baseFile.exists() || File(file.baseFile.path+".bak").exists()) JournalHistory(appContext.filesDir).beforeSave(loadBook(),book)
         val output=file.startWrite()
         try {output.write(encoded);file.finishWrite(output)} catch(e: Exception) {file.failWrite(output);throw e}
+        AutomaticBackup(appContext.filesDir).capture(encoded)
         runCatching {DiaryHomeCache(appContext).update(book);DiaryWidgetProvider.refreshAll(appContext)}
         Unit
     }

@@ -76,7 +76,7 @@ struct DiaryView: View {
             .sheet(isPresented: $store.showingCompanion) { CompanionWardrobe(store: store) }
             .sheet(isPresented: $store.showingTemplates) { TemplateGallery(store: store) }
             .sheet(isPresented: $store.showingLayouts) { SavedLayoutsView(store: store) }
-            .sheet(isPresented: $tools) { JournalToolsView(store: store) }
+            .sheet(isPresented: $tools) { JournalToolsView(store: store,onOpenDay:{_ in tab=0}) }
             .onDisappear { Task { await lounge.disconnect() } }
     }
     private var sidebar: some View {

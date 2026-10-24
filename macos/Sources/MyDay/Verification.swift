@@ -22,6 +22,11 @@ enum MacVerification {
         try render(CompanionContent(store: store), name: "preview-companion", width: 820, height: 700)
         try render(JournalToolsView(store: store), name: "preview-journal-tools", width: 820, height: 700)
         try render(JournalToolsView(store: store,startingSection: 1), name: "preview-monthly-report", width: 820, height: 700)
+        try render(JournalToolsView(store: store,startingSection: 3), name: "preview-device-link", width: 820, height: 760)
+        try render(AutomaticBackupView(store:store),name:"preview-automatic-backup",width:820,height:650)
+        let albumFixture=try WindowsCompatibility.decode(CompatibilityVerification.data(CompatibilityVerification.fixture()))
+        if let block=albumFixture.days.values.first?.blocks.first(where:{$0.photo != nil}){store.update{$0.blocks.append(block)}}
+        try render(PhotoAlbumView(store:store,onOpen:{_ in}),name:"preview-photo-album",width:820,height:650)
         let templates = try TemplateCatalog.load()
         store.entry = DiaryEntry()
         store.applyTemplate(templates.first { $0.id == "cornell-notes" }!)

@@ -62,8 +62,8 @@ class PhoneNotebookDeviceTest {
         ui.onNodeWithText("1. 복구").assertExists();ui.onNodeWithText("2. 리포트").performClick()
         ui.onNodeWithText("기록한 날  1일",substring=true).assertExists();screenshot("android-monthly-report")
         ui.onNodeWithText("3. 알림").performClick();ui.onNodeWithText("알림 설정 적용").assertExists();screenshot("android-reminder")
-        ui.onNodeWithText("4. Wi-Fi·QR").performClick();ui.onNodeWithText("전송할 공통 백업 저장").assertExists()
-        ui.onNodeWithText("6. 업데이트").performClick();ui.onNodeWithText("현재 버전 0.9.0").assertExists();screenshot("android-journal-updates")
+        ui.onNodeWithText("4. Wi-Fi·QR").performClick();ui.onNodeWithText("같은 Wi-Fi에서 기기 연결").assertExists();screenshot("android-device-link")
+        ui.onNodeWithText("6. 업데이트").performClick();ui.onNodeWithText("현재 버전 ${JournalPolicy.appVersion}").assertExists();screenshot("android-journal-updates")
     }
     @Test fun deletedPhotoCanBeRecoveredWithCaptionAndPlacement() {
         val root=File(context.cacheDir,"journal-history-test-${java.util.UUID.randomUUID()}");root.mkdirs()
@@ -75,6 +75,13 @@ class PhoneNotebookDeviceTest {
             val recovered=archive.list().single().entry.blocks.single()
             assertEquals(data,recovered.photo);assertEquals("사진 설명",recovered.text);assertEquals(80,recovered.x);assertEquals(420,recovered.width)
         }finally {root.deleteRecursively()}
+    }
+    @Test fun photoAlbumReturnsToTheOriginalDiaryAndBackupsStayLocal(){
+        start();ui.runOnIdle{val image=Bitmap.createBitmap(20,16,Bitmap.Config.ARGB_8888);val bytes=ByteArrayOutputStream();image.compress(Bitmap.CompressFormat.JPEG,85,bytes);image.recycle();c.edit(c.entry.copy(blocks=c.entry.blocks+DiaryBlock(id="album-photo",type="photo",text="산책 사진",photo=Base64.encodeToString(bytes.toByteArray(),Base64.NO_WRAP))))}
+        ui.onNodeWithTag("nav-4").performClick();ui.onNodeWithTag("journal-tools-open").performClick();ui.onNodeWithText("사진 모아보기",useUnmergedTree=true).performClick()
+        ui.onNodeWithTag("album-album-photo").assertExists();screenshot("android-photo-album");ui.onNodeWithTag("album-album-photo").performClick()
+        ui.onNodeWithTag("nav-0").assertIsSelected();ui.runOnIdle{assertEquals(day,c.date);assertEquals("산책 사진",c.entry.blocks.last().text)}
+        ui.onNodeWithTag("nav-4").performClick();ui.onNodeWithTag("journal-tools-open").performClick();ui.onNodeWithText("자동 백업",useUnmergedTree=true).performClick();ui.onNodeWithText("지금 전체 백업").assertExists();screenshot("android-automatic-backup")
     }
     @Test fun giftDrawRevealsOnlySavedResultsAndDisablesWhenEmpty() {
         start();ui.onNodeWithTag("nav-2").performClick();ui.onNodeWithText("소품 뽑기").performClick()

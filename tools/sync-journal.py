@@ -7,7 +7,7 @@ ROOT = Path(__file__).resolve().parents[1]
 def render(root=ROOT):
     p=json.loads((root/'shared/journal-tools.json').read_text(encoding='utf-8'))
     if p.get('version')!=1 or not re.fullmatch(r'\d+\.\d+\.\d+',p.get('appVersion','')): raise ValueError('Unsupported journal policy version')
-    for k in ('historyLimitBytes','historyLimitFiles','historyIntervalSeconds','transferLifetimeSeconds'):
+    for k in ('historyLimitBytes','historyLimitFiles','historyIntervalSeconds','transferLifetimeSeconds','automaticBackupCount','automaticBackupLimitBytes'):
         if type(p.get(k)) is not int or not 1<=p[k]<=2_000_000_000: raise ValueError('Invalid positive policy limit: '+k)
     if set(p['reactions'])!={'record','habit','welcome'} or any(not isinstance(s,str) or not 1<=len(s)<=200 for s in p['reactions'].values()): raise ValueError('Invalid reaction messages')
     values={k:v for k,v in p.items() if k not in ('version','reactions')}

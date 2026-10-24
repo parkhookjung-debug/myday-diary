@@ -26,12 +26,15 @@ namespace MyDay.Windows.UI
         private readonly DiaryBook book;
         private readonly Action<JournalRevision> restore;
         private readonly JournalHistory archive;
+        private readonly Action<DiaryBook> importBook;
+        public DateTime? SelectedAlbumDate {get;private set;}
         private readonly ListBox revisions=new ListBox {Dock=DockStyle.Fill,HorizontalScrollbar=true};
         private readonly TextBox preview=new TextBox {Dock=DockStyle.Bottom,Height=100,Multiline=true,ReadOnly=true,ScrollBars=ScrollBars.Vertical};
-        public JournalToolsWindow(DiaryStore store,DiaryBook book,Action<JournalRevision> restore) {
+        public JournalToolsWindow(DiaryStore store,DiaryBook book,Action<JournalRevision> restore,Action<DiaryBook> importBook=null) {
+            this.importBook=importBook;
             this.store=store;this.book=book;this.restore=restore;root=Path.GetDirectoryName(store.FilePath);archive=new JournalHistory(root);
             Text="나의 기록 도구 · "+JournalPolicy.AppVersion;Size=Design.Size(780,640);MinimumSize=Design.Size(600,460);StartPosition=FormStartPosition.CenterParent;Font=Design.Font(10);BackColor=Design.Sidebar;
-            Controls.Add(tabs);History();Report();Reminder();Transfer();Updates();
+            Controls.Add(tabs);History();Report();Reminder();Transfer();Updates();Album();Backups();
         }
         private FlowLayoutPanel Page(string title) {var page=new TabPage(title);var flow=new FlowLayoutPanel {Dock=DockStyle.Fill,AutoScroll=true,FlowDirection=FlowDirection.TopDown,WrapContents=false,Padding=Design.Pad(20),BackColor=Design.Sidebar};page.Controls.Add(flow);tabs.TabPages.Add(page);return flow;}
         private static void Note(Control page,string text) {var label=Design.Label(text,10);label.MaximumSize=Design.Size(650,0);label.Margin=Design.Pad(0,0,0,16);page.Controls.Add(label);}
@@ -57,10 +60,13 @@ namespace MyDay.Windows.UI
             page.Controls.Add(enabled);page.Controls.Add(time);Add(page,"알림 설정 저장",delegate{value.Enabled=enabled.Checked;value.Minute=time.Value.Hour*60+time.Value.Minute;value.Save(root);MessageBox.Show("알림 설정을 저장했어요.");});
         }
         private void Transfer() {
-            var page=Page("4. Wi-Fi · QR 이동");Note(page,"같은 Wi-Fi의 Windows·Mac·Android 사이에서 백업을 옮겨요.\n1. 아래에서 공통 백업을 저장하세요.\n2. 저장소의 tools/lan-transfer.py를 실행하고 백업을 선택하세요.\n3. QR을 스캔하거나 주소를 열어 받으세요.\n4. 받은 기기의 설정·백업에서 JSON을 가져오세요.\n10분 후 전송이 닫혀요. 전송할 때만 서버를 켜세요.");
+            var page=Page("기기 연결");Note(page,"앱에서 QR을 만들거나 다른 기기의 연결 주소를 입력해요.\nPython 설치 없이 같은 Wi-Fi에서 10분 동안 연결해요.\n연결 창을 닫으면 전송도 닫혀요.");
+            Add(page,"기기 연결 열기",delegate{using(var link=new DeviceLinkWindow(book))if(link.ShowDialog(this)==DialogResult.OK&&importBook!=null){Close();importBook(link.Incoming);}});
             Add(page,"전송할 백업 저장",SaveBackup);
             Add(page,"Wi-Fi 전송 안내 열기",delegate{Process.Start("https://github.com/parkhookjung-debug/myday-diary/blob/codex/windows-app/docs/JOURNAL-TOOLS.md#4-wi-fi--qr-기록-이동");});
         }
+        private void Album(){var page=Page("사진 모아보기");Note(page,"일기에 첨부한 사진을 월별로 모아 봐요. 사진을 누르면 그날의 일기로 이동해요.");Add(page,"월별 사진 앨범 열기",delegate{using(var album=new PhotoAlbumWindow(book,DateTime.Today))if(album.ShowDialog(this)==DialogResult.OK){SelectedAlbumDate=album.SelectedDate;Close();}});}
+        private void Backups(){var page=Page("자동 백업");var backup=new AutomaticBackup(root);var value=backup.State();var enabled=new CheckBox {Text="앱에서 저장한 날 하루 한 번 전체 백업",AutoSize=true,Checked=value.Enabled};page.Controls.Add(enabled);var status=Design.Label("",10);status.MaximumSize=Design.Size(600,0);page.Controls.Add(status);Action refresh=delegate {var state=backup.State();status.Text="마지막 백업: "+(state.LastSuccess==""?"아직 없음":state.LastSuccess)+"\n보관: "+backup.Files().Length+" / "+JournalPolicy.AutomaticBackupCount+"일분"+(state.Error==""?"":"\n백업 실패: "+state.Error);};refresh();enabled.CheckedChanged+=delegate {backup.SetEnabled(enabled.Checked);refresh();};Note(page,"최근 3일분을 기기 안에 보관해요. 앱을 종료한 동안에는 실행하지 않아요. 백업 실패가 일기 저장을 막지 않아요.");Add(page,"지금 전체 백업",delegate{backup.Capture(store.FilePath,true);refresh();});Add(page,"백업 폴더 열기",delegate{Directory.CreateDirectory(backup.DirectoryPath);Process.Start(backup.DirectoryPath);});}
         private void SaveBackup() {using(var dialog=new SaveFileDialog {Filter="MyDay 백업|*.json",FileName="myday-"+DateTime.Today.ToString("yyyyMMdd")+".json"})if(dialog.ShowDialog(this)==DialogResult.OK)store.Export(dialog.FileName,book);}
         private void Updates() {
             var page=Page("6. 업데이트");Note(page,"현재 버전 "+JournalPolicy.AppVersion+"\n휴지통·이력, 월간 리포트, 알림, Wi-Fi 전송 도구, 상몬 반응을 추가했어요.\n업데이트 전에는 공통 백업을 저장하세요. 프로그램 파일과 개인 기록 폴더는 분리돼 있어요.");

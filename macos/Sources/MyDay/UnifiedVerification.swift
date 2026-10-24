@@ -6,6 +6,7 @@ enum UnifiedVerification {
     static func check(_ value: @autoclosure () -> Bool, _ name: String) throws { try MacVerification.check(value(), name) }
     static func run(root: URL) throws {
         try JournalToolsVerification.run(root: root)
+        try DeviceToolsVerification.run(root: root)
         let catalog = SharedArtCatalog.shared
         try check(catalog.characters.count == 64 && catalog.items.count == 300, "shared catalog completeness")
         for skin in catalog.characters { try check(SangmonImages.image("portraits/\(skin.id).png") != nil && SangmonImages.image("sangmon/\(skin.id).png") != nil, "shared character artwork \(skin.id)") }

@@ -23,11 +23,12 @@ import java.net.URL
 import java.time.YearMonth
 import org.json.JSONObject
 
-@Composable fun PhoneJournalTools(controller: NotebookController,onExport: ()->Unit,onDismiss: ()->Unit) {
+@Composable fun PhoneJournalTools(controller: NotebookController,onExport: ()->Unit,onDismiss: ()->Unit,onOpenDay: (java.time.LocalDate)->Unit={controller.selectDate(it)}) {
     val context=LocalContext.current;val scope=rememberCoroutineScope();val archive=remember {JournalHistory(context.filesDir)}
     var tab by remember {mutableIntStateOf(0)};var revisions by remember {mutableStateOf(emptyList<JournalRevision>())}
     var selected by remember {mutableStateOf<JournalRevision?>(null)};var confirm by remember {mutableStateOf("")}
     var message by remember {mutableStateOf("")};var busy by remember {mutableStateOf(false)}
+    var album by remember {mutableStateOf(false)};var backups by remember {mutableStateOf(false)}
     var month by remember {mutableStateOf(YearMonth.from(controller.date))}
     val prefs=remember {JournalReminder.preferences(context)};var enabled by remember {mutableStateOf(prefs.getBoolean("enabled",false))}
     var hour by remember {mutableStateOf((prefs.getInt("minute",1200)/60).toString())};var minute by remember {mutableStateOf((prefs.getInt("minute",1200)%60).toString())}
@@ -37,6 +38,7 @@ import org.json.JSONObject
     LaunchedEffect(Unit) {refresh()}
     LaunchedEffect(controller.book,controller.saving) {if(!controller.saving) refresh()}
     PhoneFullDialog("나의 기록 도구 · ${JournalPolicy.appVersion}",onDismiss,controller.error) {
+        Row(Modifier.fillMaxWidth().padding(horizontal=16.dp)){TextButton({album=true}){Text("사진 모아보기")};TextButton({backups=true}){Text("자동 백업")}}
         ScrollableTabRow(tab) {listOf("1. 복구","2. 리포트","3. 알림","4. Wi-Fi·QR","6. 업데이트").forEachIndexed {i,title->Tab(tab==i,{tab=i},text={Text(title)})}}
         if(message.isNotEmpty()) Text(message,Modifier.padding(12.dp),style=MaterialTheme.typography.bodySmall)
         LazyColumn(Modifier.weight(1f).padding(horizontal=16.dp),verticalArrangement=Arrangement.spacedBy(14.dp),contentPadding=PaddingValues(vertical=18.dp)) {
@@ -57,10 +59,7 @@ import org.json.JSONObject
                     Button({if(enabled && Build.VERSION.SDK_INT>=33 && !JournalReminder.allowed(context)) permission.launch(Manifest.permission.POST_NOTIFICATIONS) else saveReminder()}) {Text("알림 설정 적용")}
                     Text("휴대폰 절전 상태에 따라 시간이 늦어질 수 있어요. 매일 한 번만 예약하고 재부팅·시간대 변경 시 다시 예약해요. 알림을 끄면 예약도 취소해요.")
                 }}
-                3->{item {Text("같은 Wi-Fi에서 Windows·Mac·Android 기록 이동",style=MaterialTheme.typography.titleLarge);Text("1. 공통 백업을 저장해요.\n2. 컴퓨터에서 tools/lan-transfer.py를 실행해요.\n3. QR 또는 임시 주소로 다른 기기에서 받아요.\n4. 받은 앱의 설정·백업에서 가져와요.\n10분 후 전송이 닫혀요. 휴대폰 백업을 전송 페이지에서 업로드해 컴퓨터로 보낼 수도 있어요.")
-                    Button(onExport,enabled=controller.saved) {Text("전송할 공통 백업 저장")}
-                    OutlinedButton({context.startActivity(Intent(Intent.ACTION_VIEW,Uri.parse("https://github.com/parkhookjung-debug/myday-diary/blob/codex/windows-app/docs/JOURNAL-TOOLS.md")))}) {Text("전송 도구 안내")}
-                }}
+                3->{item {PhoneDeviceLink(controller)}}
                 else->{item {Text("현재 버전 ${JournalPolicy.appVersion}",style=MaterialTheme.typography.titleLarge);Text("복구 보관함·월간 리포트·알림·Wi-Fi 전송 도구·상몬 반응을 추가했어요.")
                     Button({scope.launch {busy=true;try {message=withContext(Dispatchers.IO) {checkJournalRelease()}}catch(_: Exception){message="버전 확인 실패 · 연결을 확인하고 다시 시도해 주세요."}finally{busy=false}}},enabled=!busy) {Text("최신 정식 버전 확인")}
                     OutlinedButton(onExport,enabled=controller.saved) {Text("1. 업데이트 전 백업 저장")}
@@ -70,6 +69,8 @@ import org.json.JSONObject
             }
         }
     }
+    if(album)PhoneFullDialog("사진 모아보기",{album=false},controller.error){PhonePhotoAlbum(controller.book,controller.date){day->onOpenDay(day);if(controller.saved&&controller.error==null)album=false}}
+    if(backups)PhoneAutomaticBackup(controller,onExport){backups=false}
     if(confirm.isNotEmpty()) AlertDialog(onDismissRequest={confirm=""},title={Text(when(confirm){"day"->"일기를 휴지통으로 옮길까요?";"remove"->"이 복구 사본을 영구 삭제할까요?";else->"이 버전으로 복원할까요?"})},text={Text(if(confirm=="remove") "이 사본은 다시 복원할 수 없어요." else "이전 글·사진을 보관해요. 성장 점수와 재화는 바뀌지 않아요.")},confirmButton={TextButton({val action=confirm;confirm="";scope.launch {try {
         when(action) {"day"->controller.deleteDay();"restore"->selected?.let {item->val restored=withContext(Dispatchers.IO) {controller.book.days[item.date]?.let {archive.capture(item.date,it,"복원 전",true)};item.entry};controller.restoreRevision(item.date,restored)};"remove"->selected?.let {withContext(Dispatchers.IO) {archive.remove(it)}}};refresh()
     }catch(e: Exception){message=e.message ?: "처리하지 못했어요."}}}) {Text("확인")}},dismissButton={TextButton({confirm=""}) {Text("취소")}})

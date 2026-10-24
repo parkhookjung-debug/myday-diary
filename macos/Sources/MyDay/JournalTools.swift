@@ -112,13 +112,17 @@ struct JournalToolsView: View {
     @State private var deletingDay=false
     @State private var restoring=false
     @State private var section=0
-    init(store: DiaryStore,startingSection: Int=0) { self.store=store;_section=State(initialValue:startingSection) }
+    @State private var album=false
+    private var onOpenDay:((Date)->Void)?
+    init(store: DiaryStore,startingSection: Int=0,onOpenDay:((Date)->Void)?=nil) { self.store=store;self.onOpenDay=onOpenDay;_section=State(initialValue:startingSection) }
     var body: some View {
         VStack {
             HStack { Text("나의 기록 도구 · \(JournalPolicy.appVersion)").font(.title2); Spacer(); Button("닫기") { dismiss() } }.padding()
             if !message.isEmpty { Text(message).foregroundStyle(DesktopPalette.olive).textSelection(.enabled).padding(.horizontal) }
+            HStack{Button("사진 모아보기"){album=true};Button("자동 백업"){section=5};Spacer()}.padding(.horizontal)
             Picker("기록 도구",selection: $section) {
                 Text("1. 복구").tag(0);Text("2. 리포트").tag(1);Text("3. 알림").tag(2);Text("4. Wi-Fi·QR").tag(3);Text("6. 업데이트").tag(4)
+                Text("자동 백업").tag(5)
             }.pickerStyle(.segmented).padding(.horizontal)
             Group { switch section {
                 case 0:
@@ -146,12 +150,9 @@ struct JournalToolsView: View {
                     Spacer()
                 }.padding(24)
                 case 3:
-                VStack(alignment: .leading,spacing: 20) {
-                    Text("같은 Wi-Fi에서 기록 이동").font(.title2)
-                    Text("공통 백업을 저장한 뒤 tools/lan-transfer.py를 실행하세요. QR 또는 임시 주소로 다른 기기에서 백업을 받고, 설정·백업에서 가져오세요. 10분 후 전송이 닫혀요.")
-                    Button("전송할 공통 백업 저장") { store.exportWindowsBackup() }
-                    Button("Wi-Fi 전송 도구 안내") { openGuide() }; Spacer()
-                }.padding(24)
+                NativeDeviceLinkView(store:store)
+                case 5:
+                AutomaticBackupView(store:store)
                 default:
                 VStack(alignment: .leading,spacing: 20) {
                     Text("현재 버전 \(JournalPolicy.appVersion)").font(.title2)
@@ -163,6 +164,7 @@ struct JournalToolsView: View {
                 }.padding(24)
             }}.frame(maxWidth: .infinity,maxHeight: .infinity)
         }.frame(minWidth: 760,minHeight: 600).background(DesktopPalette.sidebar).onAppear { refresh(); refreshReport() }
+        .sheet(isPresented:$album){PhotoAlbumView(store:store){date in store.select(date);if store.error==nil{onOpenDay?(date);dismiss()}}}
         .alert("선택한 복구 사본을 영구 삭제할까요?",isPresented: Binding(get: {pendingDelete != nil},set: {if !$0 {pendingDelete=nil}})) {
             Button("삭제",role: .destructive) { if let item=pendingDelete { do { try JournalHistory.remove(store.directory,item: item); selected=nil; refresh() } catch {message=error.localizedDescription} } }; Button("취소",role: .cancel) {}
         }

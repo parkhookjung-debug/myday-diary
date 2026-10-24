@@ -127,7 +127,7 @@ import java.time.LocalDate
             }
         }
     }
-    if(journalTools) PhoneJournalTools(controller,onExport) {journalTools=false}
+    if(journalTools) PhoneJournalTools(controller,onExport,onDismiss={journalTools=false},onOpenDay={day->controller.clearError();controller.selectDate(day);if(controller.saved&&controller.error==null){journalTools=false;tab=0}})
     if(add) AlertDialog(onDismissRequest={add=false},title={Text("어떤 하루 조각을 남길까요?")},text={Column {listOf("text" to "글 일기","todo" to "할 일","habit" to "습관","emotion" to "감정","photo" to "사진").forEach {(kind,title)->TextButton({if(kind=="photo") onPhoto(null) else attempt(TactileEvent.SELECT) {controller.add(kind)};add=false},modifier=Modifier.fillMaxWidth()) {Text(title)}}}},confirmButton={TextButton({add=false}) {Text("닫기")}})
     if(templates) TemplatePicker(catalog,onApply={template->attempt(TactileEvent.DROP) {controller.applyTemplate(template)};if(controller.error==null) templates=false},onDismiss={templates=false},error=controller.error)
     if(layouts) SavedLayoutPicker(controller,onApply={layout->attempt(TactileEvent.DROP) {controller.applyLayout(layout)};if(controller.error==null) layouts=false},onSave={nameFor=null;naming=true},onRename={nameFor=it;naming=true},onDelete={id->attempt(TactileEvent.DROP) {controller.deleteLayout(id)}},onDismiss={layouts=false})

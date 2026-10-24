@@ -148,6 +148,7 @@ namespace MyDay.Windows.Core
                 else File.Move(pending, FilePath);
             }
             finally { if (File.Exists(pending)) File.Delete(pending); }
+            new AutomaticBackup(directory).Capture(FilePath);
         }
         public void Export(string destination, DiaryBook book)
         {

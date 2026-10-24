@@ -13,6 +13,7 @@ app="$PWD/build/MyDay.app"
 mkdir -p "$app/Contents/MacOS" "$app/Contents/Resources"
 cp "$binary_dir/MyDay" "$app/Contents/MacOS/MyDay"
 cp Sources/MyDay/Resources/templates.json "$app/Contents/Resources/templates.json"
+cp Sources/MyDay/Resources/device-link.html "$app/Contents/Resources/device-link.html"
 cp -R Sources/MyDay/Resources/Art "$app/Contents/Resources/"
 cat > "$app/Contents/Info.plist" <<'PLIST'
 <?xml version="1.0" encoding="UTF-8"?>
@@ -23,8 +24,9 @@ cat > "$app/Contents/Info.plist" <<'PLIST'
     <key>CFBundleName</key><string>마이데이</string>
     <key>CFBundleDisplayName</key><string>마이데이</string>
     <key>CFBundlePackageType</key><string>APPL</string>
-    <key>CFBundleShortVersionString</key><string>0.9.0</string>
-    <key>CFBundleVersion</key><string>9</string>
+    <key>CFBundleShortVersionString</key><string>0.10.0</string>
+    <key>CFBundleVersion</key><string>10</string>
+    <key>NSLocalNetworkUsageDescription</key><string>같은 Wi-Fi의 기기와 일기 백업을 주고받습니다.</string>
     <key>LSMinimumSystemVersion</key><string>13.0</string>
     <key>NSHighResolutionCapable</key><true/>
     <key>NSPrincipalClass</key><string>NSApplication</string>
@@ -35,5 +37,5 @@ codesign --force --sign - "$app"
 "$app/Contents/MacOS/MyDay" --self-test
 cp README.md build/맥-실행안내.md
 cp ../LICENSE build/LICENSE
-ditto -c -k --sequesterRsrc --keepParent "$app" "build/MyDay-macOS-$(uname -m)-v0.9.0-preview.zip"
+ditto -c -k --sequesterRsrc --keepParent "$app" "build/MyDay-macOS-$(uname -m)-v0.10.0-preview.zip"
 print "완료: $app"

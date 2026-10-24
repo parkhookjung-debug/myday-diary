@@ -414,6 +414,16 @@ namespace MyDay.Windows.UI
                 {
                     DiaryBook incoming;
                     using(var stream=File.OpenRead(dialog.FileName)) incoming=DiaryStore.Read(stream);
+                    AcceptIncomingBook(incoming);
+                }
+                catch(Exception ex) { MessageBox.Show(this,"기록을 가져오지 못했어요.\n"+ex.Message,"가져오기 오류",MessageBoxButtons.OK,MessageBoxIcon.Error); }
+            }
+        }
+        private void AcceptIncomingBook(DiaryBook incoming)
+        {
+            if(!FlushSave())return;
+            try {
+                    DiaryStore.Validate(incoming);
                     var conflicts=incoming.Days.Keys.Count(book.Days.ContainsKey);
                     var layouts=SavedLayouts.Merge(book.Layouts,incoming.Layouts);
                     if(MessageBox.Show(this,incoming.Days.Count+"일의 기록과 내 레이아웃 "+incoming.Layouts.Count+"개를 가져올까요?\n같은 날짜의 기록 "+conflicts+"개와 같은 ID의 레이아웃은 백업 내용으로 바뀝니다. 이름이 겹치면 번호를 붙입니다. 기존 파일은 diary.json.bak으로 남습니다.","백업 가져오기",MessageBoxButtons.YesNo,MessageBoxIcon.Question)!=DialogResult.Yes) return;
@@ -426,9 +436,8 @@ namespace MyDay.Windows.UI
                     merged.Layouts=layouts; merged.Version=Math.Max(book.Version,incoming.Version);
                     foreach(var pair in incoming.Days) merged.Days[pair.Key]=pair.Value;
                     store.Save(merged); book=merged; dirty=false; entryDirty=false; UpdateGrowth(); LoadDate(); status.Text="가져오기 완료";
-                }
-                catch(Exception ex) { MessageBox.Show(this,"기록을 가져오지 못했어요.\n"+ex.Message,"가져오기 오류",MessageBoxButtons.OK,MessageBoxIcon.Error); }
             }
+            catch(Exception ex) { MessageBox.Show(this,"기록을 가져오지 못했어요.\n"+ex.Message,"가져오기 오류",MessageBoxButtons.OK,MessageBoxIcon.Error); }
         }
         public void SmokeTest(string destination)
         {

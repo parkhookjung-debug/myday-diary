@@ -50,6 +50,7 @@ namespace MyDay.Windows
                 }
                 RunPhotoTests(directory);
                 RunJournalToolsTests(directory);
+                RunDeviceToolsTests(directory);
                 RunBrowseTests(directory);
                 RunSavedLayoutTests(directory);
                 RunGrowthTests(directory);

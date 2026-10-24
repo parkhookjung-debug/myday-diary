@@ -17,7 +17,7 @@ namespace MyDay.Windows.UI {
                 DiaryEntry old;bool existed=book.Days.TryGetValue(revision.Date,out old);book.Days[revision.Date]=revision.Entry;
                 try {store.Save(book);} catch {if(existed)book.Days[revision.Date]=old;else book.Days.Remove(revision.Date);throw;}
                 ChangeDate(DateTime.ParseExact(revision.Date,"yyyy-MM-dd",System.Globalization.CultureInfo.InvariantCulture));LoadDate();
-            })) tools.ShowDialog(this);} catch(Exception ex) {MessageBox.Show(this,"기록 도구를 열지 못했어요. 저장 폴더의 journal-history 사본을 보관한 뒤 손상된 파일을 확인해 주세요.\n"+ex.Message,"기록 도구");}
+            },AcceptIncomingBook)) {tools.ShowDialog(this);if(tools.SelectedAlbumDate.HasValue)ChangeDate(tools.SelectedAlbumDate.Value);}} catch(Exception ex) {MessageBox.Show(this,"기록 도구를 열지 못했어요.\n"+ex.Message,"기록 도구");}
         }
         private void DeleteCurrentDay() {
             if(!FlushSave() || !book.Days.ContainsKey(DiaryStore.Key(date)))return;
@@ -31,6 +31,14 @@ namespace MyDay.Windows.UI {
                 var tabs=(TabControl)tools.Controls[0];
                 for(int i=0;i<tabs.TabCount;i++) {tabs.SelectedIndex=i;Application.DoEvents();using(var bitmap=new System.Drawing.Bitmap(tools.Width,tools.Height)){tools.DrawToBitmap(bitmap,new System.Drawing.Rectangle(System.Drawing.Point.Empty,tools.Size));bitmap.Save(Path.Combine(directory,"windows-journal-tools-"+i+".png"),System.Drawing.Imaging.ImageFormat.Png);}}
                 tools.Close();
+            }
+            using(var album=new PhotoAlbumWindow(book,date)){
+                album.StartPosition=FormStartPosition.Manual;album.Location=new System.Drawing.Point(-30000,-30000);album.Show();Application.DoEvents();
+                using(var bitmap=new System.Drawing.Bitmap(album.Width,album.Height)){album.DrawToBitmap(bitmap,new System.Drawing.Rectangle(System.Drawing.Point.Empty,album.Size));bitmap.Save(Path.Combine(directory,"windows-photo-album.png"),System.Drawing.Imaging.ImageFormat.Png);}album.Close();
+            }
+            using(var link=new DeviceLinkWindow(book)){
+                link.StartPosition=FormStartPosition.Manual;link.Location=new System.Drawing.Point(-30000,-30000);link.Show();link.StartForTest();Application.DoEvents();
+                using(var bitmap=new System.Drawing.Bitmap(link.Width,link.Height)){link.DrawToBitmap(bitmap,new System.Drawing.Rectangle(System.Drawing.Point.Empty,link.Size));bitmap.Save(Path.Combine(directory,"windows-device-link.png"),System.Drawing.Imaging.ImageFormat.Png);}link.Close();
             }
         }
         private void StartReminder() {

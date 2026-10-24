@@ -1,6 +1,8 @@
 {
   "version": 1,
-  "appVersion": "0.9.0",
+  "appVersion": "0.10.0",
+  "automaticBackupCount": 3,
+  "automaticBackupLimitBytes": 268435456,
   "historyLimitBytes": 268435456,
   "historyLimitFiles": 2000,
   "historyIntervalSeconds": 300,
