@@ -191,6 +191,15 @@ class PhoneNotebookDeviceTest {
         ui.onNodeWithText("꽃 +").performClick();ui.waitForIdle()
         ui.waitUntil(5000){c.entry.blocks.any{it.title=="꽃 스티커"}}
         ui.runOnIdle {com.myday.diary.data.NotebookPhoto.validate(c.book)}
+        val original=c.entry.blocks.single {it.title=="꽃 스티커"}.photo
+        ui.onNodeWithText("사진 꾸미기 · 사진").performClick()
+        ui.onNodeWithText("정사각 자르기").performScrollTo().performClick()
+        ui.onNodeWithText("라벤더 테두리").performScrollTo().performClick()
+        ui.onNodeWithText("별").performScrollTo().performClick()
+        ui.onNodeWithContentDescription("편집 미리보기").performScrollTo().performTouchInput {click(center)}
+        screenshot("android-photo-editor")
+        ui.onNodeWithText("이 사진 적용").performScrollTo().performClick()
+        ui.runOnIdle {assertNotEquals(original,c.entry.blocks.single {it.title=="꽃 스티커"}.photo);com.myday.diary.data.NotebookPhoto.validate(c.book)}
         ui.onNodeWithText("6 일기 잠금").performScrollTo().performClick();screenshot("android-studio-privacy")
         ui.onNodeWithText("현재 꺼짐").assertExists()
     }
