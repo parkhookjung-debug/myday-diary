@@ -108,6 +108,10 @@ import kotlin.math.*
                 Text("스티커를 고른 뒤 사진에서 붙일 위치를 눌러요.")
                 Text(error)
                 val bitmap=image
+                if(bitmap==null&&error.isEmpty()) {
+                    LinearProgressIndicator(Modifier.fillMaxWidth())
+                    Text("사진을 불러오는 중…")
+                }
                 if(bitmap!=null) {
                     BoxWithConstraints(Modifier.fillMaxWidth().height(300.dp)) {
                         val density=LocalDensity.current

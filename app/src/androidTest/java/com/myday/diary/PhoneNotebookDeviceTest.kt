@@ -193,6 +193,8 @@ class PhoneNotebookDeviceTest {
         ui.runOnIdle {com.myday.diary.data.NotebookPhoto.validate(c.book)}
         val original=c.entry.blocks.single {it.title=="꽃 스티커"}.photo
         ui.onNodeWithText("사진 꾸미기 · 사진").performClick()
+        screenshot("android-photo-editor-open")
+        ui.waitUntil(10000){ui.onAllNodesWithText("정사각 자르기").fetchSemanticsNodes().isNotEmpty()}
         ui.onNodeWithText("정사각 자르기").performScrollTo().performClick()
         ui.onNodeWithText("라벤더 테두리").performScrollTo().performClick()
         ui.onNodeWithText("별").performScrollTo().performClick()
