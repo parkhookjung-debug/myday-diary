@@ -28,6 +28,8 @@ enum MacVerification {
         for i in 0..<6{decor.Furniture.append(RoomItem(Kind:StudioCatalog.furnitureKinds[i],X:positions[i].0,Y:positions[i].1))}
         decor.Pages=[StudioNote(Date:DiaryStore.todayKey(store.date),Tags:["산책","학교"],Favourite:true)]
         store.commitStudio(decor)
+        let decorPhoto=try PhotoDecor.encode(PhotoDecor.sticker(0));store.update{e in var b=DiaryBlock(kind:.photo,text:"꽃 스티커 예시");b.photo=decorPhoto;e.blocks.append(b)}
+        try render(PhotoDecorView(source:decorPhoto,apply:{_ in}),name:"preview-photo-editor",width:820,height:660)
         for section in 0..<6{try render(StudioView(store:store,startingSection:section),name:"preview-studio-\(section)",width:890,height:720)}
         try render(AutomaticBackupView(store:store),name:"preview-automatic-backup",width:820,height:650)
         let albumFixture=try WindowsCompatibility.decode(CompatibilityVerification.data(CompatibilityVerification.fixture()))

@@ -22,6 +22,7 @@ namespace MyDay.Windows.UI
         public MonsterVariant Variant { get { return variant; } set { variant=value; Invalidate(); } }
         public MonsterView()
         {
+            SetStyle(ControlStyles.SupportsTransparentBackColor,true);
             DoubleBuffered = true; BackColor = Color.White; Cursor = Cursors.Hand;
             AccessibleName = "불꽃 몬스터. 클릭하면 불을 뿜습니다.";
             timer.Tick += delegate { Invalidate(); };
