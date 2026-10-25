@@ -3,6 +3,8 @@ import AppKit
 struct StudioView:View {
  @ObservedObject var store:DiaryStore
  var onOpen:()->Void={}
+ var startingSection=0
+ @State private var section=0
  @Environment(\.dismiss)private var dismiss
  @State private var studio=StudioData();@State private var message="";@State private var photo:UUID?
  @State private var month=Date();@State private var tags="";@State private var favourite=false;@State private var query="";@State private var only=false;@State private var selected:String?
@@ -13,15 +15,15 @@ struct StudioView:View {
  private func save(){do{try studio.validate();store.commitStudio(studio);message=store.error ?? "저장했어요."}catch{message=error.localizedDescription}}
  private func open(_ date:Date){store.select(date);if store.error==nil{onOpen();dismiss()}}
  var body:some View {VStack(alignment:.leading){HStack{Text("하루 꾸미기").font(.title2);Spacer();Button("닫기"){dismiss()}};if !message.isEmpty{Text(message).font(.caption).foregroundStyle(DesktopPalette.olive)}
-  TabView {
-   photos.tabItem{Text("1 사진·스티커")}
-   room.tabItem{Text("2 상몬의 방")}
-   moods.tabItem{Text("3 감정 달력")}
-   notes.tabItem{Text("4 태그·즐겨찾기")}
-   questions.tabItem{Text("5 오늘의 질문")}
-   lock.tabItem{Text("6 일기 잠금")}
+  TabView(selection:$section) {
+   photos.tag(0).tabItem{Text("1 사진·스티커")}
+   room.tag(1).tabItem{Text("2 상몬의 방")}
+   moods.tag(2).tabItem{Text("3 감정 달력")}
+   notes.tag(3).tabItem{Text("4 태그·즐겨찾기")}
+   questions.tag(4).tabItem{Text("5 오늘의 질문")}
+   lock.tag(5).tabItem{Text("6 일기 잠금")}
   }
- }.padding(20).frame(width:850,height:670).background(DesktopPalette.sidebar).onAppear{studio=store.studio;month=store.date;do{allDays=try store.allDays()}catch{message=error.localizedDescription};let note=studio.note(key);tags=note.Tags.joined(separator:", ");favourite=note.Favourite}.sheet(isPresented:Binding(get:{photo != nil},set:{if !$0{photo=nil}})){if let id=photo,let b=store.entry.blocks.first(where:{$0.id==id}),let data=b.photo{PhotoDecorView(source:data){edited in store.update{e in if let i=e.blocks.firstIndex(where:{$0.id==id}){e.blocks[i].photo=edited}};message=store.error ?? "사진을 적용했어요."}}}
+ }.padding(20).frame(width:850,height:670).background(DesktopPalette.sidebar).onAppear{section=startingSection;studio=store.studio;month=store.date;do{allDays=try store.allDays()}catch{message=error.localizedDescription};let note=studio.note(key);tags=note.Tags.joined(separator:", ");favourite=note.Favourite}.sheet(isPresented:Binding(get:{photo != nil},set:{if !$0{photo=nil}})){if let id=photo,let b=store.entry.blocks.first(where:{$0.id==id}),let data=b.photo{PhotoDecorView(source:data){edited in store.update{e in if let i=e.blocks.firstIndex(where:{$0.id==id}){e.blocks[i].photo=edited}};message=store.error ?? "사진을 적용했어요."}}}
  }
  private var photos:some View {ScrollView{VStack(alignment:.leading,spacing:16){Text("사진을 고른 뒤 자르기·회전·프레임·스티커를 적용해요. 적용 전에는 기존 사진을 바꾸지 않아요.");ForEach(store.entry.blocks.filter{$0.kind == .photo && $0.photo != nil}){b in Button("사진 꾸미기 · "+(b.text.isEmpty ? "사진":String(b.text.prefix(35)))){photo=b.id}};Divider();Text("독립 스티커는 일기 블록으로 추가해 자유롭게 배치할 수 있어요.");HStack{ForEach(0..<4){i in Button(StudioCatalog.stickers[i]+" +"){do{guard store.entry.blocks.count<200 else{throw WindowsCompatibility.fail("한 날짜에는 최대 200개 블록을 넣을 수 있어요.")};let data=try PhotoDecor.encode(PhotoDecor.sticker(i));store.update{e in var b=DiaryBlock(kind:.photo);b.title=StudioCatalog.stickers[i]+" 스티커";b.photo=data;e.blocks.append(b)};message=store.error ?? "일기에 스티커를 추가했어요."}catch{message=error.localizedDescription}}}}}.padding(16)}}
  private var room:some View {VStack(alignment:.leading,spacing:12){Text("가구를 마우스로 움직여요. 최대 24개, 상몬은 모은 옷장 소품을 입고 함께 쉬어요.")

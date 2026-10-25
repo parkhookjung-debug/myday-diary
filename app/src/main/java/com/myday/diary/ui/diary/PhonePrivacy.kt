@@ -15,7 +15,7 @@ import com.myday.diary.data.PinVault
 import kotlinx.coroutines.*
 class PhonePrivacy(val vault:PinVault){var enabled by mutableStateOf(false);var locked by mutableStateOf(false);var error by mutableStateOf("");var touched=android.os.SystemClock.elapsedRealtime();init{runCatching{enabled=vault.enabled();locked=enabled}.onFailure{locked=true;error="잠금 설정을 읽지 못했어요. 기록을 열지 않았어요."}};fun touch(){touched=android.os.SystemClock.elapsedRealtime()};fun refresh(){enabled=vault.enabled();touch()}}
 @Composable fun PhonePrivacyGate(privacy:PhonePrivacy):Boolean {
- val owner=LocalLifecycleOwner.current;val activity=LocalContext.current as? Activity
+ val owner=LocalLifecycleOwner.current;val activity=androidx.activity.compose.LocalActivity.current
  DisposableEffect(owner,privacy.enabled){if(privacy.enabled)activity?.window?.addFlags(WindowManager.LayoutParams.FLAG_SECURE) else activity?.window?.clearFlags(WindowManager.LayoutParams.FLAG_SECURE);val observer=LifecycleEventObserver{_,e->if(e==Lifecycle.Event.ON_STOP&&privacy.enabled)privacy.locked=true};owner.lifecycle.addObserver(observer);onDispose{owner.lifecycle.removeObserver(observer)}}
  LaunchedEffect(privacy){while(true){delay(1000);if(privacy.enabled&&android.os.SystemClock.elapsedRealtime()-privacy.touched>=300000)privacy.locked=true}}
  if(!privacy.locked)return false
