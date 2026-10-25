@@ -2,6 +2,8 @@
 
 코드를 수정하려면 수정 가이드부터, 설치와 사용은 플랫폼 안내부터 확인합니다.
 
+[0.11.0 하루 꾸미기: 여섯 기능·잠금·백업·수정 파일](STUDIO.md) · [실제 화면·개발 빌드](../previews/studio/README.md)
+
 [0.10.0 기기 연결·사진 앨범·작은 자동 백업: 사용법과 세 플랫폼 수정 파일](DEVICE-ALBUM-BACKUP.md) · [화면·검사·실행 파일](../previews/device-album-backup/README.md)
 
 [전체 수정 가이드](EDITING-GUIDE.md) · [프로젝트 첫 화면](../README.md) · [Mac·Windows 공통 개발](DESKTOP-SHARED.md)

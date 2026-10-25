@@ -1,12 +1,14 @@
-# MyDay macOS 0.10.0 · 세 플랫폼 공통 앱
+# MyDay macOS 0.11.0 · 세 플랫폼 공통 앱
 
 Windows·Android와 같은 메뉴, 일기 100종, 상몬 64종·300소품·8슬롯, Lv.100 성장·출석·등급 선물 공방을 제공하는 SwiftUI 앱입니다. [전체 기능·공통 원본·수정할 파일·기기별 차이](../docs/THREE-PLATFORMS.md).
 
 사이드바 또는 설정의 **기록 도구**에서 휴지통·변경 이력, 월간 리포트, 매일 알림, 앱 내 Wi-Fi·QR 연결, 월별 사진 앨범, 최근 3일 자동 백업, 업데이트 확인을 엽니다. [연결·앨범·백업 사용법·수정 파일](../docs/DEVICE-ALBUM-BACKUP.md) · [기존 기록 도구](../docs/JOURNAL-TOOLS.md). 글·사진 저장·습관 실천에는 상몬이 작은 점프로 반응합니다.
 
+[0.11.0 하루 꾸미기](../docs/STUDIO.md): 사진·스티커, 방·가구·쉬기, 감정 달력, 태그·즐겨찾기, 질문, 기기별 PIN 잠금을 사이드바에서 엽니다. 새 꾸미기 자료는 백업 버전 9이며 PIN 설정은 기기별로 유지합니다.
+
 ## 실행 파일 받기
 
-GitHub **Actions → 해당 소스 커밋의 Mac·Windows 검사 → Artifacts → myday-chat-macOS-ARM64**에서 ZIP을 받습니다. 안의 `MyDay-macOS-arm64-v0.10.0-preview.zip`을 풀고 `MyDay.app`을 응용 프로그램 폴더로 복사합니다. [완료된 검사·다운로드 링크](../previews/device-album-backup/README.md). 기존 Releases의 이전 Mac ZIP에는 최신 기능이 포함되지 않습니다.
+GitHub **Actions → 해당 소스 커밋의 Mac·Windows 검사 → Artifacts → myday-chat-macOS-ARM64**에서 ZIP을 받습니다. 안의 `MyDay-macOS-arm64-v0.11.0-preview.zip`을 풀고 `MyDay.app`을 응용 프로그램 폴더로 복사합니다. [완료된 검사·다운로드 링크](../previews/studio/README.md). 기존 Releases의 이전 Mac ZIP에는 최신 기능이 포함되지 않습니다.
 
 macOS 13 이상을 지원합니다. CI 파일은 Apple Silicon용입니다. Intel Mac은 해당 Mac에서 빌드하세요. 로컬 개발 서명이며 Apple 공증은 적용하지 않았습니다. 기존 일기는 앱을 종료한 뒤 백업하고 새 앱을 실행합니다.
 
@@ -38,7 +40,7 @@ zsh macos/run.command
 
 기록 위치는 `~/Library/Application Support/MyDay/`입니다. 날짜별 일기 JSON·사진과 기존 `companion.json`, 공통 성장·장비·경제를 보관하는 `windows-metadata.json`을 로컬에 저장합니다. 서버에 일기·사진을 자동 전송하지 않습니다.
 
-**설정·백업 → 공통 백업 다운로드 / 백업 복원**으로 Windows·Android와 같은 버전 1~8 JSON을 읽고 최신 필드를 보존합니다. 동일 날짜는 가져온 일기로 교체하고 다른 날짜는 유지합니다. 성장 지급 날짜·미션은 합집합으로 처리하며, 따로 진행한 경제 내역은 병합을 거부합니다. 가져오기 전 확인과 `MyDay-previous-…` 복구 사본을 유지합니다.
+**설정·백업 → 공통 백업 다운로드 / 백업 복원**으로 Windows·Android와 같은 버전 1~9 JSON을 읽고 최신 필드를 보존합니다. 동일 날짜는 가져온 일기로 교체하고 다른 날짜는 유지합니다. 성장 지급 날짜·미션은 합집합으로 처리하며, 따로 진행한 경제 내역은 병합을 거부합니다. 가져오기 전 확인과 `MyDay-previous-…` 복구 사본을 유지합니다.
 
 기존 Mac 전용 백업 버전 1~2와 예전 일기도 계속 읽습니다. **Mac 전용 백업 복원은 전체 교체**, 공통 백업은 날짜별 병합입니다. 새 공통 기능을 저장할 때 기존 XP 지급 날짜와 착용 소품을 이전하며 기본 소품 8종을 제공합니다. 최신 버전 8 백업은 구버전 Mac 앱에서 열 수 없습니다.
 

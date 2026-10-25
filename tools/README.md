@@ -2,6 +2,8 @@
 
 | 할 일 | 실행/수정 파일 | 용도 |
 | --- | --- | --- |
+| 꾸미기 질문·가구 목록 생성 | [sync-studio.py](sync-studio.py) | shared/studio.json에서 세 앱 카탈로그 생성, --check 지원 |
+| 공통 가구 PNG 생성 | [export-studio-art.ps1](export-studio-art.ps1) · [ExportStudioArt.cs](ExportStudioArt.cs) | Windows RoomArt.cs의 자체 벡터 그림을 Android·Mac용 PNG로 내보냄 |
 | 세 앱의 공통 메뉴·성장·공방과 PC 형식·색상·제한 수정 | [sync-desktop.py](sync-desktop.py) | shared/에서 네이티브 앱과 서버용 파일 생성, --check로 생성 누락 확인 |
 | 기록 도구 버전·보관 한도·응원 문구 수정 | [sync-journal.py](sync-journal.py) | shared/journal-tools.json에서 세 네이티브 앱 정책 생성, --check로 검증 |
 | 앱 내 기기 연결의 공통 브라우저 화면 생성 | [sync-device-link.py](sync-device-link.py) | shared/device-link.html을 세 앱에 묶음, --check 지원. [연결·앨범·백업](../docs/DEVICE-ALBUM-BACKUP.md) |

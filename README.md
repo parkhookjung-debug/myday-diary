@@ -6,6 +6,8 @@
 
 Windows·Mac·Android용 커스터마이즈 일기 앱입니다. 세 버전에서 사진과 일기 블록을 자유롭게 배치하고 상몬 64종을 키우며 장비 300종을 8개 슬롯에 조합합니다. Android는 손가락 조작과 짧은 햅틱, Windows는 바탕화면 캐릭터를 제공합니다. MIT 라이선스로 공개하며 5명이 화면·저장·캐릭터·통합·검증을 나눠 개발합니다.
 
+**0.11.0 하루 꾸미기:** 사진 자르기·회전·프레임·스티커 → 상몬의 작은 방 → 감정 달력 → 태그·즐겨찾기 → 오늘의 질문 → 기기별 PIN 잠금을 추가했습니다. [사용법·세 플랫폼 수정 파일](docs/STUDIO.md) · [실제 화면·검사·실행 파일](previews/studio/README.md). 새 꾸미기 백업은 버전 9이므로 세 앱을 0.11.0 이상으로 맞춰 주세요.
+
 **0.10.0 기기 연결·사진 앨범·작은 자동 백업:** 각 앱의 **기록 도구**에서 시작하세요. 앱 안에서 Wi-Fi 연결 QR을 만들고 기록을 확인해 가져옵니다. Python은 필요 없습니다. 월별 사진을 누르면 원래 일기로 이동하며, 자동 백업은 하루 한 번·최근 3개·256MiB로 제한합니다. [사용법·수정 파일](docs/DEVICE-ALBUM-BACKUP.md) · [실제 화면·검사·실행 파일](previews/device-album-backup/README.md) · [변경 내역](CHANGELOG.md).
 
 기존 [휴지통·이력·월간 리포트·알림·상몬 반응·업데이트 안내](docs/JOURNAL-TOOLS.md)도 유지합니다. 업데이트 설치는 백업 후 OS에서 진행합니다.
@@ -36,6 +38,7 @@ Windows·Mac·Android용 커스터마이즈 일기 앱입니다. 세 버전에�
 
 | 바꾸려는 기능 | Windows에서 열 파일 | Android에서 열 파일 |
 | --- | --- | --- |
+| 사진 꾸미기·상몬 방·감정 달력·태그·질문·잠금 | [여섯 기능의 원본·화면·검증 파일](docs/STUDIO.md#어떤-파일을-수정하나요) | [세 앱 공통 목록](shared/studio.json) |
 | 기기 연결·월별 사진·자동 백업 (Mac 포함) | [세 플랫폼 수정 파일 표](docs/DEVICE-ALBUM-BACKUP.md#수정할-파일) · [공통 전송 화면](shared/device-link.html) | [PhoneDeviceLink.kt](app/src/main/java/com/myday/diary/ui/diary/PhoneDeviceLink.kt) · [PhonePhotoAlbum.kt](app/src/main/java/com/myday/diary/ui/diary/PhonePhotoAlbum.kt) · [PhoneAutomaticBackup.kt](app/src/main/java/com/myday/diary/ui/diary/PhoneAutomaticBackup.kt) |
 | 서버 채팅·메시지·접속자·초대코드 | [ChatClient.cs](windows/Chat/ChatClient.cs) · [ChatWindow.cs](windows/UI/ChatWindow.cs) · [chat_server.py](server/chat_server.py) | [LoungeClient.kt](app/src/main/java/com/myday/diary/chat/LoungeClient.kt) · [PhoneLounge.kt](app/src/main/java/com/myday/diary/ui/diary/PhoneLounge.kt) |
 | 무료 서버·Mac 채팅 화면·공통 통신 | [무료 서버 원본](server/cloudflare/src/index.ts) · [배포 차단](server/cloudflare/tools/free-deploy.mjs) · [Mac 화면](macos/Sources/MyDay/ChatView.swift) · [Mac 통신](macos/Sources/MyDay/ChatClient.swift) | [공통 프로토콜](docs/CHAT.md) |
@@ -63,7 +66,7 @@ Windows·Mac·Android용 커스터마이즈 일기 앱입니다. 세 버전에�
 
 ## 실행 파일 받기
 
-**최신 0.10.0 개발 빌드:** [완료된 Actions와 플랫폼별 다운로드 위치](previews/device-album-backup/README.md). 아래 Releases 파일은 이전 버전이며 새 기능이 포함되지 않습니다.
+**최신 0.11.0 개발 빌드:** [완료된 Actions와 플랫폼별 다운로드 위치](previews/studio/README.md). 아래 Releases 파일은 이전 버전이며 새 기능이 포함되지 않습니다.
 
 | 사용할 환경 | 다운로드 | 실행·개발 안내 |
 | --- | --- | --- |
@@ -71,7 +74,7 @@ Windows·Mac·Android용 커스터마이즈 일기 앱입니다. 세 버전에�
 | 갤럭시 / Android 8 이상 | [Android APK 받기](https://github.com/parkhookjung-debug/myday-diary/releases/tag/v0.4.0-android-preview) (개발용 debug) | [Android 안내](docs/ANDROID.md) |
 | macOS 13 이상 | [Mac 개발 소스·로컬 빌드 안내](macos/README.md). 새 채팅 포함 실행 파일은 아직 Releases에 없습니다. | Windows EXE 대신 Mac용 앱을 빌드합니다. |
 
-GitHub 저장소 오른쪽 **Releases → 해당 버전 → Assets**에서도 받습니다. Windows는 .NET Framework 4.8 이상에서 사용하며, 이전 앱이 실행 중이면 알림 영역 MyDay → **모두 종료** 후 새 EXE를 실행합니다. 현재 Windows 배포는 v0.3.10-preview입니다.
+GitHub 저장소 오른쪽 **Releases → 해당 버전 → Assets**에서도 받습니다. Windows는 .NET Framework 4.8 이상에서 사용하며, 이전 앱이 실행 중이면 알림 영역 MyDay → **모두 종료** 후 새 EXE를 실행합니다. 위 Releases 링크는 v0.3.10-preview이며, 최신 개발 빌드는 위 Actions 안내에서 받습니다.
 
 ## 처음 개발에 참여한다면
 
@@ -91,13 +94,13 @@ Windows는 C# / Windows Forms이며 [windows/build.ps1](windows/build.ps1)로 �
 
 ## 현재 기능
 
-Windows v0.3.10-preview는 팀의 웹 디자인을 네이티브 앱에 적용했습니다. 달력·일기·상몬 3단 구성, 크림·숲·라벤더 테마, 완료 현황을 제공합니다. [디자인과 수정 파일](docs/WINDOWS-DESIGN.md)
+현재 개발 브랜치 0.11.0은 여섯 가지 하루 꾸미기와 기기 연결·사진 앨범·자동 백업을 제공합니다. 아래 화면 구성은 기존 Windows 디자인을 유지합니다. 달력·일기·상몬 3단 구성, 크림·숲·라벤더 테마, 완료 현황을 제공합니다. [디자인과 수정 파일](docs/WINDOWS-DESIGN.md)
 
 | 플랫폼 | 구현한 기능 |
 | --- | --- |
 | Windows | 날짜별 글·할 일·습관·감정·사진, 자유 배치, 내 레이아웃 저장·재사용, 일기 형식 100종, 월간 달력·본문/사진 설명 검색, 자동 저장·JSON 백업 |
 | Windows 상몬 | 바탕화면 이동·클릭으로 일기 열기·숨기기/재표시, 외형 64종, 출석·활동 미션·성장 보상, 소품 300종의 8슬롯 조합·뽑기 수집 |
-| Android 0.7.0 소스 | Windows와 같은 일기 100종·사진·자유 배치·내 레이아웃·달력·검색·성장·64종·파스텔 소품 300종·등급 뽑기·합성·버전 8 JSON 백업, 네 탭 화면·햅틱·홈 위젯·라이브 배경화면 |
+| Android 0.11.0 소스 | Windows와 같은 일기 100종·사진·자유 배치·내 레이아웃·달력·검색·성장·64종·파스텔 소품 300종·등급 뽑기·합성·버전 8 JSON 백업, 네 탭 화면·햅틱·홈 위젯·라이브 배경화면 |
 
 [Android·Windows 기능 비교와 햅틱](docs/ANDROID-PARITY.md), [Android 설치·기존 기록 이전](docs/ANDROID.md)을 확인하세요. 이전 debug APK와 서명이 달라 설치가 막히면 앱 삭제 전에 백업부터 합니다. 각 기기에 기록을 저장하며 플랫폼 사이의 자동 동기화는 없습니다. 영상 첨부와 AI 감정 대화는 후속 기능입니다.
 
@@ -114,6 +117,6 @@ Windows v0.3.10-preview는 팀의 웹 디자인을 네이티브 앱에 적용했
 
 ## 검증과 저장 호환성
 
-Android CI는 빌드·Lint·단위 테스트·Android 35 에뮬레이터 화면/저장/사진 검사·실제 Windows JSON 호환성 검사를, Windows CI는 빌드·저장·레이아웃·사진·검색·성장·장비·캐릭터 렌더링 검사 206개와 네이티브 화면 검사를 실행합니다. 화면 검사는 격리된 기록으로 3단·작은 창 전환, 달력·테마·완료 현황과 기존 일기 기능을 확인합니다. 갤럭시 실기기, 여러 모니터·DPI·절전 복귀는 추가 검증 대상입니다.
+Android CI는 빌드·Lint·단위 테스트·Android 35 에뮬레이터 화면/저장/사진 검사·실제 Windows JSON 호환성 검사를, Windows CI는 빌드·저장·레이아웃·사진·검색·성장·장비·캐릭터 렌더링 검사 311개와 네이티브 화면 검사를 실행합니다. 화면 검사는 격리된 기록으로 3단·작은 창 전환, 달력·테마·완료 현황과 기존 일기 기능을 확인합니다. 갤럭시 실기기, 여러 모니터·DPI·절전 복귀는 추가 검증 대상입니다.
 
-출석·활동과 확장 장비는 버전 5, 기존 소유권은 버전 7, 새 등급 뽑기·조각 합성·제작은 버전 8로 저장합니다. 이번 변경을 포함한 새 Windows·Android로 열어주세요. 버전 1~6의 기록·기존 장비·경험치도 보존합니다. 자세한 기준은 [성장 안내](docs/SANGMON-GROWTH.md)와 [장비 안내](docs/SANGMON-ITEMS.md)에 있습니다.
+새 방·태그·즐겨찾기는 버전 9로 저장합니다. Windows·Mac·Android를 0.11.0 이상으로 맞추면 함께 옮길 수 있습니다. 기존 버전 1~8도 읽습니다. 출석·활동과 확장 장비는 버전 5, 기존 소유권은 버전 7, 새 등급 뽑기·조각 합성·제작은 버전 8로 저장합니다. 이번 변경을 포함한 새 Windows·Android로 열어주세요. 버전 1~6의 기록·기존 장비·경험치도 보존합니다. 자세한 기준은 [성장 안내](docs/SANGMON-GROWTH.md)와 [장비 안내](docs/SANGMON-ITEMS.md)에 있습니다.
