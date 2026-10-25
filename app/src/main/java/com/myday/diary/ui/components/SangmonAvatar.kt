@@ -16,7 +16,7 @@ import com.myday.diary.data.Equipment
 import com.myday.diary.platform.*
 import com.myday.diary.ui.character.SangmonSprites
 
-@Composable fun SangmonAvatar(id: String,equipment: Equipment=Equipment(),modifier: Modifier=Modifier,haptics: DiaryHaptics?=null,reactionTick: Long=0) {
+@Composable fun SangmonAvatar(id: String,equipment: Equipment=Equipment(),modifier: Modifier=Modifier,haptics: DiaryHaptics?=null,reactionTick: Long=0,sleepy:Boolean=false) {
     val context=LocalContext.current;val sprites=remember(context) {SangmonSprites(context)}
     var firedAt by remember {mutableLongStateOf(-1L)}
     val hop=remember {Animatable(1f)}
@@ -24,6 +24,6 @@ import com.myday.diary.ui.character.SangmonSprites
     val clock by rememberInfiniteTransition(label="sangmon").animateFloat(0f,42000f,infiniteRepeatable(tween(42000,easing=LinearEasing)),label="sangmon-clock")
     Canvas(modifier.graphicsLayer {translationY=-kotlin.math.abs(kotlin.math.sin(hop.value*Math.PI*2)).toFloat()*12f}.size(148.dp).semantics {contentDescription="상몬, 누르면 잠깐 불을 뿜어요"}.clickable {firedAt=SystemClock.uptimeMillis();haptics?.perform(TactileEvent.SELECT)}) {
         val age=if(firedAt<0) -1 else SystemClock.uptimeMillis()-firedAt
-        sprites.draw(drawContext.canvas.nativeCanvas,id,equipment,size.width/2,size.height/2,size.minDimension*.45f,clock.toLong(),age)
+        sprites.draw(drawContext.canvas.nativeCanvas,id,equipment,size.width/2,size.height/2,size.minDimension*.45f,clock.toLong(),age,sleepy=sleepy)
     }
 }

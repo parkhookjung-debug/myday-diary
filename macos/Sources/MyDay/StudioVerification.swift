@@ -10,6 +10,7 @@ import AppKit
   let pin=PinVault(root:root.appendingPathComponent("studio-pin"));try check(try !pin.enabled(),"screen lock is opt-in");try pin.set(old:"",pin:"123456");try check(try pin.verify("123456"),"correct PIN unlocks");try check(try !pin.verify("654321"),"wrong PIN rejected");try check(!(try String(contentsOf:pin.url)).contains("123456"),"PIN is never stored as plaintext");try pin.disable("123456");try check(try !pin.enabled(),"PIN removal requires verification")
   let hash=try PinVault.derive("123456",Data(0..<16)).map{String(format:"%02x",$0)}.joined();try check(hash=="3e3d2422f00f2cc1d1bad045819bfb8360117d59c588035c4294f3403ac097a5","PIN matches independent PBKDF2 reference")
   for i in 0..<4{let data=try PhotoDecor.encode(PhotoDecor.sticker(i));try WindowsCompatibility.checkPhoto(data);try check(data.count>0,"portable offline sticker \(i)")}
+  let f=DateFormatter();f.calendar=Calendar(identifier:.gregorian);f.locale=Locale(identifier:"en_US_POSIX");f.dateFormat="yyyy-MM-dd";try check(StudioData.question(f.date(from:"2026-10-25")!)==StudioCatalog.questions[5],"daily question matches Windows and Android")
   let image=PhotoDecor.sticker(0);let crop=PhotoDecor.crop(image,ratio:1);try check(crop.size.width==crop.size.height&&image.size.width==320,"photo crop retains source")
  }
 }

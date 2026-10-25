@@ -15,6 +15,7 @@ namespace MyDay.Windows.UI
         private double celebrateUntil,celebrateStarted;
         public event EventHandler Fired;
         public bool ShowScene;
+        public bool Sleepy;
         private MonsterVariant variant;
         private SangmonEquipment equipment;
         public SangmonEquipment Equipment {get{return SangmonItems.Copy(equipment);}set{equipment=SangmonItems.Copy(value);Invalidate();}}
@@ -42,7 +43,7 @@ namespace MyDay.Windows.UI
                 TextRenderer.DrawText(e.Graphics,"✧",Design.Font(15),new Point(Width-Design.P(22),Height-Design.P(38)),Design.Progress);
             }
             double now=clock.Elapsed.TotalSeconds;
-            var activity=now<happyUntil?PetActivity.Fire:now<celebrateUntil?PetActivity.Hop:PetActivity.Rest;
+            var activity=now<happyUntil?PetActivity.Fire:Sleepy?PetActivity.Sleep:now<celebrateUntil?PetActivity.Hop:PetActivity.Rest;
             MonsterPainter.Draw(e.Graphics, ClientRectangle, MonsterPose.ForActivity(now,activity,now<happyUntil?now-happyStarted:now<celebrateUntil?now-celebrateStarted:now,0,0), true,variant,equipment);
         }
         protected override void Dispose(bool disposing) { if (disposing) timer.Dispose(); base.Dispose(disposing); }

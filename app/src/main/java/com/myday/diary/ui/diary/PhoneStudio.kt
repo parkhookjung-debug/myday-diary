@@ -51,14 +51,14 @@ import kotlin.math.*
    }
    1->Column(Modifier.fillMaxSize().verticalScroll(rememberScrollState()).padding(16.dp)){
     Text("가구를 손가락으로 움직여요. 최대 24개, 상몬은 옷장 소품을 입고 쉬어요.")
-    var selected by remember{mutableStateOf<String?>(null)}
+    var selected by remember{mutableStateOf<String?>(null)};var resting by remember{mutableStateOf(false)}
     BoxWithConstraints(Modifier.fillMaxWidth().height(330.dp).background(listOf(Color(0xfff3ebdc),Color(0xffe5deef),Color(0xffe0e9da))[draft.roomTheme],RoundedCornerShape(20.dp))){
      val density=LocalDensity.current;val w=with(density){maxWidth.toPx()};val h=with(density){maxHeight.toPx()}
      Box(Modifier.fillMaxWidth().fillMaxHeight(0.28f).align(Alignment.BottomCenter).background(Color(0xffd6c5ae)))
-     SangmonAvatar(controller.book.characterStyle,controller.book.equipment,Modifier.size(125.dp).align(Alignment.Center),haptics,controller.reactionTick)
+     SangmonAvatar(controller.book.characterStyle,controller.book.equipment,Modifier.size(145.dp).align(Alignment.Center),haptics,controller.reactionTick,sleepy=resting)
      draft.furniture.forEach{item->Column(Modifier.offset{IntOffset(item.x*w.toInt()/1000,item.y*h.toInt()/1000)}.background(if(selected==item.id)Color(0xfff5d4c1)else Color(0xfffbf8f2),RoundedCornerShape(20.dp)).pointerInput(item.id,w,h){detectDragGestures(onDragStart={selected=item.id},onDragEnd={save(draft)},onDrag={change,delta->change.consume();selected=item.id;draft=draft.copy(furniture=draft.furniture.map{f->if(f.id==item.id)f.copy(x=(f.x+delta.x*1000/w).roundToInt().coerceIn(0,900),y=(f.y+delta.y*1000/h).roundToInt().coerceIn(0,900))else f})})}.padding(8.dp),horizontalAlignment=Alignment.CenterHorizontally){val i=StudioCatalog.furnitureKinds.indexOf(item.kind);Image(roomArt.getValue(item.kind),StudioCatalog.furnitureNames[i],Modifier.size(58.dp));Text(StudioCatalog.furnitureNames[i],style=MaterialTheme.typography.labelSmall)}}
     }
-    FlowRow{StudioCatalog.furnitureKinds.forEachIndexed{i,kind->TextButton({save(draft.copy(furniture=draft.furniture+RoomItem(kind=kind,x=100+draft.furniture.size%5*140,y=300)))},enabled=controller.saved&&draft.furniture.size<24){Text(StudioCatalog.furnitureNames[i]+" +")}};TextButton({save(draft.copy(furniture=draft.furniture.filter{it.id!=selected}));selected=null},enabled=controller.saved&&selected!=null){Text("선택 가구 치우기")};TextButton({save(draft.copy(roomTheme=(draft.roomTheme+1)%3))},enabled=controller.saved){Text("배경 바꾸기")}}
+    FlowRow{StudioCatalog.furnitureKinds.forEachIndexed{i,kind->TextButton({save(draft.copy(furniture=draft.furniture+RoomItem(kind=kind,x=100+draft.furniture.size%5*140,y=300)))},enabled=controller.saved&&draft.furniture.size<24){Text(StudioCatalog.furnitureNames[i]+" +")}};TextButton({save(draft.copy(furniture=draft.furniture.filter{it.id!=selected}));selected=null},enabled=controller.saved&&selected!=null){Text("선택 가구 치우기")};TextButton({resting=!resting}){Text("상몬 쉬기 / 깨우기")};TextButton({save(draft.copy(roomTheme=(draft.roomTheme+1)%3))},enabled=controller.saved){Text("배경 바꾸기")}}
    }
    2->Column(Modifier.fillMaxSize().verticalScroll(rememberScrollState()).padding(16.dp)){
     var month by remember{mutableStateOf(YearMonth.from(controller.date))};Text("직접 선택한 감정을 날짜별로 돌아봐요.");Row{TextButton({if(month.year>1||month.monthValue>1)month=month.minusMonths(1)}){Text("‹")};Text(month.toString(),Modifier.padding(14.dp));TextButton({if(month.year<9999||month.monthValue<12)month=month.plusMonths(1)}){Text("›")}}
@@ -88,17 +88,74 @@ import kotlin.math.*
 }
 
 @OptIn(ExperimentalLayoutApi::class)
-@Composable private fun PhonePhotoDecor(source:String,onClose:()->Unit,onApply:(String)->Unit){
- var image by remember{mutableStateOf<android.graphics.Bitmap?>(null)};var sticker by remember{mutableIntStateOf(-1)};var error by remember{mutableStateOf("")};var busy by remember{mutableStateOf(false)};val scope=rememberCoroutineScope()
- LaunchedEffect(source){runCatching{withContext(Dispatchers.Default){PhotoDecor.decode(source)}}.onSuccess{image=it}.onFailure{error="사진을 읽지 못했어요."}}
- // Preview bitmaps are GC-owned so the renderer never sees a recycled image.
- fun replace(next:android.graphics.Bitmap){image=next}
- Dialog(onClose,properties=DialogProperties(usePlatformDefaultWidth=false)){Surface(Modifier.fillMaxSize()){Column(Modifier.statusBarsPadding().navigationBarsPadding().padding(16.dp).verticalScroll(rememberScrollState()),verticalArrangement=Arrangement.spacedBy(10.dp)){
-  Text("사진 꾸미기",style=MaterialTheme.typography.headlineSmall);Text("스티커를 고른 뒤 사진에서 붙일 위치를 눌러요.");Text(error)
-  image?.let{bitmap->BoxWithConstraints(Modifier.fillMaxWidth().height(300.dp)){val density=LocalDensity.current;val width=with(density){maxWidth.toPx()};val height=with(density){maxHeight.toPx()};Image(bitmap.asImageBitmap(),"편집 미리보기",Modifier.fillMaxSize().pointerInput(bitmap,sticker){detectTapGestures{point->if(sticker>=0){val scale=min(width/bitmap.width,height/bitmap.height);val x=(point.x-(width-bitmap.width*scale)/2)/scale;val y=(point.y-(height-bitmap.height*scale)/2)/scale;if(x>=0&&y>=0&&x<bitmap.width&&y<bitmap.height){val next=bitmap.copy(android.graphics.Bitmap.Config.ARGB_8888,true);PhotoDecor.stamp(android.graphics.Canvas(next),sticker,x,y,min(bitmap.width,bitmap.height)*0.22f);replace(next)}}}},contentScale=ContentScale.Fit)}
-   FlowRow{TextButton({replace(PhotoDecor.rotate(bitmap,-90f))}){Text("왼쪽 회전")};TextButton({replace(PhotoDecor.rotate(bitmap,90f))}){Text("오른쪽 회전")};TextButton({replace(PhotoDecor.crop(bitmap,1.0))}){Text("정사각 자르기")};TextButton({replace(PhotoDecor.crop(bitmap,4.0/3))}){Text("4:3 자르기")};listOf("크림","라벤더","숲").forEachIndexed{i,name->TextButton({replace(PhotoDecor.frame(bitmap,i))}){Text("$name 테두리")}};FlowRow{StudioCatalog.stickers.forEachIndexed{i,name->FilterChip(sticker==i,{sticker=i},label={Text(name)})}}
-   Button({busy=true;scope.launch{runCatching{withContext(Dispatchers.Default){PhotoDecor.encode(bitmap)}}.onSuccess(onApply).onFailure{error=it.message ?: "사진 적용 실패"};busy=false}},enabled=!busy){Text("이 사진 적용")}
-  }
-  TextButton({runCatching{replace(PhotoDecor.decode(source))}.onFailure{error="사진을 읽지 못했어요."}},enabled=!busy){Text("처음으로")};OutlinedButton(onClose,enabled=!busy){Text("취소")}
- }}}
+@Composable private fun PhonePhotoDecor(source:String,onClose:()->Unit,onApply:(String)->Unit) {
+    var image by remember { mutableStateOf<android.graphics.Bitmap?>(null) }
+    var sticker by remember { mutableIntStateOf(-1) }
+    var error by remember { mutableStateOf("") }
+    var busy by remember { mutableStateOf(false) }
+    val scope=rememberCoroutineScope()
+    LaunchedEffect(source) {
+        runCatching { withContext(Dispatchers.Default) { PhotoDecor.decode(source) } }
+            .onSuccess { image=it }.onFailure { error="사진을 읽지 못했어요." }
+    }
+    // Keep preview images GC-owned while Compose may still reference an earlier frame.
+    fun replace(next:android.graphics.Bitmap) { image=next }
+    Dialog(onClose,properties=DialogProperties(usePlatformDefaultWidth=false)) {
+        Surface(Modifier.fillMaxSize()) {
+            Column(Modifier.statusBarsPadding().navigationBarsPadding().padding(16.dp)
+                .verticalScroll(rememberScrollState()),verticalArrangement=Arrangement.spacedBy(10.dp)) {
+                Text("사진 꾸미기",style=MaterialTheme.typography.headlineSmall)
+                Text("스티커를 고른 뒤 사진에서 붙일 위치를 눌러요.")
+                Text(error)
+                val bitmap=image
+                if(bitmap!=null) {
+                    BoxWithConstraints(Modifier.fillMaxWidth().height(300.dp)) {
+                        val density=LocalDensity.current
+                        val width=with(density) { maxWidth.toPx() }
+                        val height=with(density) { maxHeight.toPx() }
+                        val touch=Modifier.fillMaxSize().pointerInput(bitmap,sticker) {
+                            detectTapGestures { point ->
+                                if(sticker>=0) {
+                                    val scale=min(width/bitmap.width,height/bitmap.height)
+                                    val x=(point.x-(width-bitmap.width*scale)/2)/scale
+                                    val y=(point.y-(height-bitmap.height*scale)/2)/scale
+                                    if(x>=0&&y>=0&&x<bitmap.width&&y<bitmap.height) {
+                                        val next=bitmap.copy(android.graphics.Bitmap.Config.ARGB_8888,true)
+                                        PhotoDecor.stamp(android.graphics.Canvas(next),sticker,x,y,min(bitmap.width,bitmap.height)*0.22f)
+                                        replace(next)
+                                    }
+                                }
+                            }
+                        }
+                        Image(bitmap.asImageBitmap(),"편집 미리보기",touch,contentScale=ContentScale.Fit)
+                    }
+                    FlowRow {
+                        TextButton({replace(PhotoDecor.rotate(bitmap,-90f))}) {Text("왼쪽 회전")}
+                        TextButton({replace(PhotoDecor.rotate(bitmap,90f))}) {Text("오른쪽 회전")}
+                        TextButton({replace(PhotoDecor.crop(bitmap,1.0))}) {Text("정사각 자르기")}
+                        TextButton({replace(PhotoDecor.crop(bitmap,4.0/3))}) {Text("4:3 자르기")}
+                        listOf("크림","라벤더","숲").forEachIndexed { i,name ->
+                            TextButton({replace(PhotoDecor.frame(bitmap,i))}) {Text("$name 테두리")}
+                        }
+                    }
+                    FlowRow {
+                        StudioCatalog.stickers.forEachIndexed { i,name ->
+                            FilterChip(sticker==i,{sticker=i},label={Text(name)})
+                        }
+                    }
+                    Button({
+                        busy=true
+                        scope.launch {
+                            runCatching {withContext(Dispatchers.Default) {PhotoDecor.encode(bitmap)}}
+                                .onSuccess(onApply).onFailure {error=it.message ?: "사진 적용 실패"}
+                            busy=false
+                        }
+                    },enabled=!busy) {Text("이 사진 적용")}
+                }
+                TextButton({runCatching {replace(PhotoDecor.decode(source))}
+                    .onFailure {error="사진을 읽지 못했어요."}},enabled=!busy) {Text("처음으로")}
+                OutlinedButton(onClose,enabled=!busy) {Text("취소")}
+            }
+        }
+    }
 }
