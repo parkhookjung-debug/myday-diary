@@ -89,6 +89,7 @@ jobs:
         if: runner.os == 'macOS'
         env:
           MYDAY_COMPAT_EXPORT: ${{ github.workspace }}/macos/build/mac-to-windows.json
+          MYDAY_STUDIO_EXPORT: ${{ github.workspace }}/macos/build/mac-studio-to-windows.json
         run: zsh macos/build.command
       - name: Verify Mac native transport against Workers
         if: runner.os == 'macOS'

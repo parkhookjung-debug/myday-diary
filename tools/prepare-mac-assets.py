@@ -6,7 +6,7 @@ root = Path(__file__).resolve().parents[1]
 source = root / 'app/src/main/assets'
 target = root / 'macos/Sources/MyDay/Resources/Art'
 target.mkdir(parents=True, exist_ok=True)
-for name in ['catalog.json', 'sangmon', 'portraits', 'items', 'equipment']:
+for name in ['catalog.json', 'sangmon', 'portraits', 'items', 'equipment', 'studio']:
     src, dst = source / name, target / name
     if src.is_dir():
         shutil.copytree(src, dst, dirs_exist_ok=True)
