@@ -99,7 +99,7 @@ object NotebookRules {
             layouts+=item.copy(name=name)
         }
         require(layouts.size<=MAX_LAYOUTS) {"내 레이아웃은 최대 50개까지 저장할 수 있어요."}
-        val merged=current.copy(days=current.days+incoming.days,layouts=layouts,characterStyle=incoming.characterStyle,
+        val merged=current.copy(studio=StudioData.merge(current.studio,incoming.studio),days=current.days+incoming.days,layouts=layouts,characterStyle=incoming.characterStyle,
             awardedDays=current.awardedDays+incoming.awardedDays,equipment=if(incoming.version>=5 && incoming.hasEquipment) incoming.equipment else if(incoming.version>=4 && incoming.hasEquipment)current.equipment.copy(weaponId=incoming.equipment.weaponId,charmId=incoming.equipment.charmId) else current.equipment,
             hasEquipment=current.hasEquipment || incoming.hasEquipment,activities=(current.activities.keys+incoming.activities.keys).associateWith {(current.activities[it] ?: 0) or (incoming.activities[it] ?: 0)},version=maxOf(current.version,incoming.version),collection=CollectionRules.merge(current.collection,incoming.collection))
         var collection=merged.collection
@@ -108,7 +108,8 @@ object NotebookRules {
         return merged.copy(collection=collection,version=maxOf(7,merged.version))
     }
     fun validate(book: DiaryBook) {
-        require(book.version in 1..8 && book.days.size<=50000 && book.layouts.size<=MAX_LAYOUTS && book.awardedDays.size<=50000 && book.activities.size<=50000) {"지원하지 않거나 너무 큰 기록 파일이에요."}
+        book.studio?.validate()
+        require(book.version in 1..9 && book.days.size<=50000 && book.layouts.size<=MAX_LAYOUTS && book.awardedDays.size<=50000 && book.activities.size<=50000) {"지원하지 않거나 너무 큰 기록 파일이에요."}
         require(book.characterStyle in SangmonIdentity.levels && xp(book)>=SangmonUnlockXP.values.getValue(book.characterStyle))
         book.awardedDays.forEach {require(LocalDate.parse(it).year in 1..9999)}
         book.activities.forEach {(date,flags)->require(LocalDate.parse(date).year in 1..9999 && flags in 1..31)}

@@ -56,6 +56,7 @@ struct DiaryView: View {
     @ObservedObject var store: DiaryStore
     @State private var tab = 0
     @State private var tools=false
+    @State private var studio=false
     @StateObject private var lounge = LoungeModel()
     var body: some View {
         GeometryReader { geometry in
@@ -76,6 +77,7 @@ struct DiaryView: View {
             .sheet(isPresented: $store.showingCompanion) { CompanionWardrobe(store: store) }
             .sheet(isPresented: $store.showingTemplates) { TemplateGallery(store: store) }
             .sheet(isPresented: $store.showingLayouts) { SavedLayoutsView(store: store) }
+            .sheet(isPresented:$studio){StudioView(store:store,onOpen:{tab=0})}
             .sheet(isPresented: $tools) { JournalToolsView(store: store,onOpenDay:{_ in tab=0}) }
             .onDisappear { Task { await lounge.disconnect() } }
     }
@@ -100,6 +102,7 @@ struct DiaryView: View {
                 Button("↓ 백업 다운로드") { store.exportWindowsBackup() }
                 Button("↥ 백업 복원") { store.importBackup() }
                 Button("바탕화면 친구") { DesktopCompanion.shared.show(store: store) }
+                Button("하루 꾸미기 · 사진 / 방 / 태그 / 잠금"){store.save();if store.error==nil{studio=true}}
                 Button("기록 도구 · 복구 / 리포트") { store.save();tools=true }
             }.padding(16)
         }.background(DesktopPalette.sidebar)

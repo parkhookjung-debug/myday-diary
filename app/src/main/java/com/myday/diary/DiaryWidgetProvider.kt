@@ -64,7 +64,7 @@ class DiaryWidgetProvider : AppWidgetProvider() {
                 bitmapSize/2f,bitmapSize/2f,bitmapSize*.43f,cheer*200L,if(cheer%2==1) 200L else -1L)
             views.setImageViewBitmap(R.id.widget_character, characterBitmap)
             views.setTextViewText(R.id.widget_message, cheers[cheer % cheers.size])
-            views.setTextViewText(R.id.widget_progress, "할 일 ${home.tasksDone}/${home.tasksTotal}  ·  습관 ${home.habitsDone}/${home.habitsTotal}")
+            views.setTextViewText(R.id.widget_progress, if(java.io.File(context.filesDir,"screen-lock.json").exists()) "잠금된 일기 · 앱에서 확인" else "할 일 ${home.tasksDone}/${home.tasksTotal}  ·  습관 ${home.habitsDone}/${home.habitsTotal}")
             val backgrounds = intArrayOf(R.drawable.widget_cream, R.drawable.widget_forest, R.drawable.widget_lavender)
             views.setInt(R.id.widget_root, "setBackgroundResource", backgrounds[home.theme])
             val open = PendingIntent.getActivity(context, id,

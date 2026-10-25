@@ -32,6 +32,7 @@ namespace MyDay.Windows.UI
             var preferences=Design.Button(AppShell.Symbols[4]+"  "+AppShell.Titles[4]);preferences.Size=Design.Size(216,32);preferences.Click+=delegate {using(var settings=new PreferencesWindow(entry.Theme,SetThemeFromSettings,ExportBook,ImportBook,TogglePet)) settings.ShowDialog(this);};sidebarFlow.Controls.Add(preferences);
             var today=Design.Button("오늘로 돌아가기 ↗"); today.Size=Design.Size(216,32); today.Margin=Design.Pad(0,12,0,0); today.Click+=delegate { ChangeDate(DateTime.Today); }; sidebarFlow.Controls.Add(today);
             var tools=Design.Button("기록 도구 · 복구 / 리포트");tools.Size=Design.Size(216,34);tools.Click+=delegate {OpenJournalTools();};sidebarFlow.Controls.Add(tools);
+            var studio=Design.Button("하루 꾸미기 · 사진 / 방 / 태그");studio.Size=Design.Size(216,36);studio.Click+=delegate {OpenStudio();};sidebarFlow.Controls.Add(studio);
             var delete=Design.Button("이 날짜 일기 휴지통으로");delete.Size=Design.Size(216,30);delete.Click+=delegate {DeleteCurrentDay();};sidebarFlow.Controls.Add(delete);
             sidebarCalendar=new MonthCalendar(book,date,picker.MinDate,picker.MaxDate,ChangeDate) {Size=Design.Size(216,262),Margin=Design.Pad(0,14,0,10)};
             sidebarFlow.Controls.Add(sidebarCalendar);

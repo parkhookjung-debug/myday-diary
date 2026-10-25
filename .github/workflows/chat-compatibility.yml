@@ -116,6 +116,7 @@ jobs:
             macos/build/chat*.png
             macos/build/preview*.png
             macos/build/mac-v8-to-windows.json
+            macos/build/mac-studio-to-windows.json
           if-no-files-found: error
           retention-days: 7
 
@@ -165,3 +166,13 @@ jobs:
           if ($LASTEXITCODE -ne 0) { throw 'V8 interop harness build failed' }
           & ./contracts/check-atelier.exe check ./contracts/macos/build/mac-v8-to-windows.json
           if ($LASTEXITCODE -ne 0) { throw 'Mac / Windows v8 compatibility failed' }
+
+      - name: Verify version-nine studio backup using the actual Windows serializer
+        shell: pwsh
+        run: |
+          $compiler=Join-Path $env:WINDIR 'Microsoft.NET/Framework64/v4.0.30319/csc.exe'
+          $sources=Get-ChildItem windows -Filter '*.cs' -Recurse | ForEach-Object { $_.FullName }
+          & $compiler /nologo /target:exe /main:WindowsStudioInterop ('/out:'+(Join-Path $PWD 'studio-interop.exe')) /reference:System.Drawing.dll /reference:System.Windows.Forms.dll /reference:System.Runtime.Serialization.dll (Join-Path $PWD 'tools/WindowsStudioInterop.cs') @sources
+          if ($LASTEXITCODE -ne 0) { throw 'Studio interop build failed' }
+          & ./studio-interop.exe ./contracts/macos/build/mac-studio-to-windows.json
+          if ($LASTEXITCODE -ne 0) { throw 'Studio native round trip failed' }

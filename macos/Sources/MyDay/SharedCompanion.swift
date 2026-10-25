@@ -186,7 +186,7 @@ struct SharedCompanion {
             let roll = choose(100); guard (0..<100).contains(roll) else { throw WindowsCompatibility.fail("난수 범위 오류") }
             result = "\(grade):" + (roll < CollectionPolicy.synthesisPercent[grade] ? "up" : "stay")
         } else if !["craft", "exchange-tiered"].contains(kind) { throw WindowsCompatibility.fail("지원하지 않는 작업입니다.") }
-        var next = self; next.appendRaw(kind, result); next.fields["Version"] = .number(8); try next.validate(); self = next
+        var next = self; next.appendRaw(kind, result); next.fields["Version"] = .number(Double(max(8,next.fields["Version"]?.int ?? 4))); try next.validate(); self = next
     }
     static func mergeCollection(_ lhs: JSONValue?, _ rhs: JSONValue?) throws -> JSONValue? {
         let a = lhs?.object?["Actions"]?.array ?? [], b = rhs?.object?["Actions"]?.array ?? []

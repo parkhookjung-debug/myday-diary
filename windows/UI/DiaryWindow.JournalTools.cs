@@ -8,6 +8,7 @@ namespace MyDay.Windows.UI {
         private readonly Timer reminderTimer=new Timer {Interval=30000};
         private DateTime lastReaction=DateTime.MinValue;
         private void OpenJournalTools() {
+            if(!ScreenPrivacy.Reveal())return;
             board.CancelPlacement();
             // Recovery remains accessible when an archive quota or disk error blocks saving.
             if(dirty) FlushSave();

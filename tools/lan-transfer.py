@@ -31,7 +31,7 @@ def private_host(value):
 def validate_backup(data):
     if len(data)>MAX_BYTES: raise ValueError('백업은 128MB 이하여야 합니다.')
     root=json.loads(data)
-    if not isinstance(root,dict) or type(root.get('Version')) is not int or not 1<=root['Version']<=8 or not isinstance(root.get('Days'),(dict,list)):
+    if not isinstance(root,dict) or type(root.get('Version')) is not int or not 1<=root['Version']<=9 or not isinstance(root.get('Days'),(dict,list)):
         raise ValueError('MyDay 공통 JSON 백업을 선택하세요. 최종 내용 검사는 앱에서 가져올 때 진행해요.')
     return data
 

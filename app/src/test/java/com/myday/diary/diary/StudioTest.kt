@@ -1,0 +1,11 @@
+package com.myday.diary.diary
+import com.myday.diary.data.*
+import org.junit.Assert.*
+import org.junit.Test
+import java.io.File
+import java.time.LocalDate
+class StudioTest {
+ @Test fun nativeRoundTripPreservesStudio(){val raw=File("src/test/resources/windows-studio.json").readText();val book=NotebookJson.decode(raw);assertEquals(9,book.version);assertEquals(6,book.studio!!.furniture.size);assertEquals(listOf("산책","학교"),book.studio.note("2026-10-25").tags);assertTrue(book.studio.note("2026-10-25").favourite);val encoded=NotebookJson.encode(book);assertEquals(book.studio,NotebookJson.decode(encoded).studio);val out=File("build/interop/android-studio-to-windows.json");out.parentFile.mkdirs();out.writeText(encoded)}
+ @Test fun invalidMetadataAndMerge(){val base=StudioData(pages=listOf(StudioNote("2026-10-24",listOf("이전"))));val incoming=StudioData(roomTheme=1,pages=listOf(StudioNote("2026-10-25",listOf("산책"),true)));assertEquals(2,StudioData.merge(base,incoming)!!.pages.size);assertEquals(1,StudioData.merge(base,incoming)!!.roomTheme);var failed=false;try{StudioData(furniture=listOf(RoomItem(x=901))).validate()}catch(_:Exception){failed=true};assertTrue(failed);failed=false;try{StudioData(pages=listOf(StudioNote("2026-10-25",listOf("A","a")))).validate()}catch(_:Exception){failed=true};assertTrue(failed);assertEquals(StudioCatalog.questions[Math.floorMod(LocalDate.of(2026,10,25).toEpochDay()+719162,12).toInt()],StudioData.question(LocalDate.of(2026,10,25)))}
+ @Test fun pinIsLocalHashedAndRateLimited(){val root=java.nio.file.Files.createTempDirectory("myday-pin").toFile();try{val vault=PinVault(root);assertFalse(vault.enabled());vault.set("","123456");assertTrue(vault.verify("123456"));assertFalse(vault.verify("654321"));assertFalse(File(root,"screen-lock.json").readText().contains("123456"));vault.set("123456","234567");assertTrue(vault.verify("234567"));vault.disable("234567");assertFalse(vault.enabled());vault.set("","123456");repeat(5){assertFalse(vault.verify("000000"))};var rejected=false;try{PinVault(root).verify("123456")}catch(_:Exception){rejected=true};assertTrue(rejected);assertEquals("3e3d2422f00f2cc1d1bad045819bfb8360117d59c588035c4294f3403ac097a5",PinVault.derive("123456",ByteArray(16){it.toByte()}).joinToString(""){"%02x".format(it.toInt() and 255)})}finally{root.deleteRecursively()}}
+}

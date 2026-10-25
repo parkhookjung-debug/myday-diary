@@ -24,8 +24,8 @@ cat > "$app/Contents/Info.plist" <<'PLIST'
     <key>CFBundleName</key><string>마이데이</string>
     <key>CFBundleDisplayName</key><string>마이데이</string>
     <key>CFBundlePackageType</key><string>APPL</string>
-    <key>CFBundleShortVersionString</key><string>0.10.0</string>
-    <key>CFBundleVersion</key><string>10</string>
+    <key>CFBundleShortVersionString</key><string>0.11.0</string>
+    <key>CFBundleVersion</key><string>11</string>
     <key>NSLocalNetworkUsageDescription</key><string>같은 Wi-Fi의 기기와 일기 백업을 주고받습니다.</string>
     <key>LSMinimumSystemVersion</key><string>13.0</string>
     <key>NSHighResolutionCapable</key><true/>
@@ -37,5 +37,5 @@ codesign --force --sign - "$app"
 "$app/Contents/MacOS/MyDay" --self-test
 cp README.md build/맥-실행안내.md
 cp ../LICENSE build/LICENSE
-ditto -c -k --sequesterRsrc --keepParent "$app" "build/MyDay-macOS-$(uname -m)-v0.10.0-preview.zip"
+ditto -c -k --sequesterRsrc --keepParent "$app" "build/MyDay-macOS-$(uname -m)-v0.11.0-preview.zip"
 print "완료: $app"

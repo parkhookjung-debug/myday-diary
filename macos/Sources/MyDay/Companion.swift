@@ -137,6 +137,7 @@ extension DiaryStore {
     }
 
     func exportBackup() {
+        guard MacPrivacy.shared.authorize() else{return}
         save()
         guard error == nil, profileLoaded, loaded else { return }
         let panel = NSSavePanel()
@@ -155,6 +156,7 @@ extension DiaryStore {
     }
 
     func importBackup() {
+        guard MacPrivacy.shared.authorize() else{return}
         save()
         guard error == nil, loaded, profileLoaded else { return }
         let panel = NSOpenPanel()

@@ -83,7 +83,7 @@ object CollectionRules {
         return append(book.copy(collection=ensureCloset(book.collection)),"synth","$grade:"+if(roll<SharedCollection.synthesisPercent[grade])"up" else "stay")
     }
     private fun append(book: DiaryBook,kind: String,itemId: String): DiaryBook {
-        val next=book.copy(collection=CollectionBook((book.collection?.actions ?: emptyList())+CollectionAction(UUID.randomUUID().toString().replace("-",""),kind,itemId)),version=if(needsV8(kind))8 else maxOf(7,book.version))
+        val next=book.copy(collection=CollectionBook((book.collection?.actions ?: emptyList())+CollectionAction(UUID.randomUUID().toString().replace("-",""),kind,itemId)),version=maxOf(book.version,if(needsV8(kind))8 else 7))
         state(next);return next
     }
     fun merge(a: CollectionBook?,b: CollectionBook?): CollectionBook? {

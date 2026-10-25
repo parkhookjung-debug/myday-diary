@@ -17,6 +17,7 @@ namespace MyDay.Windows.UI
         }
         private void OpenGrowth()
         {
+            if(!ScreenPrivacy.Reveal())return;
             OpenDiary(); if(!FlushSave()) return;
             using(var window=new GrowthWindow(book,EquipReward,ClaimAttendance)) window.ShowDialog(this);
         }

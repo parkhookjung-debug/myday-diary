@@ -95,7 +95,8 @@ enum WindowsCompatibility {
     static func validateMetadata(_ metadata: WindowsMetadata?) throws {
         guard let metadata else { return }
         let version = try integer(metadata.fields["Version"], fallback: 1)
-        guard (1...8).contains(version) else { throw fail("기록 버전 1~8만 지원합니다.") }
+        guard (1...9).contains(version) else { throw fail("기록 버전 1~9만 지원합니다.") }
+        _ = try StudioData.decode(metadata.fields["Studio"])
         try validateLayouts(metadata.fields)
         _ = try awardedDays(metadata.fields)
         if let equipment = metadata.fields["Equipment"], equipment != .null, equipment.object == nil { throw fail("장비 형식이 올바르지 않습니다.") }
@@ -105,7 +106,7 @@ enum WindowsCompatibility {
     static func decode(_ data: Data, companion existing: CompanionProfile = CompanionProfile()) throws -> MacBackup {
         guard data.count <= maxBytes else { throw fail("백업은 128MB 이하만 가져올 수 있습니다.") }
         guard let root = try JSONDecoder().decode(JSONValue.self, from: data).object else { throw fail("Windows 백업 형식이 아닙니다.") }
-        guard let version = root["Version"]?.int, (1...8).contains(version), let rawDays = root["Days"] else { throw fail("기록 버전 1~8만 지원합니다.") }
+        guard let version = root["Version"]?.int, (1...9).contains(version), let rawDays = root["Days"] else { throw fail("기록 버전 1~9만 지원합니다.") }
         var pairs: [(String, JSONValue)] = []
         if let array = rawDays.array {
             for value in array {
@@ -251,7 +252,8 @@ enum WindowsCompatibility {
     static func mergeMetadata(_ current: WindowsMetadata?, _ incoming: WindowsMetadata?) throws -> WindowsMetadata? {
         guard let incoming else { return current }
         var fields = current?.fields ?? [:]
-        for (key, value) in incoming.fields where !["Layouts", "Progress", "Collection", "Version"].contains(key) { fields[key] = value }
+        for (key, value) in incoming.fields where !["Layouts", "Progress", "Collection", "Version", "Studio"].contains(key) { fields[key] = value }
+        if let studio=try StudioData.merge(StudioData.decode(current?.fields["Studio"]),StudioData.decode(incoming.fields["Studio"])){fields["Studio"]=try studio.value()}
         fields["Collection"] = try SharedCompanion.mergeCollection(current?.fields["Collection"], incoming.fields["Collection"])
         var layouts = current?.fields["Layouts"]?.array ?? []
         for value in incoming.fields["Layouts"]?.array ?? [] {
@@ -299,6 +301,7 @@ extension DiaryStore {
         }
     }
     func exportWindowsBackup() {
+        guard MacPrivacy.shared.authorize() else{return}
         save()
         guard error == nil, loaded, profileLoaded, metadataLoaded else { return }
         do {

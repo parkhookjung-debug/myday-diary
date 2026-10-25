@@ -72,6 +72,7 @@ namespace MyDay.Windows
             {
                 try { Tests.VariantPreview(Path.GetFullPath(args[1]),args[0]=="--variants-first"?0:args[0]=="--variants-second"?16:32,16); return 0; } catch(Exception ex) { Console.Error.WriteLine(ex); return 1; }
             }
+            if(args.Length==2&&args[0]=="--studio-contract"){Tests.ExportStudio(Path.GetFullPath(args[1]));return 0;}
             bool created;
             // One writer per Windows user prevents two windows overwriting each other's diary.
             using(var mutex=new Mutex(true,"Local\\MyDay.Windows."+System.Security.Principal.WindowsIdentity.GetCurrent().User.Value,out created))
@@ -80,6 +81,7 @@ namespace MyDay.Windows
                 try
                 {
                     var directory=Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),"MyDay","Windows");
+                    if(!ScreenPrivacy.Start(directory))return 0;
                     var store=new DiaryStore(directory);
                     using(var session=new DiarySession(store,store.Load(),args.Length==1 && args[0]=="--open-diary")) Application.Run(session);
                     return 0;

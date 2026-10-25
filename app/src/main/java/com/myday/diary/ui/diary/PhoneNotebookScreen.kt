@@ -7,6 +7,7 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
@@ -22,6 +23,11 @@ import java.time.LocalDate
 @OptIn(ExperimentalLayoutApi::class)
 @Composable fun PhoneNotebookScreen(controller: NotebookController,catalog: NotebookCatalog,haptics: DiaryHaptics,home: HomeScreenActions,busy: Boolean,
     onPhoto: (String?)->Unit,onExport: ()->Unit,onImport: ()->Unit) {
+    val privacyContext=androidx.compose.ui.platform.LocalContext.current
+    val privacy=remember {PhonePrivacy(PinVault(privacyContext.filesDir))}
+    if(PhonePrivacyGate(privacy))return
+    LaunchedEffect(controller.entry){privacy.touch()}
+    var studio by remember {mutableStateOf(false)}
     var tab by rememberSaveable {mutableIntStateOf(0)}
     var journalTools by remember {mutableStateOf(false)}
     var add by remember {mutableStateOf(false)}
@@ -39,7 +45,7 @@ import java.time.LocalDate
         if(event!=null) haptics.perform(if(controller.error==null && (controller.saved || controller.saving)) event else TactileEvent.REJECT)
     }
     LaunchedEffect(date) {opening=null;deleting=null;editing=false}
-    Scaffold(containerColor=AppPalette.backgrounds[entry.theme],
+    Scaffold(modifier=Modifier.pointerInput(Unit){awaitPointerEventScope{while(true){awaitPointerEvent();privacy.touch()}}},containerColor=AppPalette.backgrounds[entry.theme],
         topBar={Surface(color=Color(0xfff7f5f0)) {Row(Modifier.fillMaxWidth().statusBarsPadding().padding(horizontal=20.dp,vertical=12.dp),horizontalArrangement=Arrangement.SpaceBetween) {
             Column {Text(AppShell.brand,style=MaterialTheme.typography.titleLarge,color=AppPalette.olive);Text(AppShell.tagline,style=MaterialTheme.typography.labelSmall)}
             TextButton({attempt(TactileEvent.SELECT) {controller.selectDate(LocalDate.now());tab=0}},enabled=controller.saved && !busy) {Text("오늘로 ↗")}
@@ -73,6 +79,7 @@ import java.time.LocalDate
                         AssistChip(onClick={options="style"},label={Text(when(entry.pageStyle) {"paper"->"노트";"dots"->"도트";else->"카드"})})
                         AssistChip(onClick={templates=true},label={Text("일기 형식 100종")})
                         AssistChip(onClick={layouts=true},label={Text("내 레이아웃")})
+                        AssistChip(onClick={studio=true},label={Text("하루 꾸미기")})
                     }}
                     item {Card(colors=CardDefaults.cardColors(containerColor=AppPalette.friendCard)) {Column(Modifier.padding(14.dp)) {
                         Text("YOUR LITTLE FRIEND",style=MaterialTheme.typography.labelSmall)
@@ -105,6 +112,7 @@ import java.time.LocalDate
                 2->PhoneCompanion(controller,catalog,haptics,attempt)
                 3->PhoneLounge()
                 else->LazyColumn(Modifier.fillMaxSize().padding(horizontal=20.dp),verticalArrangement=Arrangement.spacedBy(14.dp),contentPadding=PaddingValues(top=14.dp,bottom=24.dp)) {
+                    item {Button({studio=true},modifier=Modifier.fillMaxWidth()) {Text("하루 꾸미기 · 사진 / 방 / 태그 / 잠금")}}
                     item {Button({journalTools=true},modifier=Modifier.fillMaxWidth().testTag("journal-tools-open")) {Text("기록 도구 · 복구 / 리포트 / 알림")}}
                     item {Text("오늘의 분위기",style=MaterialTheme.typography.headlineSmall);FlowRow(horizontalArrangement=Arrangement.spacedBy(8.dp)) {DiaryOptions.themes.forEach {theme->FilterChip(entry.theme==theme.id,{attempt(TactileEvent.SELECT) {controller.edit(entry.copy(theme=theme.id))}},label={Text(theme.name)})}}}
                     item {Card(colors=CardDefaults.cardColors(containerColor=Color.White)) {Row(Modifier.fillMaxWidth().padding(16.dp),horizontalArrangement=Arrangement.SpaceBetween) {
@@ -127,6 +135,7 @@ import java.time.LocalDate
             }
         }
     }
+    if(studio)PhoneStudio(controller,haptics,privacy,onClose={studio=false},onOpen={day->controller.selectDate(day);if(controller.saved){studio=false;tab=0}})
     if(journalTools) PhoneJournalTools(controller,onExport,onDismiss={journalTools=false},onOpenDay={day->controller.clearError();controller.selectDate(day);if(controller.saved&&controller.error==null){journalTools=false;tab=0}})
     if(add) AlertDialog(onDismissRequest={add=false},title={Text("어떤 하루 조각을 남길까요?")},text={Column {listOf("text" to "글 일기","todo" to "할 일","habit" to "습관","emotion" to "감정","photo" to "사진").forEach {(kind,title)->TextButton({if(kind=="photo") onPhoto(null) else attempt(TactileEvent.SELECT) {controller.add(kind)};add=false},modifier=Modifier.fillMaxWidth()) {Text(title)}}}},confirmButton={TextButton({add=false}) {Text("닫기")}})
     if(templates) TemplatePicker(catalog,onApply={template->attempt(TactileEvent.DROP) {controller.applyTemplate(template)};if(controller.error==null) templates=false},onDismiss={templates=false},error=controller.error)

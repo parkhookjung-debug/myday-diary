@@ -158,4 +158,40 @@ class PhoneNotebookDeviceTest {
         ui.runOnIdle {assertEquals("solar-crown",c.book.equipment.headId);assertEquals("frost-glasses",c.book.equipment.faceId);assertEquals("frost-cloud",c.book.equipment.groundId);assertEquals(5,NotebookRules.xp(c.book))}
         screenshot("android-wardrobe-growth")
     }
+
+    @Test fun studioRoomTagsAndDailyPromptPersist() {
+        start()
+        ui.onNodeWithText("하루 꾸미기").performClick()
+        ui.onNodeWithText("1 사진·스티커").assertExists();screenshot("android-studio-photos")
+        ui.onNodeWithText("2 상몬의 방").performClick()
+        ui.onNodeWithText("화분 +").performClick()
+        ui.runOnIdle {assertEquals(9,c.book.version);assertEquals("plant",c.book.studio!!.furniture.single().kind)}
+        screenshot("android-studio-room")
+        ui.onNodeWithText("3 감정 달력").performClick();screenshot("android-studio-moods")
+        ui.onNodeWithText("4 태그·즐겨찾기").performScrollTo().performClick()
+        ui.onNodeWithTag("studio-tags").performTextInput("산책, 학교")
+        ui.onNodeWithText("이날의 분류 저장").performClick()
+        ui.runOnIdle {assertEquals(listOf("산책","학교"),c.book.studio!!.note(day.toString()).tags)}
+        screenshot("android-studio-tags")
+        ui.onNodeWithText("5 오늘의 질문").performScrollTo().performClick();screenshot("android-studio-question")
+        ui.onNodeWithText("이 질문으로 일기 쓰기").performClick()
+        ui.runOnIdle {assertTrue(c.entry.blocks.any {it.prompt==com.myday.diary.data.StudioData.question(day)})}
+    }
+    @Test fun studioPhotoToolsProduceValidPortableImages() {
+        val image=Bitmap.createBitmap(400,200,Bitmap.Config.ARGB_8888)
+        val cropped=com.myday.diary.ui.diary.PhotoDecor.crop(image,1.0)
+        assertEquals(200,cropped.width);assertEquals(200,cropped.height);assertEquals(400,image.width)
+        val framed=com.myday.diary.ui.diary.PhotoDecor.frame(cropped,0)
+        assertTrue(framed.width>cropped.width)
+        val encoded=com.myday.diary.ui.diary.PhotoDecor.encode(framed)
+        val book=com.myday.diary.data.DiaryBook(days=mapOf(day.toString() to com.myday.diary.data.DiaryEntry(blocks=listOf(com.myday.diary.data.DiaryBlock(type="photo",photo=encoded)))))
+        com.myday.diary.data.NotebookPhoto.validate(book)
+        framed.recycle();if(cropped!==image)cropped.recycle();image.recycle()
+        start();ui.onNodeWithText("하루 꾸미기").performClick()
+        ui.onNodeWithText("꽃 +").performClick();ui.waitForIdle()
+        ui.waitUntil(5000){c.entry.blocks.any{it.title=="꽃 스티커"}}
+        ui.runOnIdle {com.myday.diary.data.NotebookPhoto.validate(c.book)}
+        ui.onNodeWithText("6 일기 잠금").performScrollTo().performClick();screenshot("android-studio-privacy")
+        ui.onNodeWithText("현재 꺼짐").assertExists()
+    }
 }

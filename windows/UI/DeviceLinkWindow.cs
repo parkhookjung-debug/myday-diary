@@ -35,7 +35,7 @@ namespace MyDay.Windows.UI {
             FormClosed+=delegate {Stop();timer.Dispose();};
         }
         private static Button Add(Control page,string title,Action action){var button=Design.Button(title);button.Size=Design.Size(340,34);button.Click+=delegate {try{action();}catch(Exception ex){MessageBox.Show(ex.Message);}};page.Controls.Add(button);return button;}
-        private void Review(DiaryBook incoming){int photos=incoming.Days.Values.Sum(e=>e.Blocks.Count(b=>b.Photo!=null));int conflicts=incoming.Days.Keys.Count(book.Days.ContainsKey);if(MessageBox.Show(this,incoming.Days.Count+"일 · 사진 "+photos+"장\n겹치는 날짜 "+conflicts+"일\n가져오기 검토를 계속할까요? 아직 기록을 변경하지 않았어요.","도착한 기록",MessageBoxButtons.YesNo)!=DialogResult.Yes)return;Incoming=incoming;DialogResult=DialogResult.OK;}
+        private void Review(DiaryBook incoming){if(ScreenPrivacy.IsLocked)return;int photos=incoming.Days.Values.Sum(e=>e.Blocks.Count(b=>b.Photo!=null));int conflicts=incoming.Days.Keys.Count(book.Days.ContainsKey);if(MessageBox.Show(this,incoming.Days.Count+"일 · 사진 "+photos+"장\n겹치는 날짜 "+conflicts+"일\n가져오기 검토를 계속할까요? 아직 기록을 변경하지 않았어요.","도착한 기록",MessageBoxButtons.YesNo)!=DialogResult.Yes)return;Incoming=incoming;DialogResult=DialogResult.OK;}
         internal void StartForTest(){address.Items.Clear();address.Items.Add(IPAddress.Loopback);address.SelectedIndex=0;server=new DeviceLink(IPAddress.Loopback,DeviceLink.Encode(book));invitation.Text=server.Invitation;qr.Image=new DeviceQr(server.Invitation).Image();timer.Start();}
         private void Stop(){timer.Stop();if(server!=null){server.Dispose();server=null;}invitation.Text="";if(qr.Image!=null){qr.Image.Dispose();qr.Image=null;}state.Text="기기 연결을 닫았어요.";}
     }

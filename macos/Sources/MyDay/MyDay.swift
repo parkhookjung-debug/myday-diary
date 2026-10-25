@@ -151,7 +151,7 @@ struct MyDayApp: App {
     }
     var body: some Scene {
         WindowGroup("마이데이", id: "diary") {
-            DiaryView(store: store)
+            PrivacyRoot(store: store)
                 .frame(minWidth: 620, minHeight: 640)
                 .onAppear { lifecycle.store = store }
                 .onReceive(NotificationCenter.default.publisher(for: NSApplication.willTerminateNotification)) { _ in store.save() }

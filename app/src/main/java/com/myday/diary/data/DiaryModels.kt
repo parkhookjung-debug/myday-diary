@@ -33,7 +33,7 @@ data class SavedLayout(val id: String = UUID.randomUUID().toString(), val name: 
 data class DiaryBook(val version: Int = 4, val days: Map<String, DiaryEntry> = emptyMap(),
     val characterStyle: String = "original", val layouts: List<SavedLayout> = emptyList(),
     val awardedDays: Set<String> = emptySet(), val equipment: Equipment = Equipment(), val haptics: Boolean = true,
-    val hasEquipment: Boolean = true,val activities: Map<String,Int> = emptyMap(),val collection: CollectionBook?=null)
+    val hasEquipment: Boolean = true,val activities: Map<String,Int> = emptyMap(),val collection: CollectionBook?=null,val studio: StudioData?=null)
 
 interface NotebookRepository {
     fun loadBook(): DiaryBook

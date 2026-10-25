@@ -14,4 +14,5 @@ for name in ['catalog.json', 'sangmon', 'portraits', 'items', 'equipment']:
         shutil.copy2(src, dst)
 (target/'fixtures').mkdir(exist_ok=True)
 shutil.copy2(root/'app/src/test/resources/windows-v8.json', target/'fixtures/windows-v8.json')
+shutil.copy2(root/'app/src/test/resources/windows-studio.json', target/'fixtures/windows-studio.json')
 print('Mac staged: same 64 animated characters, 300 items and equipment overlays.')

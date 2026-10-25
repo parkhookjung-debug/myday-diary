@@ -44,7 +44,7 @@ class TransferTests(unittest.TestCase):
             with self.assertRaises(ValueError):lan.private_host(host)
     def test_qr_and_format(self):
         self.assertIn('viewBox=',lan.qr_svg(self.server.invite))
-        for data in [b'{}',b'{"Version":9,"Days":[]}',b'{"Version":true,"Days":[]}',b'[]']:
+        for data in [b'{}',b'{"Version":10,"Days":[]}',b'{"Version":true,"Days":[]}',b'[]']:
             with self.assertRaises(ValueError):lan.validate_backup(data)
 
 if __name__=='__main__': unittest.main()

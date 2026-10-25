@@ -123,6 +123,7 @@ namespace MyDay.Windows.UI
             };
             LoadDate(); UpdateGrowth();
             StartReminder();
+            if(!testMode)ScreenPrivacy.Watch(()=>FlushSave());
             Disposed+=delegate {reminderTimer.Dispose();};
         }
         public void StartOnDesktop()
@@ -145,7 +146,7 @@ namespace MyDay.Windows.UI
             pet.VariantChanged+=delegate { if(!binding) SelectVariant(pet.Variant); };
             pet.PetHidden+=delegate { petToggle.Text="캐릭터 띄우기"; };
         }
-        public void OpenDiary() { Show(); if(WindowState==FormWindowState.Minimized) WindowState=FormWindowState.Normal; Activate(); }
+        public void OpenDiary() { if(!ScreenPrivacy.Reveal())return; Show(); if(WindowState==FormWindowState.Minimized) WindowState=FormWindowState.Normal; Activate(); }
         public void SelectVariant(MonsterVariant variant)
         {
             if(!SangmonGrowth.CanUse(book.Progress,variant)) { ApplyVariant(); return; }
@@ -248,6 +249,7 @@ namespace MyDay.Windows.UI
             {
                 var item=block;
                 var card=new BlockCard(item,QueueSave,delegate(int step) { MoveBlock(item,step); },delegate { RemoveBlock(item); },delegate { item.Wide=!item.Wide; QueueSave(); RenderCards(); },entry.PageStyle,delegate { SelectPhoto(item); });
+                if(card.Photo!=null){card.Photo.Cursor=Cursors.Hand;card.Photo.DoubleClick+=delegate{DecoratePhoto(item);};}
                 card.SetEditing(editingLayout,entry.LayoutMode=="free"); board.AddCard(card);
             }
             if(entry.Blocks.Count==0) { var empty=Design.Label("빈 페이지예요. 아래에서 원하는 블록을 추가해보세요.",11); empty.Margin=Design.Pad(20); board.Controls.Add(empty); }
@@ -433,6 +435,7 @@ namespace MyDay.Windows.UI
                     merged.Collection=SangmonCollection.Merge(book.Collection,incoming.Collection);
                     if(incoming.Version<7)merged.Collection=SangmonCollection.PreserveLegacy(merged.Collection,merged.Progress,incoming.Equipment);
                     merged.Equipment=SangmonItems.Import(book.Equipment,incoming.Equipment,incoming.Version>=5);
+                    merged.Studio=StudioData.Merge(book.Studio,incoming.Studio);
                     merged.Layouts=layouts; merged.Version=Math.Max(book.Version,incoming.Version);
                     foreach(var pair in incoming.Days) merged.Days[pair.Key]=pair.Value;
                     store.Save(merged); book=merged; dirty=false; entryDirty=false; UpdateGrowth(); LoadDate(); status.Text="가져오기 완료";

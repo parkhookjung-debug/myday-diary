@@ -7,6 +7,7 @@ namespace MyDay.Windows.UI
         private ChatWindow chatWindow;
         private void OpenChat()
         {
+            if(!ScreenPrivacy.Reveal())return;
             if(chatWindow==null || chatWindow.IsDisposed)chatWindow=new ChatWindow();
             chatWindow.Show(this);chatWindow.Activate();
         }

@@ -12,6 +12,7 @@ namespace MyDay.Windows.UI
         private void ApplyEquipment() {avatar.Equipment=book.Equipment;if(pet!=null)pet.Equipment=book.Equipment;}
         private void OpenItems()
         {
+            if(!ScreenPrivacy.Reveal())return;
             OpenDiary();if(!FlushSave())return;
             using(var window=new EquipmentWindow(book,EquipItem,OpenCollection))window.ShowDialog(this);
         }
