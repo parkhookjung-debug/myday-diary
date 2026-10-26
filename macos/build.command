@@ -37,5 +37,6 @@ codesign --force --sign - "$app"
 "$app/Contents/MacOS/MyDay" --self-test
 cp README.md build/맥-실행안내.md
 cp ../LICENSE build/LICENSE
-ditto -c -k --sequesterRsrc --keepParent "$app" "build/MyDay-macOS-$(uname -m)-v0.11.0-preview.zip"
+package_version=$(/usr/libexec/PlistBuddy -c 'Print :CFBundleShortVersionString' "$app/Contents/Info.plist")
+ditto -c -k --sequesterRsrc --keepParent "$app" "build/MyDay-macOS-$(uname -m)-v${package_version}-preview.zip"
 print "완료: $app"
