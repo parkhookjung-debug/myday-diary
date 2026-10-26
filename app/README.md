@@ -1,5 +1,7 @@
 # Android 앱 — 수정할 파일 찾기
 
+**0.12.0:** [저장 복구·첫 실행 안내·성장 현황·설치와 수정 파일](../docs/QUALITY-UPDATE.md) · [통과한 검사·실행파일](../previews/quality/README.md). 설정·백업에서 사용 안내를 다시 열 수 있습니다. 최신 기기 연결은 앱 안에서 실행하며 별도 Python은 필요 없습니다.
+
 **화면을 바꾸려면 [Phone UI 안내](src/main/java/com/myday/diary/ui/diary/README.md), 저장·성장을 바꾸려면 [기능 안내](src/main/java/com/myday/diary/diary/README.md)부터 여세요.**
 
 | 할 일 | 들어갈 곳 |

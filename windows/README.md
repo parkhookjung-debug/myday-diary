@@ -1,5 +1,7 @@
 # MyDay Windows
 
+**0.12.0:** [저장 복구·첫 실행 안내·성장 현황·설치와 수정 파일](../docs/QUALITY-UPDATE.md) · [통과한 검사·실행파일](../previews/quality/README.md). 설정·백업에서 사용 안내를 다시 열 수 있습니다. 최신 기기 연결은 앱 안에서 실행하며 별도 Python은 필요 없습니다.
+
 Windows에서 실행하는 C# / Windows Forms 일기 앱과 투명한 바탕화면 캐릭터입니다.
 Android 프로젝트와 별도 폴더에서 개발하며 외부 패키지, 브라우저, Node.js가 필요하지 않습니다.
 
