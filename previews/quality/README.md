@@ -7,7 +7,7 @@
 | 운영체제 | 통과한 검사 | Artifacts에서 선택할 항목 | 실제 소스 |
 | --- | --- | --- | --- |
 | Windows 10/11 | [성공한 실행](https://github.com/parkhookjung-debug/myday-diary/actions/runs/40356914665) | `myday-windows-63` | `16a20a5` |
-| Mac Apple Silicon / macOS 13+ | [성공한 실행](https://github.com/parkhookjung-debug/myday-diary/actions/runs/40359393084) | `myday-chat-macOS-ARM64` | `3d7aad5` |
+| Mac Apple Silicon / macOS 13+ | [성공한 실행](https://github.com/parkhookjung-debug/myday-diary/actions/runs/40361697832) | `myday-chat-macOS-ARM64` | `b5438fe` |
 | Android 8+ / 갤럭시 | [성공한 실행](https://github.com/parkhookjung-debug/myday-diary/actions/runs/40359386330) | `myday-debug-69` | `3d7aad5` |
 
 성공한 실행을 열고 **Artifacts**를 선택합니다. Windows는 `bin/MyDay.exe`, Mac은 `MyDay-macOS-arm64-v0.12.0-preview.zip`, Android는 `outputs/apk/debug/app-debug.apk`를 사용합니다. 다운로드에 GitHub 로그인이 필요할 수 있으며 Artifacts 보관 기간은 플랫폼별 7~14일입니다. 이전 Releases 파일과 별개인 개발 빌드입니다. 앱 종료·공통 백업 후 교체하고 개인 기록 폴더는 삭제하지 않습니다. Android 서명 불일치 시 백업 확인 없이 앱을 삭제하지 않습니다.
@@ -36,3 +36,7 @@
 ## Android: 휴대폰 안내
 
 ![Android 성장·재화 현황](android-welcome-rewards.png)
+
+사진 편집 로딩 보강 후 실제 자르기·프레임·스티커 선택·적용 검사 화면입니다.
+
+![Android 실제 사진 편집](android-photo-editor.png)

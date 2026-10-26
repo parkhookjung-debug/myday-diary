@@ -73,7 +73,7 @@ Windows·Mac·Android용 커스터마이즈 일기 앱입니다. 세 버전에�
 | 사용할 환경 | 들어갈 곳 | Artifacts → 파일 |
 | --- | --- | --- |
 | Windows 10/11 | [0.12.0 검사·다운로드](https://github.com/parkhookjung-debug/myday-diary/actions/runs/40356914665) | `myday-windows-63` → `bin/MyDay.exe` |
-| Mac Apple Silicon / macOS 13+ | [0.12.0 검사·다운로드](https://github.com/parkhookjung-debug/myday-diary/actions/runs/40359393084) | `myday-chat-macOS-ARM64` → `MyDay-macOS-arm64-v0.12.0-preview.zip` |
+| Mac Apple Silicon / macOS 13+ | [0.12.0 검사·다운로드](https://github.com/parkhookjung-debug/myday-diary/actions/runs/40361697832) | `myday-chat-macOS-ARM64` → `MyDay-macOS-arm64-v0.12.0-preview.zip` |
 | 갤럭시 / Android 8+ | [0.12.0 검사·다운로드](https://github.com/parkhookjung-debug/myday-diary/actions/runs/40359386330) | `myday-debug-69` → `outputs/apk/debug/app-debug.apk` |
 
 업데이트 전 **공통 백업 저장 → 앱 완전 종료 → 새 앱으로 교체 → 기록 확인** 순서를 사용합니다. Windows는 .NET Framework 4.8 이상이 필요하며 트레이 MyDay → 모두 종료 후 교체합니다. Android는 앱 ID·서명이 같아야 덮어 설치할 수 있으니 서명 불일치 시 백업 확인 없이 삭제하지 마세요. GitHub 로그인이 필요할 수 있고 개발 빌드의 보관 기간은 플랫폼별 7~14일입니다.

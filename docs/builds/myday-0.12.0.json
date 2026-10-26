@@ -19,11 +19,11 @@
     {
       "platform": "macos",
       "file": "MyDay-macOS-arm64.zip",
-      "sourceCommit": "3d7aad59c497951ad8ba307efa77921b27530b51",
-      "ci": "https://github.com/parkhookjung-debug/myday-diary/actions/runs/40359393084",
+      "sourceCommit": "b5438fedbe8f36e03af879b313bc11eb52076e47",
+      "ci": "https://github.com/parkhookjung-debug/myday-diary/actions/runs/40361697832",
       "artifact": "myday-chat-macOS-ARM64",
-      "sha256": "27aaed3b4724f662f02f07ad72622fffb3b29ebf701169e874eb8b6dbaa491c6",
-      "bytes": 17188986
+      "sha256": "65762609f16e4ea3e87f98773d1104f8995285747926b654f84e0bcc71becf43",
+      "bytes": 17188991
     },
     {
       "platform": "android",
