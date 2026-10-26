@@ -5,7 +5,14 @@ import java.io.ByteArrayOutputStream
 import kotlin.math.*
 object PhotoDecor {
  val colors=intArrayOf(Color.rgb(240,224,213),Color.rgb(219,210,236),Color.rgb(220,231,211))
- fun decode(value:String):Bitmap {val bytes=Base64.decode(value,Base64.DEFAULT);return requireNotNull(BitmapFactory.decodeByteArray(bytes,0,bytes.size)).copy(Bitmap.Config.ARGB_8888,true)}
+ fun decode(value:String):Bitmap {
+  require(value.length<=com.myday.diary.data.NotebookPhoto.MAX_CHARACTERS)
+  val bytes=Base64.decode(value,Base64.DEFAULT);require(bytes.size<=com.myday.diary.data.NotebookPhoto.MAX_BYTES)
+  val bounds=BitmapFactory.Options().apply{inJustDecodeBounds=true};BitmapFactory.decodeByteArray(bytes,0,bytes.size,bounds)
+  require(bounds.outWidth in 1..1600&&bounds.outHeight in 1..1600)
+  val source=requireNotNull(BitmapFactory.decodeByteArray(bytes,0,bytes.size))
+  try{return requireNotNull(source.copy(Bitmap.Config.ARGB_8888,true))}finally{source.recycle()}
+ }
  fun encode(image:Bitmap):String {val ratio=min(1f,1600f/max(image.width,image.height));val b=Bitmap.createBitmap(max(1,(image.width*ratio).toInt()),max(1,(image.height*ratio).toInt()),Bitmap.Config.ARGB_8888);try{Canvas(b).apply{drawColor(Color.WHITE);drawBitmap(image,null,Rect(0,0,b.width,b.height),Paint(3))};val out=ByteArrayOutputStream();check(b.compress(Bitmap.CompressFormat.JPEG,88,out));require(out.size()<=2*1024*1024);return Base64.encodeToString(out.toByteArray(),Base64.NO_WRAP)}finally{b.recycle()}}
  fun crop(image:Bitmap,ratio:Double):Bitmap {var w=image.width;var h=image.height;if(w.toDouble()/h>ratio)w=max(1,(h*ratio).toInt())else h=max(1,(w/ratio).toInt());return Bitmap.createBitmap(image,(image.width-w)/2,(image.height-h)/2,w,h)}
  fun rotate(image:Bitmap,degrees:Float):Bitmap=Bitmap.createBitmap(image,0,0,image.width,image.height,Matrix().apply{postRotate(degrees)},true)

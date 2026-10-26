@@ -89,15 +89,14 @@ import kotlin.math.*
 
 @OptIn(ExperimentalLayoutApi::class)
 @Composable private fun PhonePhotoDecor(source:String,onClose:()->Unit,onApply:(String)->Unit) {
-    var image by remember { mutableStateOf<android.graphics.Bitmap?>(null) }
+    // One normalized, bounded (2 MiB / 1600 px) photo is decoded once for this editor.
+    // The first frame has a usable bitmap rather than depending on a composition effect.
+    val decoded=remember(source){runCatching{PhotoDecor.decode(source)}}
+    var image by remember(source) { mutableStateOf(decoded.getOrNull()) }
     var sticker by remember { mutableIntStateOf(-1) }
-    var error by remember { mutableStateOf("") }
+    var error by remember(source) { mutableStateOf(if(decoded.isFailure) "사진을 읽지 못했어요. 다시 시도해 주세요." else "") }
     var busy by remember { mutableStateOf(false) }
     val scope=rememberCoroutineScope()
-    LaunchedEffect(source) {
-        runCatching { withContext(Dispatchers.Default) { PhotoDecor.decode(source) } }
-            .onSuccess { image=it }.onFailure { error="사진을 읽지 못했어요." }
-    }
     // Keep preview images GC-owned while Compose may still reference an earlier frame.
     fun replace(next:android.graphics.Bitmap) { image=next }
     Dialog(onClose,properties=DialogProperties(usePlatformDefaultWidth=false)) {
@@ -156,7 +155,7 @@ import kotlin.math.*
                         }
                     },enabled=!busy) {Text("이 사진 적용")}
                 }
-                TextButton({runCatching {replace(PhotoDecor.decode(source))}
+                TextButton({runCatching {replace(PhotoDecor.decode(source));error=""}
                     .onFailure {error="사진을 읽지 못했어요."}},enabled=!busy) {Text("처음으로")}
                 OutlinedButton(onClose,enabled=!busy) {Text("취소")}
             }

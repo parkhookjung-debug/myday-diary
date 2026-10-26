@@ -35,7 +35,7 @@ struct SharedSangmonView: View {
                 let row = age < 0.7 ? 2 : sleepy ? 6 : (30..<31.6).contains(phase) ? 3 : (34..<36.4).contains(phase) ? 6 : 0
                 let frame = row == 2 ? min(6, Int(age * 10)) : row == 3 ? Int((phase - 30) * 5) : Int(time * (row == 6 ? 3.33 : 1.9)) % 8
                 let hopAge=timeline.date.timeIntervalSince(hopAt)
-                let offset=hopAge<0.9 ? -abs(sin(hopAge*Double.pi*2/0.9))*9 : 0
+                let offset:CGFloat=hopAge<0.9 ? CGFloat(-abs(sin(hopAge*Double.pi*2/0.9))*9) : 0
                 let side = min(size.width, size.height), bounds = CGRect(x: (size.width - side) / 2, y: (size.height - side) / 2+offset, width: side, height: side)
                 func overlay(_ slot: String) {
                     let id = companion.item(slot)
