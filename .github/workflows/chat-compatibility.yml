@@ -8,6 +8,13 @@ on:
     branches: [main]
     paths: ['shared/**', 'tools/*desktop*', 'server/cloudflare/**', 'macos/**', 'windows/**', '.github/workflows/chat-compatibility.yml']
   workflow_dispatch:
+    inputs:
+      macos_runner:
+        description: 'Standard free macOS runner (public repository only)'
+        required: false
+        default: macos-latest
+        type: choice
+        options: [macos-latest, macos-15]
 
 permissions:
   contents: read
@@ -52,7 +59,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [windows-latest, macos-latest]
+        os: [windows-latest, "${{ inputs.macos_runner || 'macos-latest' }}"]
     runs-on: ${{ matrix.os }}
     timeout-minutes: 15
     env:
