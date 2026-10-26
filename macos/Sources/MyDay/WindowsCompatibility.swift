@@ -289,6 +289,7 @@ extension DiaryStore {
     func loadWindowsMetadata() {
         do {
             let url = directory.appendingPathComponent("windows-metadata.json")
+            if !FileManager.default.fileExists(atPath:url.path),FileManager.default.fileExists(atPath:url.appendingPathExtension("previous").path){throw CocoaError(.fileReadNoSuchFile)}
             let metadata = FileManager.default.fileExists(atPath: url.path)
                 ? try JSONDecoder().decode(WindowsMetadata.self, from: Data(contentsOf: url)) : nil
             try WindowsCompatibility.validateMetadata(metadata)

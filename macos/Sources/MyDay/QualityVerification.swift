@@ -13,6 +13,11 @@ import Foundation
     try Data("bad prior".utf8).write(to:file.appendingPathExtension("previous"));try Data("bad current".utf8).write(to:file)
     let invalid=DiaryStore(directory:directory);try MacVerification.check(!invalid.recoveryAvailable,"invalid prior snapshot cannot be offered")
     invalid.recoverPrevious();let untouched=try Data(contentsOf:file);try MacVerification.check(untouched==Data("bad current".utf8),"invalid recovery does not replace original")
+    let profileDirectory=root.appendingPathComponent("missing-profile");let profileStore=DiaryStore(directory:profileDirectory)
+    profileStore.update{$0.blocks.append(DiaryBlock(kind:.text,text:"첫 저장"))};profileStore.update{$0.blocks[0].text="다음 저장"}
+    let metadata=profileDirectory.appendingPathComponent("windows-metadata.json");try FileManager.default.removeItem(at:metadata)
+    let missing=DiaryStore(directory:profileDirectory);try MacVerification.check(!missing.metadataLoaded && missing.recoveryAvailable,"missing metadata cannot silently reset companion or currency")
+    missing.recoverPrevious();try MacVerification.check(missing.metadataLoaded,"missing metadata recovers from validated prior generation")
     try MacVerification.check(ExperienceCatalog.titles.count==4 && ExperienceCatalog.bodies[2].contains("65%"),"shared onboarding and transparent economy help loaded")
  }
 }

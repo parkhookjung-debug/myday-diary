@@ -1,9 +1,17 @@
-import importlib.util,json,unittest
+import importlib.util,json,unittest,tempfile,shutil
 from pathlib import Path
 ROOT=Path(__file__).resolve().parents[1]
 spec=importlib.util.spec_from_file_location('experience',ROOT/'tools/sync-experience.py');m=importlib.util.module_from_spec(spec);spec.loader.exec_module(m)
 class ExperienceTests(unittest.TestCase):
     def test_native_outputs_match(self):m.sync(check=True)
+    def test_changed_odds_reach_every_native_guide(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root=Path(directory);(root/'shared').mkdir()
+            for name in ('experience.json','collection.json','desktop.json'):shutil.copyfile(ROOT/'shared'/name,root/'shared'/name)
+            p=json.loads((root/'shared/collection.json').read_text(encoding='utf-8'));p['weights']=[6000,3000,900,100]
+            (root/'shared/collection.json').write_text(json.dumps(p,ensure_ascii=False),encoding='utf-8')
+            values=m.render(root)
+            for value in values.values():self.assertIn('일상 60% / 반짝 30%',value)
     def test_secondary_text_contrast(self):
         p=json.loads((ROOT/'shared/desktop.json').read_text(encoding='utf-8'))['design']
         def lum(hex):

@@ -5,6 +5,7 @@ namespace MyDay.Windows.Core {
     public static class RecoveryStore {
         public static bool Available(DiaryStore store) {try {using(var s=File.OpenRead(store.FilePath+".bak"))DiaryStore.Read(s);return true;}catch{return false;}}
         public static string Restore(DiaryStore store) {
+            if(new FileInfo(store.FilePath+".bak").Length>DiaryStore.MaxFileBytes)throw new InvalidDataException("직전 저장본의 크기가 너무 커요.");
             byte[] bytes=File.ReadAllBytes(store.FilePath+".bak");
             using(var s=new MemoryStream(bytes))DiaryStore.Read(s);
             string archive=store.FilePath+".damaged-"+Guid.NewGuid().ToString("N");

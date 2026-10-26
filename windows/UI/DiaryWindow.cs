@@ -42,8 +42,10 @@ namespace MyDay.Windows.UI
         private DesktopPet pet;
         private readonly NotifyIcon tray;
         private readonly bool testMode;
+        private readonly bool showWelcome;
         public DiaryWindow(DiaryStore store, DiaryBook book, bool testMode = false)
         {
+            showWelcome=!testMode && WelcomeState.ShouldShow(Path.GetDirectoryName(store.FilePath),book.Days.Count>0);
             SangmonCollection.Migrate(book);this.store=store; this.book=book; this.testMode=testMode;
             board=new DiaryBoard(QueueSave) { Dock=DockStyle.Fill };
             Text="MyDay · 나의 작은 일기장";
@@ -123,7 +125,7 @@ namespace MyDay.Windows.UI
             };
             LoadDate(); UpdateGrowth();
             StartReminder();
-            Shown+=delegate{if(!testMode && WelcomeState.ShouldShow(Path.GetDirectoryName(store.FilePath),File.Exists(store.FilePath)))BeginInvoke((Action)OpenWelcome);};
+            Shown+=delegate{if(showWelcome)BeginInvoke((Action)OpenWelcome);};
             if(!testMode)ScreenPrivacy.Watch(()=>FlushSave());
             Disposed+=delegate {reminderTimer.Dispose();};
         }

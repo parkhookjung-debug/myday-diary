@@ -63,7 +63,7 @@ import org.json.JSONObject
                 else->{item {Text("현재 버전 ${JournalPolicy.appVersion}",style=MaterialTheme.typography.titleLarge);Text("복구 보관함·월간 리포트·알림·Wi-Fi 전송 도구·상몬 반응을 추가했어요.")
                     Button({scope.launch {busy=true;try {message=withContext(Dispatchers.IO) {checkJournalRelease()}}catch(_: Exception){message="버전 확인 실패 · 연결을 확인하고 다시 시도해 주세요."}finally{busy=false}}},enabled=!busy) {Text("최신 정식 버전 확인")}
                     OutlinedButton(onExport,enabled=controller.saved) {Text("1. 업데이트 전 백업 저장")}
-                    OutlinedButton({context.startActivity(Intent(Intent.ACTION_VIEW,Uri.parse("https://github.com/parkhookjung-debug/myday-diary/actions/workflows/android.yml")))}) {Text("2. Android 개발 빌드 받기 (Actions)")}
+                    OutlinedButton({context.startActivity(Intent(Intent.ACTION_VIEW,Uri.parse("https://github.com/parkhookjung-debug/myday-diary/actions/workflows/android.yml?query=branch%3Acodex%2Fwindows-app")))}) {Text("2. Android 개발 빌드 받기 (Actions)")}
                     Text("같은 앱 ID와 서명의 APK를 설치하면 기록이 유지돼요. 서명이 다르다는 안내가 나오면 삭제하지 말고 먼저 백업하세요. 개발 빌드는 Actions에서 받아요.")
                 }}
             }

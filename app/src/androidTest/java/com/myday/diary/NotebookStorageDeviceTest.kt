@@ -39,6 +39,7 @@ class NotebookStorageDeviceTest {
         val before=File(directory,"notebook.json").readBytes();File(directory,"notebook.previous.json").writeText("bad prior")
         assertFalse(RecoveryStore.available(directory));assertThrows(Exception::class.java){RecoveryStore.restore(directory)}
         assertArrayEquals(before,File(directory,"notebook.json").readBytes())
+        File(directory,"notebook.json").delete();assertThrows(Exception::class.java){store.loadBook()}
     }
     @Test fun migrationAndAtomicFileFailureKeepPreviousContent() {
         val old="""{"theme":2,"character":"🐱","blocks":[{"id":"legacy","type":"todo","text":"이전 기록","checked":true}]}"""

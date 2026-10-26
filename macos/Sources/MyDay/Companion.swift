@@ -56,12 +56,14 @@ extension DiaryStore {
     func loadCompanion() {
         do {
             let url = directory.appendingPathComponent("companion.json")
+            if !FileManager.default.fileExists(atPath:url.path),FileManager.default.fileExists(atPath:url.appendingPathExtension("previous").path){throw CocoaError(.fileReadNoSuchFile)}
             let profile = FileManager.default.fileExists(atPath: url.path)
                 ? try JSONDecoder().decode(CompanionProfile.self, from: Data(contentsOf: url)) : CompanionProfile()
             try MacBackup(days: [:], companion: profile).validate()
             companion = profile
             profileLoaded = true
         } catch {
+            profileLoaded=false
             self.error = "상몬 정보를 읽지 못했습니다. 저장 폴더의 companion.json을 확인해 주세요. \(error.localizedDescription)"
         }
     }

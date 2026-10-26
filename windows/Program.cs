@@ -87,7 +87,7 @@ namespace MyDay.Windows
                     try {book=store.Load();}catch {
                         if(!RecoveryStore.Available(store) || MessageBox.Show("현재 기록을 읽지 못했어요. 검증된 직전 저장본으로 복구할까요?\n현재 파일은 별도로 보존하고, 직전 저장 이후 변경은 되돌아가요.","MyDay · 기록 복구",MessageBoxButtons.YesNo,MessageBoxIcon.Warning)!=DialogResult.Yes)throw;
                         string archive=RecoveryStore.Restore(store);book=store.Load();
-                        MessageBox.Show("직전 저장본으로 복구했어요. 기존 파일 보관 위치:\n"+archive,"MyDay");
+                        MessageBox.Show("직전 저장본으로 복구했어요."+(File.Exists(archive)?" 기존 파일 보관 위치:\n"+archive:" 현재 파일이 없어서 별도 보관본은 만들지 않았어요."),"MyDay");
                     }
                     using(var session=new DiarySession(store,book,args.Length==1 && args[0]=="--open-diary")) Application.Run(session);
                     return 0;
