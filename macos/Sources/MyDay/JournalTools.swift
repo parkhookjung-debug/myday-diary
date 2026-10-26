@@ -159,7 +159,8 @@ struct JournalToolsView: View {
                     Text("휴지통·변경 이력, 월간 리포트, 알림, Wi-Fi 전송 도구, 상몬 반응을 추가했어요.")
                     Button("최신 정식 버전 확인") { Task { await checkUpdate() } }
                     Button("1. 업데이트 전 백업 저장") { store.exportWindowsBackup() }
-                    Button("2. 다운로드·설치 페이지 열기") { NSWorkspace.shared.open(URL(string:"https://github.com/parkhookjung-debug/myday-diary/releases")!) }
+                    Button("2. Mac 개발 빌드 받기 (Actions)") { NSWorkspace.shared.open(URL(string:"https://github.com/parkhookjung-debug/myday-diary/actions/workflows/chat-compatibility.yml")!) }
+                    Text("성공한 실행 → myday-chat-macOS-ARM64. 앱 종료 후 MyDay.app을 교체하며 기록 폴더는 유지해요.")
                     Text("새 앱을 Applications에 교체해도 Application Support의 개인 기록은 유지해요. 개발 빌드는 Actions에서 받아요."); Spacer()
                 }.padding(24)
             }}.frame(maxWidth: .infinity,maxHeight: .infinity)

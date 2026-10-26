@@ -1,0 +1,37 @@
+name: 앱 사용성 점검
+description: 팀원이 샘플 일기로 사용한 결과를 공유합니다.
+title: "[사용성] "
+labels: [enhancement]
+body:
+  - type: markdown
+    attributes:
+      value: 개인 일기·사진·PIN·백업 파일은 첨부하지 마세요. 샘플 기록 화면만 사용합니다.
+  - type: input
+    id: environment
+    attributes:
+      label: 운영체제·기기·앱 버전
+      placeholder: Windows 11 / 0.12.0 또는 Galaxy / Android 버전
+    validations:
+      required: true
+  - type: checkboxes
+    id: journey
+    attributes:
+      label: 확인한 사용 흐름
+      options:
+        - label: 첫 안내 및 설정에서 다시 열기
+        - label: 글·사진 추가 및 재실행 후 유지
+        - label: 자유 배치·상몬 방 저장
+        - label: 공통 백업 및 다른 OS에서 가져오기
+        - label: 이력 복구 및 보상 중복 없음
+  - type: textarea
+    id: feedback
+    attributes:
+      label: 막힌 부분과 기대한 동작
+      description: 클릭 순서·실제 결과·원했던 결과를 적어 주세요.
+    validations:
+      required: true
+  - type: textarea
+    id: rewards
+    attributes:
+      label: 성장·선물 사용감 (선택)
+      description: 사용 일수·하루 대략 뽑기 횟수·중복 느낌·소품 획득 경로를 적어 주세요. 기록 원문은 필요 없습니다.

@@ -60,10 +60,10 @@ namespace MyDay.Windows.UI
         private void RefreshItems()
         {
             var state=SangmonCollection.State(book.Collection,book.Progress);
-            balance.Text="클로버 "+state.Coins+" · 꽃잎 "+state.Petals+" · 보유 "+state.Owned.Count+"/300";
+            balance.Text="클로버 "+state.Coins+" · "+state.Coins/SangmonCollection.DrawCost+"회 가능 · 꽃잎 "+state.Petals+" · 보유 "+state.Owned.Count+"/300";
             materials.Text=string.Join(" · ",Enumerable.Range(0,4).Select(g=>CollectionPolicy.Names[g]+" 조각 "+state.Materials[g]));
             DrawButton.Enabled=state.Coins>=20 && (book.Collection==null || book.Collection.Actions.Count<SangmonCollection.MaxActions);
-            DrawButton.Text="클로버 20 · 선물 뽑기";pity.Text=state.Owned.Count==SangmonItems.All.Length?"모든 소품 수집 완료 · 일반 뽑기":(10-state.Draws%10)+"회 후 새 소품 보장";
+            DrawButton.Text=state.Coins<SangmonCollection.DrawCost?"클로버 "+(SangmonCollection.DrawCost-state.Coins)+"개 더 필요":"클로버 20 · 선물 뽑기";pity.Text=state.Owned.Count==SangmonItems.All.Length?"모든 소품 수집 완료 · 일반 뽑기":(10-state.Draws%10)+"회 후 새 소품 보장";
             var matches=SangmonItems.All.Where(i=>(rarity.SelectedIndex<=0 || SangmonCollection.Rarity(i.Id)==rarity.SelectedIndex-1) && (!ownedOnly.Checked || state.Owned.Contains(i.Id)) && (i.Name+" "+i.Id).IndexOf(search.Text.Trim(),StringComparison.OrdinalIgnoreCase)>=0).ToArray();
             int pages=Math.Max(1,(matches.Length+11)/12);page=Math.Max(0,Math.Min(page,pages-1));
             grid.SuspendLayout();foreach(Control control in grid.Controls.Cast<Control>().ToArray())control.Dispose();

@@ -75,7 +75,8 @@ namespace MyDay.Windows.UI
             check.Click+=async delegate {check.Enabled=false;try {using(var client=new WebClient()){client.Headers[HttpRequestHeader.UserAgent]="MyDay/"+JournalPolicy.AppVersion;client.Headers[HttpRequestHeader.Accept]="application/vnd.github+json";string json=await client.DownloadStringTaskAsync(new Uri("https://api.github.com/repos/parkhookjung-debug/myday-diary/releases/latest"));using(var s=new MemoryStream(System.Text.Encoding.UTF8.GetBytes(json))){var release=(ReleaseInfo)new DataContractJsonSerializer(typeof(ReleaseInfo)).ReadObject(s);Version latest,current;if(!Version.TryParse((release.Tag??"").TrimStart('v'),out latest)||!Version.TryParse(JournalPolicy.AppVersion,out current))throw new IOException("릴리스 버전을 확인할 수 없어요.");status.Text=latest>current?"새 버전 "+latest+"\n"+(release.Body??""):"현재 버전보다 새로운 정식 릴리스가 없어요.\n개발 브랜치의 빌드는 GitHub Actions에서 확인하세요.";}}}
                 catch(WebException ex){status.Text=ex.Response is HttpWebResponse && ((HttpWebResponse)ex.Response).StatusCode==HttpStatusCode.NotFound?"아직 정식 릴리스가 없어요. 개발 빌드는 Actions에 있어요.":"버전 확인 실패 · 연결을 확인하고 다시 시도해 주세요.";}catch(Exception ex){status.Text=ex.Message;}finally{check.Enabled=true;}};
             Add(page,"1. 업데이트 전 백업 저장",SaveBackup);
-            Add(page,"2. 다운로드·설치 페이지 열기",delegate{Process.Start("https://github.com/parkhookjung-debug/myday-diary/releases");});
+            Add(page,"2. Windows 개발 빌드 받기 (Actions)",delegate{Process.Start("https://github.com/parkhookjung-debug/myday-diary/actions/workflows/windows.yml");});
+            Note(page,"성공한 실행 → myday-windows-* → MyDay.exe. 앱을 모두 종료한 뒤 실행 파일을 교체하세요. 정식 릴리스 확인과 개발 빌드는 별개예요.");
         }
         [DataContract] private sealed class ReleaseInfo {[DataMember(Name="tag_name")]public string Tag="";[DataMember(Name="body")]public string Body="";}
     }

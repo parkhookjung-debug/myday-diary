@@ -47,7 +47,7 @@
     {"id":"dream","url":"https://journey.cloud/dream-journal"}
   ],
   "design": {
-    "Ink":"#433D36", "Muted":"#9B9588", "Accent":"#805C49", "Soft":"#E9E4DB",
+    "Ink":"#433D36", "Muted":"#70695E", "Accent":"#805C49", "Soft":"#E9E4DB",
     "Tint":"#F3E6DF", "Paper":"#FFFCF8", "Sidebar":"#F7F5F0", "Olive":"#60694E",
     "FriendCard":"#EFEEE3", "FriendHalo":"#FAF8ED", "Progress":"#A2AD89", "Selection":"#E9ECDF",
     "ChatBackground":"#FFFCF7", "ChatMine":"#E8EFE1", "ChatOther":"#F5EBE1",

@@ -74,7 +74,7 @@ namespace MyDay.Windows.Core
         public DiaryStore(string directory) { FilePath = Path.Combine(directory, "diary.json"); }
         public DiaryBook Load()
         {
-            if (!File.Exists(FilePath)) return new DiaryBook();
+            if (!File.Exists(FilePath)) {if(File.Exists(FilePath+".bak"))throw new InvalidDataException("현재 기록 파일이 없어요. 직전 저장본 복구를 확인해 주세요.");return new DiaryBook();}
             using (var stream = File.OpenRead(FilePath)) return Read(stream);
         }
         public static DiaryBook Read(Stream stream)
@@ -161,13 +161,13 @@ namespace MyDay.Windows.Core
                 UpgradeVersion(book);
                 new DataContractJsonSerializer(typeof(DiaryBook)).WriteObject(buffer, book);
                 CheckSize(buffer.Length);
-                File.WriteAllBytes(destination, buffer.ToArray());
+                RecoveryStore.AtomicWrite(destination, buffer.ToArray());
             }
         }
         public static string Key(DateTime date) { return date.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture); }
         private static void UpgradeVersion(DiaryBook book)
         {
-            if(book.Studio!=null)book.Version=Math.Max(book.Version,9);
+            if(book.Studio!=null){SangmonCollection.Migrate(book);book.Version=Math.Max(book.Version,9);}
             if(book.Collection!=null){book.Version=Math.Max(book.Version,SangmonCollection.NeedsV8(book.Collection)?8:SangmonCollection.State(book.Collection,book.Progress).Closet?7:6);return;}
             if(book.Version>=6)return;
             if(SangmonItems.Expanded(book.Equipment) || book.Progress!=null && book.Progress.Activities!=null && book.Progress.Activities.Count>0)book.Version=5;

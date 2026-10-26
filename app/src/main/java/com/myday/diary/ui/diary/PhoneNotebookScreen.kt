@@ -27,6 +27,9 @@ import java.time.LocalDate
     val privacy=remember {PhonePrivacy(PinVault(privacyContext.filesDir))}
     if(PhonePrivacyGate(privacy))return
     LaunchedEffect(controller.entry){privacy.touch()}
+    val welcomePrefs=remember(privacyContext){privacyContext.getSharedPreferences("myday-welcome",android.content.Context.MODE_PRIVATE)}
+    var welcome by remember{mutableStateOf(controller.book.days.isEmpty() && !welcomePrefs.getBoolean("complete",false))}
+    fun closeWelcome(){welcomePrefs.edit().putBoolean("complete",true).apply();welcome=false}
     var studio by remember {mutableStateOf(false)}
     var tab by rememberSaveable {mutableIntStateOf(0)}
     var journalTools by remember {mutableStateOf(false)}
@@ -112,6 +115,7 @@ import java.time.LocalDate
                 2->PhoneCompanion(controller,catalog,haptics,attempt)
                 3->PhoneLounge()
                 else->LazyColumn(Modifier.fillMaxSize().padding(horizontal=20.dp),verticalArrangement=Arrangement.spacedBy(14.dp),contentPadding=PaddingValues(top=14.dp,bottom=24.dp)) {
+                    item {OutlinedButton({welcome=true},Modifier.fillMaxWidth().testTag("guide-open")){Text("처음 시작하기 · 사용 안내")}}
                     item {Button({studio=true},modifier=Modifier.fillMaxWidth()) {Text("하루 꾸미기 · 사진 / 방 / 태그 / 잠금")}}
                     item {Button({journalTools=true},modifier=Modifier.fillMaxWidth().testTag("journal-tools-open")) {Text("기록 도구 · 복구 / 리포트 / 알림")}}
                     item {Text("오늘의 분위기",style=MaterialTheme.typography.headlineSmall);FlowRow(horizontalArrangement=Arrangement.spacedBy(8.dp)) {DiaryOptions.themes.forEach {theme->FilterChip(entry.theme==theme.id,{attempt(TactileEvent.SELECT) {controller.edit(entry.copy(theme=theme.id))}},label={Text(theme.name)})}}}
@@ -135,6 +139,10 @@ import java.time.LocalDate
             }
         }
     }
+    if(welcome)PhoneWelcome(controller.book,onClose={closeWelcome()},onAction={i->
+        if(controller.saved && !busy){closeWelcome();tab=0;when(i){0->attempt(TactileEvent.SELECT){controller.add("text")};1->onPhoto(null);else->studio=true}}
+        else controller.report("저장이 끝나면 시작할 수 있어요.")
+    })
     if(studio)PhoneStudio(controller,haptics,privacy,onClose={studio=false},onOpen={day->controller.selectDate(day);if(controller.saved){studio=false;tab=0}})
     if(journalTools) PhoneJournalTools(controller,onExport,onDismiss={journalTools=false},onOpenDay={day->controller.clearError();controller.selectDate(day);if(controller.saved&&controller.error==null){journalTools=false;tab=0}})
     if(add) AlertDialog(onDismissRequest={add=false},title={Text("어떤 하루 조각을 남길까요?")},text={Column {listOf("text" to "글 일기","todo" to "할 일","habit" to "습관","emotion" to "감정","photo" to "사진").forEach {(kind,title)->TextButton({if(kind=="photo") onPhoto(null) else attempt(TactileEvent.SELECT) {controller.add(kind)};add=false},modifier=Modifier.fillMaxWidth()) {Text(title)}}}},confirmButton={TextButton({add=false}) {Text("닫기")}})

@@ -15,7 +15,7 @@ fun MyDayTheme(content: @Composable () -> Unit) {
             secondary = AppPalette.accent,
             primaryContainer=Color(0xfff3e6df),onPrimaryContainer=Color(0xff433d36),
             secondaryContainer=Color(0xffe9ecdf),onSecondaryContainer=Color(0xff60694e),
-            surface=AppPalette.paper,onSurface=AppPalette.ink,onSurfaceVariant=Color(0xff716b60),
+            surface=AppPalette.paper,onSurface=AppPalette.ink,onSurfaceVariant=AppPalette.muted,
             surfaceVariant=Color(0xfff3e6df),outline=Color(0xffb6aa9c)
         ),
         typography = DiaryTypography,

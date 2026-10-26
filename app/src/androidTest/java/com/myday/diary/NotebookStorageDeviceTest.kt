@@ -31,6 +31,15 @@ class NotebookStorageDeviceTest {
         target.getSharedPreferences("$identifier-diary",Context.MODE_PRIVATE).edit().clear().commit()
         target.getSharedPreferences("$identifier-diary-home",Context.MODE_PRIVATE).edit().clear().commit()
     }
+    @Test fun explicitRecoveryPreservesOriginalAndEconomy() {
+        val book=NotebookJson.decode(InstrumentationRegistry.getInstrumentation().context.assets.open("windows-v7.json").bufferedReader().use{it.readText()})
+        val store=DiaryStore(isolated);store.saveBook(book);store.saveBook(book.copy(haptics=false));assertTrue(RecoveryStore.available(directory))
+        File(directory,"notebook.json").writeText("damaged current");assertThrows(Exception::class.java){store.loadBook()}
+        val archive=RecoveryStore.restore(directory);assertEquals("damaged current",archive.readText());assertEquals(book,store.loadBook())
+        val before=File(directory,"notebook.json").readBytes();File(directory,"notebook.previous.json").writeText("bad prior")
+        assertFalse(RecoveryStore.available(directory));assertThrows(Exception::class.java){RecoveryStore.restore(directory)}
+        assertArrayEquals(before,File(directory,"notebook.json").readBytes())
+    }
     @Test fun migrationAndAtomicFileFailureKeepPreviousContent() {
         val old="""{"theme":2,"character":"🐱","blocks":[{"id":"legacy","type":"todo","text":"이전 기록","checked":true}]}"""
         isolated.getSharedPreferences("diary",Context.MODE_PRIVATE).edit().putString("2026-10-08",old).commit()

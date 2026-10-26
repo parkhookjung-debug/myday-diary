@@ -21,7 +21,9 @@ extension DiaryStore {
             let metadata = WindowsMetadata(fields: next.fields)
             try WindowsCompatibility.validateMetadata(metadata)
             try FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true)
-            try JSONEncoder().encode(metadata).write(to: directory.appendingPathComponent("windows-metadata.json"), options: .atomic)
+            try SafeStorage.write(JSONEncoder().encode(metadata),to:directory.appendingPathComponent("windows-metadata.json")){data in
+                try WindowsCompatibility.validateMetadata(JSONDecoder().decode(WindowsMetadata.self,from:data))
+            }
             windowsMetadata = metadata
             companion.activityDays.formUnion(next.awarded)
             error = nil

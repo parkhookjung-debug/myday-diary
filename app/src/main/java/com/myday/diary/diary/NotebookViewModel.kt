@@ -33,6 +33,11 @@ class NotebookViewModel(application: Application): AndroidViewModel(application)
         }
         reload()
     }
+    val recoveryAvailable get()=com.myday.diary.data.RecoveryStore.available(getApplication<Application>().filesDir)
+    fun recover() {viewModelScope.launch {
+        runCatching {withContext(Dispatchers.IO) {check(controller==null);com.myday.diary.data.RecoveryStore.restore(getApplication<Application>().filesDir)}}
+            .onSuccess {reload()}.onFailure {loadError=it.message ?: "직전 저장본으로 복구하지 못했어요."}
+    }}
     fun reload() {viewModelScope.launch {loadError=null
         runCatching {withContext(Dispatchers.IO) {NotebookController(repository,persist={book,date,done->
             if(requests.trySend(WriteRequest(book,date,done)).isFailure) done(Result.failure(IllegalStateException("저장 요청을 처리하지 못했어요.")))

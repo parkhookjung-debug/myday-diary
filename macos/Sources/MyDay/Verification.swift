@@ -16,6 +16,7 @@ enum MacVerification {
         store.update { entry in
             entry.blocks = [DiaryBlock(kind: .text, text: "맥에서 시작하는 나의 작은 하루.\n오늘은 산책을 하고 좋아하는 음악을 들었어요."), DiaryBlock(kind: .todo, text: "나를 위한 시간 10분", checked: true)]
         }
+        for i in 0..<4{try render(ExperienceView(store:store,section:i),name:"preview-welcome-\(i)",width:780,height:700)}
         try render(DiaryView(store: store), name: "preview", width: 920, height: 860)
         try render(DiaryView(store: store), name: "preview-narrow", width: 620, height: 800)
         try render(DiaryView(store: store), name: "preview-wide", width: 1320, height: 860)
@@ -64,6 +65,7 @@ enum MacVerification {
         try LoungeVerification.addresses()
         let root = FileManager.default.temporaryDirectory.appendingPathComponent("MyDay-check-\(UUID())")
         defer { try? FileManager.default.removeItem(at: root) }
+        try QualityVerification.run(root)
         let directory = root.appendingPathComponent("MyDay")
         let store = DiaryStore(directory: directory)
         try check(store.loaded && store.profileLoaded, "empty store")

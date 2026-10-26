@@ -38,6 +38,12 @@ class PhoneNotebookDeviceTest {
                 if(id==null) c.edit(NotebookRules.append(c.entry,listOf(DiaryBlock(type="photo",photo=data,height=360))),true)
                 else c.updateBlock(c.entry.blocks.first {it.id==id}.copy(type="photo",photo=data))},onExport={},onImport={})}}
     }
+    @Test fun sharedGuideOpensNavigatesAndStartsWriting() {
+        start();ui.onNodeWithTag("nav-4").performClick();ui.onNodeWithTag("guide-open").performScrollTo().performClick()
+        ui.onNodeWithTag("guide-tab-2").performClick();ui.onNodeWithTag("guide-tab-2").assertIsSelected();screenshot("android-welcome-rewards")
+        ui.onNodeWithTag("guide-tab-0").performClick();ui.onNodeWithTag("guide-action-0").performScrollTo().performClick()
+        ui.runOnIdle{assertEquals(4,c.entry.blocks.size)}
+    }
     private fun screenshot(name: String) {
         ui.waitForIdle()
         Thread.sleep(500) // Let the Android render thread publish the composed frame before capture.

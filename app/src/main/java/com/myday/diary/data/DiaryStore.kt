@@ -17,6 +17,7 @@ class DiaryStore(context: Context) : DiaryRepository, NotebookRepository {
         if(file.baseFile.exists() || File(file.baseFile.path+".bak").exists()) return@synchronized file.openRead().use {input->
             require(input.available()<=NotebookJson.MAX_BYTES);NotebookJson.decode(input.readBytes().toString(Charsets.UTF_8)).also(NotebookPhoto::validate).also {runCatching {DiaryHomeCache(appContext).update(it)}}
         }
+        require(!File(appContext.filesDir,"notebook.previous.json").exists()) {"현재 기록 파일이 없어요. 직전 저장본으로 복구해 주세요."}
         val days=prefs.all.filterKeys {it.matches(Regex("\\d{4}-\\d{2}-\\d{2}"))}.mapValues {(_,raw)->NotebookJson.legacy(raw as String)}
         val previous=days[LocalDate.now().toString()]?.character
         val character=when(previous) {"🐱"->"cat";"🐰"->"rabbit";"🐻"->"bear";else->"original"}
@@ -28,6 +29,8 @@ class DiaryStore(context: Context) : DiaryRepository, NotebookRepository {
         NotebookPhoto.validate(book)
         val encoded=NotebookJson.encode(book).toByteArray(Charsets.UTF_8)
         if(file.baseFile.exists() || File(file.baseFile.path+".bak").exists()) JournalHistory(appContext.filesDir).beforeSave(loadBook(),book)
+        // Keep a durable prior generation before AtomicFile replaces the current one.
+        if(file.baseFile.exists()) RecoveryStore.checkpoint(appContext.filesDir,RecoveryStore.current(appContext.filesDir))
         val output=file.startWrite()
         try {output.write(encoded);file.finishWrite(output)} catch(e: Exception) {file.failWrite(output);throw e}
         AutomaticBackup(appContext.filesDir).capture(encoded)

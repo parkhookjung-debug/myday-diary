@@ -52,6 +52,7 @@ final class DiaryStore: ObservableObject {
     func load() {
         do {
             let url = file(for: date)
+            if !FileManager.default.fileExists(atPath:url.path),FileManager.default.fileExists(atPath:url.appendingPathExtension("previous").path){throw CocoaError(.fileReadNoSuchFile)}
             entry = FileManager.default.fileExists(atPath: url.path)
                 ? try JSONDecoder().decode(DiaryEntry.self, from: Data(contentsOf: url)) : DiaryEntry()
             try MacBackup(days: ["2000-01-01": entry], companion: CompanionProfile()).validate()
@@ -77,7 +78,10 @@ final class DiaryStore: ObservableObject {
             let url=file(for: date)
             let previous=FileManager.default.fileExists(atPath: url.path) ? try JSONDecoder().decode(DiaryEntry.self,from: Data(contentsOf: url)) : DiaryEntry()
             try JournalHistory.beforeSave(directory,date: url.deletingPathExtension().lastPathComponent,previous: previous,next: entry)
-            try encoder.encode(entry).write(to: url, options: .atomic)
+            try SafeStorage.write(encoder.encode(entry),to:url){data in
+                let decoded=try JSONDecoder().decode(DiaryEntry.self,from:data)
+                try MacBackup(days:["2000-01-01":decoded],companion:CompanionProfile()).validate()
+            }
             error = nil
             if pendingActivity && Date().timeIntervalSince(lastReaction)>4 {
                 let habit=entry.blocks.contains { b in b.kind == .habit && b.checked && !previous.blocks.contains {$0.id==b.id && $0.checked} }

@@ -83,7 +83,13 @@ namespace MyDay.Windows
                     var directory=Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),"MyDay","Windows");
                     if(!ScreenPrivacy.Start(directory))return 0;
                     var store=new DiaryStore(directory);
-                    using(var session=new DiarySession(store,store.Load(),args.Length==1 && args[0]=="--open-diary")) Application.Run(session);
+                    DiaryBook book;
+                    try {book=store.Load();}catch {
+                        if(!RecoveryStore.Available(store) || MessageBox.Show("현재 기록을 읽지 못했어요. 검증된 직전 저장본으로 복구할까요?\n현재 파일은 별도로 보존하고, 직전 저장 이후 변경은 되돌아가요.","MyDay · 기록 복구",MessageBoxButtons.YesNo,MessageBoxIcon.Warning)!=DialogResult.Yes)throw;
+                        string archive=RecoveryStore.Restore(store);book=store.Load();
+                        MessageBox.Show("직전 저장본으로 복구했어요. 기존 파일 보관 위치:\n"+archive,"MyDay");
+                    }
+                    using(var session=new DiarySession(store,book,args.Length==1 && args[0]=="--open-diary")) Application.Run(session);
                     return 0;
                 }
                 catch(Exception ex)
@@ -100,10 +106,11 @@ namespace MyDay.Windows
         private readonly DiaryWindow window;
         public DiarySession(DiaryStore store,DiaryBook book,bool openDiary=false)
         {
+            bool welcome=WelcomeState.ShouldShow(Path.GetDirectoryName(store.FilePath),book.Days.Count>0);
             window=new DiaryWindow(store,book);
             window.FormClosed+=delegate { ExitThread(); };
             window.StartOnDesktop();
-            if(openDiary) window.OpenDiary();
+            if(openDiary || welcome) window.OpenDiary();
         }
         protected override void Dispose(bool disposing)
         {

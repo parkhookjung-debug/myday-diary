@@ -58,6 +58,7 @@ struct DiaryView: View {
     @State private var tab = 0
     @State private var tools=false
     @State private var studio=false
+    @State private var welcome=false
     @StateObject private var lounge = LoungeModel()
     var body: some View {
         GeometryReader { geometry in
@@ -78,6 +79,8 @@ struct DiaryView: View {
             .sheet(isPresented: $store.showingCompanion) { CompanionWardrobe(store: store) }
             .sheet(isPresented: $store.showingTemplates) { TemplateGallery(store: store) }
             .sheet(isPresented: $store.showingLayouts) { SavedLayoutsView(store: store) }
+            .onAppear{if (try? store.allDays().isEmpty)==true && !FileManager.default.fileExists(atPath:store.directory.appendingPathComponent("welcome-complete.txt").path){welcome=true}}
+            .sheet(isPresented:$welcome,onDismiss:{do{try FileManager.default.createDirectory(at:store.directory,withIntermediateDirectories:true);try Data("1".utf8).write(to:store.directory.appendingPathComponent("welcome-complete.txt"),options:.atomic)}catch{store.error=error.localizedDescription}}){ExperienceView(store:store,action:{i in tab=0;if i==0{store.addBlock(.text)}else if i==1{store.addBlock(.photo)}else{DispatchQueue.main.asyncAfter(deadline:.now()+0.25){studio=true}}})}
             .sheet(isPresented:$studio){StudioView(store:store,onOpen:{tab=0})}
             .sheet(isPresented: $tools) { JournalToolsView(store: store,onOpenDay:{_ in tab=0}) }
             .onDisappear { Task { await lounge.disconnect() } }
@@ -160,6 +163,8 @@ struct DiaryView: View {
             Text(AppShell.titles[4]).font(.largeTitle)
             Button("기록 도구 · 복구 / 리포트 / 알림 / 기기 이동 / 업데이트") { store.save();tools=true }
             errorBanner
+            Button("처음 시작하기 · 사용 안내"){welcome=true}
+            Button("하루 꾸미기"){studio=true}
             Text("오늘의 분위기").font(.headline)
             Picker("배경", selection: Binding(get: { store.entry.theme }, set: { v in store.update { $0.theme = v } })) { Text("크림").tag(0); Text("숲").tag(1); Text("라벤더").tag(2) }.pickerStyle(.segmented)
             Text("소중한 하루 보관하기").font(.headline)
@@ -241,7 +246,8 @@ struct CompanionContent: View {
     }
     private var gifts: some View {
         VStack(alignment: .leading, spacing: 16) {
-            Text("클로버 \(owned.coins) · 꽃잎 \(owned.petals) · 수집 \(owned.owned.count)/300").font(.headline)
+            Text("클로버 \(owned.coins) · \(owned.coins/20)회 가능 · 꽃잎 \(owned.petals) · 수집 \(owned.owned.count)/300").font(.headline)
+            if owned.coins<20 {Text("다음 선물까지 클로버 \(20-owned.coins)개 · 출석하거나 일기를 남겨 보세요.").font(.caption)}
             Text((0...3).map { "\(CollectionPolicy.names[$0]) \(Double(CollectionPolicy.weights[$0]) / 100)%" }.joined(separator: " / ")).font(.caption)
             Text("10회마다 미수집 소품 보장 · 중복은 등급별 꽃잎 · 뽑을 때 해당 등급 조각 +1").font(.caption)
             Button("선물 열기 · 클로버 20") {

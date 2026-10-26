@@ -7,10 +7,12 @@ namespace MyDay.Windows.UI
 {
     public sealed class PreferencesWindow : Form
     {
-        public PreferencesWindow(int currentTheme,Action<int> setTheme,Action export,Action import,Action pet)
+        public PreferencesWindow(int currentTheme,Action<int> setTheme,Action export,Action import,Action pet,Action guide=null,Action studio=null,Action tools=null)
         {
             Text=AppShell.Titles[4];Size=Design.Size(560,540);MinimumSize=Design.Size(440,440);StartPosition=FormStartPosition.CenterParent;Font=Design.Font(10);BackColor=Design.Sidebar;ForeColor=Design.Ink;
             var stack=new FlowLayoutPanel {Dock=DockStyle.Fill,AutoScroll=true,FlowDirection=FlowDirection.TopDown,WrapContents=false,Padding=Design.Pad(24)};
+            string[] shortcuts={"처음 시작하기 · 사용 안내","하루 꾸미기","기록 도구"};Action[] open={guide,studio,tools};
+            for(int i=0;i<shortcuts.Length;i++)if(open[i]!=null){var go=Design.Button(shortcuts[i]);go.Size=Design.Size(340,38);go.Margin=Design.Pad(0,0,0,10);var run=open[i];go.Click+=delegate{Close();run();};stack.Controls.Add(go);}
             var title=Design.Label("오늘의 분위기",18,true);title.Margin=Design.Pad(0,0,0,16);stack.Controls.Add(title);
             var themes=new ThemePicker {Size=Design.Size(340,62),SelectedIndex=currentTheme};themes.SelectedIndexChanged+=delegate {setTheme(themes.SelectedIndex);};stack.Controls.Add(themes);
             var note=Design.Label("일기·사진·배치·성장·소품·뽑기 기록을\nWindows·Mac·Android 사이에서 JSON 파일로 옮겨요.",10);note.Margin=Design.Pad(0,20,0,12);stack.Controls.Add(note);

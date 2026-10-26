@@ -70,7 +70,9 @@ extension DiaryStore {
         guard profileLoaded else { throw CocoaError(.fileReadCorruptFile) }
         try MacBackup(days: [:], companion: next).validate()
         try FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true)
-        try JSONEncoder().encode(next).write(to: directory.appendingPathComponent("companion.json"), options: .atomic)
+        try SafeStorage.write(JSONEncoder().encode(next),to:directory.appendingPathComponent("companion.json")){data in
+            try MacBackup(days:[:],companion:JSONDecoder().decode(CompanionProfile.self,from:data)).validate()
+        }
         companion = next
     }
 

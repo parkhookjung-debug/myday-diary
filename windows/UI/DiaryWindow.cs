@@ -123,6 +123,7 @@ namespace MyDay.Windows.UI
             };
             LoadDate(); UpdateGrowth();
             StartReminder();
+            Shown+=delegate{if(!testMode && WelcomeState.ShouldShow(Path.GetDirectoryName(store.FilePath),File.Exists(store.FilePath)))BeginInvoke((Action)OpenWelcome);};
             if(!testMode)ScreenPrivacy.Watch(()=>FlushSave());
             Disposed+=delegate {reminderTimer.Dispose();};
         }

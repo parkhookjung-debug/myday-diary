@@ -13,7 +13,7 @@ object AppShell {
 
 object AppPalette {
     val ink=androidx.compose.ui.graphics.Color(0xff433D36)
-    val muted=androidx.compose.ui.graphics.Color(0xff9B9588)
+    val muted=androidx.compose.ui.graphics.Color(0xff70695E)
     val accent=androidx.compose.ui.graphics.Color(0xff805C49)
     val soft=androidx.compose.ui.graphics.Color(0xffE9E4DB)
     val tint=androidx.compose.ui.graphics.Color(0xffF3E6DF)

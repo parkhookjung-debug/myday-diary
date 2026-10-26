@@ -24,7 +24,8 @@ import com.myday.diary.platform.*
     LaunchedEffect(last?.id) {if(last!=null && last.id!=seen){seen=last.id;if(last.kind=="craft")atelier=false;reveal=last;haptics.perform(TactileEvent.EQUIP)}}
     Column(modifier,verticalArrangement=Arrangement.spacedBy(6.dp)) {
         Text("상몬의 선물 상자",style=MaterialTheme.typography.titleMedium)
-        Text("클로버 ${state.coins} · 꽃잎 ${state.petals} · 보유 ${state.owned.size}/300",Modifier.testTag("collection-balance"))
+        Text("클로버 ${state.coins} · ${state.coins/CollectionRules.DRAW_COST}회 가능 · 꽃잎 ${state.petals} · 보유 ${state.owned.size}/300",Modifier.testTag("collection-balance"))
+        if(state.coins<CollectionRules.DRAW_COST)Text("다음 선물까지 클로버 ${CollectionRules.DRAW_COST-state.coins}개 · 출석하거나 일기를 남겨 보세요.",style=MaterialTheme.typography.bodySmall)
         Row(Modifier.fillMaxWidth(),verticalAlignment=Alignment.CenterVertically) {
             Button({attempt(null) {controller.draw()}},Modifier.testTag("collection-draw"),enabled=controller.saved && state.coins>=20 && (book.collection?.actions?.size ?: 0)<CollectionRules.MAX_ACTIONS) {Text("클로버 20 · 선물 뽑기")}
             TextButton({rules=true}) {Text("받는 방법·확률")}

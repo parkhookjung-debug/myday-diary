@@ -29,6 +29,7 @@ import kotlinx.coroutines.*
     var photoDate by rememberSaveable {mutableStateOf("")}
     var incoming by remember {mutableStateOf<DiaryBook?>(null)}
     var busy by remember {mutableStateOf(false)}
+    var recovering by remember {mutableStateOf(false)}
     val haptics=rememberDiaryHaptics(controller?.book?.haptics ?: false)
     fun failed(e: Throwable) {controller?.report(e.message ?: "처리하지 못했어요.");haptics.perform(TactileEvent.REJECT)}
     val photo=rememberLauncherForActivityResult(ActivityResultContracts.PickVisualMedia()) {uri->if(uri!=null && controller!=null) scope.launch {
@@ -60,13 +61,14 @@ import kotlinx.coroutines.*
     }}
     MyDayTheme {
         if(controller==null) Box(Modifier.fillMaxSize().systemBarsPadding().padding(24.dp),contentAlignment=Alignment.Center) {
-            if(model.loadError==null) CircularProgressIndicator() else Column {Text("기록을 읽지 못했어요. 기존 저장본을 바꾸지 않았어요.");Text(model.loadError!!);Button(model::reload) {Text("다시 읽기")}}
+            if(model.loadError==null) CircularProgressIndicator() else Column {Text("기록을 읽지 못했어요. 기존 저장본을 바꾸지 않았어요.");Text(model.loadError!!);Button(model::reload) {Text("다시 읽기")};if(model.recoveryAvailable)OutlinedButton({recovering=true}){Text("직전 저장본으로 복구")}}
         } else {
             PhoneNotebookScreen(controller,catalog,haptics,home,busy,
                 onPhoto={id->if(controller.saved) {photoId=id;photoDate=controller.date.toString();photo.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))} else controller.report("먼저 일기를 다시 저장해 주세요.")},
                 onExport={if(controller.saved) export.launch("myday-${controller.date}.json") else controller.report("먼저 일기를 다시 저장해 주세요.")},
                 onImport={if(controller.saved) import.launch(arrayOf("application/json","text/plain","application/octet-stream")) else controller.report("먼저 일기를 다시 저장해 주세요.")})
         }
+        if(recovering)AlertDialog(onDismissRequest={recovering=false},title={Text("직전 저장본으로 복구할까요?")},text={Text("현재 파일은 앱 저장 폴더에 별도로 보존해요. 직전 저장 이후 변경은 되돌아가요.")},confirmButton={TextButton({recovering=false;model.recover()}){Text("복구하기")}},dismissButton={TextButton({recovering=false}){Text("취소")}})
         if(busy) AlertDialog(onDismissRequest={},title={Text("기록을 준비하고 있어요")},text={LinearProgressIndicator(Modifier.fillMaxWidth())},confirmButton={})
         incoming?.let {book->AlertDialog(onDismissRequest={incoming=null},title={Text("백업을 가져올까요?")},text={Text("${book.days.size}일의 기록과 배치 ${book.layouts.size}개를 가져와요. 같은 날짜의 기록은 백업 내용으로 바뀌어요. 성장 날짜는 합치고 장비도 복원해요.")},
             confirmButton={TextButton({runCatching {controller?.importBook(book)}.onFailure(::failed);incoming=null}) {Text("가져오기")}},dismissButton={TextButton({incoming=null}) {Text("취소")}})}

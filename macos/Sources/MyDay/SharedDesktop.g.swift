@@ -2,7 +2,7 @@
 import SwiftUI
 
 enum DesktopContract {
-    static let sourceDigest="cd2994beb904c9d48e1b713b6db243b408284fef32965440db84c59188951c2f"
+    static let sourceDigest="b9fa87e7516bf6e4863604c2bd3eb93866b1e9005694dc4faa5d9c6939fb05c6"
     static let maxDays=50000
     static let maxBlocks=200
     static let maxTextUtf16=100000
@@ -47,7 +47,7 @@ enum DesktopContract {
 
 enum DesktopPalette {
     static let ink=Color(red: 67.0/255, green: 61.0/255, blue: 54.0/255)
-    static let muted=Color(red: 155.0/255, green: 149.0/255, blue: 136.0/255)
+    static let muted=Color(red: 112.0/255, green: 105.0/255, blue: 94.0/255)
     static let accent=Color(red: 128.0/255, green: 92.0/255, blue: 73.0/255)
     static let soft=Color(red: 233.0/255, green: 228.0/255, blue: 219.0/255)
     static let tint=Color(red: 243.0/255, green: 230.0/255, blue: 223.0/255)
