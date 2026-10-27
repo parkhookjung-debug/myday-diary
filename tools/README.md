@@ -2,6 +2,7 @@
 
 | 할 일 | 실행/수정 파일 | 용도 |
 | --- | --- | --- |
+| 사용자 설명서 본문·표·그림과 Word 생성 | [build-user-manual.py](build-user-manual.py) | [설명서 원문과 갱신 방법](../docs/manual/README.md), JSON에서 Markdown·DOCX를 함께 생성 |
 | 꾸미기 질문·가구 목록 생성 | [sync-studio.py](sync-studio.py) | shared/studio.json에서 세 앱 카탈로그 생성, --check 지원 |
 | 공통 가구 PNG 생성 | [export-studio-art.ps1](export-studio-art.ps1) · [ExportStudioArt.cs](ExportStudioArt.cs) | Windows RoomArt.cs의 자체 벡터 그림을 Android·Mac용 PNG로 내보냄 |
 | 세 앱의 공통 메뉴·성장·공방과 PC 형식·색상·제한 수정 | [sync-desktop.py](sync-desktop.py) | shared/에서 네이티브 앱과 서버용 파일 생성, --check로 생성 누락 확인 |
