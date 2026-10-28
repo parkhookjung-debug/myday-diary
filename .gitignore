@@ -24,6 +24,7 @@ keystore.properties
 
 # Private server invitations, chat data and Python caches.
 /server/.local/
+/server/friends/.local/
 __pycache__/
 *.pyc
 

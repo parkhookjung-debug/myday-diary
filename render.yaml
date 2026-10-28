@@ -1,0 +1,28 @@
+# Creating this service starts paid Render compute and persistent storage.
+# Review the actual account price before applying this Blueprint.
+services:
+  - type: web
+    name: myday-friends-api
+    runtime: python
+    plan: starter
+    region: singapore
+    branch: codex/kakao-friends-photo-diary
+    rootDir: server/friends
+    buildCommand: pip install -r requirements.txt
+    startCommand: python friends_server.py
+    autoDeployTrigger: "off"
+    healthCheckPath: /health
+    maxShutdownDelaySeconds: 60
+    disk:
+      name: myday-friends-data
+      mountPath: /var/data
+      sizeGB: 1
+    envVars:
+      - key: HOST
+        value: 0.0.0.0
+      - key: MYDAY_FRIENDS_DB
+        value: /var/data/friends.sqlite3
+      - key: MYDAY_KAKAO_APP_ID
+        sync: false
+      - key: MYDAY_KAKAO_REST_KEY
+        sync: false

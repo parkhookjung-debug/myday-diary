@@ -1,5 +1,11 @@
 # 마이데이 (MyDay)
 
+## Android 친구 일기 업데이트 (0.13.0)
+
+사진 최대 10장 한 번에 추가, 사진별 제목·장소·설명, 앱 내부 강아지 이미지의 런처 아이콘을 추가했습니다. 카카오 로그인과 선택한 기록만 친구에게 공개하는 화면·서버 코드를 함께 제공합니다. 카카오 앱 키·앱 ID·HTTPS 서버를 설정하기 전에는 실제 로그인·친구 공개를 활성화하지 않습니다.
+
+설치·기록 복원·카카오 설정은 [연결 안내](docs/KAKAO_FRIENDS_SETUP.md), 서버 실행은 [친구 일기 서버](server/friends/README.md)를 참고하세요. 디버그 앱은 기존 설치본과의 서명 충돌을 피하도록 `마이데이 친구`라는 별도 앱으로 설치됩니다.
+
 [![Android CI](https://github.com/parkhookjung-debug/myday-diary/actions/workflows/android.yml/badge.svg)](https://github.com/parkhookjung-debug/myday-diary/actions/workflows/android.yml)
 [![Windows CI](https://github.com/parkhookjung-debug/myday-diary/actions/workflows/windows.yml/badge.svg)](https://github.com/parkhookjung-debug/myday-diary/actions/workflows/windows.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
