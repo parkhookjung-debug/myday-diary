@@ -22,7 +22,14 @@ import com.myday.diary.platform.*
 import kotlin.math.abs
 
 @Composable fun PhonePhoto(data: String,modifier: Modifier=Modifier) {
-    val bitmap=remember(data) {runCatching {val bytes=Base64.decode(data,Base64.DEFAULT);BitmapFactory.decodeByteArray(bytes,0,bytes.size,BitmapFactory.Options().apply {inSampleSize=2})}.getOrNull()}
+    val bitmap=remember(data) {runCatching {
+        require(data.length<=com.myday.diary.data.NotebookPhoto.MAX_CHARACTERS)
+        val bytes=Base64.decode(data,Base64.DEFAULT)
+        val bounds=BitmapFactory.Options().apply {inJustDecodeBounds=true}
+        BitmapFactory.decodeByteArray(bytes,0,bytes.size,bounds)
+        require(bounds.outWidth in 1..1600 && bounds.outHeight in 1..1600)
+        BitmapFactory.decodeByteArray(bytes,0,bytes.size,BitmapFactory.Options().apply {inSampleSize=2})
+    }.getOrNull()}
     DisposableEffect(bitmap) {onDispose {bitmap?.recycle()}}
     if(bitmap!=null) Image(bitmap.asImageBitmap(),"일기에 첨부한 사진",modifier,contentScale=ContentScale.Fit)
     else Text("사진을 표시하지 못했어요.")
@@ -48,9 +55,13 @@ import kotlin.math.abs
             }
             if(block.photo!=null) PhonePhoto(block.photo,Modifier.fillMaxWidth().heightIn(max=280.dp))
             if(block.type in setOf("photo","photo-slot")) OutlinedButton(onClick=onPhoto,modifier=Modifier.fillMaxWidth()) {Text(if(block.photo==null) "사진 선택" else "사진 바꾸기")}
+            if(block.type in setOf("photo","photo-slot")) OutlinedTextField(block.title,{if(it.length<=80)onEdit(block.copy(title=it))},
+                modifier=Modifier.fillMaxWidth(),label={Text("사진 제목 · 장소")},placeholder={Text("예: 한강에서 보낸 오후")},singleLine=true,shape=RoundedCornerShape(14.dp))
             if(block.prompt.isNotBlank()) Text(block.prompt,style=MaterialTheme.typography.bodySmall,color=MaterialTheme.colorScheme.onSurfaceVariant)
             OutlinedTextField(block.text,{if(it.length<=100000) onEdit(block.copy(text=it))},modifier=Modifier.fillMaxWidth(),
-                label={Text(if(block.type in setOf("photo","photo-slot")) "이 순간을 한 줄로" else "내 기록")},minLines=if(block.type in setOf("text","emotion")) 3 else 1,shape=RoundedCornerShape(14.dp))
+                label={Text(if(block.type in setOf("photo","photo-slot")) "사진 속 순간을 자세히" else "내 기록")},
+                supportingText=if(block.type in setOf("photo","photo-slot")) {{Text("언제, 누구와, 어떤 일이 있었나요? 사진마다 이야기를 남겨 보세요.")}} else null,
+                minLines=if(block.type in setOf("text","emotion","photo","photo-slot")) 3 else 1,shape=RoundedCornerShape(14.dp))
             if(block.type in setOf("todo","habit")) Row {
                 Checkbox(block.checked,{onEdit(block.copy(checked=it));haptics.perform(TactileEvent.CHECK)})
                 Text(if(block.checked) "오늘 완료했어요" else "완료하면 체크해 주세요",Modifier.padding(top=14.dp))
