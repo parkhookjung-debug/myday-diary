@@ -1,10 +1,10 @@
 # 마이데이 (MyDay)
 
-## Android 친구 일기 업데이트 (0.13.0)
+## Android 무료 친구 초대 업데이트 (0.14.0)
 
-사진 최대 10장 한 번에 추가, 사진별 제목·장소·설명, 앱 내부 강아지 이미지의 런처 아이콘을 추가했습니다. 카카오 로그인과 선택한 기록만 친구에게 공개하는 화면·서버 코드를 함께 제공합니다. 카카오 앱 키·앱 ID·HTTPS 서버를 설정하기 전에는 실제 로그인·친구 공개를 활성화하지 않습니다.
+사진 최대 10장 한 번에 추가, 사진별 제목·장소·설명, 앱 내부 강아지 이미지의 런처 아이콘을 유지하며 **Supabase 무료 요금제와 초대코드** 방식으로 친구 일기를 연결합니다. 카톡으로 코드 보내기 → 친구 요청 → 상대 수락 후, 직접 고른 글·사진만 볼 수 있습니다. 카카오 친구 목록 API는 사용하지 않습니다. 서울 지역 Free 프로젝트에 데이터베이스·비공개 사진 저장소·카카오 인증 함수를 배포했고, 제공하는 APK에 공개 연결 설정을 넣었습니다. 휴대폰 두 계정에서의 실제 로그인·공유 확인은 남아 있습니다.
 
-설치·기록 복원·카카오 설정은 [연결 안내](docs/KAKAO_FRIENDS_SETUP.md), 서버 실행은 [친구 일기 서버](server/friends/README.md)를 참고하세요. 디버그 앱은 기존 설치본과의 서명 충돌을 피하도록 `마이데이 친구`라는 별도 앱으로 설치됩니다.
+설치·무료 서버·카카오 로그인·정책 검사는 [무료 친구 연결 안내](docs/FREE_FRIENDS_SETUP.md)를 참고하세요. 유료 Render 배포 설정은 제거했습니다. 디버그 앱은 기존 설치본과의 서명 충돌을 피하도록 `마이데이 친구`라는 별도 앱으로 설치됩니다.
 
 [![Android CI](https://github.com/parkhookjung-debug/myday-diary/actions/workflows/android.yml/badge.svg)](https://github.com/parkhookjung-debug/myday-diary/actions/workflows/android.yml)
 [![Windows CI](https://github.com/parkhookjung-debug/myday-diary/actions/workflows/windows.yml/badge.svg)](https://github.com/parkhookjung-debug/myday-diary/actions/workflows/windows.yml)
