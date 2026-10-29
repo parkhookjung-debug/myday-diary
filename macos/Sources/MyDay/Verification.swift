@@ -83,14 +83,14 @@ enum MacVerification {
         let formatTemplate=try TemplateCatalog.load().first(where:{$0.id=="cornell-notes"})!
         formatStore.applyTemplate(formatTemplate)
         let formatIDs=Set(formatStore.entry.blocks.map(\.id))
-        let originalDate=formatStore.date
+        let formatOriginalDate=formatStore.date
         let replacementTemplate=try TemplateCatalog.load().first(where:{$0.id != formatTemplate.id})!
         formatStore.applyTemplate(replacementTemplate)
         try check(formatStore.entry.blocks.count==formatTemplate.sections.count+replacementTemplate.sections.count && formatIDs.isSubset(of:Set(formatStore.entry.blocks.map(\.id))),"applying format preserves existing empty custom blocks")
         formatStore.select(Calendar.current.date(byAdding:.day,value:1,to:formatStore.date)!)
         try check(formatStore.entry.blocks.map(\.title)==replacementTemplate.sections.map(\.title) && formatStore.entry.blocks.allSatisfy{$0.text.isEmpty && !$0.checked && $0.photo==nil && $0.videoPath==nil},"saved format on new day")
         try check(formatIDs.isDisjoint(with:formatStore.entry.blocks.map(\.id)),"saved format independent block ids")
-        formatStore.select(originalDate)
+        formatStore.select(formatOriginalDate)
         try check(formatIDs.isSubset(of:Set(formatStore.entry.blocks.map(\.id))),"old date preserves block IDs when a default format exists")
         let formatReopened=DiaryStore(directory:formatDirectory)
         formatReopened.select(Calendar.current.date(byAdding:.day,value:2,to:formatReopened.date)!)
