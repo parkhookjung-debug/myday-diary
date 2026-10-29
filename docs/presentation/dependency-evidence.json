@@ -1,0 +1,87 @@
+{
+  "date": "2026-10-29",
+  "sourceCommit": "73f9c20ed0002a46eff23115359462eedec94a37",
+  "pomMetadata": [
+    {
+      "coordinate": "com.kakao.sdk:v2-user:2.26.0",
+      "pomSHA256": "c77e1ddaffb4c12887ff9d679a249d5009566a3eadccd93d5762624536191c43",
+      "licenses": [
+        {
+          "name": "The Apache Software License, Version 2.0",
+          "url": "http://www.apache.org/licenses/LICENSE-2.0.txt"
+        }
+      ]
+    },
+    {
+      "coordinate": "androidx.compose.ui:ui-android:1.8.0",
+      "pomSHA256": "9c32de96eb58db5f2434472c812bf5797e320cede3bd334798b64b5bdb93e685",
+      "licenses": [
+        {
+          "name": "The Apache Software License, Version 2.0",
+          "url": "http://www.apache.org/licenses/LICENSE-2.0.txt"
+        }
+      ]
+    },
+    {
+      "coordinate": "androidx.compose.material3:material3-android:1.3.2",
+      "pomSHA256": "6f7aa2f96e971fab29637c01e1427116deed4f01b9be6ffb465a67520d9bdf74",
+      "licenses": [
+        {
+          "name": "The Apache Software License, Version 2.0",
+          "url": "http://www.apache.org/licenses/LICENSE-2.0.txt"
+        }
+      ]
+    },
+    {
+      "coordinate": "org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.3",
+      "pomSHA256": "020515246d19e176d5626eb118f80f97f7876d1accd8cec15b1a4159257d5054",
+      "licenses": [
+        {
+          "name": "The Apache Software License, Version 2.0",
+          "url": "https://www.apache.org/licenses/LICENSE-2.0.txt"
+        }
+      ]
+    },
+    {
+      "coordinate": "junit:junit:4.13.2",
+      "pomSHA256": "569b6977ee4603c965c1c46c3058fa6e969291b0160eb6964dd092cd89eadd94",
+      "licenses": [
+        {
+          "name": "Eclipse Public License 1.0",
+          "url": "http://www.eclipse.org/legal/epl-v10.html"
+        }
+      ]
+    },
+    {
+      "coordinate": "org.json:json:20240303",
+      "pomSHA256": "994baf5d89bf4caa5ce968e4c4eab135c8f9783ecf4d2b7b0e9d1c8a4ddf1e4f",
+      "licenses": [
+        {
+          "name": "Public Domain",
+          "url": "https://github.com/stleary/JSON-java/blob/master/LICENSE"
+        }
+      ]
+    },
+    {
+      "coordinate": "com.squareup.okhttp3:okhttp:4.9.3",
+      "pomSHA256": "64df3b9baddd00eaa4bc727641fd157c65f39465e68eaecaa5a1d0417fc2f269",
+      "licenses": [
+        {
+          "name": "The Apache Software License, Version 2.0",
+          "url": "http://www.apache.org/licenses/LICENSE-2.0.txt"
+        }
+      ]
+    },
+    {
+      "coordinate": "com.squareup.retrofit2:retrofit:2.9.0",
+      "pomSHA256": "f7e96a31ded699ee36c4e77695c7c1868aa6b4c64bf998f9dfe0c66f25d0e493",
+      "licenses": [
+        {
+          "name": "The Apache Software License, Version 2.0",
+          "url": "http://www.apache.org/licenses/LICENSE-2.0.txt"
+        }
+      ]
+    }
+  ],
+  "scope": "Presentation evidence, not a full dependency SBOM"
+}

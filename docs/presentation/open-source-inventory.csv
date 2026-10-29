@@ -1,0 +1,25 @@
+﻿구성요소,확인 버전,범위,확인 라이선스,쓰임,근거,출처,설명
+Jetpack Compose UI와 Foundation,1.8.0,Android 실행,Apache-2.0,"선언형 화면, 카드·목록·입력·드래그 UI의 기반",app/build.gradle.kts; PhoneNotebookScreen.kt; PhoneFreeBoard.kt,https://github.com/androidx/androidx/blob/androidx-main/LICENSE.txt,BOM은 2025.04.01이며 숫자가 실제 UI 라이브러리 버전과 같지는 않음
+Compose Material 3,1.3.2,Android 실행,Apache-2.0,버튼·탭·대화상자·테마 등의 UI 컴포넌트,app/build.gradle.kts; PhoneDialogs.kt,https://github.com/androidx/androidx/blob/androidx-main/LICENSE.txt,
+Activity Compose,1.10.1,Android 실행,Apache-2.0,"Activity와 Compose 연결, 시스템 사진 선택 흐름",app/build.gradle.kts; PhoneNotebookRoute.kt,https://github.com/androidx/androidx/blob/androidx-main/LICENSE.txt,
+AndroidX Lifecycle,2.8.7,Android 실행,Apache-2.0,"화면 생명주기와 ViewModel, 상태 유지",app/build.gradle.kts; app/src/main/java/com/myday/diary/diary/NotebookViewModel.kt,https://github.com/androidx/androidx/blob/androidx-main/LICENSE.txt,
+Kotlin Coroutines,1.7.3,Android 실행,Apache-2.0,사진 처리·저장·통신을 비동기로 수행,PhoneNotebookRoute.kt; CommunityConnection.kt,https://github.com/Kotlin/kotlinx.coroutines/blob/1.7.3/LICENSE.txt,Gradle에는 전이 의존성으로 제공되고 코드에서 직접 import함
+ZXing Core,3.5.3,Android 실행,Apache-2.0,기기 연결 주소의 QR 생성과 이미지에서 QR 읽기,app/build.gradle.kts; PhoneDeviceLink.kt,https://github.com/zxing/zxing/blob/zxing-3.5.3/LICENSE,
+Project Nayuki QR Code generator,commit 3c6d0b3cefb4e049dc337e82237c9644399716a8,Windows와 선택적 Python 도구,MIT,"Windows 고정 규격 QR 알고리즘의 기반, Python 전송 도구의 QR 생성",windows/Core/DeviceQr.cs; tools/vendor/qrcodegen.py; windows/Core/DeviceQr.LICENSE.txt,https://github.com/nayuki/QR-Code-generator/blob/3c6d0b3cefb4e049dc337e82237c9644399716a8/python/qrcodegen.py,Windows는 전체 라이브러리를 그대로 탑재한 것이 아니라 제한된 byte-mode v6-L 인코더로 적용
+Kakao Android SDK v2-user,2.26.0,Android 포함 및 연결 비활성,POM 표기 Apache-2.0,친구 확장 원본의 카카오 로그인 연결,app/build.gradle.kts; MyDayApplication.kt; CommunityConnection.kt,https://devrepo.kakao.com/nexus/content/groups/public/com/kakao/sdk/v2-user/2.26.0/v2-user-2.26.0.pom,SDK 아티팩트의 라이선스 표기와 카카오 서비스 사용 조건은 별개. 통합판에서 초기화·콜백·로그인·전송은 꺼져 있음
+OkHttp,4.9.3,Android SDK 전이 의존성,Apache-2.0,Kakao SDK 네트워크 계층의 전이 구성요소,Gradle debugRuntimeClasspath,https://github.com/square/okhttp/blob/parent-4.9.3/LICENSE.txt,우리 로컬 라운지 클라이언트가 직접 OkHttp로 작성됐다는 뜻은 아님
+Retrofit,2.9.0,Android SDK 전이 의존성,Apache-2.0,Kakao SDK API 계층의 전이 구성요소,Gradle debugRuntimeClasspath,https://github.com/square/retrofit/blob/parent-2.9.0/LICENSE.txt,
+JUnit 4,4.13.2,Android 테스트 전용,EPL-1.0,저장·성장·공개 사본 선택 등의 자동 검사,app/build.gradle.kts; app/src/test/,https://github.com/junit-team/junit4/blob/r4.13.2/LICENSE-junit.txt,
+JSON-java,20240303,JVM 테스트 전용,Public Domain,Android 플랫폼 밖 JVM 테스트에 JSON 객체 제공,app/build.gradle.kts; SharedDiaryDraftTest.kt,https://github.com/stleary/JSON-java/blob/20240303/LICENSE,Android 실행 중 org.json 사용과 testImplementation 의존성을 구분
+Compose UI Test와 AndroidX Test,UI Test 1.8.0; Runner 1.6.2; Ext JUnit 1.2.1,Android 기기 검사 전용,Apache-2.0,실제 화면 입력·터치·탭·사진·저장 확인,app/build.gradle.kts; PhoneNotebookDeviceTest.kt,https://github.com/androidx/androidx/blob/androidx-main/LICENSE.txt,
+PGlite,0.5.8,친구 공유 정책 테스트 전용,Apache-2.0,격리된 PostgreSQL 환경에서 SQL·접근 정책 검사,supabase/tests/package-lock.json; policies.test.mjs,https://github.com/electric-sql/pglite/blob/main/LICENSE,패키지에 포함된 PostgreSQL 등 구성요소의 고지는 별도. 실제 클라우드 DB 운영과 구분
+TypeScript,5.9.3,서버 개발·검사,Apache-2.0,로컬 채팅 서버 타입 검사,server/cloudflare/package-lock.json,https://github.com/microsoft/TypeScript/blob/v5.9.3/LICENSE.txt,
+Vitest,4.1.11,로컬 Workers 테스트,MIT,서버 응답·세션·제한 등의 자동 검사,server/cloudflare/package-lock.json,https://github.com/vitest-dev/vitest/blob/main/LICENSE,
+Wrangler,4.151.1,로컬 Workers 개발,MIT OR Apache-2.0,Workers 개발 실행·타입 생성·배포 전 dry-run,server/cloudflare/package-lock.json,https://github.com/cloudflare/workers-sdk/blob/main/packages/wrangler/package.json,현재 공개 클라우드 배포를 실행했다는 뜻은 아님
+Miniflare,5.20261012.1-beta,로컬 Workers 개발·검사,MIT,컴퓨터 안에서 Workers 환경 에뮬레이션,server/cloudflare/package-lock.json,https://github.com/cloudflare/workers-sdk/tree/main/packages/miniflare,
+Cloudflare Vitest Plugin,1.4.4,로컬 Workers 테스트,MIT,Vitest와 Workers 실행 환경 연결,server/cloudflare/package-lock.json,https://github.com/cloudflare/workers-sdk,
+Cloudflare Workers Types,5.20261016.1,서버 타입 정의,MIT OR Apache-2.0,Workers·Durable Objects API 타입 제공,server/cloudflare/package-lock.json,https://github.com/cloudflare/workerd/tree/main/types,
+Gradle,8.11.1,Android 빌드 도구,Apache-2.0,의존성 해석·빌드·테스트·Lint 실행,gradle/wrapper/gradle-wrapper.properties,https://github.com/gradle/gradle/blob/v8.11.1/LICENSE,
+Kotlin과 Compose Compiler Plugin,2.0.21,Android 언어·컴파일 도구,Apache-2.0,Kotlin과 Compose 코드 컴파일,build.gradle.kts,https://github.com/JetBrains/kotlin/blob/v2.0.21/license/LICENSE.txt,
+Android Gradle Plugin,8.9.2,Android 빌드 도구,Apache-2.0,Android 리소스·APK·Lint 빌드 작업,build.gradle.kts,https://dl.google.com/dl/android/maven2/com/android/tools/build/gradle/8.9.2/gradle-8.9.2.pom,
+Python과 표준 라이브러리,서버·생성 도구 기준 3.11 이상,로컬 서버·생성·검사 도구,PSF-2.0 및 포함 구성요소 고지,JSON 원본 생성·공유 계약 검사·표준 라이브러리 채팅 서버,server/chat_server.py; tools/sync-desktop.py,https://docs.python.org/3/license.html,

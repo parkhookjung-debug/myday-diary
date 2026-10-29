@@ -8,6 +8,8 @@
 
 Windows·Mac·Android용 커스터마이즈 일기 앱입니다. 세 버전에서 사진과 일기 블록을 자유롭게 배치하고 상몬 64종을 키우며 장비 300종을 8개 슬롯에 조합합니다. Android는 손가락 조작과 짧은 햅틱, Windows는 바탕화면 캐릭터를 제공합니다. MIT 라이선스로 공개하며 5명이 화면·저장·캐릭터·통합·검증을 나눠 개발합니다.
 
+**발표 준비 자료:** [오픈소스 활용·프로그램 구조·팀원 기여·발표 구성](docs/PRESENTATION-BRIEF.md) · [편집 가능한 Word](docs/presentation/MyDay-Presentation-Brief-0.14.0.docx) · [오픈소스 24개 항목 CSV](docs/presentation/open-source-inventory.csv). GitHub 계정과 PR·커밋 근거를 연결하고, 확인이 필요한 역할은 따로 표시했습니다.
+
 **처음 사용하는 분을 위한 상세 설명서:** [전체 기능과 사용 순서](docs/USER-MANUAL.md) · [편집 가능한 Word 파일](docs/manual/MyDay-0.12.0-User-Manual.docx). 설치부터 일기·사진·자유 배치·상몬·뽑기·합성·백업·채팅·오류 해결까지 36개 장으로 정리했습니다. [설명서 원본과 갱신 방법](docs/manual/README.md).
 
 **0.12.0 안정성·사용 경험:** 직전 저장본의 검증·명시적 복구, 세 앱 공통 첫 실행 안내·기능 바로가기, 읽기 쉬운 보조 글자 색, 재화·뽑기 가능 횟수 안내, OS별 빌드 다운로드 경로를 추가했습니다. **설정·백업 → 처음 시작하기 · 사용 안내**에서 확인하세요. [사용법·수정 파일·팀 점검 순서](docs/QUALITY-UPDATE.md) · [실제 화면·통과한 빌드](previews/quality/README.md). 백업 버전 1~9·기존 성장과 재화를 유지합니다.

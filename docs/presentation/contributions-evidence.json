@@ -1,0 +1,51 @@
+{
+  "date": "2026-10-29",
+  "sourceCommit": "73f9c20ed0002a46eff23115359462eedec94a37",
+  "display": "GitHub account",
+  "method": "PR authors and GitHub-attributed commit accounts with changed files; no contribution rankings",
+  "accounts": [
+    {
+      "account": "parkhookjung-debug",
+      "status": "confirmed",
+      "role": "기획·통합·저장소 관리",
+      "evidence": [
+        "https://github.com/parkhookjung-debug/myday-diary/pull/7",
+        "https://github.com/parkhookjung-debug/myday-diary/commit/b2470bbbcc3646ed8e085194605fb06d10310229"
+      ],
+      "note": "AI 코딩 도구 활용을 포함하며 계정 기록은 모든 코드의 수작업 작성을 뜻하지 않음"
+    },
+    {
+      "account": "ceed3927",
+      "status": "confirmed",
+      "role": "디자인·Mac 일기 기능",
+      "evidence": [
+        "https://github.com/parkhookjung-debug/myday-diary/pull/8",
+        "https://github.com/parkhookjung-debug/myday-diary/commit/546d15474ce586cf34155442ff4d12ef5118f386"
+      ]
+    },
+    {
+      "account": "cms6727",
+      "status": "confirmed",
+      "role": "Android 사진·친구 공유 확장",
+      "evidence": [
+        "https://github.com/parkhookjung-debug/myday-diary/pull/9",
+        "https://github.com/parkhookjung-debug/myday-diary/commit/f33f02f"
+      ],
+      "note": "외부 연결은 현재 통합판에서 비활성"
+    },
+    {
+      "account": "mrsandwith-76",
+      "status": "needs_team_confirmation",
+      "role": null,
+      "evidence": [],
+      "note": "현재 조회 기록으로 직접 연결한 결과물 없음; 미참여 판단이 아님"
+    },
+    {
+      "account": "hongmin060115-create",
+      "status": "needs_team_confirmation",
+      "role": null,
+      "evidence": [],
+      "note": "현재 조회 기록으로 직접 연결한 결과물 없음; 미참여 판단이 아님"
+    }
+  ]
+}

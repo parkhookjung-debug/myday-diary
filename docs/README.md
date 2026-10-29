@@ -2,6 +2,8 @@
 
 [0.14 통합판 사용법과 검증 상태](INTEGRATION-2026-10-29.md) — 100종 보존·추천 20종·사진 여러 장·외부 연결 비활성화
 
+**발표 자료부터 보기:** [오픈소스·구조·팀 기여·10분 구성안](PRESENTATION-BRIEF.md) · [Word](presentation/MyDay-Presentation-Brief-0.14.0.docx) · [조사 원본과 CSV](presentation/README.md).
+
 **사용자 설명서부터 보기:** [설치·전체 기능·실제 사용 순서·오류 해결](USER-MANUAL.md) · [Word 다운로드](manual/MyDay-0.12.0-User-Manual.docx) · [설명서 갱신 방법](manual/README.md).
 
 [0.12.0 안정성·첫 실행·보상·설치 안내와 수정 파일](QUALITY-UPDATE.md)

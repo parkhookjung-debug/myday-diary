@@ -1,0 +1,242 @@
+[
+  {
+    "name": "Jetpack Compose UI와 Foundation",
+    "version": "1.8.0",
+    "scope": "Android 실행",
+    "license": "Apache-2.0",
+    "purpose": "선언형 화면, 카드·목록·입력·드래그 UI의 기반",
+    "evidence": "app/build.gradle.kts; PhoneNotebookScreen.kt; PhoneFreeBoard.kt",
+    "source": "https://github.com/androidx/androidx/blob/androidx-main/LICENSE.txt",
+    "note": "BOM은 2025.04.01이며 숫자가 실제 UI 라이브러리 버전과 같지는 않음"
+  },
+  {
+    "name": "Compose Material 3",
+    "version": "1.3.2",
+    "scope": "Android 실행",
+    "license": "Apache-2.0",
+    "purpose": "버튼·탭·대화상자·테마 등의 UI 컴포넌트",
+    "evidence": "app/build.gradle.kts; PhoneDialogs.kt",
+    "source": "https://github.com/androidx/androidx/blob/androidx-main/LICENSE.txt",
+    "note": ""
+  },
+  {
+    "name": "Activity Compose",
+    "version": "1.10.1",
+    "scope": "Android 실행",
+    "license": "Apache-2.0",
+    "purpose": "Activity와 Compose 연결, 시스템 사진 선택 흐름",
+    "evidence": "app/build.gradle.kts; PhoneNotebookRoute.kt",
+    "source": "https://github.com/androidx/androidx/blob/androidx-main/LICENSE.txt",
+    "note": ""
+  },
+  {
+    "name": "AndroidX Lifecycle",
+    "version": "2.8.7",
+    "scope": "Android 실행",
+    "license": "Apache-2.0",
+    "purpose": "화면 생명주기와 ViewModel, 상태 유지",
+    "evidence": "app/build.gradle.kts; app/src/main/java/com/myday/diary/diary/NotebookViewModel.kt",
+    "source": "https://github.com/androidx/androidx/blob/androidx-main/LICENSE.txt",
+    "note": ""
+  },
+  {
+    "name": "Kotlin Coroutines",
+    "version": "1.7.3",
+    "scope": "Android 실행",
+    "license": "Apache-2.0",
+    "purpose": "사진 처리·저장·통신을 비동기로 수행",
+    "evidence": "PhoneNotebookRoute.kt; CommunityConnection.kt",
+    "source": "https://github.com/Kotlin/kotlinx.coroutines/blob/1.7.3/LICENSE.txt",
+    "note": "Gradle에는 전이 의존성으로 제공되고 코드에서 직접 import함"
+  },
+  {
+    "name": "ZXing Core",
+    "version": "3.5.3",
+    "scope": "Android 실행",
+    "license": "Apache-2.0",
+    "purpose": "기기 연결 주소의 QR 생성과 이미지에서 QR 읽기",
+    "evidence": "app/build.gradle.kts; PhoneDeviceLink.kt",
+    "source": "https://github.com/zxing/zxing/blob/zxing-3.5.3/LICENSE",
+    "note": ""
+  },
+  {
+    "name": "Project Nayuki QR Code generator",
+    "version": "commit 3c6d0b3cefb4e049dc337e82237c9644399716a8",
+    "scope": "Windows와 선택적 Python 도구",
+    "license": "MIT",
+    "purpose": "Windows 고정 규격 QR 알고리즘의 기반, Python 전송 도구의 QR 생성",
+    "evidence": "windows/Core/DeviceQr.cs; tools/vendor/qrcodegen.py; windows/Core/DeviceQr.LICENSE.txt",
+    "source": "https://github.com/nayuki/QR-Code-generator/blob/3c6d0b3cefb4e049dc337e82237c9644399716a8/python/qrcodegen.py",
+    "note": "Windows는 전체 라이브러리를 그대로 탑재한 것이 아니라 제한된 byte-mode v6-L 인코더로 적용"
+  },
+  {
+    "name": "Kakao Android SDK v2-user",
+    "version": "2.26.0",
+    "scope": "Android 포함 및 연결 비활성",
+    "license": "POM 표기 Apache-2.0",
+    "purpose": "친구 확장 원본의 카카오 로그인 연결",
+    "evidence": "app/build.gradle.kts; MyDayApplication.kt; CommunityConnection.kt",
+    "source": "https://devrepo.kakao.com/nexus/content/groups/public/com/kakao/sdk/v2-user/2.26.0/v2-user-2.26.0.pom",
+    "note": "SDK 아티팩트의 라이선스 표기와 카카오 서비스 사용 조건은 별개. 통합판에서 초기화·콜백·로그인·전송은 꺼져 있음"
+  },
+  {
+    "name": "OkHttp",
+    "version": "4.9.3",
+    "scope": "Android SDK 전이 의존성",
+    "license": "Apache-2.0",
+    "purpose": "Kakao SDK 네트워크 계층의 전이 구성요소",
+    "evidence": "Gradle debugRuntimeClasspath",
+    "source": "https://github.com/square/okhttp/blob/parent-4.9.3/LICENSE.txt",
+    "note": "우리 로컬 라운지 클라이언트가 직접 OkHttp로 작성됐다는 뜻은 아님"
+  },
+  {
+    "name": "Retrofit",
+    "version": "2.9.0",
+    "scope": "Android SDK 전이 의존성",
+    "license": "Apache-2.0",
+    "purpose": "Kakao SDK API 계층의 전이 구성요소",
+    "evidence": "Gradle debugRuntimeClasspath",
+    "source": "https://github.com/square/retrofit/blob/parent-2.9.0/LICENSE.txt",
+    "note": ""
+  },
+  {
+    "name": "JUnit 4",
+    "version": "4.13.2",
+    "scope": "Android 테스트 전용",
+    "license": "EPL-1.0",
+    "purpose": "저장·성장·공개 사본 선택 등의 자동 검사",
+    "evidence": "app/build.gradle.kts; app/src/test/",
+    "source": "https://github.com/junit-team/junit4/blob/r4.13.2/LICENSE-junit.txt",
+    "note": ""
+  },
+  {
+    "name": "JSON-java",
+    "version": "20240303",
+    "scope": "JVM 테스트 전용",
+    "license": "Public Domain",
+    "purpose": "Android 플랫폼 밖 JVM 테스트에 JSON 객체 제공",
+    "evidence": "app/build.gradle.kts; SharedDiaryDraftTest.kt",
+    "source": "https://github.com/stleary/JSON-java/blob/20240303/LICENSE",
+    "note": "Android 실행 중 org.json 사용과 testImplementation 의존성을 구분"
+  },
+  {
+    "name": "Compose UI Test와 AndroidX Test",
+    "version": "UI Test 1.8.0; Runner 1.6.2; Ext JUnit 1.2.1",
+    "scope": "Android 기기 검사 전용",
+    "license": "Apache-2.0",
+    "purpose": "실제 화면 입력·터치·탭·사진·저장 확인",
+    "evidence": "app/build.gradle.kts; PhoneNotebookDeviceTest.kt",
+    "source": "https://github.com/androidx/androidx/blob/androidx-main/LICENSE.txt",
+    "note": ""
+  },
+  {
+    "name": "PGlite",
+    "version": "0.5.8",
+    "scope": "친구 공유 정책 테스트 전용",
+    "license": "Apache-2.0",
+    "purpose": "격리된 PostgreSQL 환경에서 SQL·접근 정책 검사",
+    "evidence": "supabase/tests/package-lock.json; policies.test.mjs",
+    "source": "https://github.com/electric-sql/pglite/blob/main/LICENSE",
+    "note": "패키지에 포함된 PostgreSQL 등 구성요소의 고지는 별도. 실제 클라우드 DB 운영과 구분"
+  },
+  {
+    "name": "TypeScript",
+    "version": "5.9.3",
+    "scope": "서버 개발·검사",
+    "license": "Apache-2.0",
+    "purpose": "로컬 채팅 서버 타입 검사",
+    "evidence": "server/cloudflare/package-lock.json",
+    "source": "https://github.com/microsoft/TypeScript/blob/v5.9.3/LICENSE.txt",
+    "note": ""
+  },
+  {
+    "name": "Vitest",
+    "version": "4.1.11",
+    "scope": "로컬 Workers 테스트",
+    "license": "MIT",
+    "purpose": "서버 응답·세션·제한 등의 자동 검사",
+    "evidence": "server/cloudflare/package-lock.json",
+    "source": "https://github.com/vitest-dev/vitest/blob/main/LICENSE",
+    "note": ""
+  },
+  {
+    "name": "Wrangler",
+    "version": "4.151.1",
+    "scope": "로컬 Workers 개발",
+    "license": "MIT OR Apache-2.0",
+    "purpose": "Workers 개발 실행·타입 생성·배포 전 dry-run",
+    "evidence": "server/cloudflare/package-lock.json",
+    "source": "https://github.com/cloudflare/workers-sdk/blob/main/packages/wrangler/package.json",
+    "note": "현재 공개 클라우드 배포를 실행했다는 뜻은 아님"
+  },
+  {
+    "name": "Miniflare",
+    "version": "5.20261012.1-beta",
+    "scope": "로컬 Workers 개발·검사",
+    "license": "MIT",
+    "purpose": "컴퓨터 안에서 Workers 환경 에뮬레이션",
+    "evidence": "server/cloudflare/package-lock.json",
+    "source": "https://github.com/cloudflare/workers-sdk/tree/main/packages/miniflare",
+    "note": ""
+  },
+  {
+    "name": "Cloudflare Vitest Plugin",
+    "version": "1.4.4",
+    "scope": "로컬 Workers 테스트",
+    "license": "MIT",
+    "purpose": "Vitest와 Workers 실행 환경 연결",
+    "evidence": "server/cloudflare/package-lock.json",
+    "source": "https://github.com/cloudflare/workers-sdk",
+    "note": ""
+  },
+  {
+    "name": "Cloudflare Workers Types",
+    "version": "5.20261016.1",
+    "scope": "서버 타입 정의",
+    "license": "MIT OR Apache-2.0",
+    "purpose": "Workers·Durable Objects API 타입 제공",
+    "evidence": "server/cloudflare/package-lock.json",
+    "source": "https://github.com/cloudflare/workerd/tree/main/types",
+    "note": ""
+  },
+  {
+    "name": "Gradle",
+    "version": "8.11.1",
+    "scope": "Android 빌드 도구",
+    "license": "Apache-2.0",
+    "purpose": "의존성 해석·빌드·테스트·Lint 실행",
+    "evidence": "gradle/wrapper/gradle-wrapper.properties",
+    "source": "https://github.com/gradle/gradle/blob/v8.11.1/LICENSE",
+    "note": ""
+  },
+  {
+    "name": "Kotlin과 Compose Compiler Plugin",
+    "version": "2.0.21",
+    "scope": "Android 언어·컴파일 도구",
+    "license": "Apache-2.0",
+    "purpose": "Kotlin과 Compose 코드 컴파일",
+    "evidence": "build.gradle.kts",
+    "source": "https://github.com/JetBrains/kotlin/blob/v2.0.21/license/LICENSE.txt",
+    "note": ""
+  },
+  {
+    "name": "Android Gradle Plugin",
+    "version": "8.9.2",
+    "scope": "Android 빌드 도구",
+    "license": "Apache-2.0",
+    "purpose": "Android 리소스·APK·Lint 빌드 작업",
+    "evidence": "build.gradle.kts",
+    "source": "https://dl.google.com/dl/android/maven2/com/android/tools/build/gradle/8.9.2/gradle-8.9.2.pom",
+    "note": ""
+  },
+  {
+    "name": "Python과 표준 라이브러리",
+    "version": "서버·생성 도구 기준 3.11 이상",
+    "scope": "로컬 서버·생성·검사 도구",
+    "license": "PSF-2.0 및 포함 구성요소 고지",
+    "purpose": "JSON 원본 생성·공유 계약 검사·표준 라이브러리 채팅 서버",
+    "evidence": "server/chat_server.py; tools/sync-desktop.py",
+    "source": "https://docs.python.org/3/license.html",
+    "note": ""
+  }
+]
