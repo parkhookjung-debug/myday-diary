@@ -9,6 +9,8 @@ flags=(${=MYDAY_SWIFT_FLAGS:-})
 python3 ../tools/prepare-mac-assets.py
 swift build "${flags[@]}" -c release
 binary_dir=$(swift build "${flags[@]}" -c release --show-bin-path)
+# Compatibility self-tests export into build/ before the staged bundle is copied.
+mkdir -p "$PWD/build"
 output_app="$PWD/build/MyDay.app"
 staging_root=$(mktemp -d "${TMPDIR:-/tmp}/myday-build.XXXXXX")
 trap 'rm -rf "$staging_root"' EXIT
