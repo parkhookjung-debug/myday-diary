@@ -23,7 +23,7 @@
 | 기본 상몬 재질·조명·눈·옆입·작은 불꽃 | [ClayMaterial.cs](../../../windows/Character/ClayMaterial.cs) |
 | 공통 몸 윤곽·포즈·재질 연결 | [MonsterPainter.cs](../../../windows/Character/MonsterPainter.cs) |
 | 행동 전환·불꽃 반응 시간 | [PetBehavior.cs](../../../windows/Character/PetBehavior.cs) |
-| 이 미리보기 생성 | [ClayPreview.cs](../../../windows/ClayPreview.cs) |
+| 이 미리보기 생성 | [ClayPreview.cs](../../../windows/Tests/ClayPreview.cs) |
 | Android PNG 다시 생성 | [export-android-assets.ps1](../../../tools/export-android-assets.ps1) |
 
 클레이 몸은 윤곽에서 거리·높이·법선을 계산하고 부드러운 조명으로 칠합니다. 몸 7프레임만 프로세스 수명 동안 캐시하고, 눈·기울기·늘어남·장비는 기존 렌더러에서 처리합니다. 이미지 생성 도구로 만든 시안을 참고했으며 **이 폴더의 적용 이미지는 C# 코드로 생성**했습니다.

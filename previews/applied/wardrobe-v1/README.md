@@ -31,7 +31,7 @@
 | Windows 장비함 | [EquipmentWindow.cs](../../../windows/UI/EquipmentWindow.cs) |
 | Android 장비함·출석·미션 | [PhoneCompanion.kt](../../../app/src/main/java/com/myday/diary/ui/diary/PhoneCompanion.kt) |
 | 점수·중복 방지 | [SangmonGrowth.cs](../../../windows/Core/SangmonGrowth.cs), [NotebookRules.kt](../../../app/src/main/java/com/myday/diary/diary/NotebookRules.kt) |
-| 이 도형 미리보기 생성 | [WardrobePreview.cs](../../../windows/WardrobePreview.cs), `MyDay.exe --wardrobe-preview <출력 폴더>` |
+| 이 도형 미리보기 생성 | [WardrobePreview.cs](../../../windows/Tests/WardrobePreview.cs), `MyDay.exe --wardrobe-preview <출력 폴더>` |
 | Android 그림·착용 레이어 다시 생성 | [export-android-assets.ps1](../../../tools/export-android-assets.ps1) |
 
 [장비 사용·전체 ID](../../../docs/SANGMON-ITEMS.md) · [출석·활동 점수표](../../../docs/SANGMON-GROWTH.md)

@@ -82,8 +82,8 @@ Windows는 **상몬 성장**, Android는 **상몬 탭 → 오늘의 미션**에�
 | 점수·활동 판정·중복 방지·합병 | [SangmonGrowth.cs](../windows/Core/SangmonGrowth.cs) | [NotebookRules.kt](../app/src/main/java/com/myday/diary/diary/NotebookRules.kt) |
 | 저장 성공 후 확정·실패 복구 | [DiaryWindow.cs](../windows/UI/DiaryWindow.cs), [DiaryWindow.Growth.cs](../windows/UI/DiaryWindow.Growth.cs) | [NotebookController.kt](../app/src/main/java/com/myday/diary/diary/NotebookController.kt), [NotebookViewModel.kt](../app/src/main/java/com/myday/diary/diary/NotebookViewModel.kt) |
 | 레벨·출석·미션 화면 | [GrowthWindow.cs](../windows/UI/GrowthWindow.cs) | [PhoneCompanion.kt](../app/src/main/java/com/myday/diary/ui/diary/PhoneCompanion.kt) |
-| 단위 검사 | [GrowthTests.cs](../windows/GrowthTests.cs), [ActivityTests.cs](../windows/ActivityTests.cs) | [WardrobeGrowthTest.kt](../app/src/test/java/com/myday/diary/diary/WardrobeGrowthTest.kt) |
-| 99·200·295일 실제 활동·만렙·재화 보존 | [GrowthPaceTests.cs](../windows/GrowthPaceTests.cs) | [GrowthPaceTest.kt](../app/src/test/java/com/myday/diary/diary/GrowthPaceTest.kt) |
+| 단위 검사 | [GrowthTests.cs](../windows/Tests/GrowthTests.cs), [ActivityTests.cs](../windows/Tests/ActivityTests.cs) | [WardrobeGrowthTest.kt](../app/src/test/java/com/myday/diary/diary/WardrobeGrowthTest.kt) |
+| 99·200·295일 실제 활동·만렙·재화 보존 | [GrowthPaceTests.cs](../windows/Tests/GrowthPaceTests.cs) | [GrowthPaceTest.kt](../app/src/test/java/com/myday/diary/diary/GrowthPaceTest.kt) |
 
 활동은 버전 5의 Progress.Activities에 날짜·Flags로 저장하고, XP는 지급 기록에서 계산합니다. 임의의 합계 XP 필드를 중복 저장하지 않습니다. 새 활동을 추가하려면 양쪽 Flags·점수·검증·병합·화면·검사를 함께 수정합니다.
 

@@ -1,45 +1,50 @@
 # 파일·폴더 안내
 
-Android와 Windows 소스, 팀 문서, 미리보기, 다운로드용 빌드를 나눠 관리합니다. Android Studio의 표준 프로젝트 구조를 유지하므로 루트에서 Gradle을 실행합니다.
+Windows·Mac·Android 앱 소스, 세 앱 공통 원본, 서버, 팀 문서, 미리보기를 나눠 관리합니다. Android Studio 표준 구조를 유지하므로 Gradle은 루트에서 실행합니다.
 
 ```text
 myday-diary/
-├── app/                       Android 앱
+├── app/                       Android 앱 (Kotlin / Compose)
 │   └── src/
 │       ├── main/
 │       │   ├── java/com/myday/diary/
-│       │   │   ├── data/      기록 모델·저장
-│       │   │   ├── diary/     날짜·입력·일기 동작
-│       │   │   ├── platform/  홈 위젯·배경화면 설정 연결
-│       │   │   └── ui/        화면·디자인·캐릭터·배경화면
-│       │   ├── assets/        공통 64종 애니메이션·300종 소품·100종 형식
+│       │   │   ├── chat/      라운지 채팅 연결
+│       │   │   ├── data/      기록 모델·저장·사진·백업
+│       │   │   ├── device/    기기 간 Wi-Fi 전송
+│       │   │   ├── diary/     성장·뽑기·일기 동작 (Notebook*)
+│       │   │   ├── platform/  햅틱·알림·홈 위젯·배경화면 연결
+│       │   │   ├── social/    친구 공유 미리보기 (기본 꺼짐)
+│       │   │   └── ui/        화면(Phone*)·디자인·캐릭터·배경화면
+│       │   ├── assets/        공통 64종 애니메이션·300종 소품·100종 형식 (생성)
 │       │   └── res/           색·크기·위젯 레이아웃·설정
-│       ├── debug/             Android Studio 화면 Preview
-│       ├── test/              일기·캐릭터·JSON 단위 테스트
+│       ├── test/              단위 테스트
 │       └── androidTest/       실제 UI·사진·저장 검사
-├── windows/                   네이티브 Windows 앱
+├── windows/                   Windows 앱 (C# / WinForms)
 │   ├── Chat/                  채팅 HTTP·JSON·취소
-│   ├── Core/                  기록·저장·입력 제스처
+│   ├── Core/                  기록·저장·성장·뽑기 (Shared/ 는 생성 코드)
 │   ├── UI/                    일기 창·블록·디자인
 │   ├── Character/             상몬 그림·행동·외형·게임 재질
+│   ├── Tests/                 --self-test 검사와 미리보기 생성기
 │   ├── Program.cs             시작·세션·테스트 명령 연결
-│   ├── Tests.cs               저장·캐릭터·네이티브 검증
-│   ├── PhotoTests.cs          사진 보존·변환·백업·손상 검증
-│   ├── BrowseTests.cs         달력 날짜·사진 표시·본문 검색 검증
-│   ├── ItemTests.cs           아이템 슬롯·저장·모든 조합 경계 검증
-│   ├── GrowthTests.cs         상몬 성장·해금·버전 3·백업 검증
-│   ├── SavedLayoutTests.cs    내 레이아웃 저장·재사용·보존 검증
 │   ├── build.ps1              .NET Framework 빌드
 │   └── 실행.cmd               소스에서 빌드 후 실행
-├── server/                    초대형 공용 채팅 서버·SQLite·통신 검사
-├── docs/                      실행·디자인·협업 문서
-├── previews/
-│   ├── android/               Android PNG·GIF·초기 HTML 예시
-│   └── windows/               Windows PNG·상몬 GIF
-├── .github/                   Android/Windows CI·협업 양식
-├── tools/                     공통 자산 생성·상호 호환성·백업·미리보기 도구
-├── gradle/                    Gradle Wrapper
-├── README.md                  시작 안내·다운로드·전체 기능
+├── macos/                     Mac 앱 (SwiftUI)
+│   ├── Sources/MyDay/         화면·저장·공통 생성 코드(*.g.swift)
+│   │   └── Verification/      실행 파일 내장 자체 검사
+│   ├── verification/          Windows 호환성 검사
+│   └── build.command          SwiftPM 빌드·앱 번들 생성
+├── shared/                    세 앱 공통 원본 (형식 100종·색상·규칙·전송 화면)
+├── server/                    로컬 채팅 서버(Python)·Cloudflare 무료 서버 원본·통신 검사
+├── supabase/                  친구 공유 미리보기용 DB·함수·검사
+├── tools/                     공통 코드 생성·자산 내보내기·호환성·백업 도구
+├── docs/                      기능 안내·수정 가이드·팀·발표 문서
+│   ├── builds/                버전별 검증 빌드 기록
+│   ├── manual/                사용자 설명서 Word·생성 원본
+│   └── presentation/          발표 자료
+├── previews/                  실제 앱 화면 캡처 (기능·버전별 폴더)
+├── .github/                   CI·이슈·PR 양식
+├── README.md                  소개·설치·빌드·수정 위치
+├── CHANGELOG.md               버전별 변경 내역
 ├── CONTRIBUTING.md            협업 방법
 └── LICENSE                    MIT 라이선스
 ```
@@ -72,7 +77,7 @@ myday-diary/
 | 게임 속성 재질 | 공통 Windows 원본 → 생성 assets | `Character/GameSkins.cs` |
 | 움직임 | `ui/character/CharacterAnimation.kt` | `Character/PetBehavior.cs` |
 | 홈/바탕화면 | 위젯 Provider, Wallpaper Service, `ui/wallpaper/` | `Character/DesktopPet.cs` |
-| 검증 | `app/src/test/` | `windows/Tests.cs` |
+| 검증 | `app/src/test/`, `app/src/androidTest/` | `Tests/` |
 
 Android 표의 Java 경로는 `app/src/main/java/com/myday/diary/` 기준입니다. Windows 경로는 `windows/` 기준입니다. 문서와 미리보기는 각 플랫폼 코드의 실행 파일이 아닙니다.
 

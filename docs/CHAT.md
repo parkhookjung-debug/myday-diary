@@ -56,6 +56,6 @@ JSON UTF-8 요청/응답입니다. 로그인 이후에는 `Authorization: Bearer
 | 채팅 창·접속·전송 | [ChatWindow.cs](../windows/UI/ChatWindow.cs) |
 | 말풍선 그림·줄바꿈·스크롤 | [ChatTranscript.cs](../windows/UI/ChatTranscript.cs) |
 | 진입 버튼·창 관리 | [DiaryWindow.Shell.cs](../windows/UI/DiaryWindow.Shell.cs), [DiaryWindow.Chat.cs](../windows/UI/DiaryWindow.Chat.cs) |
-| 실제 Windows 통신·화면 검사 | [ChatTests.cs](../windows/ChatTests.cs), [test_windows_chat.py](../server/test_windows_chat.py) |
+| 실제 Windows 통신·화면 검사 | [ChatTests.cs](../windows/Tests/ChatTests.cs), [test_windows_chat.py](../server/test_windows_chat.py) |
 
 Android는 위 프로토콜을 그대로 사용해 전송 계층과 화면을 추가할 예정입니다. 현재 Android 앱에 채팅 탭이나 채팅 알림을 추가하지 않았습니다.

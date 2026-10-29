@@ -64,7 +64,7 @@ Windows는 **옷장 → 소품 뽑기 → 조각 합성·성취 도감**, Androi
 | Windows 선물 상자·공방 | [CollectionWindow.cs](../windows/UI/CollectionWindow.cs), [AtelierWindow.cs](../windows/UI/AtelierWindow.cs) |
 | Windows 저장 확정·실패 복구 | [DiaryWindow.Collection.cs](../windows/UI/DiaryWindow.Collection.cs) |
 | Android 같은 규칙·화면·저장 연결 | [CollectionRules.kt](../app/src/main/java/com/myday/diary/diary/CollectionRules.kt), [PhoneCollection.kt](../app/src/main/java/com/myday/diary/ui/diary/PhoneCollection.kt), [PhoneAtelier.kt](../app/src/main/java/com/myday/diary/ui/diary/PhoneAtelier.kt), [NotebookController.kt](../app/src/main/java/com/myday/diary/diary/NotebookController.kt) |
-| 확률 경계·소모·환급·중복 지급·예전 이력·저장 검사 | [AtelierTests.cs](../windows/AtelierTests.cs), [AtelierTest.kt](../app/src/test/java/com/myday/diary/diary/AtelierTest.kt) |
+| 확률 경계·소모·환급·중복 지급·예전 이력·저장 검사 | [AtelierTests.cs](../windows/Tests/AtelierTests.cs), [AtelierTest.kt](../app/src/test/java/com/myday/diary/diary/AtelierTest.kt) |
 | 실제 Windows → Android → Windows 버전 8 검사 | [WindowsAtelierInterop.cs](../tools/WindowsAtelierInterop.cs), [windows-v8.json](../app/src/test/resources/windows-v8.json) |
 
 ## 검증 결과

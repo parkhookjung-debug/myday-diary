@@ -8,8 +8,6 @@
 
 화면은 [ui/diary](../ui/diary/README.md), 실제 JSON·파일·사진은 [data](../data/README.md)에 있습니다. ViewModel은 빠른 입력을 묶어 마지막 내용을 저장하고, 성공한 저장을 기준으로 성장과 장비 상태를 확정합니다.
 
-`DiaryController.kt`는 초기 Preview·기존 검사용입니다. 현재 앱 기능을 수정하려면 **Notebook 파일**을 봅니다.
-
 [단위 검사](../../../../../../test/java/com/myday/diary/diary/NotebookTest.kt) · [실제 저장기 검사](../../../../../../androidTest/java/com/myday/diary/NotebookWriterDeviceTest.kt) · [Android 전체 안내](../README.md)
 
 클로버·뽑기·10회 보장·중복 꽃잎·선택 교환은 [CollectionRules.kt](CollectionRules.kt), 레벨 구간은 [NotebookRules.kt](NotebookRules.kt)에서 수정합니다.

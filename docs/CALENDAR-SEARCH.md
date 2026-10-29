@@ -36,7 +36,7 @@ Android 0.4.0의 달력 탭에서도 기록/사진 표시와 전체 본문·사�
 | 월간 달력·날짜 버튼·월 이동 | `windows/UI/MonthCalendar.cs` |
 | 날짜 결과 행·사진 표시 | `windows/UI/HistoryRow.cs` |
 | 일기 화면 연결·저장 후 날짜 이동 | `windows/UI/DiaryWindow.cs` |
-| 윤년·경계·검색·기록 보존 테스트 | `windows/BrowseTests.cs` |
+| 윤년·경계·검색·기록 보존 테스트 | `windows/Tests/BrowseTests.cs` |
 | 실제 Windows 검색 화면 검증 | `windows/UI/JournalBrowserVerification.cs` |
 
 달력과 검색은 현재 Windows에 적용했습니다.

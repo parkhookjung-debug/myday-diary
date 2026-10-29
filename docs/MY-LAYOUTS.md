@@ -46,7 +46,7 @@ Android 0.4.0에서는 일기 탭 → 내 레이아웃에서 같은 저장·관�
 | 실제 좌표 기반 배치 그림 | `windows/UI/SavedLayoutDiagram.cs` |
 | 일기 화면 연결·저장 실패 복구 | `windows/UI/DiaryWindow.cs` |
 | 빈 사진 자리·사진 선택 | `windows/UI/BlockCard.cs`, `windows/UI/PhotoView.cs` |
-| 저장·적용·독립성·백업·보존 검사 | `windows/SavedLayoutTests.cs` |
+| 저장·적용·독립성·백업·보존 검사 | `windows/Tests/SavedLayoutTests.cs` |
 | 실제 Windows 관리 화면 검사 | `windows/UI/MyLayoutsVerification.cs` |
 
 ![내가 저장한 레이아웃 목록과 미리보기](../previews/windows/windows-my-layouts.png)

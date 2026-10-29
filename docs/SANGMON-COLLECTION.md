@@ -60,6 +60,6 @@ Windows는 **옷장 → 소품 뽑기**, Android는 **상몬 → 소품 뽑기**
 | 선물 상자·수집 도감 화면 | [CollectionWindow.cs](../windows/UI/CollectionWindow.cs) | [PhoneCollection.kt](../app/src/main/java/com/myday/diary/ui/diary/PhoneCollection.kt) |
 | 저장 성공 후 결과·실패 복구 | [DiaryWindow.Collection.cs](../windows/UI/DiaryWindow.Collection.cs) | [NotebookController.kt](../app/src/main/java/com/myday/diary/diary/NotebookController.kt) |
 | 버전 8 JSON | [DiaryData.cs](../windows/Core/DiaryData.cs) | [DiaryModels.kt](../app/src/main/java/com/myday/diary/data/DiaryModels.kt) · [NotebookJson.kt](../app/src/main/java/com/myday/diary/data/NotebookJson.kt) |
-| 검사 | [CollectionTests.cs](../windows/CollectionTests.cs) | [CollectionTest.kt](../app/src/test/java/com/myday/diary/diary/CollectionTest.kt) |
+| 검사 | [CollectionTests.cs](../windows/Tests/CollectionTests.cs) | [CollectionTest.kt](../app/src/test/java/com/myday/diary/diary/CollectionTest.kt) |
 
 [성장 점수표](SANGMON-GROWTH.md) · [소품 디자인 수정](SANGMON-ITEMS.md) · [현재 잠금·보유·뽑기 화면](../previews/applied/ownership-v1/README.md)

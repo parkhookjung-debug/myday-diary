@@ -50,7 +50,7 @@ Windows·Mac은 사이드바의 **하루 꾸미기**, Android는 일기의 **하
 | 질문·가구 이름·감정 목록 | [shared/studio.json](../shared/studio.json) → [sync-studio.py](../tools/sync-studio.py)로 세 앱 생성 | 같은 공통 원본 | 같은 공통 원본 |
 | 가구 그림 | [RoomArt.cs](../windows/Core/RoomArt.cs) → [export-studio-art.ps1](../tools/export-studio-art.ps1) | [prepare-mac-assets.py](../tools/prepare-mac-assets.py)로 묶음 | 생성된 [studio/ PNG](../app/src/main/assets/studio/) |
 | PIN·유휴 잠금·화면 보호 | [PinVault.cs](../windows/Core/PinVault.cs), [ScreenPrivacy.cs](../windows/UI/ScreenPrivacy.cs) | [ScreenPrivacy.swift](../macos/Sources/MyDay/ScreenPrivacy.swift) | [PinVault.kt](../app/src/main/java/com/myday/diary/data/PinVault.kt), [PhonePrivacy.kt](../app/src/main/java/com/myday/diary/ui/diary/PhonePrivacy.kt) |
-| 검사 | [StudioTests.cs](../windows/StudioTests.cs), [백업 교환](../tools/WindowsStudioInterop.cs) | [StudioVerification.swift](../macos/Sources/MyDay/StudioVerification.swift) | [StudioTest.kt](../app/src/test/java/com/myday/diary/diary/StudioTest.kt), [기기 검사](../app/src/androidTest/java/com/myday/diary/PhoneNotebookDeviceTest.kt) |
+| 검사 | [StudioTests.cs](../windows/Tests/StudioTests.cs), [백업 교환](../tools/WindowsStudioInterop.cs) | [StudioVerification.swift](../macos/Sources/MyDay/Verification/StudioVerification.swift) | [StudioTest.kt](../app/src/test/java/com/myday/diary/diary/StudioTest.kt), [기기 검사](../app/src/androidTest/java/com/myday/diary/PhoneNotebookDeviceTest.kt) |
 
 Mac의 `.swift` 파일은 `macos/Sources/MyDay/`, Android의 `data/`, `ui/`, `diary/`는 `app/src/main/java/com/myday/diary/` 기준입니다. 생성된 그림과 `.g.*` 파일은 직접 수정하지 않고 원본에서 다시 생성합니다.
 

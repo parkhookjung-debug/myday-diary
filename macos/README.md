@@ -57,6 +57,6 @@ zsh macos/run.command
 - 공통 메뉴·인사말: `shared/app-shell.json`, 색상·제한·성장 상수: `shared/desktop.json`, 경제 정책: `shared/collection.json` → `python tools/sync-desktop.py`.
 - Mac 화면: `Sources/MyDay/UnifiedViews.swift`, `SavedLayouts.swift`. 그림 패키징: `tools/prepare-mac-assets.py`.
 - Mac 성장·소품·경제: `SharedCompanion.swift`, 저장 연결: `CompanionStore.swift`.
-- 공통 백업: `WindowsCompatibility.swift`. 실제 버전 8 왕복·쓰기 실패·이전 검증: `UnifiedVerification.swift`.
+- 공통 백업: `WindowsCompatibility.swift`. 실제 버전 8 왕복·쓰기 실패·이전 검증: `Verification/UnifiedVerification.swift`.
 
 `build/MyDay.app/Contents/MacOS/MyDay --self-test`는 개인 일기를 변경하지 않는 임시 자료로 검사합니다. `--render-preview`는 넓은/좁은 일기와 상몬·형식·자유 배치 PNG를 만듭니다. Mac CI는 실제 앱을 빌드하고 Windows의 실제 직렬화 코드와 최신 백업 교환을 검사합니다. 실기기 창 조작·Intel 빌드·접근성은 별도 기기 검증 대상입니다.

@@ -38,4 +38,4 @@ Windows의 [상몬 그림 코드](../../../../../../../windows/Character/README.
 
 [NotebookTest.kt](../../../../../test/java/com/myday/diary/diary/NotebookTest.kt)는 성장·저장 실패·백업·메타데이터를 검사합니다. [PhoneNotebookDeviceTest.kt](../../../../../androidTest/java/com/myday/diary/PhoneNotebookDeviceTest.kt), [NotebookStorageDeviceTest.kt](../../../../../androidTest/java/com/myday/diary/NotebookStorageDeviceTest.kt)는 실제 Android UI·사진·저장을 격리된 예시 기록으로 검사합니다. [NotebookWriterDeviceTest.kt](../../../../../androidTest/java/com/myday/diary/NotebookWriterDeviceTest.kt)는 실제 ViewModel 저장기의 연속 입력·실패/재시도·앱 종료 직전 저장을 확인합니다.
 
-기존 `DiaryRoute/DiaryScreen/DiaryController`, `CharacterAvatar/SketchMonsterPainter`는 이전 Preview·호환 검사용 코드입니다. 현재 휴대폰 화면 수정은 `PhoneNotebook*`에서 시작합니다. 기존 debug Preview는 초기 화면을 표시하므로 최신 네 탭 화면 확인은 에뮬레이터/기기로 실행합니다.
+휴대폰 화면 수정은 `PhoneNotebook*`에서 시작합니다. 최신 네 탭 화면은 에뮬레이터/기기로 실행해 확인합니다.

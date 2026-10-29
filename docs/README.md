@@ -1,40 +1,65 @@
-# 안내 문서 찾기
+# 문서 목록
 
-[0.14 통합판 사용법과 검증 상태](INTEGRATION-2026-10-29.md) — 100종 보존·추천 20종·사진 여러 장·외부 연결 비활성화
+[프로젝트 첫 화면](../README.md) · [변경 내역](../CHANGELOG.md) · [공동 작업 안내](../CONTRIBUTING.md)
 
-**발표 자료부터 보기:** [오픈소스·구조·팀 기여·10분 구성안](PRESENTATION-BRIEF.md) · [Word](presentation/MyDay-Presentation-Brief-0.14.0.docx) · [조사 원본과 CSV](presentation/README.md).
+## 처음 보는 분
 
-**사용자 설명서부터 보기:** [설치·전체 기능·실제 사용 순서·오류 해결](USER-MANUAL.md) · [Word 다운로드](manual/MyDay-0.12.0-User-Manual.docx) · [설명서 갱신 방법](manual/README.md).
+| 문서 | 내용 |
+| --- | --- |
+| [USER-MANUAL.md](USER-MANUAL.md) | 설치·전체 기능·사용 순서·오류 해결 ([Word](manual/MyDay-0.12.0-User-Manual.docx) · [갱신 방법](manual/README.md)) |
+| [INTEGRATION-2026-10-29.md](INTEGRATION-2026-10-29.md) | 현재 0.14 통합 미리보기의 기능 범위·검증 상태 |
+| [THREE-PLATFORMS.md](THREE-PLATFORMS.md) | Windows·Mac·Android 공통 메뉴·화면·OS별 차이 |
+| [PRESENTATION-BRIEF.md](PRESENTATION-BRIEF.md) | 발표용 구조·오픈소스·팀 기여 ([Word](presentation/MyDay-Presentation-Brief-0.14.0.docx) · [원본](presentation/README.md)) |
 
-[0.12.0 안정성·첫 실행·보상·설치 안내와 수정 파일](QUALITY-UPDATE.md)
+## 코드 수정
 
-코드를 수정하려면 수정 가이드부터, 설치와 사용은 플랫폼 안내부터 확인합니다.
+| 문서 | 내용 |
+| --- | --- |
+| [EDITING-GUIDE.md](EDITING-GUIDE.md) | 기능 → 플랫폼별 파일 찾기 |
+| [REPOSITORY-STRUCTURE.md](REPOSITORY-STRUCTURE.md) | 전체 폴더 구조·배포 위치 |
+| [DESKTOP-SHARED.md](DESKTOP-SHARED.md) | `shared/` 원본 수정 → 세 앱 생성 코드 갱신 |
+| [TEAM.md](TEAM.md) | 5명 역할·담당 파일 |
+| [../windows/README.md](../windows/README.md) | Windows 빌드·실행·검사 |
+| [ANDROID.md](ANDROID.md) · [ANDROID-SIGNING.md](ANDROID-SIGNING.md) · [ANDROID-PARITY.md](ANDROID-PARITY.md) | Android 실행·서명·기존 앱 이전·기능 비교 |
+| [../macos/README.md](../macos/README.md) | Mac 빌드·실행 |
 
-[0.11.0 하루 꾸미기: 여섯 기능·잠금·백업·수정 파일](STUDIO.md) · [실제 화면·개발 빌드](../previews/studio/README.md)
+## 디자인
 
-[0.10.0 기기 연결·사진 앨범·작은 자동 백업: 사용법과 세 플랫폼 수정 파일](DEVICE-ALBUM-BACKUP.md) · [화면·검사·실행 파일](../previews/device-album-backup/README.md)
+| 문서 | 내용 |
+| --- | --- |
+| [WINDOWS-DESIGN.md](WINDOWS-DESIGN.md) · [DESIGN.md](DESIGN.md) | Windows·Android 색·카드·배치 수정 |
+| [DESIGN-SYNC.md](DESIGN-SYNC.md) | 공동 작업자 디자인을 앱에 반영하는 기준 |
+| [SANGMON-DESIGN.md](SANGMON-DESIGN.md) | 상몬 외형·게임 스타일 |
 
-[전체 수정 가이드](EDITING-GUIDE.md) · [프로젝트 첫 화면](../README.md) · [Mac·Windows 공통 개발](DESKTOP-SHARED.md)
+## 일기 기능
 
-| 바꾸려는 것 | 파일 | 역할 |
-| --- | --- | --- |
-| 기능에서 수정할 파일 찾기 | [EDITING-GUIDE.md](EDITING-GUIDE.md) | 클릭 가능한 Windows·Android 파일 표와 수정 예 |
-| 전체 폴더·배포 위치 | [REPOSITORY-STRUCTURE.md](REPOSITORY-STRUCTURE.md) | 프로젝트 구조 |
-| Windows 실행·빌드 | [README.md](../windows/README.md) | EXE·PowerShell·검증 |
-| 기능 통일·햅틱·다음 작업 | [ANDROID-PARITY.md](ANDROID-PARITY.md) | 두 플랫폼 비교·터치 동작 |
-| Android 서명·기존 앱 이전 | [ANDROID-SIGNING.md](ANDROID-SIGNING.md) | APK 업데이트·서명 키 설정 |
-| Android 실행 | [ANDROID.md](ANDROID.md) | Android Studio·갤럭시 |
-| 화면 디자인 | [WINDOWS-DESIGN.md](WINDOWS-DESIGN.md), [DESIGN.md](DESIGN.md) | 플랫폼별 디자인 수정 |
-| 일기 형식 100종와 질문 | [JOURNAL-FORMATS.md](JOURNAL-FORMATS.md), [JOURNAL-CATALOG.md](JOURNAL-CATALOG.md) | 형식·블록 추가 사용·전체 목록 |
-| 자유 배치·내 레이아웃 | [FREE-LAYOUT.md](FREE-LAYOUT.md), [MY-LAYOUTS.md](MY-LAYOUTS.md) | 드래그·저장·재사용 |
-| 사진·달력·검색 | [PHOTOS.md](PHOTOS.md), [CALENDAR-SEARCH.md](CALENDAR-SEARCH.md) | 입력·저장·기록 탐색 |
-| 상몬 외형·성장·아이템 | [SANGMON-DESIGN.md](SANGMON-DESIGN.md), [SANGMON-GROWTH.md](SANGMON-GROWTH.md), [SANGMON-ITEMS.md](SANGMON-ITEMS.md) | 그림·경험치·장착 |
-| 전체 300종 장비 ID | [ITEM-CATALOG.md](ITEM-CATALOG.md) | 8슬롯별 이름·ID·속성 |
-| 공동 작업과 역할 | [CONTRIBUTING.md](../CONTRIBUTING.md), [TEAM.md](TEAM.md) | 브랜치·PR·검증·팀원 |
-| 화면 예시 | [README.md](../previews/README.md) | 플랫폼별 PNG·GIF |
+| 문서 | 내용 |
+| --- | --- |
+| [JOURNAL-FORMATS.md](JOURNAL-FORMATS.md) · [JOURNAL-CATALOG.md](JOURNAL-CATALOG.md) | 일기 형식 사용법·100종 전체 목록 |
+| [FREE-LAYOUT.md](FREE-LAYOUT.md) · [MY-LAYOUTS.md](MY-LAYOUTS.md) | 자유 배치·내 레이아웃 저장 |
+| [PHOTOS.md](PHOTOS.md) · [CALENDAR-SEARCH.md](CALENDAR-SEARCH.md) | 사진 첨부·달력·검색 |
+| [STUDIO.md](STUDIO.md) | 사진 꾸미기·상몬 방·감정 달력·태그·질문·잠금 (0.11.0) |
+| [JOURNAL-TOOLS.md](JOURNAL-TOOLS.md) | 휴지통·이력·월간 리포트·알림 (0.9.0) |
+| [DEVICE-ALBUM-BACKUP.md](DEVICE-ALBUM-BACKUP.md) | 기기 연결·월별 사진·자동 백업 (0.10.0) |
+| [QUALITY-UPDATE.md](QUALITY-UPDATE.md) | 저장 복구·첫 실행 안내·업데이트 순서 (0.12.0) |
 
-[소품 뽑기·수집 도감·클로버·꽃잎·확률](SANGMON-COLLECTION.md)
+## 상몬 성장·수집
 
-[Windows 서버 채팅·실행·공통 API·수정 위치](CHAT.md)
+| 문서 | 내용 |
+| --- | --- |
+| [SANGMON-GROWTH.md](SANGMON-GROWTH.md) | 레벨·출석·미션 점수표 |
+| [SANGMON-ITEMS.md](SANGMON-ITEMS.md) · [ITEM-CATALOG.md](ITEM-CATALOG.md) | 소품 300종·8슬롯·전체 ID |
+| [SANGMON-COLLECTION.md](SANGMON-COLLECTION.md) | 뽑기·클로버·꽃잎·10회 보장 |
+| [SANGMON-ATELIER.md](SANGMON-ATELIER.md) | 등급 선물·조각 합성·제작 |
 
-[비용 0원 로컬 서버·Mac/Windows 채팅·무료 계정 배포 차단](FREE-CHAT.md)
+## 채팅·친구
+
+| 문서 | 내용 |
+| --- | --- |
+| [CHAT.md](CHAT.md) | 세 앱 라운지 공통 API |
+| [FREE-CHAT.md](FREE-CHAT.md) | 비용 0원 로컬 서버·무료 배포 차단 |
+| [FREE_FRIENDS_SETUP.md](FREE_FRIENDS_SETUP.md) · [KAKAO_FRIENDS_SETUP.md](KAKAO_FRIENDS_SETUP.md) · [FREE_FRIENDS_INSTALL.txt](FREE_FRIENDS_INSTALL.txt) | 외부 서비스 실험 원본 자료 (현재 통합판에서는 비활성화) |
+
+## 기타
+
+[builds/](builds) 버전별 검증 빌드 기록 · [licenses/](licenses/README.md) 제3자 라이선스 · [../previews/](../previews/README.md) 실제 화면 캡처

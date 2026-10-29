@@ -27,7 +27,7 @@ Android 0.4.0도 사진·설명·회전·압축·JSON 백업을 지원합니다.
 | 사진 선택·교체·날짜별 연결 | `windows/UI/DiaryWindow.cs` |
 | 사진 블록·설명·교체 버튼 | `windows/UI/BlockCard.cs` |
 | 비율을 유지하는 사진 미리보기 | `windows/UI/PhotoView.cs` |
-| 사진 보존·손상·용량·회전 테스트 | `windows/PhotoTests.cs` |
+| 사진 보존·손상·용량·회전 테스트 | `windows/Tests/PhotoTests.cs` |
 
 사진 첨부는 현재 Windows에 적용했습니다.
 

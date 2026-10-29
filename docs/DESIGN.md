@@ -28,7 +28,7 @@
 - 상몬 그림·아이템·질문: Windows 원본을 수정하고 `./tools/export-android-assets.ps1`를 실행합니다. 생성된 PNG·catalog.json·SangmonIdentity.kt는 직접 편집하지 않습니다.
 - 햅틱: `platform/DiaryHaptics.kt`에서 이벤트별 시스템 상수를 고칩니다. 시스템 설정을 우회하지 않습니다.
 
-현재 debug `DiaryPreviews.kt`는 **초기 화면**을 위한 Preview입니다. 최신 Phone 화면은 Android Studio에서 에뮬레이터/갤럭시로 실행해 확인합니다. Figma 자동 동기화는 없습니다. 저장 규칙·ID를 바꾸지 않는 디자인 변경은 UI 파일에서 처리합니다.
+Phone 화면은 Android Studio에서 에뮬레이터/갤럭시로 실행해 확인합니다. Figma 자동 동기화는 없습니다. 저장 규칙·ID를 바꾸지 않는 디자인 변경은 UI 파일에서 처리합니다.
 
 ## 확인
 

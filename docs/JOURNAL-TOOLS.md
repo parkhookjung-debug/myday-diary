@@ -83,7 +83,7 @@ Mac에서 `python3`을 사용해도 됩니다. `--file`을 생략하면 파일 �
 | Android 이력·리포트 | `app/src/main/java/com/myday/diary/data/JournalTools.kt` |
 | Android 도구 화면·알림 | `ui/diary/PhoneJournalTools.kt`, `platform/JournalReminder.kt` |
 | Wi-Fi 전송·QR | `tools/lan-transfer.py`, `tools/vendor/` |
-| 검증 | `windows/JournalToolsTests.cs`, `macos/Sources/MyDay/JournalToolsVerification.swift`, Android `JournalToolsTest.kt`, `tools/test_lan_transfer.py` |
+| 검증 | `windows/Tests/JournalToolsTests.cs`, `macos/Sources/MyDay/Verification/JournalToolsVerification.swift`, Android `JournalToolsTest.kt`, `tools/test_lan_transfer.py` |
 
 공통 백업은 계속 버전 8이며 앱 버전 0.9.0과 별개입니다. 파일명·상몬 ID·기존 경제 규칙을 바꾸지 않습니다.
 

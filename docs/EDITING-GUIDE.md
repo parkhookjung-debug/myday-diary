@@ -77,9 +77,9 @@
 
 **검 이름이나 설명 바꾸기:** [SangmonItems.cs](../windows/Core/SangmonItems.cs)의 `All`에서 `frost-sword` 항목의 이름·설명을 고칩니다. 그림은 [ItemPainter.cs](../windows/Character/ItemPainter.cs)의 `Sword`와 `Tone`에서 바꿉니다. 저장된 선택을 유지하려면 기존 ID는 유지합니다.
 
-**공부 일기의 질문 바꾸기:** [공통 templates.json](../shared/catalog/templates.json)에서 `category: learning` 또는 `id: cornell-notes`를 찾아 제목·질문을 수정하고 `python tools/sync-desktop.py`를 실행합니다. 형식 목록을 추가·삭제하면 [Tests.cs](../windows/Tests.cs)의 개수 검증과 [100종 목록](JOURNAL-CATALOG.md)도 함께 갱신합니다.
+**공부 일기의 질문 바꾸기:** [공통 templates.json](../shared/catalog/templates.json)에서 `category: learning` 또는 `id: cornell-notes`를 찾아 제목·질문을 수정하고 `python tools/sync-desktop.py`를 실행합니다. 형식 목록을 추가·삭제하면 [Tests.cs](../windows/Tests/Tests.cs)의 개수 검증과 [100종 목록](JOURNAL-CATALOG.md)도 함께 갱신합니다.
 
-**경험치 규칙 바꾸기:** [SangmonGrowth.cs](../windows/Core/SangmonGrowth.cs)의 `DailyXP`·`LevelXP`와 보상 레벨 `Levels`를 수정하고 [GrowthTests.cs](../windows/GrowthTests.cs)를 확인합니다. 경험치는 지급 날짜 수에서 계산하므로 값 변경은 기존 사용자의 경험치·레벨에도 영향을 줍니다.
+**경험치 규칙 바꾸기:** [SangmonGrowth.cs](../windows/Core/SangmonGrowth.cs)의 `DailyXP`·`LevelXP`와 보상 레벨 `Levels`를 수정하고 [GrowthTests.cs](../windows/Tests/GrowthTests.cs)를 확인합니다. 경험치는 지급 날짜 수에서 계산하므로 값 변경은 기존 사용자의 경험치·레벨에도 영향을 줍니다.
 
 **Android 카드 모서리 바꾸기:** [PhoneBlockEditor.kt](../app/src/main/java/com/myday/diary/ui/diary/PhoneBlockEditor.kt)의 RoundedCornerShape를 수정하고 에뮬레이터/갤럭시에서 확인합니다. [Android 디자인 안내](DESIGN.md)를 참고합니다.
 
@@ -97,4 +97,4 @@ if ($result.ExitCode -ne 0) { throw 'Windows 검사 실패' }
 
 Android는 Windows PowerShell에서 `./gradlew.bat :app:assembleDebug :app:lintDebug :app:testDebugUnitTest`를 실행하고 갤럭시에서 위젯·배경화면을 확인합니다. [Android 안내](ANDROID.md)와 [디자인 Preview 안내](DESIGN.md)를 참고합니다.
 
-문서만 수정한 경우 파일 링크와 설명을 확인합니다. 기능을 수정한 경우 관련 검증 파일도 함께 확인합니다. 사진은 [PhotoTests.cs](../windows/PhotoTests.cs), 검색은 [BrowseTests.cs](../windows/BrowseTests.cs), 내 레이아웃은 [SavedLayoutTests.cs](../windows/SavedLayoutTests.cs), 장비는 [ItemTests.cs](../windows/ItemTests.cs)가 담당합니다.
+문서만 수정한 경우 파일 링크와 설명을 확인합니다. 기능을 수정한 경우 관련 검증 파일도 함께 확인합니다. 사진은 [PhotoTests.cs](../windows/Tests/PhotoTests.cs), 검색은 [BrowseTests.cs](../windows/Tests/BrowseTests.cs), 내 레이아웃은 [SavedLayoutTests.cs](../windows/Tests/SavedLayoutTests.cs), 장비는 [ItemTests.cs](../windows/Tests/ItemTests.cs)가 담당합니다.

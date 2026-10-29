@@ -77,15 +77,15 @@ Android 기록과 자동 동기화하지 않습니다. 영상·시작 시 자동
 | 날짜별 기록 목록의 표시 | [HistoryRow.cs](UI/HistoryRow.cs) |
 | 달력·검색·결과 창 | [JournalBrowser.cs](UI/JournalBrowser.cs), [MonthCalendar.cs](UI/MonthCalendar.cs) |
 | 달력 날짜·본문 검색·미리보기 | [DiaryBrowse.cs](Core/DiaryBrowse.cs) |
-| 달력·검색 단위 검증 | [BrowseTests.cs](BrowseTests.cs) |
+| 달력·검색 단위 검증 | [BrowseTests.cs](Tests/BrowseTests.cs) |
 | 내 레이아웃 모델·검증·적용·병합 | [SavedLayouts.cs](Core/SavedLayouts.cs) |
 | 내 레이아웃 목록·검색·관리·미리보기 | [MyLayoutsWindow.cs](UI/MyLayoutsWindow.cs), [LayoutNameDialog.cs](UI/LayoutNameDialog.cs), [SavedLayoutDiagram.cs](UI/SavedLayoutDiagram.cs) |
-| 내 레이아웃 저장·재사용 검증 | [SavedLayoutTests.cs](SavedLayoutTests.cs) |
+| 내 레이아웃 저장·재사용 검증 | [SavedLayoutTests.cs](Tests/SavedLayoutTests.cs) |
 | 상몬 성장·레벨·보상·병합 | [SangmonGrowth.cs](Core/SangmonGrowth.cs), [GrowthWindow.cs](UI/GrowthWindow.cs), [DiaryWindow.Growth.cs](UI/DiaryWindow.Growth.cs) |
-| 성장 보상 의상·검증 | [RewardSkins.cs](Character/RewardSkins.cs), [GrowthTests.cs](GrowthTests.cs) |
+| 성장 보상 의상·검증 | [RewardSkins.cs](Character/RewardSkins.cs), [GrowthTests.cs](Tests/GrowthTests.cs) |
 | 아이템 모델·장착·백업 | [SangmonItems.cs](Core/SangmonItems.cs), [DiaryWindow.Items.cs](UI/DiaryWindow.Items.cs) |
 | 아이템 그림·장비함·미리보기 | [CozyItems.cs](Character/CozyItems.cs), [ItemPainter.cs](Character/ItemPainter.cs), [EquipmentWindow.cs](UI/EquipmentWindow.cs), [ItemView.cs](UI/ItemView.cs) |
-| 장비 저장·슬롯·그림 경계 검증 | [ItemTests.cs](ItemTests.cs) |
+| 장비 저장·슬롯·그림 경계 검증 | [ItemTests.cs](Tests/ItemTests.cs) |
 | 날짜 표지 | [JournalCover.cs](UI/JournalCover.cs) |
 | 형식 선택·미리보기 | [TemplateGallery.cs](UI/TemplateGallery.cs) |
 | 형식의 블록 제목·질문·구성 | [DiaryTemplates.cs](Core/DiaryTemplates.cs) |
@@ -96,7 +96,7 @@ Android 기록과 자동 동기화하지 않습니다. 영상·시작 시 자동
 | 일기 블록 UI | [BlockCard.cs](UI/BlockCard.cs) |
 | 사진 미리보기 | [PhotoView.cs](UI/PhotoView.cs) |
 | 사진 입력·회전·압축·검증 | [DiaryPhoto.cs](Core/DiaryPhoto.cs) |
-| 사진 백업·손상·용량 테스트 | [PhotoTests.cs](PhotoTests.cs) |
+| 사진 백업·손상·용량 테스트 | [PhotoTests.cs](Tests/PhotoTests.cs) |
 | 기록 모델·검증·저장·백업 | [DiaryData.cs](Core/DiaryData.cs) |
 | 논리 좌표·자동 정렬·크기 범위 | [DiaryLayout.cs](Core/DiaryLayout.cs) |
 | 스케치 캐릭터 그림·포즈 | [MonsterPainter.cs](Character/MonsterPainter.cs) |
