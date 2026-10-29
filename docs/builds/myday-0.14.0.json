@@ -1,0 +1,60 @@
+{
+  "version": "0.14.0",
+  "date": "2026-10-29",
+  "branch": "codex/windows-app",
+  "backupVersionRange": [
+    1,
+    9
+  ],
+  "publicFriendsEnabled": false,
+  "files": [
+    {
+      "platform": "windows",
+      "file": "MyDay-Windows.exe",
+      "sourceCommit": "b2470bbbcc3646ed8e085194605fb06d10310229",
+      "ci": "https://github.com/parkhookjung-debug/myday-diary/actions/runs/40877973360",
+      "artifact": "myday-windows-66",
+      "sha256": "a017982d1c2e556de2e8f254d35d434c4dc23a1f30d5a89290cb21543d9cd9fa",
+      "bytes": 614400
+    },
+    {
+      "platform": "macos",
+      "file": "MyDay-macOS-arm64.zip",
+      "sourceCommit": "fda4fe1af1508bd7234f3404f98f533bd3e71b39",
+      "ci": "https://github.com/parkhookjung-debug/myday-diary/actions/runs/40879269834",
+      "artifact": "myday-chat-macOS-ARM64",
+      "sha256": "016549df4ae43d11eeb7a64f255f36b558dae5f159e77d91de6470458adfd829",
+      "bytes": 17407263
+    },
+    {
+      "platform": "android",
+      "file": "MyDay-Android.apk",
+      "sourceCommit": "20ed15dd6b8c68fcd18ed1b14239a39ccde43114",
+      "ci": "https://github.com/parkhookjung-debug/myday-diary/actions/runs/40879968912",
+      "artifact": "myday-debug-72",
+      "sha256": "358d678798cb9dd70e65addab1710c908bc50bf7278f2f28ec459ef5159c14d0",
+      "bytes": 32295158
+    }
+  ],
+  "verification": {
+    "windowsSelfTests": 325,
+    "windowsNativeSmoke": "passed",
+    "commonGenerationAndContrast": 14,
+    "androidJvmTests": 59,
+    "android35DeviceTests": 22,
+    "androidLint": "passed",
+    "androidWindowsInterop": "passed",
+    "macNativeBuildAndSelfTests": "passed",
+    "macNativeRendering": "reviewed",
+    "windowsMacBackupAndContract": "passed",
+    "localFriendsServerTests": 10,
+    "isolatedPostgresPolicyTests": 30,
+    "mockKakaoAuthTests": 13
+  },
+  "limits": [
+    "Mac Apple Silicon development build, not notarized",
+    "Friend preview only; public connection/login/upload disabled",
+    "Mac video references do not include media in backup",
+    "Physical Galaxy haptics, two real friend accounts and Intel Mac not verified"
+  ]
+}

@@ -47,6 +47,20 @@ Mac의 영상 블록은 이 Mac의 로컬 원본 파일 경로를 참조하는 �
 
 ## 검사 상태
 
-Windows 저장·성장·캐릭터 검사 325개와 실제 WinForms 화면 검사가 통과했습니다. 공통 생성·대비 검사 14개, 이전 로컬 친구 서버 모의 검사 10개, 격리된 PostgreSQL 정책 검사 30개와 모의 카카오 인증 검사 13개가 통과했습니다. 공개 서버 접속이나 실제 사용자 계정은 검사에 사용하지 않았습니다. Android·Mac의 통합 빌드와 기기 검사는 아래 결과가 확인되는 대로 기록합니다.
+Windows 저장·성장·캐릭터 검사 325개와 실제 WinForms 화면 검사가 통과했습니다. 공통 생성·대비 검사 14개, 이전 로컬 친구 서버 모의 검사 10개, 격리된 PostgreSQL 정책 검사 30개와 모의 카카오 인증 검사 13개가 통과했습니다. 공개 서버 접속이나 실제 사용자 계정은 검사에 사용하지 않았습니다. Mac 빌드·저장 자체 검사·네이티브 화면 렌더링·로컬 채팅 통신·실제 Windows 백업 교환·공통 동작 비교도 통과했습니다. Android 최종 빌드·Lint·단위 검사 59개·Android 35 기기 검사 22개와 실제 Windows 백업 호환 검사도 모두 통과했습니다. 형식 미리보기의 적용 버튼을 고정하고 새 라운지 탭을 실제로 조작해 확인했습니다.
 
 [실제 Windows 화면](../previews/integration-20261029/README.md) · [0.12 상세 사용 설명서](USER-MANUAL.md) · [통합 PR 7](https://github.com/parkhookjung-debug/myday-diary/pull/7)
+
+검사 실행: [Windows](https://github.com/parkhookjung-debug/myday-diary/actions/runs/40877973360) · [Mac과 공통 호환성](https://github.com/parkhookjung-debug/myday-diary/actions/runs/40879269834) · [Android 최종 검사 통과](https://github.com/parkhookjung-debug/myday-diary/actions/runs/40879968912)
+
+## 실행 파일 받기
+
+GitHub에 로그인한 뒤 해당 성공한 실행의 **Artifacts**에서 내려받습니다. 압축을 먼저 풀고 아래 파일을 사용하세요. 개발 빌드 보관 기간이 지나면 다시 빌드해야 합니다.
+
+| 운영체제 | 성공한 실행 | Artifacts 이름 | 실행할 파일 |
+| --- | --- | --- | --- |
+| Windows | [Windows 검사](https://github.com/parkhookjung-debug/myday-diary/actions/runs/40877973360) | myday-windows-66 | bin/MyDay.exe |
+| Mac | [Mac·공통 검사](https://github.com/parkhookjung-debug/myday-diary/actions/runs/40879269834) | myday-chat-macOS-ARM64 | macos/build/MyDay-macOS-arm64-v0.14.0-preview.zip 안의 MyDay.app |
+| Android | [Android 검사](https://github.com/parkhookjung-debug/myday-diary/actions/runs/40879968912) | myday-debug-72 | outputs/apk/debug/app-debug.apk |
+
+[파일별 실제 빌드 소스·SHA256·검증 범위](builds/myday-0.14.0.json)를 함께 확인하세요. Windows와 Mac을 검사한 뒤 Android 화면만 수정했으므로 운영체제별 마지막 빌드 커밋은 다릅니다. 기기별 앱은 0.14.0이며 설치 시 기존 개인 기록 폴더를 지우지 않습니다. 갤럭시의 실제 햅틱 느낌·강제 종료·OS 업데이트, Intel Mac과 두 실제 친구 계정의 온라인 공유는 별도 수동 검증 범위입니다.
