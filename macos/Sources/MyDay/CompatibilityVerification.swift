@@ -133,7 +133,8 @@ enum CompatibilityVerification {
     }
     static func templatesAndLayout() throws {
         let templates = try TemplateCatalog.load()
-        try check(templates.count == 20 && Set(templates.map(\.category)) == Set(TemplateCatalog.categories), "focused template catalog")
+        try check(templates.count == 100 && Set(templates.map(\.category)) == Set(TemplateCatalog.categories), "complete 100-format catalog")
+        try check(DesktopContract.featuredTemplateIds.count==20 && Set(DesktopContract.featuredTemplateIds).isSubset(of:Set(templates.map(\.id))),"20 featured formats preserve the full catalog")
         try check(TemplateCatalog.find(templates, category: "", query: "코넬").contains { $0.id == "cornell-notes" }, "template search")
         for template in templates {
             var page = DiaryEntry()
