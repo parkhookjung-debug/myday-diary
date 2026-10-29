@@ -21,7 +21,7 @@
 | Android 서명·기존 앱 이전 | [ANDROID-SIGNING.md](ANDROID-SIGNING.md) | APK 업데이트·서명 키 설정 |
 | Android 실행 | [ANDROID.md](ANDROID.md) | Android Studio·갤럭시 |
 | 화면 디자인 | [WINDOWS-DESIGN.md](WINDOWS-DESIGN.md), [DESIGN.md](DESIGN.md) | 플랫폼별 디자인 수정 |
-| 일기 100종과 질문 | [JOURNAL-FORMATS.md](JOURNAL-FORMATS.md), [JOURNAL-CATALOG.md](JOURNAL-CATALOG.md) | 형식 사용·전체 목록 |
+| 일기 형식 20개와 질문 | [JOURNAL-FORMATS.md](JOURNAL-FORMATS.md), [JOURNAL-CATALOG.md](JOURNAL-CATALOG.md) | 형식·블록 추가 사용·전체 목록 |
 | 자유 배치·내 레이아웃 | [FREE-LAYOUT.md](FREE-LAYOUT.md), [MY-LAYOUTS.md](MY-LAYOUTS.md) | 드래그·저장·재사용 |
 | 사진·달력·검색 | [PHOTOS.md](PHOTOS.md), [CALENDAR-SEARCH.md](CALENDAR-SEARCH.md) | 입력·저장·기록 탐색 |
 | 상몬 외형·성장·아이템 | [SANGMON-DESIGN.md](SANGMON-DESIGN.md), [SANGMON-GROWTH.md](SANGMON-GROWTH.md), [SANGMON-ITEMS.md](SANGMON-ITEMS.md) | 그림·경험치·장착 |

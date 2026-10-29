@@ -9,7 +9,10 @@ flags=(${=MYDAY_SWIFT_FLAGS:-})
 python3 ../tools/prepare-mac-assets.py
 swift build "${flags[@]}" -c release
 binary_dir=$(swift build "${flags[@]}" -c release --show-bin-path)
-app="$PWD/build/MyDay.app"
+output_app="$PWD/build/MyDay.app"
+staging_root=$(mktemp -d "${TMPDIR:-/tmp}/myday-build.XXXXXX")
+trap 'rm -rf "$staging_root"' EXIT
+app="$staging_root/MyDay.app"
 mkdir -p "$app/Contents/MacOS" "$app/Contents/Resources"
 cp "$binary_dir/MyDay" "$app/Contents/MacOS/MyDay"
 cp Sources/MyDay/Resources/templates.json "$app/Contents/Resources/templates.json"
@@ -33,10 +36,14 @@ cat > "$app/Contents/Info.plist" <<'PLIST'
     <key>NSAppTransportSecurity</key><dict><key>NSAllowsLocalNetworking</key><true/></dict>
 </dict></plist>
 PLIST
+xattr -cr "$app"
 codesign --force --sign - "$app"
 "$app/Contents/MacOS/MyDay" --self-test
+rm -rf "$output_app"
+ditto --noextattr --norsrc "$app" "$output_app"
+codesign --verify --deep --strict "$output_app"
 cp README.md build/맥-실행안내.md
 cp ../LICENSE build/LICENSE
-package_version=$(/usr/libexec/PlistBuddy -c 'Print :CFBundleShortVersionString' "$app/Contents/Info.plist")
-ditto -c -k --sequesterRsrc --keepParent "$app" "build/MyDay-macOS-$(uname -m)-v${package_version}-preview.zip"
-print "완료: $app"
+package_version=$(/usr/libexec/PlistBuddy -c 'Print :CFBundleShortVersionString' "$output_app/Contents/Info.plist")
+ditto -c -k --sequesterRsrc --keepParent "$output_app" "build/MyDay-macOS-$(uname -m)-v${package_version}-preview.zip"
+print "완료: $output_app"

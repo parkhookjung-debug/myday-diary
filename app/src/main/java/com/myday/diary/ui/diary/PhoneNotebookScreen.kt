@@ -33,7 +33,6 @@ import java.time.LocalDate
     var studio by remember {mutableStateOf(false)}
     var tab by rememberSaveable {mutableIntStateOf(0)}
     var journalTools by remember {mutableStateOf(false)}
-    var add by remember {mutableStateOf(false)}
     var templates by remember {mutableStateOf(false)}
     var layouts by remember {mutableStateOf(false)}
     var editing by rememberSaveable {mutableStateOf(false)}
@@ -56,7 +55,7 @@ import java.time.LocalDate
         bottomBar={NavigationBar(containerColor=AppPalette.sidebar) {AppShell.titles.forEachIndexed {i,title->
             NavigationBarItem(modifier=Modifier.testTag("nav-$i"),selected=tab==i,onClick={tab=i;haptics.perform(TactileEvent.SELECT)},icon={Text(AppShell.symbols[i])},label={Text(title,maxLines=1)})
         }}},
-        floatingActionButton={if(tab==0) ExtendedFloatingActionButton(modifier=Modifier.testTag("add-block"),onClick={add=true;haptics.perform(TactileEvent.SELECT)},text={Text("하루 조각 추가")},icon={Text("＋")},containerColor=MaterialTheme.colorScheme.primary,contentColor=Color.White)}) {padding->
+        floatingActionButton={}) {padding->
         Column(Modifier.fillMaxSize().padding(padding).imePadding()) {
             controller.error?.let {message->Surface(color=Color(0xfff3e6df)) {Row(Modifier.fillMaxWidth().padding(horizontal=16.dp),horizontalArrangement=Arrangement.SpaceBetween) {
                 Text(message,Modifier.weight(1f).padding(vertical=10.dp),style=MaterialTheme.typography.bodySmall)
@@ -80,7 +79,7 @@ import java.time.LocalDate
                     item {FlowRow(horizontalArrangement=Arrangement.spacedBy(6.dp)) {
                         AssistChip(onClick={options="mood"},label={Text(entry.mood)})
                         AssistChip(onClick={options="style"},label={Text(when(entry.pageStyle) {"paper"->"노트";"dots"->"도트";else->"카드"})})
-                        AssistChip(onClick={templates=true},label={Text("일기 형식 100종")})
+                        AssistChip(modifier=Modifier.testTag("add-block"),onClick={templates=true},label={Text("일기 형식 · 블록 추가")})
                         AssistChip(onClick={layouts=true},label={Text("내 레이아웃")})
                         AssistChip(onClick={studio=true},label={Text("하루 꾸미기")})
                     }}
@@ -145,8 +144,7 @@ import java.time.LocalDate
     })
     if(studio)PhoneStudio(controller,haptics,privacy,onClose={studio=false},onOpen={day->controller.selectDate(day);if(controller.saved){studio=false;tab=0}})
     if(journalTools) PhoneJournalTools(controller,onExport,onDismiss={journalTools=false},onOpenDay={day->controller.clearError();controller.selectDate(day);if(controller.saved&&controller.error==null){journalTools=false;tab=0}})
-    if(add) AlertDialog(onDismissRequest={add=false},title={Text("어떤 하루 조각을 남길까요?")},text={Column {listOf("text" to "글 일기","todo" to "할 일","habit" to "습관","emotion" to "감정","photo" to "사진").forEach {(kind,title)->TextButton({if(kind=="photo") onPhoto(null) else attempt(TactileEvent.SELECT) {controller.add(kind)};add=false},modifier=Modifier.fillMaxWidth()) {Text(title)}}}},confirmButton={TextButton({add=false}) {Text("닫기")}})
-    if(templates) TemplatePicker(catalog,onApply={template->attempt(TactileEvent.DROP) {controller.applyTemplate(template)};if(controller.error==null) templates=false},onDismiss={templates=false},error=controller.error)
+    if(templates) TemplatePicker(catalog,onApply={template->attempt(TactileEvent.DROP) {controller.applyTemplate(template)};if(controller.error==null) templates=false},onAddBlock={kind->if(kind=="photo") onPhoto(null) else attempt(TactileEvent.SELECT) {controller.add(kind)};if(controller.error==null) templates=false},onDismiss={templates=false},error=controller.error)
     if(layouts) SavedLayoutPicker(controller,onApply={layout->attempt(TactileEvent.DROP) {controller.applyLayout(layout)};if(controller.error==null) layouts=false},onSave={nameFor=null;naming=true},onRename={nameFor=it;naming=true},onDelete={id->attempt(TactileEvent.DROP) {controller.deleteLayout(id)}},onDismiss={layouts=false})
     if(naming) NameDialog(if(nameFor==null) "현재 배치 저장" else "레이아웃 이름 변경",nameFor?.name ?: "",onSave={name->attempt(TactileEvent.CHECK) {if(nameFor==null) controller.saveLayout(name) else controller.renameLayout(nameFor!!.id,name)};if(controller.error==null) naming=false},onDismiss={naming=false},error=controller.error)
     deleting?.let {id->AlertDialog(onDismissRequest={deleting=null},title={Text("이 블록을 삭제할까요?")},text={Text("이전 글과 사진은 기록 도구의 휴지통·이력에 보관해요.")},confirmButton={TextButton({attempt(TactileEvent.DROP) {controller.delete(id)};deleting=null;opening=null}) {Text("삭제")}},dismissButton={TextButton({deleting=null}) {Text("취소")}})}

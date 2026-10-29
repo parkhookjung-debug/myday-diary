@@ -1,14 +1,50 @@
 import SwiftUI
 import AppKit
+import AVKit
+
+private struct InlineVideoPlayer: NSViewRepresentable {
+    let path: String
+    final class Coordinator { var path="" }
+    func makeCoordinator()->Coordinator { Coordinator() }
+    func makeNSView(context:Context)->AVPlayerView {let view=AVPlayerView();view.controlsStyle = .inline;return view}
+    func updateNSView(_ view:AVPlayerView,context:Context){guard context.coordinator.path != path else{return};context.coordinator.path=path;view.player?.pause();view.player=FileManager.default.fileExists(atPath:path) ? AVPlayer(url:URL(fileURLWithPath:path)) : nil}
+    static func dismantleNSView(_ view:AVPlayerView,coordinator:Coordinator){view.player?.pause()}
+}
+
+struct DiaryBoardTools:View {
+    @ObservedObject var store:DiaryStore
+    @Binding var editing:Bool
+    @Binding var zoom:Double
+    var availableWidth=800
+    @State private var confirmingArrange=false
+    private var free:Bool{store.entry.layoutMode=="free"}
+    var body:some View{
+        VStack(alignment:.leading,spacing:9){
+            ViewThatFits(in:.horizontal){controls;VStack(alignment:.leading,spacing:10){controlsPrimary;if free{controlsSecondary}}}
+            if free{Text(editing ? "제목을 드래그해 이동하고 오른쪽 아래 ↘를 끌어 크기를 바꾸세요. 놓으면 저장됩니다.":"가로 스크롤과 확대/축소로 넓은 페이지를 살펴보세요. 배치 편집을 누르면 이동할 수 있습니다.").font(.caption).foregroundStyle(.secondary)}
+        }.alert("현재 위치를 자동 정렬할까요?",isPresented:$confirmingArrange){Button("취소",role:.cancel){};Button("다시 정렬"){store.arrangeBlocks(width:availableWidth)}}message:{Text("글과 사진은 유지하며 블록의 위치와 크기를 다시 배치합니다.")}
+    }
+    private var layoutPicker:some View{Picker("배치",selection:Binding(get:{store.entry.layoutMode},set:{value in store.changeLayout(value,width:availableWidth);if value=="cards"{editing=false}})){Text("자동 정렬").tag("cards");Text("자유 배치").tag("free")}.pickerStyle(.segmented).frame(width:180)}
+    private var paperPicker:some View{Picker("종이",selection:Binding(get:{store.entry.pageStyle},set:{value in store.update{$0.pageStyle=value}})){Text("기본").tag("plain");Text("줄 노트").tag("paper");Text("도트").tag("dots")}.frame(width:140)}
+    private var controlsPrimary:some View{HStack(spacing:12){layoutPicker;Divider().frame(height:28);paperPicker}}
+    private var controlsSecondary:some View{HStack(spacing:10){Button(editing ? "편집 완료":"배치 편집"){editing.toggle()};Button{confirmingArrange=true}label:{Label("다시 정렬",systemImage:"arrow.triangle.2.circlepath")};Spacer();Button{zoom=max(0.5,zoom-0.1)}label:{Image(systemName:"minus")};Text("\(Int(zoom*100))%").monospacedDigit().frame(width:42);Button{zoom=min(1.25,zoom+0.1)}label:{Image(systemName:"plus")}}}
+    private var controls:some View{HStack(spacing:12){controlsPrimary;if free{Divider().frame(height:28);controlsSecondary}}}
+}
 
 struct DiaryBoard: View {
     @ObservedObject var store: DiaryStore
     var startsEditing = false
-    @State private var editing = false
-    @State private var zoom = 0.9
+    var editingState:Binding<Bool>?
+    var zoomState:Binding<Double>?
+    var showsControls=true
+    @State private var localEditing = false
+    @State private var localZoom = 0.9
     @State private var availableWidth = 800
-    @State private var confirmingArrange = false
     private var free: Bool { store.entry.layoutMode == "free" }
+    private var editing:Bool{editingState?.wrappedValue ?? localEditing}
+    private var zoom:Double{zoomState?.wrappedValue ?? localZoom}
+    private var editingBinding:Binding<Bool>{Binding(get:{editing},set:{value in if editingState != nil{editingState?.wrappedValue=value}else{localEditing=value}})}
+    private var zoomBinding:Binding<Double>{Binding(get:{zoom},set:{value in if zoomState != nil{zoomState?.wrappedValue=value}else{localZoom=value}})}
     private func positions(width: Int) -> [BlockRect] {
         free ? store.entry.blocks.map(DiaryLayout.bounds) : DiaryLayout.autoArrange(store.entry.blocks, width: width)
     }
@@ -17,30 +53,6 @@ struct DiaryBoard: View {
     }
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
-            HStack {
-                Picker("배치", selection: Binding(get: { store.entry.layoutMode }, set: { value in
-                    store.changeLayout(value, width: availableWidth)
-                    if value == "cards" { editing = false }
-                })) {
-                    Text("자동 정렬").tag("cards")
-                    Text("자유 배치").tag("free")
-                }.pickerStyle(.segmented).frame(width: 180)
-                Picker("종이", selection: Binding(get: { store.entry.pageStyle }, set: { value in store.update { $0.pageStyle = value } })) {
-                    Text("기본").tag("plain"); Text("줄 노트").tag("paper"); Text("도트").tag("dots")
-                }.frame(width: 140)
-                Spacer()
-            }
-            if free {
-                HStack {
-                    Button(editing ? "편집 완료" : "배치 편집") { editing.toggle() }
-                    Button("자동으로 다시 정렬…") { confirmingArrange = true }
-                    Spacer()
-                    Text("\(Int(zoom * 100))%").monospacedDigit().font(.caption)
-                    Slider(value: $zoom, in: 0.5...1.25).frame(width: 110).accessibilityLabel("배치 화면 확대")
-                }
-                Text(editing ? "제목을 드래그해 이동하고 오른쪽 아래 ↘를 끌어 크기를 바꾸세요. 놓으면 저장됩니다." : "가로 스크롤과 확대/축소로 넓은 페이지를 살펴보세요. 배치 편집을 누르면 이동할 수 있습니다.")
-                    .font(.caption).foregroundStyle(.secondary)
-            }
             GeometryReader { geometry in
                 let rects = positions(width: Int(geometry.size.width))
                 let width = free ? max(800, (rects.map { $0.x + $0.width }.max() ?? 0) + 24) : Int(geometry.size.width)
@@ -63,20 +75,10 @@ struct DiaryBoard: View {
                 .onAppear { availableWidth = Int(geometry.size.width) }
                 .onChange(of: geometry.size.width) { availableWidth = Int($0) }
             }.frame(height: canvasHeight)
-            Menu {
-                ForEach(BlockKind.allCases.filter { $0 != .photoSlot }, id: \.self) { kind in
-                    Button(kind.title) { store.addBlock(kind) }.disabled(store.entry.blocks.count >= 200)
-                }
-            } label: {
-                Text("+ 블록 추가").frame(maxWidth: .infinity).padding(10)
-            }.menuStyle(.borderlessButton).padding(8).background(.white.opacity(0.8), in: RoundedRectangle(cornerRadius: 16))
+            if showsControls{Divider();DiaryBoardTools(store:store,editing:editingBinding,zoom:zoomBinding,availableWidth:availableWidth)}
         }
-        .onAppear { editing = startsEditing }
-        .onChange(of: store.date) { _ in editing = false }
-        .alert("현재 위치를 자동 정렬할까요?", isPresented: $confirmingArrange) {
-            Button("취소", role: .cancel) { }
-            Button("다시 정렬") { store.arrangeBlocks(width: availableWidth) }
-        } message: { Text("글과 사진은 유지하며 블록의 위치와 크기를 다시 배치합니다.") }
+        .onAppear { if startsEditing{editingBinding.wrappedValue=true} }
+        .onChange(of: store.date) { _ in editingBinding.wrappedValue=false }
     }
 }
 
@@ -138,10 +140,16 @@ struct PositionedDiaryCard: View {
                         }
                         Button(block.photo == nil ? "사진 선택…" : "사진 바꾸기…") { store.choosePhoto(block.id) }
                     }
+                    if block.kind == .video {
+                        if let path=block.videoPath,FileManager.default.fileExists(atPath:path){InlineVideoPlayer(path:path).frame(minHeight:150,maxHeight:min(240,CGFloat(displayed.height)*0.55));Text(URL(fileURLWithPath:path).lastPathComponent).font(.caption).foregroundStyle(.secondary)}
+                        else if block.videoPath != nil {Text("원본 영상 파일을 찾을 수 없어요. 다시 선택해 주세요.").font(.caption).foregroundStyle(.orange)}
+                        Text("영상은 이 Mac의 원본 파일을 참조하며 공통 백업에는 파일 자체가 포함되지 않아요.").font(.caption2).foregroundStyle(.secondary)
+                        Button(block.videoPath == nil ? "영상 선택…" : "영상 바꾸기…") { store.chooseVideo(block.id) }
+                    }
                     TextEditor(text: text).font(.body).scrollContentBackground(.hidden)
-                        .frame(height: max(70, CGFloat(displayed.height) - (block.prompt == nil ? 110 : 145) - (block.kind == .photo ? 170 : 0)))
+                        .frame(height: max(70, CGFloat(displayed.height) - (block.prompt == nil ? 110 : 145) - (block.kind == .photo ? 170 : 0) - (block.kind == .video ? 230 : 0)))
                         .padding(6).background(Color.black.opacity(0.025), in: RoundedRectangle(cornerRadius: 8))
-                        .accessibilityLabel(block.kind == .photo || block.kind == .photoSlot ? "사진 설명" : "\(block.title ?? block.kind.title) 본문")
+                        .accessibilityLabel(block.kind == .photo || block.kind == .photoSlot ? "사진 설명" : block.kind == .video ? "영상 설명" : "\(block.title ?? block.kind.title) 본문")
                     if block.kind == .todo || block.kind == .habit {
                         Toggle("오늘 완료했어요", isOn: Binding(get: { store.entry.blocks.first(where: { $0.id == block.id })?.checked ?? false }, set: { value in
                             store.update { entry in
@@ -169,7 +177,7 @@ struct PositionedDiaryCard: View {
         .alert("블록을 삭제할까요?", isPresented: $deleting) {
             Button("취소", role: .cancel) { }
             Button("삭제", role: .destructive) { store.update { $0.blocks.removeAll { $0.id == block.id } } }
-        } message: { Text("작성한 내용과 첨부 사진도 함께 삭제됩니다.") }
+        } message: { Text("작성한 내용과 첨부 사진·영상 연결도 함께 삭제됩니다. 원본 영상 파일은 삭제하지 않습니다.") }
     }
 }
 

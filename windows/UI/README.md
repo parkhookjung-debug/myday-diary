@@ -15,7 +15,7 @@
 | 블록의 입력창·체크·사진 버튼 | [BlockCard.cs](BlockCard.cs) | 블록 카드의 표시와 입력 |
 | 마우스 배치·크기 조절 | [DiaryBoard.cs](DiaryBoard.cs) | 드래그·핸들·캔버스 |
 | 날짜 표지·기록 행 | [JournalCover.cs](JournalCover.cs), [HistoryRow.cs](HistoryRow.cs) | 표지 장식과 목록 행 |
-| 일기 형식 선택 | [TemplateGallery.cs](TemplateGallery.cs), [TemplateOption.cs](TemplateOption.cs) | 100종 분류·검색·미리보기 |
+| 일기 형식·블록 추가 | [TemplateGallery.cs](TemplateGallery.cs), [TemplateOption.cs](TemplateOption.cs) | 20개 분류·검색·미리보기·블록 바로 추가 |
 | 달력·검색 | [JournalBrowser.cs](JournalBrowser.cs), [MonthCalendar.cs](MonthCalendar.cs) | 결과 창과 달력 |
 | 사진과 빈 사진 자리 | [PhotoView.cs](PhotoView.cs) | 이미지 비율과 썸네일 |
 | 내 레이아웃 관리 | [MyLayoutsWindow.cs](MyLayoutsWindow.cs), [LayoutNameDialog.cs](LayoutNameDialog.cs), [SavedLayoutDiagram.cs](SavedLayoutDiagram.cs) | 목록·이름 입력·배치 그림 |

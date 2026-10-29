@@ -22,7 +22,7 @@
 | 글·할 일·습관·감정·사진 블록 | [BlockCard.cs](../windows/UI/BlockCard.cs) | 제목·입력창·체크·사진 교체 버튼 |
 | 블록 드래그·크기 조절 | [DiaryBoard.cs](../windows/UI/DiaryBoard.cs), [DiaryLayout.cs](../windows/Core/DiaryLayout.cs) | 마우스 입력과 좌표·크기 계산 |
 | 일기 형식의 제목·질문 | [공통 templates.json](../shared/catalog/templates.json) | category·id로 찾고 수정 후 `python tools/sync-desktop.py` |
-| 일기 형식 100종 선택 화면 | [TemplateGallery.cs](../windows/UI/TemplateGallery.cs), [TemplateOption.cs](../windows/UI/TemplateOption.cs) | 분류·검색·형식 카드·배치 그림 |
+| 일기 형식 20개·블록 추가 화면 | [TemplateGallery.cs](../windows/UI/TemplateGallery.cs), [TemplateOption.cs](../windows/UI/TemplateOption.cs) | 분류·검색·형식 카드·배치 그림·블록 바로 추가 |
 | 코넬·편지·타임라인 등 기본 배치 | [JournalLayouts.cs](../windows/Core/JournalLayouts.cs) | 형식별 블록 위치 계산 |
 | 내 레이아웃 목록·이름·미리보기 | [MyLayoutsWindow.cs](../windows/UI/MyLayoutsWindow.cs), [LayoutNameDialog.cs](../windows/UI/LayoutNameDialog.cs), [SavedLayoutDiagram.cs](../windows/UI/SavedLayoutDiagram.cs) | 저장 목록·이름 입력·배치 그림 |
 | 내 레이아웃 저장·재사용 규칙 | [SavedLayouts.cs](../windows/Core/SavedLayouts.cs) | 캡처·이름 검사·빈 칸으로 적용·병합 |
@@ -57,7 +57,7 @@
 
 ## Android: 갤럭시 앱
 
-[Android 패키지 안내](../app/src/main/java/com/myday/diary/README.md)에 클릭 가능한 전체 파일 표가 있습니다. Android 0.4.0에는 사진·자유 배치·100종 형식·내 레이아웃·성장·장비가 모두 있습니다.
+[Android 패키지 안내](../app/src/main/java/com/myday/diary/README.md)에 클릭 가능한 전체 파일 표가 있습니다. Android에는 사진·자유 배치·20개 형식·내 레이아웃·성장·장비가 모두 있습니다.
 
 | 바꾸고 싶은 것 | 먼저 열 파일 |
 | --- | --- |

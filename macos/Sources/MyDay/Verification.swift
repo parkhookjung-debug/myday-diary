@@ -45,7 +45,7 @@ enum MacVerification {
             entry.blocks[2].text = "배운 내용을 한 문장으로 정리하기."
         }
         try render(DiaryBoard(store: store, startsEditing: true).padding(20), name: "preview-free-layout", width: 880, height: 650)
-        try render(TemplateGallery(store: store), name: "preview-templates", width: 820, height: 650)
+        try render(TemplateGallery(store: store), name: "preview-templates", width: 820, height: 690)
         print("Previews: macos/build/preview*.png")
     }
     static func render<V: View>(_ content: V, name: String, width: CGFloat, height: CGFloat) throws {
@@ -78,6 +78,27 @@ enum MacVerification {
         let reopened = DiaryStore(directory: directory)
         try check(reopened.entry.blocks.first?.text == "맥에서 쓴 하루 다시 작성", "reopen diary")
         try check(reopened.companion.xp == 10 && !reopened.pendingActivity, "reopen growth")
+        let formatDirectory=root.appendingPathComponent("format-persistence")
+        let formatStore=DiaryStore(directory:formatDirectory)
+        let formatTemplate=try TemplateCatalog.load().first(where:{$0.id=="cornell-notes"})!
+        formatStore.applyTemplate(formatTemplate)
+        let formatIDs=Set(formatStore.entry.blocks.map(\.id))
+        let replacementTemplate=try TemplateCatalog.load().first(where:{$0.id != formatTemplate.id})!
+        formatStore.applyTemplate(replacementTemplate)
+        try check(formatStore.entry.blocks.map(\.title)==replacementTemplate.sections.map(\.title),"replace empty saved format")
+        formatStore.select(Calendar.current.date(byAdding:.day,value:1,to:formatStore.date)!)
+        try check(formatStore.entry.blocks.map(\.title)==replacementTemplate.sections.map(\.title) && formatStore.entry.blocks.allSatisfy{$0.text.isEmpty && !$0.checked && $0.photo==nil && $0.videoPath==nil},"saved format on new day")
+        try check(formatIDs.isDisjoint(with:formatStore.entry.blocks.map(\.id)),"saved format independent block ids")
+        let formatReopened=DiaryStore(directory:formatDirectory)
+        formatReopened.select(Calendar.current.date(byAdding:.day,value:2,to:formatReopened.date)!)
+        try check(formatReopened.entry.blocks.map(\.title)==replacementTemplate.sections.map(\.title),"saved format after reopen")
+        var authored=DiaryBlock(kind:.todo,text:"보존할 내용")
+        authored.title="이전 형식"
+        formatReopened.update{$0.blocks=[authored]}
+        let authoredDate=formatReopened.date
+        formatReopened.select(Calendar.current.date(byAdding:.day,value:1,to:authoredDate)!)
+        formatReopened.select(authoredDate)
+        try check(formatReopened.entry.blocks.prefix(replacementTemplate.sections.count).map(\.title)==replacementTemplate.sections.map(\.title) && formatReopened.entry.blocks.contains{$0.text=="보존할 내용"},"fixed format reconciles existing day without data loss")
         reopened.equip(weapon: 2, orb: 3)
         try check(reopened.companion.weapon == 2 && reopened.companion.orb == 3, "independent equipment")
         let backup = MacBackup(days: try reopened.allDays(), companion: reopened.companion)

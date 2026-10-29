@@ -7,7 +7,7 @@
 | 공통 기능 | Windows | Mac | Android |
 |---|---|---|---|
 | 일기·사진·할 일·습관·감정·달력·본문 검색 | ✓ | ✓ | ✓ |
-| 일기 형식 100종·자유 배치·내 레이아웃 | ✓ | ✓ | ✓ |
+| 일기 형식 20개·자유 배치·내 레이아웃 | ✓ | ✓ | ✓ |
 | 같은 상몬 64종·소품 300종·8슬롯 | ✓ | ✓ | ✓ |
 | Lv.100·100/200/300일 성장 패턴·출석 | ✓ | ✓ | ✓ |
 | 등급 뽑기·꽃잎·조각·합성·제작·성취 보상 | ✓ | ✓ | ✓ |
@@ -25,7 +25,7 @@
 | 배경·카드·채팅·강조 색 | `shared/desktop.json`의 `design` |
 | 성장 점수·기간·검증 패턴 | `shared/desktop.json`, Windows `SangmonGrowth.cs`, Android `NotebookRules.kt`, Mac `SharedCompanion.swift` |
 | 뽑기 등급·확률·합성·성취 | `shared/collection.json` |
-| 일기 형식과 질문 100종 | `shared/catalog/templates.json` |
+| 일기 형식과 질문 20개 | `shared/catalog/templates.json` |
 | Windows 화면 | `windows/UI/DiaryWindow.Shell.cs`, `PreferencesWindow.cs`, `CompanionHubWindow.cs` |
 | Mac 화면 | `macos/Sources/MyDay/UnifiedViews.swift`, `SavedLayouts.swift` |
 | Android 화면·햅틱 | `app/src/main/java/com/myday/diary/ui/diary/PhoneNotebookScreen.kt`, `PhoneCompanion.kt`, `PhoneLounge.kt`, `platform/` |

@@ -32,7 +32,7 @@ Windows·Mac·Android용 커스터마이즈 일기 앱입니다. 세 버전에�
 
 **Windows·Mac·Android 채팅 / 현재 로컬 개발:** 일기 앱의 **상몬 라운지 · 채팅**에서 같은 서버에 접속하도록 구현했습니다. [계정 없이 실행·같은 Wi-Fi·무료 배포 차단·수정 파일](docs/FREE-CHAT.md) · [Mac 일기 앱](macos/README.md) · [기존 Python 서버](server/README.md) · [공통 API](docs/CHAT.md). [자동 검사](https://github.com/parkhookjung-debug/myday-diary/actions/runs/39037445085)에서 서버·Windows·Mac 빌드와 실제 앱 통신이 통과했습니다. 해당 화면 아래 **Artifacts**에서 Windows 실행 파일과 Apple Silicon Mac 앱을 받습니다(7일 보관). 무료 계정을 준비하기 전까지 외부 서버는 배포하지 않습니다. Android에도 같은 서버에 접속하는 라운지를 제공합니다.
 
-**세 플랫폼 공통 개발:** [shared/ 원본과 수정 위치](shared/README.md)에서 일기 100종·색상·입력/배치 제한·채팅 제한을 함께 관리합니다. 수정 후 `python tools/sync-desktop.py`를 실행하면 각 앱의 공통 코드가 생성됩니다. [작업 순서·검사](docs/DESKTOP-SHARED.md).
+**세 플랫폼 공통 개발:** [shared/ 원본과 수정 위치](shared/README.md)에서 자주 쓰는 일기 형식 20개·색상·입력/배치 제한·채팅 제한을 함께 관리합니다. 수정 후 `python tools/sync-desktop.py`를 실행하면 각 앱의 공통 코드가 생성됩니다. [작업 순서·검사](docs/DESKTOP-SHARED.md).
 
 **공동 디자인 → Windows:** `ceed3927`의 10월 10일 디자인을 기준으로 큰 제목·상몬 카드·테마 색상 버튼을 적용했습니다. [디자인 원본·반영 기준·수정 파일 안내](docs/DESIGN-SYNC.md)에서 다음 디자인을 어디에 반영하는지 확인합니다.
 
@@ -52,7 +52,7 @@ Windows·Mac·Android용 커스터마이즈 일기 앱입니다. 세 버전에�
 | 블록 이동·크기 조절·자유 배치 | [DiaryBoard.cs](windows/UI/DiaryBoard.cs) | [PhoneFreeBoard.kt](app/src/main/java/com/myday/diary/ui/diary/PhoneFreeBoard.kt) |
 | 사진 회전·압축·용량 제한 | [DiaryPhoto.cs](windows/Core/DiaryPhoto.cs) | [NotebookPhoto.kt](app/src/main/java/com/myday/diary/data/NotebookPhoto.kt) |
 | 달력·일기 검색 화면 | [JournalBrowser.cs](windows/UI/JournalBrowser.cs) | [PhoneCalendar.kt](app/src/main/java/com/myday/diary/ui/diary/PhoneCalendar.kt) |
-| 일기 형식 100종의 제목·질문 | [Windows·Mac 공통 원본](shared/catalog/templates.json) · [생성 도구](tools/sync-desktop.py) | 생성 후 [Android 자산 생성](tools/export-android-assets.ps1) |
+| 일기 형식 20개의 제목·질문 | [Windows·Mac 공통 원본](shared/catalog/templates.json) · [생성 도구](tools/sync-desktop.py) | 생성 후 [Android 자산 생성](tools/export-android-assets.ps1) |
 | 내 레이아웃 목록·이름·미리보기 | [MyLayoutsWindow.cs](windows/UI/MyLayoutsWindow.cs) | [PhoneDialogs.kt](app/src/main/java/com/myday/diary/ui/diary/PhoneDialogs.kt) |
 | 저장·백업 형식·이전 기록 | [DiaryData.cs](windows/Core/DiaryData.cs) | [DiaryStore.kt](app/src/main/java/com/myday/diary/data/DiaryStore.kt) · [NotebookJson.kt](app/src/main/java/com/myday/diary/data/NotebookJson.kt) |
 | 뽑기·클로버·꽃잎·수집 도감 | [SangmonCollection.cs](windows/Core/SangmonCollection.cs) · [CollectionWindow.cs](windows/UI/CollectionWindow.cs) | [CollectionRules.kt](app/src/main/java/com/myday/diary/diary/CollectionRules.kt) · [PhoneCollection.kt](app/src/main/java/com/myday/diary/ui/diary/PhoneCollection.kt) |
@@ -109,9 +109,9 @@ Windows는 C# / Windows Forms이며 [windows/build.ps1](windows/build.ps1)로 �
 
 | 플랫폼 | 구현한 기능 |
 | --- | --- |
-| Windows | 날짜별 글·할 일·습관·감정·사진, 자유 배치, 내 레이아웃 저장·재사용, 일기 형식 100종, 월간 달력·본문/사진 설명 검색, 자동 저장·JSON 백업 |
+| Windows | 날짜별 글·할 일·습관·감정·사진, 자유 배치, 내 레이아웃 저장·재사용, 일기 형식 20개, 월간 달력·본문/사진 설명 검색, 자동 저장·JSON 백업 |
 | Windows 상몬 | 바탕화면 이동·클릭으로 일기 열기·숨기기/재표시, 외형 64종, 출석·활동 미션·성장 보상, 소품 300종의 8슬롯 조합·뽑기 수집 |
-| Android 0.12.0 소스 | Windows와 같은 일기 100종·사진·자유 배치·내 레이아웃·달력·검색·성장·64종·파스텔 소품 300종·등급 뽑기·합성·하루 꾸미기·버전 1~9 JSON 백업, 다섯 탭 화면·햅틱·홈 위젯·라이브 배경화면 |
+| Android 0.12.0 소스 | Windows와 같은 일기 형식 20개·사진·자유 배치·내 레이아웃·달력·검색·성장·64종·파스텔 소품 300종·등급 뽑기·합성·하루 꾸미기·버전 1~9 JSON 백업, 다섯 탭 화면·햅틱·홈 위젯·라이브 배경화면 |
 
 [Android·Windows 기능 비교와 햅틱](docs/ANDROID-PARITY.md), [Android 설치·기존 기록 이전](docs/ANDROID.md)을 확인하세요. 이전 debug APK와 서명이 달라 설치가 막히면 앱 삭제 전에 백업부터 합니다. 각 기기에 기록을 저장하며 플랫폼 사이의 자동 동기화는 없습니다. 영상 첨부와 AI 감정 대화는 후속 기능입니다.
 

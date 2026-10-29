@@ -129,11 +129,11 @@ enum CompatibilityVerification {
         try templatesAndLayout()
         // Leave a synthetic round-trip fixture for the optional Windows serializer check.
         if let path = ProcessInfo.processInfo.environment["MYDAY_COMPAT_EXPORT"] { try output.write(to: URL(fileURLWithPath: path), options: .atomic) }
-        print("Windows v1–v4 / photos / metadata / merge / 100 templates / layout: passed")
+        print("Windows v1–v4 / photos / metadata / merge / 20 templates / layout: passed")
     }
     static func templatesAndLayout() throws {
         let templates = try TemplateCatalog.load()
-        try check(templates.count == 100 && Set(templates.map(\.category)) == Set(TemplateCatalog.categories), "complete template catalog")
+        try check(templates.count == 20 && Set(templates.map(\.category)) == Set(TemplateCatalog.categories), "focused template catalog")
         try check(TemplateCatalog.find(templates, category: "", query: "코넬").contains { $0.id == "cornell-notes" }, "template search")
         for template in templates {
             var page = DiaryEntry()
@@ -152,6 +152,11 @@ enum CompatibilityVerification {
             let decoded = try WindowsCompatibility.decode(exported)
             try check(decoded.days["2024-01-01"]!.blocks.map(\.title) == page.blocks.map(\.title), "template Windows export " + template.id)
         }
+        var videoPage=DiaryEntry();var video=DiaryBlock(kind:.video);video.videoPath="/tmp/MyDay sample.mp4";video.text="산책 영상";videoPage.blocks=[video]
+        let nativeVideo=try JSONDecoder().decode(MacBackup.self,from:JSONEncoder().encode(MacBackup(days:["2024-01-01":videoPage],companion:CompanionProfile())))
+        try nativeVideo.validate();try check(nativeVideo.days["2024-01-01"]?.blocks[0].videoPath==video.videoPath,"native Mac video reference round trip")
+        let portableVideo=try WindowsCompatibility.decode(WindowsCompatibility.encode(nativeVideo))
+        try check(portableVideo.days["2024-01-01"]?.blocks[0].kind == .video && portableVideo.days["2024-01-01"]?.blocks[0].videoPath==video.videoPath && portableVideo.days["2024-01-01"]?.blocks[0].text==video.text,"common backup preserves Mac video reference without embedding media")
         let cornell = DiaryLayout.preset("cornell", count: 3, width: 800)
         try check(cornell == [BlockRect(x: 12, y: 12, width: 300, height: 250), BlockRect(x: 328, y: 12, width: 448, height: 250), BlockRect(x: 12, y: 278, width: 764, height: 200)], "Windows Cornell preset geometry")
         let rect = BlockRect(x: 12, y: 18, width: 340, height: 250)

@@ -18,7 +18,7 @@ extension DiaryStore {
                 let positions = entry.layoutMode == "free" ? entry.blocks.map(DiaryLayout.bounds) : DiaryLayout.autoArrange(entry.blocks, width: 900)
                 let blocks: [JSONValue] = entry.blocks.enumerated().map { index, b in
                     let r = positions[index]
-                    return .object(["Kind": .string(b.kind == .photo ? "photo-slot" : b.kind.rawValue), "Title": b.title.map(JSONValue.string) ?? .null, "Prompt": b.prompt.map(JSONValue.string) ?? .null, "Wide": .bool(b.wide), "X": .number(Double(r.x)), "Y": .number(Double(r.y)), "Width": .number(Double(r.width)), "Height": .number(Double(r.height))])
+                    return .object(["Kind": .string(b.kind == .photo ? "photo-slot" : b.kind == .video ? "text" : b.kind.rawValue), "Title": b.title.map(JSONValue.string) ?? .null, "Prompt": b.prompt.map(JSONValue.string) ?? .null, "Wide": .bool(b.wide), "X": .number(Double(r.x)), "Y": .number(Double(r.y)), "Width": .number(Double(r.width)), "Height": .number(Double(r.height))])
                 }
                 list.append(["Id": .string(UUID().uuidString.lowercased()), "Name": .string(name), "Mode": .string(entry.layoutMode), "Style": .string(entry.pageStyle), "Theme": .number(Double(entry.theme)), "Blocks": .array(blocks)])
             }

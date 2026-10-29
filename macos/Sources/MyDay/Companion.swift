@@ -13,13 +13,13 @@ struct CompanionProfile: Codable {
 
 struct MacBackup: Codable {
     var format = "myday-macos"
-    var version = 2
+    var version = 3
     var days: [String: DiaryEntry]
     var companion: CompanionProfile
     var windowsMetadata: WindowsMetadata?
 
     func validate() throws {
-        guard format == "myday-macos", (1...2).contains(version), days.count <= DesktopContract.maxDays,
+        guard format == "myday-macos", (1...3).contains(version), days.count <= DesktopContract.maxDays,
               (0...7).contains(companion.color), (0...6).contains(companion.weapon),
               (0...6).contains(companion.orb), companion.activityDays.count <= 50_000,
               companion.color <= min(7, companion.level - 1) else { throw CocoaError(.fileReadCorruptFile) }
@@ -34,10 +34,11 @@ struct MacBackup: Codable {
             for block in day.blocks {
                 try WindowsCompatibility.checkBounds(block.x, block.y, block.width, block.height)
                 guard block.text.utf16.count <= DesktopContract.maxTextUtf16, (block.title?.utf16.count ?? 0) <= DesktopContract.maxTitleUtf16, (block.prompt?.utf16.count ?? 0) <= DesktopContract.maxPromptUtf16,
-                      block.photo == nil || block.kind == .photo else { throw CocoaError(.fileReadCorruptFile) }
+                      block.photo == nil || block.kind == .photo, block.videoPath == nil || block.kind == .video else { throw CocoaError(.fileReadCorruptFile) }
                 if let photo = block.photo {
                     guard photo.count <= 10_000_000, NSImage(data: photo) != nil else { throw CocoaError(.fileReadCorruptFile) }
                 }
+                if let path = block.videoPath { try WindowsCompatibility.checkVideoPath(path) }
             }
         }
     }
@@ -126,6 +127,22 @@ extension DiaryStore {
                 if let index = entry.blocks.firstIndex(where: { $0.id == id }) { entry.blocks[index].photo = data; entry.blocks[index].kind = .photo }
             }
         } catch { self.error = "사진을 읽지 못했습니다. 40MB 이하의 이미지로 다시 선택해 주세요." }
+    }
+
+    func chooseVideo(_ id: UUID) {
+        let panel = NSOpenPanel()
+        panel.allowedContentTypes = [.movie, .mpeg4Movie, .quickTimeMovie]
+        panel.allowsMultipleSelection = false
+        guard panel.runModal() == .OK, let url = panel.url else { return }
+        do {
+            let values = try url.resourceValues(forKeys: [.isRegularFileKey, .fileSizeKey])
+            guard values.isRegularFile == true, (values.fileSize ?? 0) <= 2_000_000_000 else { throw CocoaError(.fileReadTooLarge) }
+            let path = url.standardizedFileURL.path
+            try WindowsCompatibility.checkVideoPath(path)
+            update { entry in
+                if let index = entry.blocks.firstIndex(where: { $0.id == id }) { entry.blocks[index].videoPath = path; entry.blocks[index].kind = .video }
+            }
+        } catch { self.error = "영상 파일을 읽지 못했습니다. 2GB 이하의 MP4·MOV 영상을 선택해 주세요." }
     }
 
     func allDays() throws -> [String: DiaryEntry] {

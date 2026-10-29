@@ -32,7 +32,7 @@
 
 ## 공통 그림과 형식 수정
 
-Windows의 [상몬 그림 코드](../../../../../../../windows/Character/README.md), [아이템 목록](../../../../../../../windows/Core/SangmonItems.cs), [100종 형식](../../../../../../../windows/Core/Templates/README.md)이 원본입니다. 수정 후 [export-android-assets.ps1](../../../../../../../tools/export-android-assets.ps1)를 실행하면 Android 자산과 해금 목록이 갱신됩니다. [NotebookCatalog.kt](data/NotebookCatalog.kt)는 생성된 자산 목록을 읽습니다. ID는 기존 기록을 유지하도록 바꾸지 않습니다.
+Windows의 [상몬 그림 코드](../../../../../../../windows/Character/README.md), [아이템 목록](../../../../../../../windows/Core/SangmonItems.cs), [20개 형식](../../../../../../../windows/Core/Templates/README.md)이 원본입니다. 수정 후 [export-android-assets.ps1](../../../../../../../tools/export-android-assets.ps1)를 실행하면 Android 자산과 해금 목록이 갱신됩니다. [NotebookCatalog.kt](data/NotebookCatalog.kt)는 생성된 자산 목록을 읽습니다. ID는 기존 기록을 유지하도록 바꾸지 않습니다.
 
 ## 검증·기존 파일
 

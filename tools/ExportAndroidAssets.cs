@@ -87,6 +87,6 @@ public static class AndroidAssetExporter
         SangmonCollection.Migrate(fixture);DiaryStore.Validate(fixture);
         using(var output=File.Create(Path.Combine(resourcePath,"windows-v7.json")))new System.Runtime.Serialization.Json.DataContractJsonSerializer(typeof(DiaryBook)).WriteObject(output,fixture);
         File.Copy(Path.Combine(resourcePath,"windows-v7.json"),Path.Combine(deviceResources,"windows-v7.json"),true);
-        Console.WriteLine("Exported "+(itemsOnly?"existing Sangmon atlases unchanged, ":"64 Sangmon atlases, ")+items.Length+" items/overlays and 100 templates.");return 0;
+        Console.WriteLine("Exported "+(itemsOnly?"existing Sangmon atlases unchanged, ":"64 Sangmon atlases, ")+items.Length+" items/overlays and "+DiaryTemplates.All.Length+" templates.");return 0;
     }
 }

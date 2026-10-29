@@ -57,6 +57,11 @@ enum WindowsCompatibility {
             throw fail("Windows 사진은 긴 변 1,600픽셀 이하, 2MB 이하의 JPEG여야 합니다.")
         }
     }
+    static func checkVideoPath(_ path: String) throws {
+        guard !path.isEmpty, path.utf16.count <= 4096, path.hasPrefix("/"), path.rangeOfCharacter(from: .controlCharacters) == nil else {
+            throw fail("영상 파일 경로가 올바르지 않습니다.")
+        }
+    }
     static func awardedDays(_ fields: [String: JSONValue]) throws -> Set<String> {
         guard let progress = fields["Progress"], progress != .null else { return [] }
         guard let object = progress.object, let array = object["AwardedDays"]?.array, array.count <= 50_000 else { throw fail("성장 기록이 올바르지 않습니다.") }
@@ -129,10 +134,15 @@ enum WindowsCompatibility {
             day.windowsFields = remainder(object, excluding: ["Theme", "Mood", "Blocks", "LayoutMode", "PageStyle"])
             var ids = Set<String>()
             for value in blocks {
-                guard let fields = value.object, let kind = fields["Kind"]?.string.flatMap(BlockKind.init(rawValue:)) else { throw fail("알 수 없는 Windows 블록입니다.") }
+                guard let fields = value.object, let kind = fields["Kind"]?.string.flatMap(BlockKind.init(rawValue:)), kind != .video else { throw fail("알 수 없는 Windows 블록입니다.") }
                 let windowsID = try string(fields["Id"])
                 guard !windowsID.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty, ids.insert(windowsID).inserted else { throw fail("블록 ID가 비어 있거나 중복됩니다.") }
                 var block = DiaryBlock(kind: kind, text: try string(fields["Text"]), checked: try boolean(fields["Checked"]))
+                if let path = try optionalString(fields["MacVideoPath"]) {
+                    guard kind == .text else { throw fail("Mac 영상 블록 형식이 올바르지 않습니다.") }
+                    try checkVideoPath(path); block.kind = .video; block.videoPath = path
+                    block.text = try optionalString(fields["MacVideoText"]) ?? block.text
+                }
                 block.windowsID = windowsID
                 block.id = UUID() // Windows IDs can be arbitrary strings; keep them separately without UUID collisions.
                 block.title = try optionalString(fields["Title"])
@@ -150,7 +160,7 @@ enum WindowsCompatibility {
                     block.photo = data
                     photoCharacters += encoded.utf16.count
                 } else if let photo = fields["Photo"], photo != .null { throw fail("사진 데이터는 사진 블록에만 넣을 수 있습니다.") }
-                block.windowsFields = remainder(fields, excluding: ["Id", "Kind", "Text", "Checked", "Title", "Prompt", "Wide", "X", "Y", "Width", "Height", "Photo"])
+                block.windowsFields = remainder(fields, excluding: ["Id", "Kind", "Text", "Checked", "Title", "Prompt", "Wide", "X", "Y", "Width", "Height", "Photo", "MacVideoPath", "MacVideoText"])
                 day.blocks.append(block)
             }
             guard photoCharacters <= 64 * 1024 * 1024 else { throw fail("전체 사진 용량이 Windows 제한을 초과했습니다.") }
@@ -206,8 +216,15 @@ enum WindowsCompatibility {
                 let id = block.windowsID ?? block.id.uuidString.replacingOccurrences(of: "-", with: "").lowercased()
                 guard !id.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty, ids.insert(id).inserted else { throw fail("Windows 블록 ID가 중복됩니다.") }
                 fields["Id"] = .string(id)
-                fields["Kind"] = .string(block.kind == .photo && block.photo == nil ? "photo-slot" : block.kind.rawValue)
-                fields["Text"] = .string(block.text); fields["Checked"] = .bool(block.checked)
+                fields["Kind"] = .string(block.kind == .video ? "text" : block.kind == .photo && block.photo == nil ? "photo-slot" : block.kind.rawValue)
+                if block.kind == .video, let path = block.videoPath {
+                    try checkVideoPath(path)
+                    fields["Text"] = .string(block.text.isEmpty ? "Mac 영상: \(URL(fileURLWithPath:path).lastPathComponent) · 원본 파일은 이 Mac에 있습니다." : block.text)
+                    fields["MacVideoPath"] = .string(path); fields["MacVideoText"] = .string(block.text)
+                } else {
+                    fields["Text"] = .string(block.text); fields.removeValue(forKey:"MacVideoPath"); fields.removeValue(forKey:"MacVideoText")
+                }
+                fields["Checked"] = .bool(block.checked)
                 fields["Wide"] = .bool(block.wide)
                 fields["X"] = .number(Double(block.x)); fields["Y"] = .number(Double(block.y))
                 fields["Width"] = .number(Double(block.width)); fields["Height"] = .number(Double(block.height))

@@ -15,7 +15,7 @@ shared/fixtures/layout.json ──────┘         ├─ Windows C# 생�
 
 ## 이번에 함께 관리하는 기능
 
-- 기존 이름·ID·순서·질문을 유지한 일기 100종, 10개 분류, 8개 배치의 표시 이름.
+- 반복해서 쓰기 좋은 일기 형식 20개, 10개 분류, 8개 배치의 표시 이름.
 - 배경 세 색, 글자·보조 글자·강조·종이·사이드바·채팅 말풍선 색상. 글꼴·창 크기·네이티브 입력 조작은 OS 화면 코드에서 관리합니다.
 - 한 날짜의 블록 수, 본문·제목·질문의 UTF-16 길이, 저장 좌표·최소/최대 크기·기본 높이.
 - 채팅 메시지·페이지·참여자·응답 크기 제한. 실제 HTTP 전송·취소와 OS 입력 화면은 각각 유지합니다. 서버에 일기·사진을 자동 전송하지 않습니다.
@@ -36,7 +36,7 @@ shared/fixtures/layout.json ──────┘         ├─ Windows C# 생�
 
 `python -m unittest discover -s tools -p test_sync_desktop.py -v`는 한 질문을 바꾸면 두 앱에 반영되는지, 생성 파일 직접 수정·중복 ID·잘못된 배치·UTF-16 길이를 검사합니다.
 
-Windows `MyDay.exe --desktop-contract 파일.json`과 Mac `MyDay --desktop-contract 파일.json`은 실제로 앱이 읽은 100종의 모든 필드·질문, 좌표 계산 결과, 제한과 색상을 내보냅니다. 개인 일기 대신 공통 테스트 자료만 사용합니다.
+Windows `MyDay.exe --desktop-contract 파일.json`과 Mac `MyDay --desktop-contract 파일.json`은 실제로 앱이 읽은 20개 형식의 모든 필드·질문, 좌표 계산 결과, 제한과 색상을 내보냅니다. 개인 일기 대신 공통 테스트 자료만 사용합니다.
 
 ```sh
 python tools/compare-desktop.py windows-report.json mac-report.json

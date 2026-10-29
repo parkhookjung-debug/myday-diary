@@ -31,10 +31,15 @@ import com.myday.diary.diary.NotebookController
             topLeft=androidx.compose.ui.geometry.Offset(it.x*scale,it.y*scale),size=androidx.compose.ui.geometry.Size(it.width*scale,it.height*scale),cornerRadius=androidx.compose.ui.geometry.CornerRadius(6f))}
     }
 }
-@Composable fun TemplatePicker(catalog: NotebookCatalog,onApply: (DiaryTemplate)->Unit,onDismiss: ()->Unit,error: String?=null) {
+@OptIn(ExperimentalLayoutApi::class)
+@Composable fun TemplatePicker(catalog: NotebookCatalog,onApply: (DiaryTemplate)->Unit,onAddBlock: (String)->Unit,onDismiss: ()->Unit,error: String?=null) {
     var query by remember {mutableStateOf("")};var selected by remember {mutableStateOf<DiaryTemplate?>(null)}
     val keyboard=LocalSoftwareKeyboardController.current
-    PhoneFullDialog("일기 형식 100종",onDismiss,error) {
+    PhoneFullDialog("일기 형식 · 블록 추가",onDismiss,error) {
+        Text("블록 바로 추가",Modifier.padding(horizontal=16.dp,vertical=8.dp),style=MaterialTheme.typography.titleMedium)
+        FlowRow(Modifier.fillMaxWidth().padding(horizontal=16.dp),horizontalArrangement=Arrangement.spacedBy(8.dp)) {
+            listOf("text" to "글","todo" to "할 일","habit" to "습관","emotion" to "감정","photo" to "사진").forEach {(kind,title)->OutlinedButton({onAddBlock(kind)}) {Text("＋ $title")}}
+        }
         OutlinedTextField(query,{query=it},label={Text("분야·이름·질문 검색")},modifier=Modifier.fillMaxWidth().padding(16.dp),singleLine=true)
         selected?.let {template->Card(Modifier.fillMaxWidth().padding(horizontal=16.dp)) {LazyColumn(Modifier.heightIn(max=330.dp).padding(16.dp)) {
             item {Text(template.name,style=MaterialTheme.typography.titleLarge);Text(template.description);LayoutDiagram(template.blocks)}

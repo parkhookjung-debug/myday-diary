@@ -47,6 +47,12 @@ private final class DeviceDownload:NSObject,URLSessionDataDelegate,URLSessionTas
     }
 }
 
+private final class DeviceStartGate: @unchecked Sendable {
+    private let lock=NSLock()
+    private var resumed=false
+    func claim()->Bool {lock.lock();defer{lock.unlock()};guard !resumed else{return false};resumed=true;return true}
+}
+
 final class MacDeviceLink {
     private let listener:NWListener
     private let queue=DispatchQueue(label:"MyDay.device-link")
@@ -74,11 +80,11 @@ final class MacDeviceLink {
     }
     func start()async throws->String {
         try await withCheckedThrowingContinuation{continuation in
-            var resumed=false
+            let gate=DeviceStartGate()
             listener.stateUpdateHandler = {[weak self]state in guard let self else{return};switch state {
-                case .ready:if !resumed{resumed=true;let port=self.listener.port!.rawValue;self.lock.lock();self.origin="http://\(self.host):\(port)";self.lock.unlock();continuation.resume(returning:self.invitation)}
-                case .failed(let error):if !resumed{resumed=true;continuation.resume(throwing:error)};self.close()
-                case .cancelled:if !resumed{resumed=true;continuation.resume(throwing:CancellationError())}
+                case .ready:if gate.claim(){let port=self.listener.port!.rawValue;self.lock.lock();self.origin="http://\(self.host):\(port)";self.lock.unlock();continuation.resume(returning:self.invitation)}
+                case .failed(let error):if gate.claim(){continuation.resume(throwing:error)};self.close()
+                case .cancelled:if gate.claim(){continuation.resume(throwing:CancellationError())}
                 default:break
             }}
             listener.start(queue:queue)

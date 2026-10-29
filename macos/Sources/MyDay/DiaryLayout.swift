@@ -11,7 +11,7 @@ struct BlockRect: Equatable {
 enum DiaryLayout {
     static func clamp(_ value: Int, _ lower: Int, _ upper: Int) -> Int { min(upper, max(lower, value)) }
     static func defaultHeight(_ block: DiaryBlock) -> Int {
-        block.kind == .photo || block.kind == .photoSlot ? DesktopContract.photoHeight : block.kind == .emotion ? DesktopContract.emotionHeight : DesktopContract.textHeight
+        block.kind == .photo || block.kind == .photoSlot || block.kind == .video ? DesktopContract.photoHeight : block.kind == .emotion ? DesktopContract.emotionHeight : DesktopContract.textHeight
     }
     static func bounds(_ block: DiaryBlock) -> BlockRect {
         BlockRect(x: block.x, y: block.y, width: block.width > 0 ? block.width : DesktopContract.defaultWidth, height: block.height > 0 ? block.height : defaultHeight(block))
@@ -88,7 +88,7 @@ enum DiaryLayout {
         }
     }
     static func apply(_ template: JournalTemplate, to entry: inout DiaryEntry, width: Int) throws {
-        let fresh = entry.blocks.isEmpty || (entry.blocks.count == 1 && entry.layoutMode == "cards" && entry.blocks[0].kind == .text && entry.blocks[0].text.isEmpty && !entry.blocks[0].checked && entry.blocks[0].title == nil && entry.blocks[0].prompt == nil && entry.blocks[0].photo == nil && entry.blocks[0].width == 0)
+        let fresh = entry.blocks.isEmpty || (entry.blocks.count<DesktopContract.maxBlocks && entry.blocks.allSatisfy{$0.text.trimmingCharacters(in:.whitespacesAndNewlines).isEmpty && !$0.checked && $0.photo==nil && $0.videoPath==nil})
         let original = fresh ? [] : entry.blocks
         guard original.count + template.sections.count <= DesktopContract.maxBlocks else { throw WindowsCompatibility.fail("한 날짜에 최대 \(DesktopContract.maxBlocks)개 블록을 추가할 수 있습니다.") }
         let positions = preset(template.layout, count: template.sections.count, width: width)
@@ -128,12 +128,16 @@ extension DiaryStore {
     }
     func addBlock(_ kind: BlockKind) {
         var next = entry
-        do { try DiaryLayout.append(DiaryBlock(kind: kind), to: &next); update { $0 = next } }
+        do { try DiaryLayout.append(DiaryBlock(kind: kind), to: &next); update { $0 = next };if error==nil{rememberCurrentFormat()} }
         catch { self.error = error.localizedDescription }
     }
     func applyTemplate(_ template: JournalTemplate, width: Int = 800) {
-        var next = entry
-        do { try DiaryLayout.apply(template, to: &next, width: width); update { $0 = next } }
+        do {
+            rememberTemplate(template,width:width)
+            guard error==nil,let preset=try savedFormat()else{return}
+            let next=try preset.applying(to:entry)
+            update{$0=next}
+        }
         catch { self.error = error.localizedDescription }
     }
 }

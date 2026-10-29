@@ -2,7 +2,7 @@ import SwiftUI
 import AppKit
 
 enum BlockKind: String, Codable, CaseIterable {
-    case text, todo, habit, emotion, photo
+    case text, todo, habit, emotion, photo, video
     case photoSlot = "photo-slot"
     var title: String {
         switch self {
@@ -11,6 +11,7 @@ enum BlockKind: String, Codable, CaseIterable {
         case .habit: return "🌱 습관 체크"
         case .emotion: return "💬 감정처리반"
         case .photo, .photoSlot: return "📷 사진"
+        case .video: return "🎬 영상"
         }
     }
 }
@@ -53,11 +54,13 @@ final class DiaryStore: ObservableObject {
         do {
             let url = file(for: date)
             if !FileManager.default.fileExists(atPath:url.path),FileManager.default.fileExists(atPath:url.appendingPathExtension("previous").path){throw CocoaError(.fileReadNoSuchFile)}
-            entry = FileManager.default.fileExists(atPath: url.path)
-                ? try JSONDecoder().decode(DiaryEntry.self, from: Data(contentsOf: url)) : DiaryEntry()
+            let exists=FileManager.default.fileExists(atPath:url.path)
+            let stored=exists ? try JSONDecoder().decode(DiaryEntry.self,from:Data(contentsOf:url)) : DiaryEntry()
+            entry = try savedFormat()?.applying(to:stored) ?? stored
             try MacBackup(days: ["2000-01-01": entry], companion: CompanionProfile()).validate()
             loaded = true
             error = nil
+            if exists,try savedFormat()==nil,!entry.blocks.isEmpty{rememberCurrentFormat()}
         } catch {
             loaded = false
             self.error = "기록을 읽지 못했습니다. 기존 파일을 확인한 뒤 다시 불러와 주세요. \(error.localizedDescription)"
@@ -164,7 +167,7 @@ struct MyDayApp: App {
         .commands {
             CommandGroup(after: .newItem) {
                 Button("기록 검색") { store.showingSearch = true }.keyboardShortcut("f")
-                Button("일기 형식 100종") { store.showingTemplates = true }
+                Button("일기 형식 · 블록 추가") { store.showingTemplates = true }
                 Button("Windows 백업 내보내기…") { store.exportWindowsBackup() }
                 Button("기록 백업…") { store.exportBackup() }.keyboardShortcut("e", modifiers: [.command, .shift])
                 Button("맥·Windows 백업 가져오기…") { store.importBackup() }

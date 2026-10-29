@@ -9,7 +9,7 @@
 | 자유 배치·확대·화면 이동·크기 조절 | [PhoneFreeBoard.kt](PhoneFreeBoard.kt) |
 | 달력·전체 본문/사진 설명 검색 | [PhoneCalendar.kt](PhoneCalendar.kt) |
 | 상몬 64종·성장·장비 12종 화면 | [PhoneCompanion.kt](PhoneCompanion.kt) |
-| 일기 100종·내 레이아웃·이름 입력 창 | [PhoneDialogs.kt](PhoneDialogs.kt) |
+| 일기 형식 20개·블록 추가·내 레이아웃·이름 입력 창 | [PhoneDialogs.kt](PhoneDialogs.kt) |
 | 사진 선택·백업·화면과 기능 연결 | [PhoneNotebookRoute.kt](PhoneNotebookRoute.kt) |
 | 공통 Material 색·글꼴 | [MyDayTheme.kt](../design/MyDayTheme.kt) · [DiaryTypography.kt](../design/DiaryTypography.kt) |
 

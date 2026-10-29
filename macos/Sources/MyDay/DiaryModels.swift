@@ -39,6 +39,7 @@ struct DiaryBlock: Identifiable, Codable {
     var text = ""
     var checked = false
     var photo: Data?
+    var videoPath: String?
     var title: String?
     var prompt: String?
     var wide = false
@@ -51,7 +52,7 @@ struct DiaryBlock: Identifiable, Codable {
     init(kind: BlockKind, text: String = "", checked: Bool = false) {
         self.kind = kind; self.text = text; self.checked = checked
     }
-    enum CodingKeys: String, CodingKey { case id, kind, text, checked, photo, title, prompt, wide, x, y, width, height, windowsID, windowsFields }
+    enum CodingKeys: String, CodingKey { case id, kind, text, checked, photo, videoPath, title, prompt, wide, x, y, width, height, windowsID, windowsFields }
     init(from decoder: Decoder) throws {
         let c = try decoder.container(keyedBy: CodingKeys.self)
         id = try c.decode(UUID.self, forKey: .id)
@@ -59,6 +60,7 @@ struct DiaryBlock: Identifiable, Codable {
         text = try c.decode(String.self, forKey: .text)
         checked = try c.decode(Bool.self, forKey: .checked)
         photo = try c.decodeIfPresent(Data.self, forKey: .photo)
+        videoPath = try c.decodeIfPresent(String.self, forKey: .videoPath)
         title = try c.decodeIfPresent(String.self, forKey: .title)
         prompt = try c.decodeIfPresent(String.self, forKey: .prompt)
         wide = try c.decodeIfPresent(Bool.self, forKey: .wide) ?? false

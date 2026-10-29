@@ -4,7 +4,7 @@ Windows·Mac의 일기 이름·질문·설명은 [shared/catalog/templates.json]
 
 | 바꿀 내용 | 파일 |
 | --- | --- |
-| 전체 100종·분야별 질문 | [공통 templates.json](../../../shared/catalog/templates.json)의 category·id로 찾기 |
+| 전체 20개·분야별 질문 | [공통 templates.json](../../../shared/catalog/templates.json)의 category·id로 찾기 |
 | 분류 이름·배치 이름·참고 링크 | [shared/desktop.json](../../../shared/desktop.json) |
 | 원본 생성·검사 | [sync-desktop.py](../../../tools/sync-desktop.py) |
 | Windows 블록 적용 | [DiaryTemplates.cs](../DiaryTemplates.cs) |

@@ -140,7 +140,7 @@ class PhoneNotebookDeviceTest {
         ui.onNodeWithTag("diary-list").performScrollToNode(hasTestTag("free-block-text"))
         ui.onNodeWithTag("free-block-text").performTouchInput {down(center);advanceEventTime(650);moveBy(Offset(50f,60f));advanceEventTime(30);up()}
         ui.runOnIdle {assertTrue(c.entry.blocks.first().x>12);assertEquals("예시 기록",c.entry.blocks.first().text)};screenshot("android-free-layout")
-        ui.onNodeWithTag("diary-list").performScrollToNode(hasText("일기 형식 100종"));ui.onNodeWithText("일기 형식 100종").performClick()
+        ui.onNodeWithTag("diary-list").performScrollToNode(hasText("일기 형식 · 블록 추가"));ui.onNodeWithText("일기 형식 · 블록 추가").performClick()
         ui.onNodeWithText("분야·이름·질문 검색").performTextInput("코넬")
         val template=catalog.templates.first {it.layout=="cornell"}
         ui.onNodeWithText(template.name).performClick();screenshot("android-templates")

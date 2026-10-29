@@ -97,13 +97,11 @@ namespace MyDay.Windows.UI
             arrangeLayout.Click+=delegate { board.CancelPlacement(); DiaryLayout.ArrangeFree(entry,board.LogicalWidth); QueueSave(); ArrangeCards(); };
             layoutHint.ForeColor=Design.Muted; layoutHint.Font=Design.Font(8); layoutHint.Margin=Design.Pad(2,9,0,0);
             editLayout.Width=Design.P(72); arrangeLayout.Width=Design.P(72); templates.Width=Design.P(84); myLayouts.Width=Design.P(92);
-            templates.Click+=delegate { using(var gallery=new TemplateGallery()) if(gallery.ShowDialog(this)==DialogResult.OK) ApplyTemplate(gallery.SelectedTemplate); };
+            templates.Click+=delegate { using(var gallery=new TemplateGallery()) if(gallery.ShowDialog(this)==DialogResult.OK) { if(gallery.SelectedBlockKind!=null) AddBlock(gallery.SelectedBlockKind); else ApplyTemplate(gallery.SelectedTemplate); } };
             myLayouts.Click+=delegate { ManageLayouts(); };
             layoutBar.Controls.AddRange(new Control[] {layoutLabel,layoutChoice,editLayout,arrangeLayout,templates,myLayouts,layoutHint}); grid.Controls.Add(layoutBar,0,2);
             layoutBar.Resize+=delegate { layoutHint.Visible=layoutBar.ClientSize.Width>=Design.P(740); };
             var toolbar=new FlowLayoutPanel { Dock=DockStyle.Fill, WrapContents=true, Padding=Design.Pad(0,14,0,0) };
-            string[] kinds={"text","todo","habit","emotion","photo"}; string[] names={"＋ 글 일기","＋ 할 일","＋ 습관","＋ 감정","＋ 사진"};
-            for(int i=0;i<kinds.Length;i++) { string kind=kinds[i]; var add=Design.Button(names[i],i==0); add.Width=Design.P(88); add.Click+=delegate { if(kind=="photo") SelectPhoto(null); else AddBlock(kind); }; toolbar.Controls.Add(add); }
             summary.Margin=Design.Pad(4,9,0,0); summary.ForeColor=Design.Muted; toolbar.Controls.Add(summary); grid.Controls.Add(toolbar,0,4);
             toolbar.Resize+=delegate { summary.Visible=toolbar.ClientSize.Width>=Design.P(630); };
             grid.Controls.Add(board,0,3); content.Controls.Add(grid); Controls.Add(content); Controls.Add(companion); Controls.Add(side);
@@ -255,7 +253,7 @@ namespace MyDay.Windows.UI
                 if(card.Photo!=null){card.Photo.Cursor=Cursors.Hand;card.Photo.DoubleClick+=delegate{DecoratePhoto(item);};}
                 card.SetEditing(editingLayout,entry.LayoutMode=="free"); board.AddCard(card);
             }
-            if(entry.Blocks.Count==0) { var empty=Design.Label("빈 페이지예요. 아래에서 원하는 블록을 추가해보세요.",11); empty.Margin=Design.Pad(20); board.Controls.Add(empty); }
+            if(entry.Blocks.Count==0) { var empty=Design.Label("빈 페이지예요. 일기 형식에서 형식이나 블록을 골라보세요.",11); empty.Margin=Design.Pad(20); board.Controls.Add(empty); }
             board.ResumeLayout(false); ArrangeCards(); UpdateSummary();
         }
         private void ArrangeCards()

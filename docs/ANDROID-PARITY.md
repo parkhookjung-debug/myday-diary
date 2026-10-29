@@ -5,7 +5,7 @@
 | 기능 | Windows | Android |
 | --- | --- | --- |
 | 글·할 일·습관·감정·사진 | 블록 카드 | 블록 카드·시스템 사진 선택기 |
-| 일기 형식 | 100종·8가지 배치 | 같은 100종·같은 좌표와 질문 |
+| 일기 형식 | 20개·8가지 배치 | 같은 20개·같은 좌표와 질문 |
 | 자유 배치·크기 | 마우스 드래그 | 길게 잡기·↘ 크기 조절·확대·화면 이동 |
 | 내 레이아웃 | 최대 50개·관리·재사용 | 같은 규칙·빈 칸으로 재사용 |
 | 달력·전체 본문 검색 | 별도 창 | 달력 탭·사진 설명 포함 |
@@ -37,7 +37,7 @@ Android의 라이브 배경화면은 다른 앱 위에 떠 있는 오버레이�
 
 ## 공동 작업과 데이터
 
-그림·64종 ID·해금 레벨·아이템·100종 질문은 Windows 코드가 원본입니다. Windows에서 고친 뒤 `./tools/export-android-assets.ps1`를 실행하면 Android의 `assets/catalog.json`, `assets/sangmon`, `assets/portraits`, `assets/items`, `SangmonIdentity.kt`, 상호 호환성 검사 자료가 갱신됩니다. 목록은 작은 정지 썸네일을, 상몬 미리보기와 배경화면은 동작 프레임을 사용합니다. 생성 자산을 직접 수정하면 다음 생성 때 덮어써집니다.
+그림·64종 ID·해금 레벨·아이템·20개 형식 질문은 Windows 코드가 원본입니다. Windows에서 고친 뒤 `./tools/export-android-assets.ps1`를 실행하면 Android의 `assets/catalog.json`, `assets/sangmon`, `assets/portraits`, `assets/items`, `SangmonIdentity.kt`, 상호 호환성 검사 자료가 갱신됩니다. 목록은 작은 정지 썸네일을, 상몬 미리보기와 배경화면은 동작 프레임을 사용합니다. 생성 자산을 직접 수정하면 다음 생성 때 덮어써집니다.
 
 Android 좌표는 Windows와 같은 논리 단위입니다. 저장 백업은 Windows의 대문자 필드와 Key/Value 날짜 배열을 사용하며 Android 햅틱 설정은 추가 필드입니다. Windows는 추가 필드를 무시합니다. 가져오기는 같은 날짜를 백업 내용으로 교체하고 성장 날짜를 중복 없이 합칩니다. 장비 없는 이전 백업은 현재 장비를 유지합니다. 가져오기 전 확인 창을 제공합니다.
 

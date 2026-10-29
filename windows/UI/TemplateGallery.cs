@@ -16,18 +16,24 @@ namespace MyDay.Windows.UI
         private readonly Label count=Design.Label("",8);
         private readonly Button add=Design.Button("이 형식 추가",true);
         public JournalTemplate SelectedTemplate { get; private set; }
+        public string SelectedBlockKind { get; private set; }
         public TemplateGallery()
         {
-            Text="MyDay · 일기 형식 100종"; Font=Design.Font(9); BackColor=Design.Backgrounds[0];
+            Text="MyDay · 일기 형식과 블록 추가"; Font=Design.Font(9); BackColor=Design.Backgrounds[0];
             AutoScaleMode=AutoScaleMode.None; StartPosition=FormStartPosition.CenterParent;
             var work=Screen.PrimaryScreen.WorkingArea;
             Size=new Size(Math.Min(Design.P(980),work.Width-32),Math.Min(Design.P(730),work.Height-32));
             MinimumSize=new Size(Math.Min(Design.P(800),work.Width-32),Math.Min(Design.P(610),work.Height-32));
             MaximizeBox=false; MinimizeBox=false;
-            var header=new Panel { Dock=DockStyle.Top, Height=Design.P(144), BackColor=Color.White };
+            var header=new Panel { Dock=DockStyle.Top, Height=Design.P(190), BackColor=Color.White };
             var title=Design.Label("나에게 맞는 일기를 찾아보세요",18,true); title.Location=Design.Point(24,16); header.Controls.Add(title);
-            var intro=Design.Label("100가지 형식 · 10개 분야 · 질문과 배치를 미리보고 골라요.",9); intro.ForeColor=Design.Muted; intro.Location=Design.Point(25,56); header.Controls.Add(intro);
-            var filters=new FlowLayoutPanel { Location=Design.Point(24,94), Height=Design.P(36), Width=Design.P(800), WrapContents=false };
+            var intro=Design.Label("자주 쓰는 20가지 형식과 필요한 블록을 한곳에서 골라요.",9); intro.ForeColor=Design.Muted; intro.Location=Design.Point(25,56); header.Controls.Add(intro);
+            var quick=new FlowLayoutPanel { Location=Design.Point(24,86), Height=Design.P(38), Width=Design.P(800), WrapContents=false };
+            var quickLabel=Design.Label("블록 바로 추가",9,true); quickLabel.Margin=Design.Pad(0,8,12,0); quick.Controls.Add(quickLabel);
+            string[] kinds={"text","todo","habit","emotion","photo"}; string[] names={"＋ 글","＋ 할 일","＋ 습관","＋ 감정","＋ 사진"};
+            for(int i=0;i<kinds.Length;i++) { string kind=kinds[i]; var button=Design.Button(names[i]); button.Width=Design.P(76); button.Click+=delegate { SelectedBlockKind=kind; SelectedTemplate=null; DialogResult=DialogResult.OK; Close(); }; quick.Controls.Add(button); }
+            header.Controls.Add(quick);
+            var filters=new FlowLayoutPanel { Location=Design.Point(24,136), Height=Design.P(36), Width=Design.P(800), WrapContents=false };
             category.Items.Add("전체 분야"); category.Items.AddRange(TemplateCatalog.CategoryNames.Cast<object>()); category.SelectedIndex=0; category.AccessibleName="일기 형식 분야";
             category.Margin=Design.Pad(0,0,12,0); category.Height=Design.P(34);
             var searchBox=new CardPanel { Size=Design.Size(300,34), Fill=Design.Backgrounds[1], Margin=Design.Pad(0,0,6,0) };
@@ -104,14 +110,14 @@ namespace MyDay.Windows.UI
         }
         internal void VerifyAndRender(string path)
         {
-            if(list.Controls.OfType<TemplateOption>().Count()!=100) throw new Exception("Gallery did not load all 100 formats");
+            if(list.Controls.OfType<TemplateOption>().Count()!=DesktopContract.TemplateCount) throw new Exception("Gallery did not load the focused formats");
             foreach(var button in list.Controls.OfType<TemplateOption>()) {
                 button.PerformClick();
                 if(SelectedTemplate!=button.Template || preview.Controls.OfType<CardPanel>().Count()!=SelectedTemplate.Sections.Length)
                     throw new Exception("Template selection did not update preview");
             }
             for(int i=1;i<=TemplateCatalog.Categories.Length;i++) { category.SelectedIndex=i;
-                if(list.Controls.OfType<TemplateOption>().Count()!=10 || list.Controls.OfType<TemplateOption>().Any(b=>b.Template.Category!=TemplateCatalog.Categories[i-1])) throw new Exception("Category filter mixed formats"); }
+                if(list.Controls.OfType<TemplateOption>().Count()!=2 || list.Controls.OfType<TemplateOption>().Any(b=>b.Template.Category!=TemplateCatalog.Categories[i-1])) throw new Exception("Category filter mixed formats"); }
             category.SelectedIndex=0; search.Text="코넬";
             if(!list.Controls.OfType<TemplateOption>().Any() || list.Controls.OfType<TemplateOption>().Any(b=>!DiaryTemplates.Find(null,"코넬").Contains(b.Template))) throw new Exception("Search missed format metadata");
             category.SelectedIndex=1;
