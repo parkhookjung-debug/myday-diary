@@ -7,6 +7,8 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
@@ -43,10 +45,15 @@ import com.myday.diary.diary.NotebookController
         }
         OutlinedTextField(query,{query=it},label={Text("분야·이름·질문 검색")},modifier=Modifier.fillMaxWidth().padding(16.dp),singleLine=true)
         Row(Modifier.padding(horizontal=16.dp),horizontalArrangement=Arrangement.spacedBy(8.dp)){FilterChip(featuredOnly,{featuredOnly=true},label={Text("추천 20종")});FilterChip(!featuredOnly,{featuredOnly=false},label={Text("전체 100종")})}
-        selected?.let {template->Card(Modifier.fillMaxWidth().padding(horizontal=16.dp)) {LazyColumn(Modifier.heightIn(max=330.dp).padding(16.dp)) {
-            item {Text(template.name,style=MaterialTheme.typography.titleLarge);Text(template.description);LayoutDiagram(template.blocks)}
-            items(template.blocks) {Text("${it.title} · ${it.prompt}",style=MaterialTheme.typography.bodySmall)}
-            item {Button({onApply(template)},modifier=Modifier.fillMaxWidth()) {Text("이 형식으로 기록하기")}}
+        selected?.let {template->Card(Modifier.fillMaxWidth().padding(horizontal=16.dp)) {Column(Modifier.padding(12.dp)) {
+            Row(Modifier.fillMaxWidth(),verticalAlignment=Alignment.CenterVertically,horizontalArrangement=Arrangement.spacedBy(8.dp)) {
+                Text(template.name,Modifier.weight(1f),style=MaterialTheme.typography.titleMedium)
+                Button({onApply(template)},modifier=Modifier.testTag("apply-template")) {Text("이 형식으로 기록하기")}
+            }
+            LazyColumn(Modifier.heightIn(max=200.dp)) {
+                item {Text(template.description);LayoutDiagram(template.blocks)}
+                items(template.blocks) {Text("${it.title} · ${it.prompt}",style=MaterialTheme.typography.bodySmall)}
+            }
         }}}
         LazyColumn(Modifier.weight(1f).padding(horizontal=16.dp),verticalArrangement=Arrangement.spacedBy(8.dp),contentPadding=PaddingValues(bottom=24.dp)) {
             items(catalog.templates.filter {(!featuredOnly || it.id in catalog.featuredTemplateIds) && (query.isBlank() || "${it.categoryName} ${it.layoutName} ${it.name} ${it.description} ${it.blocks.joinToString {b->b.prompt}}".contains(query,true))},key={it.id}) {template->Card(Modifier.fillMaxWidth().clickable {selected=template;keyboard?.hide()},colors=CardDefaults.cardColors(containerColor=Color.White)) {

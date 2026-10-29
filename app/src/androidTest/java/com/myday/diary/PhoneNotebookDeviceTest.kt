@@ -62,7 +62,7 @@ class PhoneNotebookDeviceTest {
         File(folder,"$name.png").outputStream().use {image.compress(Bitmap.CompressFormat.PNG,100,it)};image.recycle()
     }
     @Test fun commonNavigationAndLoungeValidateBeforeNetwork() {
-        start();ui.onNodeWithTag("nav-3").performClick()
+        start();ui.onNodeWithTag("nav-3").performClick();ui.onNodeWithText("채팅 라운지").performClick()
         ui.onNodeWithTag("chat-address").performTextInput("http://example.org/")
         ui.onNodeWithTag("chat-nickname").performTextInput("상몬친구")
         ui.onNodeWithTag("chat-code").performTextInput("local-test-only")
@@ -154,7 +154,7 @@ class PhoneNotebookDeviceTest {
         ui.onNodeWithText("분야·이름·질문 검색").performTextInput("코넬")
         val template=catalog.templates.first {it.layout=="cornell"}
         ui.onNodeWithText(template.name).performClick();screenshot("android-templates")
-        ui.onNodeWithText("이 형식으로 기록하기").performScrollTo().performClick()
+        ui.onNodeWithTag("apply-template").assertIsDisplayed().performClick()
         ui.runOnIdle {assertEquals(3+template.blocks.size,c.entry.blocks.size);assertEquals("예시 기록",c.entry.blocks.first().text)}
         ui.onNodeWithTag("diary-list").performScrollToNode(hasText("내 레이아웃"));ui.onNodeWithText("내 레이아웃").performClick();ui.onNodeWithText("현재 배치 저장").performClick()
         ui.onNodeWithText("이름 (1~40자)").performTextInput("휴대폰 배치");ui.onNodeWithText("저장",substring=false).performClick();screenshot("android-my-layouts")

@@ -61,7 +61,7 @@ import java.time.LocalDate
             TextButton({attempt(TactileEvent.SELECT) {controller.selectDate(LocalDate.now());tab=0}},enabled=controller.saved && !busy) {Text("오늘로 ↗")}
         }}},
         bottomBar={NavigationBar(containerColor=AppPalette.sidebar) {AppShell.titles.forEachIndexed {i,title->
-            NavigationBarItem(modifier=Modifier.testTag("nav-$i"),selected=tab==i,onClick={tab=i;haptics.perform(TactileEvent.SELECT)},icon={Text(AppShell.symbols[i])},label={Text(if(i==3) "친구" else title,maxLines=1)})
+            NavigationBarItem(modifier=Modifier.testTag("nav-$i"),selected=tab==i,onClick={tab=i;haptics.perform(TactileEvent.SELECT)},icon={Text(AppShell.symbols[i])},label={Text(title,maxLines=1)})
         }}},
         floatingActionButton={}) {padding->
         Column(Modifier.fillMaxSize().padding(padding).imePadding()) {
