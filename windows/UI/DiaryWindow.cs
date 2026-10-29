@@ -21,7 +21,7 @@ namespace MyDay.Windows.UI
         private readonly DiaryBoard board;
         private readonly ChoiceButton layoutChoice=Design.Choice(86);
         private readonly ChoiceButton pageStyle=Design.Choice(86);
-        private readonly Button templates=Design.Button("일기 형식",true);
+        private readonly Button templates=Design.Button("형식 · 블록 추가",true);
         private readonly Button myLayouts=Design.Button("내 레이아웃");
         private readonly Button browse=Design.Button("달력 · 일기 검색");
         private readonly Button growth=Design.Button("상몬 성장");
@@ -63,7 +63,7 @@ namespace MyDay.Windows.UI
             var grid=new TableLayoutPanel { Dock=DockStyle.Fill, ColumnCount=1, RowCount=5, Margin=Design.Pad(0), BackColor=Color.Transparent };
             grid.RowStyles.Add(new RowStyle(SizeType.Absolute,Design.P(174))); grid.RowStyles.Add(new RowStyle(SizeType.Absolute,Design.P(44)));
             grid.RowStyles.Add(new RowStyle(SizeType.Absolute,Design.P(76)));
-            grid.RowStyles.Add(new RowStyle(SizeType.Percent,100)); grid.RowStyles.Add(new RowStyle(SizeType.Absolute,Design.P(86)));
+            grid.RowStyles.Add(new RowStyle(SizeType.Percent,100)); grid.RowStyles.Add(new RowStyle(SizeType.Absolute,Design.P(38)));
             var header=new JournalCover { Dock=DockStyle.Fill, Margin=Design.Pad(0,0,0,12) }; dayTitle.Location=Design.Point(8,34); dayTitle.ForeColor=Design.Accent; header.Controls.Add(dayTitle);
             var eyebrow=Design.Label("A LITTLE SPACE FOR YOUR DAY",8,true); eyebrow.ForeColor=Design.Accent; eyebrow.Location=Design.Point(8,8); header.Controls.Add(eyebrow);
             var greeting=Design.Label(AppShell.Greeting,22); greeting.Font=Design.DisplayFont(22); greeting.AutoSize=false; greeting.AutoEllipsis=true; greeting.Location=Design.Point(6,58); greeting.Height=Design.P(38); header.Controls.Add(greeting);
@@ -83,7 +83,10 @@ namespace MyDay.Windows.UI
             pageStyle.Items.AddRange(new object[] {"노트","카드","도트"}); pageStyle.AccessibleName="일기 종이 스타일";
             pageStyle.Margin=Design.Pad(12,0,0,0);
             pageStyle.SelectedIndexChanged+=delegate { if(!binding) { entry.PageStyle=new[] {"paper","plain","dots"}[pageStyle.SelectedIndex]; QueueSave(); RenderCards(); } };
-            appearance.Controls.AddRange(new Control[] { moodLabel,mood,pageStyle }); grid.Controls.Add(appearance,0,1);
+            var moodFaces=new MoodStrip(); moodFaces.SelectedMood=entry==null ? "평온해요" : entry.Mood;
+            moodFaces.Changed+=delegate(string value){mood.SelectedIndex=mood.Items.IndexOf(value);};
+            mood.SelectedIndexChanged+=delegate{moodFaces.SelectedMood=(string)mood.SelectedItem;};
+            appearance.Controls.AddRange(new Control[] { moodLabel,moodFaces,pageStyle }); grid.Controls.Add(appearance,0,1);
             var layoutBar=new FlowLayoutPanel { Dock=DockStyle.Fill,WrapContents=true,Padding=Design.Pad(0,5,0,0) };
             var layoutLabel=Design.Label("배치",9); layoutLabel.Margin=Design.Pad(0,7,10,0);
             layoutChoice.Items.AddRange(new object[] {"자동 정렬","자유 배치"}); layoutChoice.AccessibleName="일기 블록 배치 방식";
@@ -96,7 +99,7 @@ namespace MyDay.Windows.UI
             };
             arrangeLayout.Click+=delegate { board.CancelPlacement(); DiaryLayout.ArrangeFree(entry,board.LogicalWidth); QueueSave(); ArrangeCards(); };
             layoutHint.ForeColor=Design.Muted; layoutHint.Font=Design.Font(8); layoutHint.Margin=Design.Pad(2,9,0,0);
-            editLayout.Width=Design.P(72); arrangeLayout.Width=Design.P(72); templates.Width=Design.P(84); myLayouts.Width=Design.P(92);
+            editLayout.Width=Design.P(72); arrangeLayout.Width=Design.P(72); templates.Width=Design.P(132); myLayouts.Width=Design.P(92);
             templates.Click+=delegate { using(var gallery=new TemplateGallery()) if(gallery.ShowDialog(this)==DialogResult.OK) { if(gallery.SelectedBlockKind!=null) AddBlock(gallery.SelectedBlockKind); else ApplyTemplate(gallery.SelectedTemplate); } };
             myLayouts.Click+=delegate { ManageLayouts(); };
             layoutBar.Controls.AddRange(new Control[] {layoutLabel,layoutChoice,editLayout,arrangeLayout,templates,myLayouts,layoutHint}); grid.Controls.Add(layoutBar,0,2);
@@ -563,6 +566,7 @@ namespace MyDay.Windows.UI
                 gallery.StartPosition=FormStartPosition.Manual; gallery.Location=new Point(-30000,-30000); gallery.Show(); Application.DoEvents();
                 gallery.VerifyAndRender(Path.Combine(Path.GetDirectoryName(destination),"windows-journal-templates.png"));
             }
+            using(var photoGallery=new TemplateGallery()){photoGallery.StartPosition=FormStartPosition.Manual;photoGallery.Location=new Point(-30000,-30000);photoGallery.Show();Application.DoEvents();photoGallery.VerifyQuickPhotoForTest();}
             ChangeDate(date.AddDays(1)); ApplyTemplate(DiaryTemplates.All[1]);
             if(entry.Blocks.Count!=3) throw new Exception("Fresh page retained a redundant empty starter when selecting format");
             entry.Blocks[0].Text="오랜만에 창문을 열고,\r\n좋아하는 음악을 들으며 하루를 시작했다.";
@@ -613,7 +617,7 @@ namespace MyDay.Windows.UI
             board.AutoScrollPosition=Point.Empty; PerformLayout(); Update();
             using(var image=new Bitmap(Width,Height)) { DrawToBitmap(image,new Rectangle(Point.Empty,Size)); image.Save(Path.Combine(Path.GetDirectoryName(destination),"windows-photos.png"),System.Drawing.Imaging.ImageFormat.Png); }
             Size fullSize=Size; Size=MinimumSize; PerformLayout(); Application.DoEvents();
-            var photoButton=AllControls(this).OfType<Button>().First(b=>b.Text=="＋ 사진");
+            var photoButton=templates;
             if(photoButton.Right>photoButton.Parent.ClientSize.Width || !photoButton.Visible) throw new Exception("Photo action clipped at minimum window width");
             DiaryLayout.SetBounds(photo,new Rectangle(12,12,300,180)); RenderCards(); photoCard=board.Controls.OfType<BlockCard>().First(c=>c.Block==photo);
             if(photoCard.Photo.Bottom>=photoCard.Editor.Top || photoCard.Editor.Bottom>photoCard.ReplacePhoto.Top) throw new Exception("Small photo card overlaps caption or action");

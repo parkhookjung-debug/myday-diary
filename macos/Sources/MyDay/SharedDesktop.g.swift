@@ -2,7 +2,7 @@
 import SwiftUI
 
 enum DesktopContract {
-    static let sourceDigest="ebbff8eb779488796cee6ba1febea842ca543a801a4504f535e14d32a4f47ebd"
+    static let sourceDigest="4994d0a72c6c4e400c8ebd71ba8a6c1591e37e27991cf2072870baff48dc2f94"
     static let maxDays=50000
     static let maxBlocks=200
     static let maxTextUtf16=100000
@@ -34,9 +34,10 @@ enum DesktopContract {
     static let growthMaxXP=3590
     static let growthAttendanceWeekXP=10
     static let growthDailyActivityXP=40
-    static let templateCount=20
+    static let templateCount=100
     static let blockKinds=["text","todo","habit","emotion","photo","photo-slot"]
     static let pageStyles=["plain","paper","dots"]
+    static let featuredTemplateIds=["free","one-line","reflection","weekly-review","gratitude","three-thanks","mood-check","worry-sort","cornell-notes","study-log","bullet","daily-plan","habit-log","sleep-log","letter","future-letter","brainstorm","dream-log","travel-day","year-end"]
     static let categories=["daily","reflection","gratitude","emotions","learning","planning","wellbeing","relationships","creativity","memories"]
     static let categoryNames=["일상 기록","회고·성장","감사·행복","마음 정리","학습·독서","목표·계획","생활·루틴","관계·편지","창작·취향","여행·추억"]
     static let layoutIds=["page","cards","split","timeline","letter","dashboard","cornell","compare"]

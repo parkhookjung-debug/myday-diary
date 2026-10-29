@@ -4,14 +4,40 @@
   "repository": "parkhookjung-debug/myday-diary",
   "designer": "ceed3927",
   "sourceDate": "2026-10-10",
-  "reviewedOn": "2026-10-19",
+  "reviewedOn": "2026-10-29",
   "sources": [
-    {"branch": "codex/share-web-design", "commit": "bc0aae0adad4b4403773fced46a27a9cde130683"},
-    {"branch": "codex/macos-and-web-preview", "commit": "fdf89561bebd5cbb8a5358fa9f8d9ce0488dfafa", "pullRequest": 8}
+    {
+      "branch": "codex/share-web-design",
+      "commit": "bc0aae0adad4b4403773fced46a27a9cde130683"
+    },
+    {
+      "branch": "codex/macos-and-web-preview",
+      "commit": "fdf89561bebd5cbb8a5358fa9f8d9ce0488dfafa",
+      "pullRequest": 8
+    },
+    {
+      "branch": "codex/windows-app",
+      "commit": "546d15474ce586cf34155442ff4d12ef5118f386",
+      "kind": "designer-direct-push"
+    }
   ],
   "reviewedFiles": [
-    {"path": "web/desktop.css", "gitBlob": "71be43b555e53daf1b6e090ef48ccd89e7f73a50"},
-    {"path": "web/index.html", "gitBlob": "4e0b96319b7d257e61c802fc789e092d08818f06"}
+    {
+      "path": "web/desktop.css",
+      "gitBlob": "71be43b555e53daf1b6e090ef48ccd89e7f73a50"
+    },
+    {
+      "path": "web/index.html",
+      "gitBlob": "4e0b96319b7d257e61c802fc789e092d08818f06"
+    },
+    {
+      "path": "macos/Sources/MyDay/UnifiedViews.swift",
+      "gitBlob": "f8e27ce0aa8940f5ca5667265d45ef5f0c81b07d"
+    },
+    {
+      "path": "macos/Sources/MyDay/MoodStickers.swift",
+      "gitBlob": "5e32e3bc40257b06d3df62433ac1a029c7f3d921"
+    }
   ],
   "windowsTargets": [
     "shared/desktop.json",
@@ -19,8 +45,16 @@
     "windows/UI/DiaryWindow.cs",
     "windows/UI/DiaryWindow.Shell.cs",
     "windows/UI/ThemePicker.cs",
-    "windows/UI/MonsterView.cs"
+    "windows/UI/MonsterView.cs",
+    "windows/UI/MoodStrip.cs",
+    "windows/UI/TemplateGallery.cs"
   ],
   "scope": "Native Windows adaptation of the shared web design; native controls and existing app features retained.",
-  "guide": "docs/DESIGN-SYNC.md"
+  "guide": "docs/DESIGN-SYNC.md",
+  "latestAdaptation": {
+    "sourceCommit": "546d15474ce586cf34155442ff4d12ef5118f386",
+    "guide": "docs/INTEGRATION-2026-10-29.md",
+    "preservedTemplateCount": 100,
+    "featuredTemplateCount": 20
+  }
 }

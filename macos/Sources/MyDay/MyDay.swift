@@ -56,11 +56,10 @@ final class DiaryStore: ObservableObject {
             if !FileManager.default.fileExists(atPath:url.path),FileManager.default.fileExists(atPath:url.appendingPathExtension("previous").path){throw CocoaError(.fileReadNoSuchFile)}
             let exists=FileManager.default.fileExists(atPath:url.path)
             let stored=exists ? try JSONDecoder().decode(DiaryEntry.self,from:Data(contentsOf:url)) : DiaryEntry()
-            entry = try savedFormat()?.applying(to:stored) ?? stored
+            entry = exists ? stored : (try savedFormat()?.makeEntry() ?? stored)
             try MacBackup(days: ["2000-01-01": entry], companion: CompanionProfile()).validate()
             loaded = true
             error = nil
-            if exists,try savedFormat()==nil,!entry.blocks.isEmpty{rememberCurrentFormat()}
         } catch {
             loaded = false
             self.error = "기록을 읽지 못했습니다. 기존 파일을 확인한 뒤 다시 불러와 주세요. \(error.localizedDescription)"

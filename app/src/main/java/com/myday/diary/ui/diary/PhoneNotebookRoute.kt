@@ -44,6 +44,20 @@ import kotlinx.coroutines.*
             haptics.perform(if(controller.saved || controller.saving) TactileEvent.CHECK else TactileEvent.REJECT)
         } catch(e: Exception) {failed(e)} finally {busy=false}
     }}
+    val photos=rememberLauncherForActivityResult(ActivityResultContracts.PickMultipleVisualMedia(10)) {uris->if(uris.isNotEmpty() && controller!=null) scope.launch {
+        busy=true
+        try {
+            require(uris.size<=10) {"사진은 한 번에 10장까지 선택해 주세요."}
+            val data=withContext(Dispatchers.IO) {uris.map {NotebookPhoto.read(context,it)}}
+            require(controller.date.toString()==photoDate) {"사진을 선택하던 날짜가 바뀌었어요. 원하는 날짜에서 다시 선택해 주세요."}
+            require(controller.saved) {"먼저 일기 저장이 끝난 뒤 사진을 추가해 주세요."}
+            val next=NotebookRules.append(controller.entry,data.map {DiaryBlock(type="photo",photo=it,height=360)})
+            val candidate=controller.book.copy(days=controller.book.days+(photoDate to next))
+            withContext(Dispatchers.IO) {NotebookRules.validate(candidate);NotebookPhoto.validate(candidate)}
+            controller.edit(next,true)
+            haptics.perform(TactileEvent.CHECK)
+        } catch(e: Exception) {if(e is CancellationException)throw e;failed(e)} finally {busy=false}
+    }}
     val export=rememberLauncherForActivityResult(ActivityResultContracts.CreateDocument("application/json")) {uri->if(uri!=null && controller!=null) scope.launch {
         busy=true
         try {require(controller.saved);val snapshot=controller.book
@@ -64,7 +78,7 @@ import kotlinx.coroutines.*
             if(model.loadError==null) CircularProgressIndicator() else Column {Text("기록을 읽지 못했어요. 기존 저장본을 바꾸지 않았어요.");Text(model.loadError!!);Button(model::reload) {Text("다시 읽기")};if(model.recoveryAvailable)OutlinedButton({recovering=true}){Text("직전 저장본으로 복구")}}
         } else {
             PhoneNotebookScreen(controller,catalog,haptics,home,busy,
-                onPhoto={id->if(controller.saved) {photoId=id;photoDate=controller.date.toString();photo.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))} else controller.report("먼저 일기를 다시 저장해 주세요.")},
+                onPhoto={id->if(controller.saved && !busy) {photoId=id;photoDate=controller.date.toString();val request=PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly);if(id==null) photos.launch(request) else photo.launch(request)} else controller.report("먼저 일기를 다시 저장해 주세요.")},
                 onExport={if(controller.saved) export.launch("myday-${controller.date}.json") else controller.report("먼저 일기를 다시 저장해 주세요.")},
                 onImport={if(controller.saved) import.launch(arrayOf("application/json","text/plain","application/octet-stream")) else controller.report("먼저 일기를 다시 저장해 주세요.")})
         }

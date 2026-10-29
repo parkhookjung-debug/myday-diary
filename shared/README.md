@@ -10,7 +10,7 @@
 | 메뉴 이름·인사말 | [app-shell.json](app-shell.json), 메뉴 추가·재배치는 네이티브 연결도 함께 수정 |
 | 앱 버전·복구 및 자동 백업 한도·상몬 응원 문구 | [journal-tools.json](journal-tools.json) → `python tools/sync-journal.py`, [기록 도구](../docs/JOURNAL-TOOLS.md) |
 | 세 앱의 Wi-Fi 연결 브라우저 화면 | [device-link.html](device-link.html) → `python tools/sync-device-link.py`, [연결·앨범·백업 안내](../docs/DEVICE-ALBUM-BACKUP.md) |
-| 자주 쓰는 일기 형식 20개의 이름·질문·설명·배치 | [catalog/templates.json](catalog/templates.json) |
+| 일기 형식 100종의 이름·질문·설명·배치 | [catalog/templates.json](catalog/templates.json) |
 | 분류 이름·배치 이름·참고 링크 | [desktop.json](desktop.json)의 categories·layouts·references |
 | 공통 색상·종이·배경·채팅 말풍선 | [desktop.json](desktop.json)의 design |
 | 블록 수·본문·제목·질문 길이·좌표·크기 | [desktop.json](desktop.json)의 limits |

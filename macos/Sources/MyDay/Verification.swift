@@ -83,12 +83,15 @@ enum MacVerification {
         let formatTemplate=try TemplateCatalog.load().first(where:{$0.id=="cornell-notes"})!
         formatStore.applyTemplate(formatTemplate)
         let formatIDs=Set(formatStore.entry.blocks.map(\.id))
+        let originalDate=formatStore.date
         let replacementTemplate=try TemplateCatalog.load().first(where:{$0.id != formatTemplate.id})!
         formatStore.applyTemplate(replacementTemplate)
-        try check(formatStore.entry.blocks.map(\.title)==replacementTemplate.sections.map(\.title),"replace empty saved format")
+        try check(formatStore.entry.blocks.count==formatTemplate.sections.count+replacementTemplate.sections.count && formatIDs.isSubset(of:Set(formatStore.entry.blocks.map(\.id))),"applying format preserves existing empty custom blocks")
         formatStore.select(Calendar.current.date(byAdding:.day,value:1,to:formatStore.date)!)
         try check(formatStore.entry.blocks.map(\.title)==replacementTemplate.sections.map(\.title) && formatStore.entry.blocks.allSatisfy{$0.text.isEmpty && !$0.checked && $0.photo==nil && $0.videoPath==nil},"saved format on new day")
         try check(formatIDs.isDisjoint(with:formatStore.entry.blocks.map(\.id)),"saved format independent block ids")
+        formatStore.select(originalDate)
+        try check(formatIDs.isSubset(of:Set(formatStore.entry.blocks.map(\.id))),"old date preserves block IDs when a default format exists")
         let formatReopened=DiaryStore(directory:formatDirectory)
         formatReopened.select(Calendar.current.date(byAdding:.day,value:2,to:formatReopened.date)!)
         try check(formatReopened.entry.blocks.map(\.title)==replacementTemplate.sections.map(\.title),"saved format after reopen")
@@ -98,7 +101,7 @@ enum MacVerification {
         let authoredDate=formatReopened.date
         formatReopened.select(Calendar.current.date(byAdding:.day,value:1,to:authoredDate)!)
         formatReopened.select(authoredDate)
-        try check(formatReopened.entry.blocks.prefix(replacementTemplate.sections.count).map(\.title)==replacementTemplate.sections.map(\.title) && formatReopened.entry.blocks.contains{$0.text=="보존할 내용"},"fixed format reconciles existing day without data loss")
+        try check(formatReopened.entry.blocks.count==1 && formatReopened.entry.blocks[0].id==authored.id && formatReopened.entry.blocks[0].text=="보존할 내용","existing date never receives default layout blocks")
         reopened.equip(weapon: 2, orb: 3)
         try check(reopened.companion.weapon == 2 && reopened.companion.orb == 3, "independent equipment")
         let backup = MacBackup(days: try reopened.allDays(), companion: reopened.companion)

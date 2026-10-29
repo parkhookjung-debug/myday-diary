@@ -88,7 +88,7 @@ enum DiaryLayout {
         }
     }
     static func apply(_ template: JournalTemplate, to entry: inout DiaryEntry, width: Int) throws {
-        let fresh = entry.blocks.isEmpty || (entry.blocks.count<DesktopContract.maxBlocks && entry.blocks.allSatisfy{$0.text.trimmingCharacters(in:.whitespacesAndNewlines).isEmpty && !$0.checked && $0.photo==nil && $0.videoPath==nil})
+        let fresh = entry.blocks.isEmpty || (entry.blocks.count == 1 && entry.layoutMode == "cards" && entry.blocks[0].kind == .text && entry.blocks[0].text.isEmpty && !entry.blocks[0].checked && entry.blocks[0].title == nil && entry.blocks[0].prompt == nil && entry.blocks[0].photo == nil && entry.blocks[0].width == 0)
         let original = fresh ? [] : entry.blocks
         guard original.count + template.sections.count <= DesktopContract.maxBlocks else { throw WindowsCompatibility.fail("한 날짜에 최대 \(DesktopContract.maxBlocks)개 블록을 추가할 수 있습니다.") }
         let positions = preset(template.layout, count: template.sections.count, width: width)
@@ -133,10 +133,10 @@ extension DiaryStore {
     }
     func applyTemplate(_ template: JournalTemplate, width: Int = 800) {
         do {
-            rememberTemplate(template,width:width)
-            guard error==nil,let preset=try savedFormat()else{return}
-            let next=try preset.applying(to:entry)
+            var next=entry
+            try DiaryLayout.apply(template,to:&next,width:width)
             update{$0=next}
+            if error==nil{rememberTemplate(template,width:width)}
         }
         catch { self.error = error.localizedDescription }
     }

@@ -56,7 +56,7 @@ struct TemplateGallery: View {
     private var results: [JournalTemplate] {
         guard category != "basic" else{return []}
         let found=TemplateCatalog.find(templates,category:TemplateCatalog.categories.contains(category) ? category : "",query:query)
-        return category == "favorites" ? found.filter{favoriteSet.contains($0.id)} : found
+        return category == "favorites" ? found.filter{favoriteSet.contains($0.id)} : category == "featured" ? found.filter{DesktopContract.featuredTemplateIds.contains($0.id)} : found
     }
     private var blockResults:[BlockKind] {let q=query.trimmingCharacters(in:.whitespacesAndNewlines);return basicBlocks.filter{q.isEmpty || ($0.title+" "+blockDescription($0)).localizedCaseInsensitiveContains(q)}}
     private func favoriteKey(_ kind:BlockKind)->String{"block:\(kind.rawValue)"}
@@ -93,7 +93,7 @@ struct TemplateGallery: View {
                 Picker("분류", selection: $category) {
                     Text("기본").tag("basic")
                     Text("즐겨찾기").tag("favorites")
-                    Text("모든 레이아웃").tag("")
+                    Text("추천 20종").tag("featured");Text("전체 100종").tag("")
                     ForEach(TemplateCatalog.categories, id: \.self) { Text(TemplateCatalog.categoryName($0)).tag($0) }
                 }.frame(width: 250)
                 TextField(category=="basic" ? "블록 검색" : category=="favorites" ? "블록·레이아웃 검색" : "레이아웃·질문 검색", text: $query).textFieldStyle(.roundedBorder)

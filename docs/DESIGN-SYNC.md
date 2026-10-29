@@ -2,6 +2,10 @@
 
 디자인 기준은 `ceed3927`이 2026-10-10에 올린 [공통 웹 디자인](https://github.com/parkhookjung-debug/myday-diary/tree/codex/share-web-design/web)과 [PR #8](https://github.com/parkhookjung-debug/myday-diary/pull/8)입니다. 두 브랜치의 `web/index.html`, `web/desktop.css`는 검토 시점에 같은 내용입니다. 작성·반영 기준 커밋과 파일 해시는 [design-source.json](../shared/design-source.json)에 기록합니다.
 
+## 2026년 10월 29일 추가 반영
+
+`ceed3927`의 직접 푸시 `546d154`를 검토해 형식·블록 추가 화면을 통합하고 `MoodStickers.swift`의 다섯 표정을 Windows 기본 컨트롤에 맞춰 옮겼습니다. 기존 100종 목록은 유지하며 디자이너의 20종을 공통 추천 목록으로 제공합니다. [통합 기준과 수정 파일](INTEGRATION-2026-10-29.md).
+
 ## 현재 Windows 반영 내용
 
 기존의 크림·올리브 색과 3단 구성을 유지하면서 웹 원본의 큰 명조 제목, 별도 날짜 표시, 선택된 다이어리 메뉴, 연한 올리브 상몬 카드·원형 배경·작은 별, 올리브 완료 막대, 세 가지 테마 색상 버튼과 하단 문구를 적용했습니다. 캐릭터는 기존 상몬을 사용하며 성장·옷장·채팅·사진·자유 배치도 같은 창에서 사용합니다. 좁은 창에서는 오른쪽 영역을 왼쪽 스크롤 영역으로 옮깁니다.

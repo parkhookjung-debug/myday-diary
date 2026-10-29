@@ -1,6 +1,7 @@
 package com.myday.diary.ui.diary
 
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material3.*
@@ -11,6 +12,9 @@ import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.res.painterResource
+import com.myday.diary.R
 import com.myday.diary.data.*
 import com.myday.diary.diary.*
 import com.myday.diary.platform.*
@@ -33,6 +37,7 @@ import java.time.LocalDate
     var studio by remember {mutableStateOf(false)}
     var tab by rememberSaveable {mutableIntStateOf(0)}
     var journalTools by remember {mutableStateOf(false)}
+    var sharing by remember {mutableStateOf(false)}
     var templates by remember {mutableStateOf(false)}
     var layouts by remember {mutableStateOf(false)}
     var editing by rememberSaveable {mutableStateOf(false)}
@@ -49,11 +54,14 @@ import java.time.LocalDate
     LaunchedEffect(date) {opening=null;deleting=null;editing=false}
     Scaffold(modifier=Modifier.pointerInput(Unit){awaitPointerEventScope{while(true){awaitPointerEvent();privacy.touch()}}},containerColor=AppPalette.backgrounds[entry.theme],
         topBar={Surface(color=Color(0xfff7f5f0)) {Row(Modifier.fillMaxWidth().statusBarsPadding().padding(horizontal=20.dp,vertical=12.dp),horizontalArrangement=Arrangement.SpaceBetween) {
-            Column {Text(AppShell.brand,style=MaterialTheme.typography.titleLarge,color=AppPalette.olive);Text(AppShell.tagline,style=MaterialTheme.typography.labelSmall)}
+            Row(verticalAlignment=Alignment.CenterVertically,horizontalArrangement=Arrangement.spacedBy(8.dp)) {
+                Image(painterResource(R.drawable.puppy_icon),"마이데이의 강아지 친구",Modifier.size(42.dp))
+                Column {Text(AppShell.brand,style=MaterialTheme.typography.titleLarge,color=AppPalette.olive);Text(AppShell.tagline,style=MaterialTheme.typography.labelSmall)}
+            }
             TextButton({attempt(TactileEvent.SELECT) {controller.selectDate(LocalDate.now());tab=0}},enabled=controller.saved && !busy) {Text("오늘로 ↗")}
         }}},
         bottomBar={NavigationBar(containerColor=AppPalette.sidebar) {AppShell.titles.forEachIndexed {i,title->
-            NavigationBarItem(modifier=Modifier.testTag("nav-$i"),selected=tab==i,onClick={tab=i;haptics.perform(TactileEvent.SELECT)},icon={Text(AppShell.symbols[i])},label={Text(title,maxLines=1)})
+            NavigationBarItem(modifier=Modifier.testTag("nav-$i"),selected=tab==i,onClick={tab=i;haptics.perform(TactileEvent.SELECT)},icon={Text(AppShell.symbols[i])},label={Text(if(i==3) "친구" else title,maxLines=1)})
         }}},
         floatingActionButton={}) {padding->
         Column(Modifier.fillMaxSize().padding(padding).imePadding()) {
@@ -82,6 +90,8 @@ import java.time.LocalDate
                         AssistChip(modifier=Modifier.testTag("add-block"),onClick={templates=true},label={Text("일기 형식 · 블록 추가")})
                         AssistChip(onClick={layouts=true},label={Text("내 레이아웃")})
                         AssistChip(onClick={studio=true},label={Text("하루 꾸미기")})
+                        AssistChip(onClick={onPhoto(null)},enabled=controller.saved && !busy,label={Text("사진 여러 장 추가")})
+                        AssistChip(onClick={sharing=true},enabled=controller.saved && !busy,label={Text("친구에게 공개")})
                     }}
                     item {Card(colors=CardDefaults.cardColors(containerColor=AppPalette.friendCard)) {Column(Modifier.padding(14.dp)) {
                         Text("YOUR LITTLE FRIEND",style=MaterialTheme.typography.labelSmall)
@@ -112,7 +122,7 @@ import java.time.LocalDate
                 }
                 1->PhoneCalendar(controller.book,date) {next->attempt(TactileEvent.SELECT) {controller.selectDate(next);if(controller.saved) tab=0}}
                 2->PhoneCompanion(controller,catalog,haptics,attempt)
-                3->PhoneLounge()
+                3->PhoneCommunity(controller)
                 else->LazyColumn(Modifier.fillMaxSize().padding(horizontal=20.dp),verticalArrangement=Arrangement.spacedBy(14.dp),contentPadding=PaddingValues(top=14.dp,bottom=24.dp)) {
                     item {OutlinedButton({welcome=true},Modifier.fillMaxWidth().testTag("guide-open")){Text("처음 시작하기 · 사용 안내")}}
                     item {Button({studio=true},modifier=Modifier.fillMaxWidth()) {Text("하루 꾸미기 · 사진 / 방 / 태그 / 잠금")}}
@@ -144,6 +154,7 @@ import java.time.LocalDate
     })
     if(studio)PhoneStudio(controller,haptics,privacy,onClose={studio=false},onOpen={day->controller.selectDate(day);if(controller.saved){studio=false;tab=0}})
     if(journalTools) PhoneJournalTools(controller,onExport,onDismiss={journalTools=false},onOpenDay={day->controller.clearError();controller.selectDate(day);if(controller.saved&&controller.error==null){journalTools=false;tab=0}})
+    if(sharing) PhoneShareDiary(controller.date,controller.entry,onDismiss={sharing=false})
     if(templates) TemplatePicker(catalog,onApply={template->attempt(TactileEvent.DROP) {controller.applyTemplate(template)};if(controller.error==null) templates=false},onAddBlock={kind->if(kind=="photo") onPhoto(null) else attempt(TactileEvent.SELECT) {controller.add(kind)};if(controller.error==null) templates=false},onDismiss={templates=false},error=controller.error)
     if(layouts) SavedLayoutPicker(controller,onApply={layout->attempt(TactileEvent.DROP) {controller.applyLayout(layout)};if(controller.error==null) layouts=false},onSave={nameFor=null;naming=true},onRename={nameFor=it;naming=true},onDelete={id->attempt(TactileEvent.DROP) {controller.deleteLayout(id)}},onDismiss={layouts=false})
     if(naming) NameDialog(if(nameFor==null) "현재 배치 저장" else "레이아웃 이름 변경",nameFor?.name ?: "",onSave={name->attempt(TactileEvent.CHECK) {if(nameFor==null) controller.saveLayout(name) else controller.renameLayout(nameFor!!.id,name)};if(controller.error==null) naming=false},onDismiss={naming=false},error=controller.error)

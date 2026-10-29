@@ -38,6 +38,16 @@ class PhoneNotebookDeviceTest {
                 if(id==null) c.edit(NotebookRules.append(c.entry,listOf(DiaryBlock(type="photo",photo=data,height=360))),true)
                 else c.updateBlock(c.entry.blocks.first {it.id==id}.copy(type="photo",photo=data))},onExport={},onImport={})}}
     }
+    @Test fun offlineFriendPreviewKeepsLocalLoungeAvailable() {
+        start()
+        ui.onNodeWithTag("nav-3").performClick()
+        ui.onNodeWithText("친구 일기 공유 미리보기").assertExists()
+        ui.onNodeWithText("카카오로 로그인").assertDoesNotExist()
+        screenshot("android-offline-friends")
+        ui.onNodeWithText("채팅 라운지").performClick()
+        ui.onNodeWithText("서버 주소").assertExists()
+    }
+
     @Test fun sharedGuideOpensNavigatesAndStartsWriting() {
         start();ui.onNodeWithTag("nav-4").performClick();ui.onNodeWithTag("guide-open").performScrollTo().performClick()
         ui.onNodeWithTag("guide-tab-2").performClick();ui.onNodeWithTag("guide-tab-2").assertIsSelected();screenshot("android-welcome-rewards")
@@ -117,7 +127,7 @@ class PhoneNotebookDeviceTest {
         ui.onNodeWithTag("diary-list").performScrollToNode(hasText("예시 기록"))
         ui.onNodeWithText("예시 기록").performTextReplacement("휴대폰에서 쓴 기록")
         ui.runOnIdle {assertEquals("휴대폰에서 쓴 기록",c.book.days.getValue(day.toString()).blocks.first().text);assertEquals(10,NotebookRules.xp(c.book))}
-        ui.onNodeWithTag("add-block").performClick();ui.onNodeWithText("사진").performClick()
+        ui.onNodeWithTag("diary-list").performScrollToNode(hasTestTag("add-block"));ui.onNodeWithTag("add-block").performClick();ui.onNodeWithText("사진").performClick()
         ui.onNodeWithTag("diary-list").performScrollToNode(hasContentDescription("일기에 첨부한 사진"));screenshot("android-photo")
         ui.onNodeWithTag("nav-1").performClick();screenshot("android-calendar")
         ui.onNodeWithText("본문·사진 설명 검색").performTextInput("휴대폰")

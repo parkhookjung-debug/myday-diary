@@ -53,6 +53,8 @@ def load_sources(root=ROOT):
         for color in value if isinstance(value,list) else [value]:
             if not re.fullmatch(r'#[A-Fa-f0-9]{6}', color): raise ValueError('Invalid color')
     if len(contract['design']['Backgrounds']) != 3: raise ValueError('Saved themes require three stable slots')
+    featured=contract.get("featuredTemplateIds",[])
+    if len(featured)!=len(set(featured)) or any(t not in {x["id"] for x in templates} for t in featured):raise ValueError("Invalid featured templates")
     seen = set()
     for template in templates:
         if not re.fullmatch(r'[a-z0-9-]+', template['id']) or template['id'] in seen:
@@ -120,7 +122,7 @@ def render(root=ROOT):
     collection_cs.append('        public static readonly int[][] Milestones={'+','.join('new[]{'+','.join(map(str,row))+'}' for row in rows)+'};\n    }\n}\n')
     collection_kt.append('    val milestones=arrayOf('+','.join('intArrayOf('+','.join(map(str,row))+')' for row in rows)+')\n}\n')
     numbers = dict(c['limits'], **c['chat'], **c['growth'], TemplateCount=len(templates))
-    arrays = {'BlockKinds':c['blockKinds'], 'PageStyles':c['pageStyles']}
+    arrays = {'BlockKinds':c['blockKinds'], 'PageStyles':c['pageStyles'], 'FeaturedTemplateIds':c.get('featuredTemplateIds',[])}
     for prefix, group, value in [('Categories','categories','id'),('CategoryNames','categories','name'),
             ('LayoutIds','layouts','id'),('LayoutNames','layouts','name'),('ReferenceIds','references','id'),('ReferenceUrls','references','url')]:
         arrays[prefix] = [entry[value] for entry in c[group]]

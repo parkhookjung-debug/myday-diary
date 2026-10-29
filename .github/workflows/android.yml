@@ -105,3 +105,20 @@ jobs:
           if ($LASTEXITCODE -ne 0) { throw 'Studio interop build failed' }
           & ./studio-interop.exe (Get-ChildItem interop -Filter 'android-studio-to-windows.json' -Recurse | Select-Object -First 1 -ExpandProperty FullName)
           if ($LASTEXITCODE -ne 0) { throw 'Studio native round trip failed' }
+
+  friends-source-policy:
+    name: Offline friends source policy checks
+    if: github.event.repository.private == false
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: '24'
+      - name: Test migrations in an isolated local database and mock Kakao responses
+        run: |
+          npm --prefix supabase/tests ci --ignore-scripts --no-audit --no-fund
+          npm --prefix supabase/tests test

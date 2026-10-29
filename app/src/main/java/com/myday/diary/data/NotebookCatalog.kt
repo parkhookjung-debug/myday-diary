@@ -11,6 +11,7 @@ data class DiaryTemplate(val id: String,val name: String,val description: String
 }
 class NotebookCatalog(context: Context) {
     private val json=context.assets.open("catalog.json").bufferedReader().use {JSONObject(it.readText())}
+    val featuredTemplateIds=json.optJSONArray("featuredTemplateIds")?.let {a->(0 until a.length()).map{a.getString(it)}.toSet()} ?: emptySet()
     val characters=json.getJSONArray("characters").let {a->(0 until a.length()).map {val o=a.getJSONObject(it);SangmonSkin(o.getString("id"),o.getString("name"),o.getInt("level"),o.getInt("xp"))}}
     val items=json.getJSONArray("items").let {a->(0 until a.length()).map {val o=a.getJSONObject(it);SangmonItem(o.getString("id"),o.getString("name"),o.getString("slot"),o.getString("description"),o.getString("element"))}}
     val templates=json.getJSONArray("templates").let {a->(0 until a.length()).map {val o=a.getJSONObject(it);val s=o.getJSONArray("sections")

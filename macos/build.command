@@ -27,8 +27,8 @@ cat > "$app/Contents/Info.plist" <<'PLIST'
     <key>CFBundleName</key><string>마이데이</string>
     <key>CFBundleDisplayName</key><string>마이데이</string>
     <key>CFBundlePackageType</key><string>APPL</string>
-    <key>CFBundleShortVersionString</key><string>0.12.0</string>
-    <key>CFBundleVersion</key><string>12</string>
+    <key>CFBundleShortVersionString</key><string>0.14.0</string>
+    <key>CFBundleVersion</key><string>14</string>
     <key>NSLocalNetworkUsageDescription</key><string>같은 Wi-Fi의 기기와 일기 백업을 주고받습니다.</string>
     <key>LSMinimumSystemVersion</key><string>13.0</string>
     <key>NSHighResolutionCapable</key><true/>

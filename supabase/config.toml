@@ -1,0 +1,9 @@
+project_id = "myday-friends"
+
+[functions.myday-kakao-login]
+# This endpoint verifies a Kakao token itself before issuing any Supabase session.
+verify_jwt = false
+
+[functions.myday-kakao-events]
+# Signed Kakao Security Event Tokens are verified inside the handler.
+verify_jwt = false

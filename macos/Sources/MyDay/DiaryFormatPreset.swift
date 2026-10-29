@@ -44,7 +44,7 @@ struct DiaryFormatPreset:Codable {
             result.blocks[index].windowsID=saved.windowsID
             result.blocks[index].windowsFields=saved.windowsFields
         }
-        for block in remaining where Self.hasContent(block){try DiaryLayout.append(block,to:&result)}
+        for block in remaining {try DiaryLayout.append(block,to:&result)}
         return result
     }
 

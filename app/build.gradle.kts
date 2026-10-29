@@ -1,8 +1,23 @@
+import java.util.Properties
+
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
     id("org.jetbrains.kotlin.plugin.compose")
 }
+val localSettings = Properties().apply {
+    val settings = rootProject.file("local.properties")
+    if (settings.exists()) settings.inputStream().use { load(it) }
+}
+fun integrationSetting(name: String) = providers.gradleProperty(name)
+    .orElse(providers.environmentVariable(name)).orElse(localSettings.getProperty(name, "")).get().trim()
+fun quoted(value: String) = "\"" + value.replace("\\", "\\\\").replace("\"", "\\\"") + "\""
+// Public friend services are source-only in this integration. No keys or endpoints enter the APK.
+val onlineFriendsEnabled = false
+val supabaseUrl = if(onlineFriendsEnabled) integrationSetting("MYDAY_SUPABASE_URL") else ""
+val supabaseKey = if(onlineFriendsEnabled) integrationSetting("MYDAY_SUPABASE_KEY") else ""
+val kakaoNativeKey = if(onlineFriendsEnabled) integrationSetting("MYDAY_KAKAO_NATIVE_KEY") else ""
+require(supabaseKey.isEmpty() || supabaseKey.startsWith("sb_publishable_")) { "Use a Supabase publishable key, never a secret or service role key." }
 android {
     namespace = "com.myday.diary"
     compileSdk = 35
@@ -10,8 +25,15 @@ android {
         applicationId = "com.myday.diary"
         minSdk = 26
         targetSdk = 35
-        versionCode = 12
-        versionName = "0.12.0"
+        versionCode = 14
+        versionName = "0.14.0"
+        manifestPlaceholders["appLabel"] = "마이데이"
+        manifestPlaceholders["onlineFriendsEnabled"] = onlineFriendsEnabled.toString()
+        buildConfigField("boolean", "ONLINE_FRIENDS_ENABLED", onlineFriendsEnabled.toString())
+        buildConfigField("String", "SUPABASE_URL", quoted(supabaseUrl))
+        buildConfigField("String", "SUPABASE_KEY", quoted(supabaseKey))
+        buildConfigField("String", "KAKAO_NATIVE_KEY", quoted(kakaoNativeKey))
+        manifestPlaceholders["kakaoRedirectScheme"] = if(kakaoNativeKey.matches(Regex("[a-fA-F0-9]{32}"))) "kakao$kakaoNativeKey" else "myday-kakao-unconfigured"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
     compileOptions {
@@ -19,7 +41,8 @@ android {
         targetCompatibility = JavaVersion.VERSION_17
     }
     kotlinOptions { jvmTarget = "17" }
-    buildFeatures { compose = true }
+    buildFeatures { compose = true; buildConfig = true }
+
     val signingPath=System.getenv("MYDAY_ANDROID_KEYSTORE")
     if(!signingPath.isNullOrBlank()) {
         signingConfigs.create("mydayDistribution") {
@@ -32,6 +55,7 @@ android {
     }
 }
 dependencies {
+    implementation("com.kakao.sdk:v2-user:2.26.0")
     implementation("com.google.zxing:core:3.5.3")
     implementation(platform("androidx.compose:compose-bom:2025.04.01"))
     implementation("androidx.activity:activity-compose:1.10.1")

@@ -34,20 +34,22 @@ import com.myday.diary.diary.NotebookController
 @OptIn(ExperimentalLayoutApi::class)
 @Composable fun TemplatePicker(catalog: NotebookCatalog,onApply: (DiaryTemplate)->Unit,onAddBlock: (String)->Unit,onDismiss: ()->Unit,error: String?=null) {
     var query by remember {mutableStateOf("")};var selected by remember {mutableStateOf<DiaryTemplate?>(null)}
+    var featuredOnly by remember {mutableStateOf(false)}
     val keyboard=LocalSoftwareKeyboardController.current
     PhoneFullDialog("일기 형식 · 블록 추가",onDismiss,error) {
         Text("블록 바로 추가",Modifier.padding(horizontal=16.dp,vertical=8.dp),style=MaterialTheme.typography.titleMedium)
         FlowRow(Modifier.fillMaxWidth().padding(horizontal=16.dp),horizontalArrangement=Arrangement.spacedBy(8.dp)) {
-            listOf("text" to "글","todo" to "할 일","habit" to "습관","emotion" to "감정","photo" to "사진").forEach {(kind,title)->OutlinedButton({onAddBlock(kind)}) {Text("＋ $title")}}
+            listOf("text" to "글","todo" to "할 일","habit" to "습관","emotion" to "감정","photo" to "사진").forEach {(kind,title)->OutlinedButton({onAddBlock(kind)}) {Text(title)}}
         }
         OutlinedTextField(query,{query=it},label={Text("분야·이름·질문 검색")},modifier=Modifier.fillMaxWidth().padding(16.dp),singleLine=true)
+        Row(Modifier.padding(horizontal=16.dp),horizontalArrangement=Arrangement.spacedBy(8.dp)){FilterChip(featuredOnly,{featuredOnly=true},label={Text("추천 20종")});FilterChip(!featuredOnly,{featuredOnly=false},label={Text("전체 100종")})}
         selected?.let {template->Card(Modifier.fillMaxWidth().padding(horizontal=16.dp)) {LazyColumn(Modifier.heightIn(max=330.dp).padding(16.dp)) {
             item {Text(template.name,style=MaterialTheme.typography.titleLarge);Text(template.description);LayoutDiagram(template.blocks)}
             items(template.blocks) {Text("${it.title} · ${it.prompt}",style=MaterialTheme.typography.bodySmall)}
             item {Button({onApply(template)},modifier=Modifier.fillMaxWidth()) {Text("이 형식으로 기록하기")}}
         }}}
         LazyColumn(Modifier.weight(1f).padding(horizontal=16.dp),verticalArrangement=Arrangement.spacedBy(8.dp),contentPadding=PaddingValues(bottom=24.dp)) {
-            items(catalog.templates.filter {query.isBlank() || "${it.categoryName} ${it.layoutName} ${it.name} ${it.description} ${it.blocks.joinToString {b->b.prompt}}".contains(query,true)},key={it.id}) {template->Card(Modifier.fillMaxWidth().clickable {selected=template;keyboard?.hide()},colors=CardDefaults.cardColors(containerColor=Color.White)) {
+            items(catalog.templates.filter {(!featuredOnly || it.id in catalog.featuredTemplateIds) && (query.isBlank() || "${it.categoryName} ${it.layoutName} ${it.name} ${it.description} ${it.blocks.joinToString {b->b.prompt}}".contains(query,true))},key={it.id}) {template->Card(Modifier.fillMaxWidth().clickable {selected=template;keyboard?.hide()},colors=CardDefaults.cardColors(containerColor=Color.White)) {
                 Column(Modifier.padding(16.dp)) {Text(template.name,style=MaterialTheme.typography.titleMedium);Text("${template.categoryName} · 약 ${template.minutes}분 · ${template.layoutName}",style=MaterialTheme.typography.labelSmall);Text(template.description,maxLines=2)}
             }}
         }
