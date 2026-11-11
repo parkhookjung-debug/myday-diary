@@ -1,34 +1,36 @@
 # 마이데이 (MyDay)
 
+## 앱 다운로드 · 0.15.0 시험판
+
+**[다운로드 페이지 열기](https://github.com/parkhookjung-debug/myday-diary/releases/tag/v0.15.0-preview)** — 내 운영체제에 맞는 파일 하나를 받으세요. GitHub 로그인과 개발 도구가 필요 없습니다.
+
+| 운영체제 | 다운로드 | 실행 방법 |
+| --- | --- | --- |
+| Windows 10/11 · .NET Framework 4.8+ | [Windows 실행 파일 (.exe)](https://github.com/parkhookjung-debug/myday-diary/releases/download/v0.15.0-preview/MyDay-Windows.exe) | 기존 앱 종료 후 EXE 실행 |
+| Mac · Apple Silicon(M1 이상) · macOS 13+ | [Mac 앱 (.zip)](https://github.com/parkhookjung-debug/myday-diary/releases/download/v0.15.0-preview/MyDay-macOS-arm64.zip) | 압축을 풀고 `MyDay.app` 실행 |
+| Android 8 이상 · Galaxy 등 | [Android 설치 파일 (.apk)](https://github.com/parkhookjung-debug/myday-diary/releases/download/v0.15.0-preview/MyDay-Android.apk) | 휴대폰에서 APK 다운로드 후 설치 |
+
+[자세한 설치·업데이트 안내](docs/DOWNLOADS.md). Mac은 **Apple Silicon 전용**이며 Apple 공증 미적용 시험판입니다. Android는 **디버그 서명 APK**입니다. 기존 사용자는 **공통 백업 → 앱 완전 종료 → 새 앱 실행 → 기록 확인** 순서로 업데이트하세요. Android 서명이 달라 설치가 안 되더라도 백업 확인 전 기존 앱을 삭제하지 마세요.
+
+배포 소스는 [v0.15.0-preview 태그](https://github.com/parkhookjung-debug/myday-diary/tree/v0.15.0-preview)에서 확인합니다. Windows 파일에는 상몬의 탄성 드래그·속도 비례 던지기가 포함됩니다. [플랫폼별 파일 출처·SHA256](https://github.com/parkhookjung-debug/myday-diary/releases/download/v0.15.0-preview/SOURCE.json)
+
 [![Android CI](https://github.com/parkhookjung-debug/myday-diary/actions/workflows/android.yml/badge.svg)](https://github.com/parkhookjung-debug/myday-diary/actions/workflows/android.yml)
 [![Windows CI](https://github.com/parkhookjung-debug/myday-diary/actions/workflows/windows.yml/badge.svg)](https://github.com/parkhookjung-debug/myday-diary/actions/workflows/windows.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 
-Windows·Mac·Android에서 쓰는 꾸미기 일기 앱입니다. 사진과 일기 블록을 자유롭게 배치하고, 기록할수록 함께 자라는 캐릭터 **상몬**을 키웁니다.
+Windows·Mac·Android에서 쓰는 일기 앱입니다. 사진과 일기 블록을 자유롭게 배치하고, 기록할수록 함께 자라는 캐릭터 **상몬**을 키웁니다.
 
-![Windows 일기 화면](previews/integration-20261029/windows-example.png)
+![Windows 일기 화면](https://raw.githubusercontent.com/parkhookjung-debug/myday-diary/v0.15.0-preview/previews/focused-20261111/windows-example.png)
 
 - **일기**: 글·할 일·습관·감정·사진 블록, 자유 배치, 일기 형식 100종(추천 20종), 내 레이아웃 저장
 - **기록 탐색**: 월간 달력, 본문·사진 설명 검색, 감정 달력, 태그·즐겨찾기, 월별 사진 앨범
-- **상몬**: 외형 64종, Lv.100까지 성장, 파스텔 소품 300종·8슬롯, 클로버 뽑기·조각 합성
+- **상몬 성장**: 기본 상몬 한 마리, 출석·일기·할 일·습관으로 Lv.100까지 성장
 - **안전한 저장**: 자동 저장, 직전 저장본 복구, 휴지통·변경 이력, 하루 한 번 자동 백업, 기기 간 Wi-Fi 전송
 - **플랫폼별 기능**: Windows 바탕화면 캐릭터 · Android 홈 위젯·라이브 배경화면·햅틱 · 세 앱 공통 라운지 채팅(로컬 서버)
 
 기록은 각 기기에만 저장합니다. 플랫폼 사이의 자동 동기화는 없고, 공통 JSON 백업(버전 1~9)으로 옮깁니다.
 
-> **현재 버전 0.14.0 통합 미리보기**: 새 일기 디자인·레이아웃 선택, 사진 여러 장을 추가했습니다. Android 친구 공유는 미리보기만 제공하며 로그인·업로드는 꺼져 있습니다. [이번 버전 안내](docs/INTEGRATION-2026-10-29.md) · [전체 변경 내역](CHANGELOG.md)
-
-## 설치
-
-정식 릴리스는 아직 없습니다. 최신 개발 빌드는 GitHub Actions 실행 결과의 **Artifacts**에서 받습니다(GitHub 로그인 필요, 7~14일 보관).
-
-| 환경 | 받는 곳 | 파일 |
-| --- | --- | --- |
-| Windows 10/11 (.NET Framework 4.8+) | [Windows CI](https://github.com/parkhookjung-debug/myday-diary/actions/workflows/windows.yml) | `myday-windows-*` → `MyDay.exe` |
-| Mac Apple Silicon (macOS 13+) | [Chat compatibility CI](https://github.com/parkhookjung-debug/myday-diary/actions/workflows/chat-compatibility.yml) | `myday-chat-macOS-ARM64` → `MyDay-macOS-arm64-*.zip` |
-| Android 8+ | [Android CI](https://github.com/parkhookjung-debug/myday-diary/actions/workflows/android.yml) | `myday-debug-*` → `app-debug.apk` |
-
-업데이트할 때는 **공통 백업 저장 → 앱 완전 종료 → 새 앱으로 교체 → 기록 확인** 순서로 진행하세요. Android는 서명이 다르면 덮어 설치되지 않으니, 백업을 확인하기 전에는 기존 앱을 삭제하지 마세요. 자세한 사용법은 [사용자 설명서](docs/USER-MANUAL.md)에 있습니다.
+> **공개 다운로드 0.15.0 시험판**: 기본 상몬·일기·레벨업에 집중합니다. 변신·코디·뽑기·재화·합성 화면은 제거했으며 로컬 채팅과 카카오 연동 원본은 유지합니다. [기능 범위](https://github.com/parkhookjung-debug/myday-diary/blob/v0.15.0-preview/docs/FOCUSED-APP.md). 아래 개발 문서는 main의 이전 소스를 포함하므로 실제 배포 코드는 다운로드 태그를 기준으로 확인하세요.
 
 ## 직접 빌드하기
 
