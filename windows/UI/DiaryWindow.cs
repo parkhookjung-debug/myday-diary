@@ -25,7 +25,6 @@ namespace MyDay.Windows.UI
         private readonly Button myLayouts=Design.Button("내 레이아웃");
         private readonly Button browse=Design.Button("달력 · 일기 검색");
         private readonly Button growth=Design.Button("상몬 성장");
-        private readonly Button items=Design.Button("옷장");
         private readonly Button editLayout=Design.Button("배치 편집"),arrangeLayout=Design.Button("자동 정리");
         private readonly Label layoutHint=Design.Label("",9);
         private readonly Label status = Design.Label("내 컴퓨터에 자동 저장", 9);
@@ -35,7 +34,6 @@ namespace MyDay.Windows.UI
         private readonly DateTimePicker picker = new DateTimePicker { Format=DateTimePickerFormat.Custom, CustomFormat="yyyy. MM. dd", Width=Design.P(135) };
         private readonly ThemePicker theme = new ThemePicker();
         private readonly ChoiceButton mood = Design.Choice(108);
-        private readonly ChoiceButton characterChoice=Design.Choice(160);
         private readonly Button petToggle = Design.Button("캐릭터 숨기기");
         private readonly Panel content = new Panel { Dock=DockStyle.Fill, Padding=Design.Pad(24,18,20,12) };
         private readonly MonsterView avatar = new MonsterView();
@@ -115,7 +113,6 @@ namespace MyDay.Windows.UI
             var trayMenu=new ContextMenuStrip(); trayMenu.Items.Add("일기 열기",null,delegate { OpenDiary(); });
             trayMenu.Items.Add("캐릭터 표시 / 숨기기",null,delegate { TogglePet(); });
             trayMenu.Items.Add("상몬 성장",null,delegate { OpenGrowth(); });
-            trayMenu.Items.Add("작은 옷장",null,delegate { OpenItems(); });
             trayMenu.Items.Add("모두 종료",null,delegate { ExitApp(); }); tray.ContextMenuStrip=trayMenu;
             tray.DoubleClick+=delegate { OpenDiary(); };
             avatar.Fired+=delegate { if (pet!=null) pet.Fire(); };
@@ -143,27 +140,20 @@ namespace MyDay.Windows.UI
         private void EnsurePet()
         {
             if(pet!=null && !pet.IsDisposed) return;
-            pet=new DesktopPet(OpenDiary,delegate { OpenGrowth(); },delegate { OpenItems(); });
-            pet.SetAvailability(v=>SangmonGrowth.CanUse(book.Progress,v));
-            pet.Variant=MonsterVariants.FromId(book.CharacterStyle);
-            pet.Equipment=book.Equipment;
-            pet.VariantChanged+=delegate { if(!binding) SelectVariant(pet.Variant); };
+            pet=new DesktopPet(OpenDiary,delegate { OpenGrowth(); });
+            pet.Variant=MonsterVariant.Original;
+            pet.Equipment=null;
             pet.PetHidden+=delegate { petToggle.Text="캐릭터 띄우기"; };
         }
         public void OpenDiary() { if(!ScreenPrivacy.Reveal())return; Show(); if(WindowState==FormWindowState.Minimized) WindowState=FormWindowState.Normal; Activate(); }
         public void SelectVariant(MonsterVariant variant)
         {
-            if(!SangmonGrowth.CanUse(book.Progress,variant)) { ApplyVariant(); return; }
-            book.CharacterStyle=MonsterVariants.Id(variant); ApplyVariant(); QueueBookSave();
+            ApplyVariant(); // Legacy style is retained in backups, never selected in the focused app.
         }
         private void ApplyVariant()
         {
-            bool previous=binding; binding=true;
-            var variant=MonsterVariants.FromId(book.CharacterStyle);
-            characterChoice.SelectedIndex=(int)variant; avatar.Variant=variant;
-            ApplyEquipment();
-            if(pet!=null) pet.Variant=variant;
-            binding=previous;
+            avatar.Variant=MonsterVariant.Original;avatar.Equipment=null;
+            if(pet!=null){pet.Variant=MonsterVariant.Original;pet.Equipment=null;}
         }
         private void TogglePet()
         {
@@ -462,30 +452,8 @@ namespace MyDay.Windows.UI
             if(!entry.Blocks.First(b=>b.Id==id).Text.Contains("윈도우")) throw new Exception("Date navigation lost content");
             if(!store.Load().Days[DiaryStore.Key(date)].Blocks.Any(b=>b.Checked)) throw new Exception("Check did not persist");
             if(entry.Mood!="속상해요" || entry.Theme!=1 || mood.SelectedIndex!=3 || theme.SelectedIndex!=1) throw new Exception("Appearance did not persist");
-            characterChoice.SelectedIndex=(int)MonsterVariant.Winged;
-            if(avatar.Variant!=MonsterVariant.Winged || pet==null || pet.Variant!=MonsterVariant.Winged) throw new Exception("Diary variant choice did not update desktop pet");
-            var menu=pet.ContextMenuStrip.Items.OfType<ToolStripMenuItem>().First(item=>item.Text=="캐릭터 버전");
-            ((ToolStripMenuItem)menu.DropDownItems[(int)MonsterVariant.Mini]).PerformClick();
-            if(characterChoice.SelectedIndex!=(int)MonsterVariant.Mini || avatar.Variant!=MonsterVariant.Mini) throw new Exception("Desktop variant menu did not update diary");
-            foreach(var variant in MonsterVariants.All.Take(56)) {
-                characterChoice.SelectedIndex=(int)variant;
-                if(avatar.Variant!=variant || pet.Variant!=variant) throw new Exception("Diary choice missed "+variant);
-                ((ToolStripMenuItem)menu.DropDownItems[(int)variant]).PerformClick();
-                if(characterChoice.SelectedIndex!=(int)variant || avatar.Variant!=variant) throw new Exception("Desktop menu missed "+variant);
-            }
-            var games=pet.ContextMenuStrip.Items.OfType<ToolStripMenuItem>().First(item=>item.Text=="게임 스타일");
-            var gameVariants=MonsterVariants.All.Where(GameSkins.IsGame).ToArray();
-            if(games.DropDownItems.Count!=gameVariants.Length) throw new Exception("Game style shortcut count is wrong");
-            for(int i=0;i<gameVariants.Length;i++) {
-                ((ToolStripMenuItem)games.DropDownItems[i]).PerformClick();
-                if(avatar.Variant!=gameVariants[i] || characterChoice.SelectedIndex!=(int)gameVariants[i]) throw new Exception("Game shortcut did not update diary");
-                if(games.DropDownItems.OfType<ToolStripMenuItem>().Count(item=>item.Checked)!=1) throw new Exception("Game style checkmarks are out of sync");
-            }
-            characterChoice.SelectedIndex=(int)MonsterVariant.Mini;
-            if(!FlushSave() || store.Load().CharacterStyle!="mini") throw new Exception("Variant did not save");
-            characterChoice.SelectedIndex=(int)MonsterVariant.Frost;
-            ChangeDate(date.AddDays(1)); ChangeDate(date.AddDays(-1));
-            if(characterChoice.SelectedIndex!=(int)MonsterVariant.Frost) throw new Exception("Date change reset global variant");
+            if(avatar.Variant!=MonsterVariant.Original||pet==null||pet.Variant!=MonsterVariant.Original)throw new Exception("Focused companion is not original");
+            if(pet.ContextMenuStrip.Items.OfType<ToolStripMenuItem>().Any(i=>i.Text=="캐릭터 버전"||i.Text=="게임 스타일"||i.Text=="작은 옷장"))throw new Exception("Removed customization is reachable");
             var original=Size; Size=MinimumSize; PerformLayout(); ArrangeCards();
             foreach(var card in board.Controls.OfType<BlockCard>())
                 if(card.Width>board.ClientSize.Width || card.Editor.Width<=0 || card.Editor.Height<=0) throw new Exception("Small window layout overflow");

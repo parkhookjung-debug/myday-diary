@@ -1,5 +1,7 @@
 # MyDay Windows
 
+**0.15 간소화:** [현재 기능과 제거 범위](../docs/FOCUSED-APP.md). 기본 상몬·레벨업과 기록 기능에 집중하며 로컬 채팅·카카오 연동 원본을 유지합니다.
+
 **0.12.0:** [저장 복구·첫 실행 안내·성장 현황·설치와 수정 파일](../docs/QUALITY-UPDATE.md) · [통과한 검사·실행파일](../previews/quality/README.md). 설정·백업에서 사용 안내를 다시 열 수 있습니다. 최신 기기 연결은 앱 안에서 실행하며 별도 Python은 필요 없습니다.
 
 Windows에서 실행하는 C# / Windows Forms 일기 앱과 투명한 바탕화면 캐릭터입니다.
@@ -83,8 +85,8 @@ Android 기록과 자동 동기화하지 않습니다. 영상·시작 시 자동
 | 내 레이아웃 저장·재사용 검증 | [SavedLayoutTests.cs](Tests/SavedLayoutTests.cs) |
 | 상몬 성장·레벨·보상·병합 | [SangmonGrowth.cs](Core/SangmonGrowth.cs), [GrowthWindow.cs](UI/GrowthWindow.cs), [DiaryWindow.Growth.cs](UI/DiaryWindow.Growth.cs) |
 | 성장 보상 의상·검증 | [RewardSkins.cs](Character/RewardSkins.cs), [GrowthTests.cs](Tests/GrowthTests.cs) |
-| 아이템 모델·장착·백업 | [SangmonItems.cs](Core/SangmonItems.cs), [DiaryWindow.Items.cs](UI/DiaryWindow.Items.cs) |
-| 아이템 그림·장비함·미리보기 | [CozyItems.cs](Character/CozyItems.cs), [ItemPainter.cs](Character/ItemPainter.cs), [EquipmentWindow.cs](UI/EquipmentWindow.cs), [ItemView.cs](UI/ItemView.cs) |
+| 아이템 모델·장착·백업 | [SangmonItems.cs](Core/SangmonItems.cs), [DiaryWindow.Items.cs](https://github.com/parkhookjung-debug/myday-diary/blob/f29da72f23ed7a49aa3dfd28d85311f59b6bd7bc/windows/UI/DiaryWindow.Items.cs) |
+| 아이템 그림·장비함·미리보기 | [CozyItems.cs](Character/CozyItems.cs), [ItemPainter.cs](Character/ItemPainter.cs), [EquipmentWindow.cs](https://github.com/parkhookjung-debug/myday-diary/blob/f29da72f23ed7a49aa3dfd28d85311f59b6bd7bc/windows/UI/EquipmentWindow.cs), [ItemView.cs](https://github.com/parkhookjung-debug/myday-diary/blob/f29da72f23ed7a49aa3dfd28d85311f59b6bd7bc/windows/UI/ItemView.cs) |
 | 장비 저장·슬롯·그림 경계 검증 | [ItemTests.cs](Tests/ItemTests.cs) |
 | 날짜 표지 | [JournalCover.cs](UI/JournalCover.cs) |
 | 형식 선택·미리보기 | [TemplateGallery.cs](UI/TemplateGallery.cs) |

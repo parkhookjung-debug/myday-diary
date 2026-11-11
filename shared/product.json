@@ -1,0 +1,30 @@
+{
+  "format": "myday-product",
+  "version": 1,
+  "appVersion": "0.15.0",
+  "characterId": "original",
+  "retained": [
+    "diary",
+    "photos",
+    "free-layout",
+    "calendar-search",
+    "growth",
+    "backup-recovery",
+    "local-chat",
+    "kakao-integration-source"
+  ],
+  "removed": [
+    "character-transformations",
+    "outfits",
+    "gacha",
+    "currency",
+    "synthesis"
+  ],
+  "externalFriendsEnabled": false,
+  "assetIncludes": [
+    "catalog.json",
+    "device-link.html",
+    "sangmon/original.png",
+    "studio/**"
+  ]
+}

@@ -1,5 +1,7 @@
 # 등급 선물과 작은 조각 공방
 
+> 이 문서는 0.14까지의 기능 기록입니다. 0.15의 변신·코디·뽑기·합성 제거 범위는 [현재 간소화 안내](FOCUSED-APP.md)를 확인하세요.
+
 Windows는 **옷장 → 소품 뽑기 → 조각 합성·성취 도감**, Android는 **상몬 → 소품 뽑기 → 조각 합성·성취 도감**에서 엽니다. 실제 결제·유료 재화는 없으며 기존 Lv.100 / 약 100·200·300일 성장 규칙은 유지합니다.
 
 ![실제 Windows 조각 합성·선택 제작 화면](../previews/windows/windows-atelier.png)
@@ -61,9 +63,9 @@ Windows는 **옷장 → 소품 뽑기 → 조각 합성·성취 도감**, Androi
 | 등급 이름·확률·색·중복 꽃잎·교환 비용·합성률·성취 보상 | [shared/collection.json](../shared/collection.json), 수정 후 `python tools/sync-desktop.py` |
 | Windows 재화·뽑기·이력 병합 | [SangmonCollection.cs](../windows/Core/SangmonCollection.cs) |
 | Windows 등급·합성·제작·성취 | [SangmonAtelier.cs](../windows/Core/SangmonAtelier.cs) |
-| Windows 선물 상자·공방 | [CollectionWindow.cs](../windows/UI/CollectionWindow.cs), [AtelierWindow.cs](../windows/UI/AtelierWindow.cs) |
-| Windows 저장 확정·실패 복구 | [DiaryWindow.Collection.cs](../windows/UI/DiaryWindow.Collection.cs) |
-| Android 같은 규칙·화면·저장 연결 | [CollectionRules.kt](../app/src/main/java/com/myday/diary/diary/CollectionRules.kt), [PhoneCollection.kt](../app/src/main/java/com/myday/diary/ui/diary/PhoneCollection.kt), [PhoneAtelier.kt](../app/src/main/java/com/myday/diary/ui/diary/PhoneAtelier.kt), [NotebookController.kt](../app/src/main/java/com/myday/diary/diary/NotebookController.kt) |
+| Windows 선물 상자·공방 | [CollectionWindow.cs](https://github.com/parkhookjung-debug/myday-diary/blob/f29da72f23ed7a49aa3dfd28d85311f59b6bd7bc/windows/UI/CollectionWindow.cs), [AtelierWindow.cs](https://github.com/parkhookjung-debug/myday-diary/blob/f29da72f23ed7a49aa3dfd28d85311f59b6bd7bc/windows/UI/AtelierWindow.cs) |
+| Windows 저장 확정·실패 복구 | [DiaryWindow.Collection.cs](https://github.com/parkhookjung-debug/myday-diary/blob/f29da72f23ed7a49aa3dfd28d85311f59b6bd7bc/windows/UI/DiaryWindow.Collection.cs) |
+| Android 같은 규칙·화면·저장 연결 | [CollectionRules.kt](../app/src/main/java/com/myday/diary/diary/CollectionRules.kt), [PhoneCollection.kt](https://github.com/parkhookjung-debug/myday-diary/blob/f29da72f23ed7a49aa3dfd28d85311f59b6bd7bc/app/src/main/java/com/myday/diary/ui/diary/PhoneCollection.kt), [PhoneAtelier.kt](https://github.com/parkhookjung-debug/myday-diary/blob/f29da72f23ed7a49aa3dfd28d85311f59b6bd7bc/app/src/main/java/com/myday/diary/ui/diary/PhoneAtelier.kt), [NotebookController.kt](../app/src/main/java/com/myday/diary/diary/NotebookController.kt) |
 | 확률 경계·소모·환급·중복 지급·예전 이력·저장 검사 | [AtelierTests.cs](../windows/Tests/AtelierTests.cs), [AtelierTest.kt](../app/src/test/java/com/myday/diary/diary/AtelierTest.kt) |
 | 실제 Windows → Android → Windows 버전 8 검사 | [WindowsAtelierInterop.cs](../tools/WindowsAtelierInterop.cs), [windows-v8.json](../app/src/test/resources/windows-v8.json) |
 

@@ -19,7 +19,7 @@ namespace MyDay.Windows
                 Check(sameLip && eyesChanged,"Clay yawn closes the eyes while retaining the exact side lip with no new mouth");
             }
             using(var image=new Bitmap(320,280)) {
-                using(var g=Graphics.FromImage(image)) MonsterPainter.Draw(g,new Rectangle(12,18,296,226),MonsterPose.ForActivity(0,PetActivity.Rest,0,0,0),true);
+                using(var g=Graphics.FromImage(image)) MonsterPainter.DrawLegacy(g,new Rectangle(12,18,296,226),MonsterPose.ForActivity(0,PetActivity.Rest,0,0,0),true);
                 int min=255,max=0,body=0;
                 for(int y=0;y<280;y++) for(int x=0;x<320;x++) {
                     var pixel=image.GetPixel(x,y);

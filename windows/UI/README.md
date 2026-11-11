@@ -20,10 +20,10 @@
 | 사진과 빈 사진 자리 | [PhotoView.cs](PhotoView.cs) | 이미지 비율과 썸네일 |
 | 내 레이아웃 관리 | [MyLayoutsWindow.cs](MyLayoutsWindow.cs), [LayoutNameDialog.cs](LayoutNameDialog.cs), [SavedLayoutDiagram.cs](SavedLayoutDiagram.cs) | 목록·이름 입력·배치 그림 |
 | 성장 화면·보상 장착 | [GrowthWindow.cs](GrowthWindow.cs), [DiaryWindow.Growth.cs](DiaryWindow.Growth.cs) | 경험치·보상 카드와 연결 |
-| 등급 선물·조각 합성·제작·성취 표시 | [CollectionWindow.cs](CollectionWindow.cs), [AtelierWindow.cs](AtelierWindow.cs), [DiaryWindow.Collection.cs](DiaryWindow.Collection.cs) | [공통 확률·재료 원본과 보상 안내](../../docs/SANGMON-ATELIER.md) |
-| 아이템 장비함·장착 연결 | [EquipmentWindow.cs](EquipmentWindow.cs), [DiaryWindow.Items.cs](DiaryWindow.Items.cs) | 두 슬롯과 저장·적용 |
-| 앱 안 캐릭터·아이템 미리보기 | [MonsterView.cs](MonsterView.cs), [ItemView.cs](ItemView.cs) | 타이머와 렌더링 연결 |
+| 등급 선물·조각 합성·제작·성취 표시 | [CollectionWindow.cs](https://github.com/parkhookjung-debug/myday-diary/blob/f29da72f23ed7a49aa3dfd28d85311f59b6bd7bc/windows/UI/CollectionWindow.cs), [AtelierWindow.cs](https://github.com/parkhookjung-debug/myday-diary/blob/f29da72f23ed7a49aa3dfd28d85311f59b6bd7bc/windows/UI/AtelierWindow.cs), [DiaryWindow.Collection.cs](https://github.com/parkhookjung-debug/myday-diary/blob/f29da72f23ed7a49aa3dfd28d85311f59b6bd7bc/windows/UI/DiaryWindow.Collection.cs) | [공통 확률·재료 원본과 보상 안내](../../docs/SANGMON-ATELIER.md) |
+| 아이템 장비함·장착 연결 | [EquipmentWindow.cs](https://github.com/parkhookjung-debug/myday-diary/blob/f29da72f23ed7a49aa3dfd28d85311f59b6bd7bc/windows/UI/EquipmentWindow.cs), [DiaryWindow.Items.cs](https://github.com/parkhookjung-debug/myday-diary/blob/f29da72f23ed7a49aa3dfd28d85311f59b6bd7bc/windows/UI/DiaryWindow.Items.cs) | 두 슬롯과 저장·적용 |
+| 앱 안 캐릭터·아이템 미리보기 | [MonsterView.cs](MonsterView.cs), [ItemView.cs](https://github.com/parkhookjung-debug/myday-diary/blob/f29da72f23ed7a49aa3dfd28d85311f59b6bd7bc/windows/UI/ItemView.cs) | 타이머와 렌더링 연결 |
 
-뽑기·수집 도감은 [CollectionWindow.cs](CollectionWindow.cs), 저장 성공/실패 처리는 [DiaryWindow.Collection.cs](DiaryWindow.Collection.cs)에서 수정합니다. [규칙 안내](../../docs/SANGMON-COLLECTION.md)
+뽑기·수집 도감은 [CollectionWindow.cs](https://github.com/parkhookjung-debug/myday-diary/blob/f29da72f23ed7a49aa3dfd28d85311f59b6bd7bc/windows/UI/CollectionWindow.cs), 저장 성공/실패 처리는 [DiaryWindow.Collection.cs](https://github.com/parkhookjung-debug/myday-diary/blob/f29da72f23ed7a49aa3dfd28d85311f59b6bd7bc/windows/UI/DiaryWindow.Collection.cs)에서 수정합니다. [규칙 안내](../../docs/SANGMON-COLLECTION.md)
 
 채팅 화면은 [ChatWindow.cs](ChatWindow.cs), 말풍선은 [ChatTranscript.cs](ChatTranscript.cs), 일기 앱 진입은 [DiaryWindow.Chat.cs](DiaryWindow.Chat.cs)에서 수정합니다. 통신은 [ChatClient.cs](../Chat/ChatClient.cs)입니다.

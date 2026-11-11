@@ -97,7 +97,7 @@ import java.time.LocalDate
                         Text("YOUR LITTLE FRIEND",style=MaterialTheme.typography.labelSmall)
                         Row(verticalAlignment=androidx.compose.ui.Alignment.CenterVertically) {
                             SangmonAvatar(controller.book.characterStyle,controller.book.equipment,Modifier.size(92.dp),haptics,controller.reactionTick)
-                            Column(Modifier.weight(1f)) {Text(AppShell.friendTitle,style=MaterialTheme.typography.titleMedium);Text("Lv.${NotebookRules.level(controller.book)} · ${NotebookRules.xp(controller.book)} XP",style=MaterialTheme.typography.labelSmall);TextButton({tab=2}) {Text("상몬·공방 열기")}}
+                            Column(Modifier.weight(1f)) {Text(AppShell.friendTitle,style=MaterialTheme.typography.titleMedium);Text("Lv.${NotebookRules.level(controller.book)} · ${NotebookRules.xp(controller.book)} XP",style=MaterialTheme.typography.labelSmall);TextButton({tab=2}) {Text("상몬 성장 열기")}}
                         }
                         Text("차곡차곡, 오늘의 실천",style=MaterialTheme.typography.titleSmall)
                         if(controller.reaction.isNotEmpty()) Text(controller.reaction,style=MaterialTheme.typography.bodySmall,color=AppPalette.olive)
@@ -129,7 +129,7 @@ import java.time.LocalDate
                     item {Button({journalTools=true},modifier=Modifier.fillMaxWidth().testTag("journal-tools-open")) {Text("기록 도구 · 복구 / 리포트 / 알림")}}
                     item {Text("오늘의 분위기",style=MaterialTheme.typography.headlineSmall);FlowRow(horizontalArrangement=Arrangement.spacedBy(8.dp)) {DiaryOptions.themes.forEach {theme->FilterChip(entry.theme==theme.id,{attempt(TactileEvent.SELECT) {controller.edit(entry.copy(theme=theme.id))}},label={Text(theme.name)})}}}
                     item {Card(colors=CardDefaults.cardColors(containerColor=Color.White)) {Row(Modifier.fillMaxWidth().padding(16.dp),horizontalArrangement=Arrangement.SpaceBetween) {
-                        Column(Modifier.weight(1f)) {Text("햅틱 반응",style=MaterialTheme.typography.titleMedium);Text("체크·블록 이동·장착에 짧게 반응해요. 휴대폰의 터치 피드백 설정을 따라요.",style=MaterialTheme.typography.bodySmall)}
+                        Column(Modifier.weight(1f)) {Text("햅틱 반응",style=MaterialTheme.typography.titleMedium);Text("체크·블록 이동에 짧게 반응해요. 휴대폰의 터치 피드백 설정을 따라요.",style=MaterialTheme.typography.bodySmall)}
                         Switch(controller.book.haptics,{enabled->attempt(null) {controller.configure {it.copy(haptics=enabled)}}})
                     }}}
                     item {Card(colors=CardDefaults.cardColors(containerColor=Color.White)) {Column(Modifier.padding(16.dp),verticalArrangement=Arrangement.spacedBy(10.dp)) {

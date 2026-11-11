@@ -56,14 +56,14 @@ namespace MyDay.Windows
             foreach(bool left in new[]{true,false})foreach(var activity in new[]{PetActivity.Hop,PetActivity.Fire,PetActivity.Yawn,PetActivity.Drag})
             using(var image=new Bitmap(240,220)) {
                 var equipped=new SangmonEquipment {WeaponId=weapon.Id,CharmId=charm.Id};
-                using(var g=Graphics.FromImage(image))MonsterPainter.Draw(g,new Rectangle(16,22,208,176),MonsterPose.ForActivity(.32,activity,.32,0,0),left,variant,equipped);
+                using(var g=Graphics.FromImage(image))MonsterPainter.DrawLegacy(g,new Rectangle(16,22,208,176),MonsterPose.ForActivity(.32,activity,.32,0,0),left,variant,equipped);
                 bool clearEdges=ClearEdges(image);if(!clearEdges && failure=="")failure=weapon.Id+" "+charm.Id+" "+variant+" "+activity+" "+left;fits&=clearEdges;
             }
             Check(fits,"Every dual-slot combination fits desktop poses in both directions: "+failure);
             bool wardrobeFits=true;string wardrobeFailure="";
             foreach(var item in SangmonItems.All)foreach(bool left in new[]{true,false})foreach(var activity in new[]{PetActivity.Hop,PetActivity.Drag})using(var image=new Bitmap(240,220)) {
                 var equipped=SangmonItems.Select(null,item.Slot,item.Id);
-                using(var g=Graphics.FromImage(image))MonsterPainter.Draw(g,new Rectangle(16,22,208,176),MonsterPose.ForActivity(.32,activity,.32,0,0),left,MonsterVariant.Original,equipped);
+                using(var g=Graphics.FromImage(image))MonsterPainter.DrawLegacy(g,new Rectangle(16,22,208,176),MonsterPose.ForActivity(.32,activity,.32,0,0),left,MonsterVariant.Original,equipped);
                 if(!ClearEdges(image)){wardrobeFits=false;wardrobeFailure=item.Id+" "+activity+" "+left;}
             }
             Check(wardrobeFits,"All 300 equipped items fit hop and held poses in either direction: "+wardrobeFailure);

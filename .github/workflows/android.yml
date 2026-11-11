@@ -34,6 +34,8 @@ jobs:
         run: '"$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" "platforms;android-35" "build-tools;35.0.0"'
       - name: Build, lint and run available unit tests
         run: ./gradlew --no-daemon :app:assembleDebug :app:lintDebug :app:testDebugUnitTest
+      - name: Verify focused APK artwork and retained feature contract
+        run: python3 -m unittest discover -s tools -p test_focused_product.py -v
       - name: Verify phone gestures, storage and artwork on Android 35
         run: bash tools/android-device-tests.sh
       - name: Upload debug APK and reports

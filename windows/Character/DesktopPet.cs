@@ -23,31 +23,10 @@ namespace MyDay.Windows.Character
         private MonsterVariant variant;
         private SangmonEquipment equipment;
         public SangmonEquipment Equipment {get{return SangmonItems.Copy(equipment);}set{equipment=SangmonItems.Copy(value);if(Visible)RenderFrame();}}
-        private Func<MonsterVariant,bool> canUse;
-        public void SetAvailability(Func<MonsterVariant,bool> predicate)
-        {
-            canUse=predicate;
-            foreach(var v in MonsterVariants.All) {
-                bool enabled=canUse==null || canUse(v);
-                variantItems[(int)v].Enabled=enabled;
-                variantItems[(int)v].Text=MonsterVariants.Name(v)+(enabled?"":" · 총 "+SangmonGrowth.RequiredXP(v)+" XP");
-            }
-        }
-        private readonly ToolStripMenuItem[] variantItems=new ToolStripMenuItem[MonsterVariants.All.Length];
-        public event EventHandler VariantChanged;
-        public MonsterVariant Variant {
-            get { return variant; }
-            set {
-                if(variant==value || canUse!=null && !canUse(value)) return;
-                variant=value;
-                foreach(var item in MonsterVariants.All) variantItems[(int)item].Checked=item==value;
-                if(Visible) RenderFrame();
-                if(VariantChanged!=null) VariantChanged(this,EventArgs.Empty);
-            }
-        }
+        public MonsterVariant Variant {get{return MonsterVariant.Original;}set{variant=MonsterVariant.Original;if(Visible)RenderFrame();}}
         public bool Roaming { get { return roaming; } }
         public event EventHandler PetHidden;
-        public DesktopPet(Action openDiary,Action openGrowth=null,Action openItems=null)
+        public DesktopPet(Action openDiary,Action openGrowth=null)
         {
             this.openDiary = openDiary;
             Text = "MyDay 상몬"; FormBorderStyle = FormBorderStyle.None;
@@ -60,20 +39,6 @@ namespace MyDay.Windows.Character
             var menu = new ContextMenuStrip();
             menu.Items.Add("일기 열기", null, delegate { openDiary(); });
             if(openGrowth!=null) menu.Items.Add("상몬 성장",null,delegate { openGrowth(); });
-            if(openItems!=null) menu.Items.Add("작은 옷장",null,delegate { openItems(); });
-            var versions=new ToolStripMenuItem("캐릭터 버전");
-            foreach(var item in MonsterVariants.All) {
-                var choice=item; var option=new ToolStripMenuItem(MonsterVariants.Name(item)) { Checked=item==variant };
-                option.Click+=delegate { Variant=choice; }; variantItems[(int)item]=option; versions.DropDownItems.Add(option);
-            }
-            menu.Items.Add(versions);
-            var games=new ToolStripMenuItem("게임 스타일");
-            foreach(var item in MonsterVariants.All) if(GameSkins.IsGame(item)) {
-                var choice=item; var option=new ToolStripMenuItem(MonsterVariants.Name(item)) { Checked=item==variant };
-                option.Click+=delegate { Variant=choice; }; games.DropDownItems.Add(option);
-                VariantChanged+=delegate { option.Checked=variant==choice; };
-            }
-            menu.Items.Add(games);
             var roam = new ToolStripMenuItem("자유롭게 움직이기") { Checked = true, CheckOnClick = true };
             roam.CheckedChanged += delegate { roaming = roam.Checked; }; menu.Items.Add(roam);
             var top = new ToolStripMenuItem("다른 창 위에 표시") { Checked = true, CheckOnClick = true };

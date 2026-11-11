@@ -65,5 +65,5 @@ import kotlinx.coroutines.*
         Text(message,style=MaterialTheme.typography.bodySmall)
         Text("연결 창을 닫거나 앱을 배경으로 보내면 연결이 닫혀요. 신뢰하는 같은 Wi-Fi에서 사용하세요.",style=MaterialTheme.typography.labelSmall)
     }
-    incoming?.let{book->AlertDialog(onDismissRequest={incoming=null},title={Text("도착한 기록을 가져올까요?")},text={Text("${book.days.size}일 · 사진 ${book.days.values.sumOf{e->e.blocks.count{it.photo!=null}}}장\n겹치는 날짜 ${book.days.keys.count{it in controller.book.days}}일은 백업 내용으로 바뀌어요. 성장 기록과 소품은 기존 병합 규칙으로 확인해요.")},confirmButton={TextButton({runCatching{controller.importBook(book)}.onFailure{controller.report(it.message ?: "가져오기 실패")};incoming=null}){Text("가져오기")}},dismissButton={TextButton({incoming=null}){Text("취소")}})}
+    incoming?.let{book->AlertDialog(onDismissRequest={incoming=null},title={Text("도착한 기록을 가져올까요?")},text={Text("${book.days.size}일 · 사진 ${book.days.values.sumOf{e->e.blocks.count{it.photo!=null}}}장\n겹치는 날짜 ${book.days.keys.count{it in controller.book.days}}일은 백업 내용으로 바뀌어요. 성장과 이전 백업 정보는 기존 병합 규칙으로 확인해요.")},confirmButton={TextButton({runCatching{controller.importBook(book)}.onFailure{controller.report(it.message ?: "가져오기 실패")};incoming=null}){Text("가져오기")}},dismissButton={TextButton({incoming=null}){Text("취소")}})}
 }

@@ -195,7 +195,7 @@ extension DiaryStore {
                 let current = MacBackup(days: try allDays(), companion: companion, windowsMetadata: windowsMetadata)
                 let conflicts = incoming.days.keys.filter { current.days[$0] != nil }.count
                 backup = try WindowsCompatibility.merge(current: current, incoming: incoming)
-                message = "Windows 기록 \(incoming.days.count)일을 합칩니다. 같은 날짜 \(conflicts)일은 가져온 기록으로 교체하고 나머지 맥 기록은 유지합니다. 성장 날짜는 합치고 장비는 백업에 있으면 적용합니다."
+                message = "Windows 기록 \(incoming.days.count)일을 합칩니다. 같은 날짜 \(conflicts)일은 가져온 기록으로 교체하고 나머지 맥 기록은 유지합니다. 성장 날짜를 합치고 예전 꾸미기 정보는 백업 호환용으로 보관합니다."
             } else {
                 backup = try JSONDecoder().decode(MacBackup.self, from: data)
                 message = "맥 백업 \(backup.days.count)일의 기록과 상몬 정보를 복원합니다. 현재 맥 기록 전체가 교체됩니다."
