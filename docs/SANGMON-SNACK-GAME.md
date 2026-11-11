@@ -39,3 +39,5 @@
 [실제 렌더링 화면](../previews/snack-game-20261111/README.md)
 
 키 처리 참고: [Microsoft WinForms 키보드 이벤트](https://learn.microsoft.com/en-us/dotnet/desktop/winforms/input-keyboard/events). `SuppressKeyPress`로 KeyUp을 없애지 않고 `Handled`와 KeyPress 처리를 분리합니다.
+
+최종 검증 완료: [Windows CI](https://github.com/parkhookjung-debug/myday-diary/actions/runs/43037274582)에서 363개 assertion, 네이티브 일기·게임·키 이벤트·그림, 로컬 서버/Windows 채팅이 통과했습니다. [실행 파일의 출처·SHA256](builds/windows-snack-game-2026-11-11.json).
