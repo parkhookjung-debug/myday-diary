@@ -20,5 +20,4 @@
 | 소품 이름과 설명 | [SangmonItems.cs](../Core/SangmonItems.cs) | 그림과 별도로 관리하는 아이템 목록 |
 | 걷기·쉬기·하품·클릭 반응 | [PetBehavior.cs](PetBehavior.cs) | 행동 전환·가속·반응 시간 |
 | 바탕화면 이동·마우스·메뉴 | [DesktopPet.cs](DesktopPet.cs) | 투명 창·드래그·경계·우클릭 메뉴 |
-
 | 탄성·던지기·중력·화면 충돌 | [PetDynamics.cs](PetDynamics.cs) | [사용법과 조절 값](../../docs/DESKTOP-PET-MOTION.md) |

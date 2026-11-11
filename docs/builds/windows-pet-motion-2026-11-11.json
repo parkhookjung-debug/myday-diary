@@ -1,0 +1,23 @@
+{
+  "date": "2026-11-11",
+  "appVersion": "0.15.0",
+  "scope": "Windows elastic desktop pet; speed-scaled throw, screen collision and damping",
+  "sourceCommit": "a5c9093b2886e44f7eca8aed2789ddd0b29f367e",
+  "branch": "codex/windows-app",
+  "ci": "https://github.com/parkhookjung-debug/myday-diary/actions/runs/43032278564",
+  "ciConclusion": "success",
+  "artifact": "myday-windows-70",
+  "file": "MyDay.exe",
+  "bytes": 584704,
+  "sha256": "70e16c22cf66228ed4e1c97a132e2575e0d6cd724bf768a4b720e0b5d74dbfa3",
+  "checks": {
+    "assertions": 346,
+    "nativeDiarySmoke": true,
+    "nativePointerRoutingAndUnclippedFourDirectionStretch": true,
+    "localChatServerAndTwoWindowsClients": true
+  },
+  "macAndAndroidMotionChanged": false,
+  "databaseVersionChanged": false,
+  "throwGain": 1.8,
+  "maxLaunchPixelsPerSecond": 5200
+}

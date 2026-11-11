@@ -20,7 +20,7 @@
 | 과도한 발사 제한 | 같은 파일 `MaxThrowSpeed=5200` px/s. 제한 미만에서는 같은 조건의 드래그 속도가 2배면 발사 속도도 2배 |
 | 중력·반발·감속 | 같은 파일 `Gravity`, `Restitution`, `Step`의 공기 저항·바닥 마찰 |
 | 잡았을 때 늘어남 | 같은 파일 `Held` 분기의 따라오기·속도·거리 기반 변형. 늘어남은 최대 약 1.75배이고 멈추면 완화 |
-| 마우스 캡처·클릭 구분·화면 경계 | [DesktopPet.cs](../windows/Character/DesktopPet.cs), [PetGesture.cs](../windows/Character/PetGesture.cs) |
+| 마우스 캡처·클릭 구분·화면 경계 | [DesktopPet.cs](../windows/Character/DesktopPet.cs), [PetGesture.cs](../windows/Core/PetGesture.cs) |
 | 몸·눈·얼굴 그림 | 기존 [MonsterPainter.cs](../windows/Character/MonsterPainter.cs), [ClayMaterial.cs](../windows/Character/ClayMaterial.cs) |
 | 동작 검사·프레임 출력 | [PetDynamicsTests.cs](../windows/Tests/PetDynamicsTests.cs) |
 
@@ -33,3 +33,5 @@
 `--pet-physics-preview <출력 폴더>`는 앱의 물리 계산과 렌더러로 180장의 재현 가능한 PNG를 만듭니다. `--pet-playground`는 일기 데이터를 읽거나 쓰지 않는 상몬 전용 시험 창을 엽니다. 시험 창에서 클릭의 일기 열기는 연결하지 않습니다. 실제 앱에서는 기존 일기 열기가 유지됩니다.
 
 [움직이는 미리보기](../previews/pet-motion-20261111/README.md)
+
+검증 완료: Windows CI의 346개 assertion·네이티브 화면/포인터 smoke·로컬 채팅 서버/Windows 두 클라이언트가 모두 통과했습니다. [빌드 원본·용량·SHA256](builds/windows-pet-motion-2026-11-11.json) · [CI 결과](https://github.com/parkhookjung-debug/myday-diary/actions/runs/43032278564).
