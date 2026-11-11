@@ -42,13 +42,20 @@
 
 과거 0.14 안내와 발표 기초 자료는 당시 기능의 기록입니다. 현재 시연·발표에서는 이 문서의 제거 범위를 함께 반영하세요.
 
-## 로컬 검증과 용량
+## 검증과 용량
 
-Windows 328개 assertion·실제 화면 smoke·로컬 서버 및 두 Windows 클라이언트 통신 검사를 통과했습니다. Android APK·JVM 단위 테스트 56개·Lint·기기 테스트 APK 빌드를 통과했습니다. 한글 경로의 JVM 테스트 클래스 로딩 문제를 피하기 위해 동일 소스를 ASCII 경로에 복사해 검증했습니다. 실제 Android 35 기기 검사와 Mac 네이티브 빌드는 PR CI에서 추가 검증합니다.
+Windows 328개 assertion·실제 화면 smoke·로컬 서버 및 두 Windows 클라이언트 통신 검사를 통과했습니다. Android APK·JVM 단위 테스트 56개·Lint 오류 0개·Android 35 기기 검사 19개·실제 Windows 백업 교환을 통과했습니다. Mac Apple Silicon 네이티브 빌드·화면 렌더링·로컬 채팅·Windows 백업 교환과 공통 계약 검사를 통과했습니다. 테스트의 세는 단위가 다르므로 합산한 총점으로 표현하지 않습니다. 실제 Galaxy 햅틱 느낌과 Intel Mac은 별도 실기기 확인 범위입니다.
 
-| 배포물 | 이전 0.14 | 0.15 로컬 검증 빌드 |
-| --- | --- | --- |
-| MyDay-Android.apk | 32295158 bytes | 15974676 bytes |
-| MyDay-Windows.exe | 614400 bytes | 567808 bytes |
+로컬 한글 경로에서 발생한 JVM 클래스 로딩 문제는 동일 소스를 ASCII 경로에 복사해 검증했습니다. GitHub의 깨끗한 환경에서도 전체 검사를 통과했습니다. Mac·Android의 이전 꾸미기 자산과 안내를 검사하던 항목은 기본 상몬의 실제 렌더링·포장·호환성 검사로 교체했습니다.
 
-Android 그림 원본은 16,827,038 → 754,257 bytes입니다. APK는 삭제된 자산이 남지 않도록 새 빌드 디렉터리에서 패키징했습니다. [Windows 실제 화면](../previews/focused-20261111/README.md)을 확인할 수 있습니다.
+| 배포물 | 이전 0.14 | 검증된 0.15 | 감소 |
+| --- | --- | --- | --- |
+| MyDay-Windows.exe | 614,400 bytes | 567,808 bytes | 7.6% |
+| MyDay-macOS-arm64.zip | 17,407,263 bytes | 1,931,281 bytes | 88.9% |
+| MyDay-Android.apk | 32,295,158 bytes | 15,974,676 bytes | 50.5% |
+
+Android 그림 원본은 16,827,038 → 754,257 bytes입니다. 삭제한 자산이 APK 안에 남지 않도록 허용 목록으로 새 패키지를 구성합니다. [세 앱 실제 화면](../previews/focused-20261111/README.md)과 [소스·CI·SHA256](builds/myday-0.15.0.json)을 확인할 수 있습니다.
+
+- [검증 실행 43023459628](https://github.com/parkhookjung-debug/myday-diary/actions/runs/43023459628)
+- [검증 실행 43026084065](https://github.com/parkhookjung-debug/myday-diary/actions/runs/43026084065)
+- [검증 실행 43025057825](https://github.com/parkhookjung-debug/myday-diary/actions/runs/43025057825)
