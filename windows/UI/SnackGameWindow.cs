@@ -31,12 +31,17 @@ namespace MyDay.Windows.UI
             canvas=new SnackGameCanvas(game){Dock=DockStyle.Fill};Controls.Add(canvas);Controls.Add(titleBar);Controls.Add(footer);
             start.Click+=delegate {StartRound();};pause.Click+=delegate {TogglePause();};
             canvas.MouseDown+=delegate {canvas.Focus();};
-            KeyDown+=delegate(object sender,KeyEventArgs e){e.SuppressKeyPress=PressGameKey(e.KeyCode);};
+            KeyDown+=delegate(object sender,KeyEventArgs e){e.Handled=PressGameKey(e.KeyCode);};
+            // SuppressKeyPress also drops KeyUp; keep key releases for movement/hold guards.
+            KeyPress+=delegate(object sender,KeyPressEventArgs e){if(" aAdDrR".IndexOf(e.KeyChar)>=0||e.KeyChar==(char)27)e.Handled=true;};
             KeyUp+=delegate(object sender,KeyEventArgs e){ReleaseGameKey(e.KeyCode);};
             Deactivate+=delegate {spaceDown=restartDown=false;PauseRound();};
-            timer.Tick+=delegate {double now=clock.Elapsed.TotalSeconds;if(game.State!=SnackRoundState.Playing){last=now;return;}game.Step(now-last,(right?1:0)-(left?1:0));last=now;UpdateControls();canvas.Invalidate();};
+            timer.Tick+=delegate {double now=clock.Elapsed.TotalSeconds;if(game.State!=SnackRoundState.Playing){last=now;return;}AdvanceGame(now-last);last=now;UpdateControls();canvas.Invalidate();};
             Shown+=delegate {last=clock.Elapsed.TotalSeconds;timer.Start();canvas.Focus();};UpdateControls();
         }
+        internal void AdvanceGame(double seconds){game.Step(seconds,(right?1:0)-(left?1:0));}
+        internal KeyEventArgs NativeKeyDownForTest(Keys key){var e=new KeyEventArgs(key);OnKeyDown(e);return e;}
+        internal void NativeKeyUpForTest(Keys key){OnKeyUp(new KeyEventArgs(key));}
         internal bool PressGameKey(Keys key)
         {
             if(key==Keys.Left||key==Keys.A)left=true;

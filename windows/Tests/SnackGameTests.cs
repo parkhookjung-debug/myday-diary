@@ -52,12 +52,17 @@ namespace MyDay.Windows
                 window.Show();Application.DoEvents();
                 using(var frame=new Bitmap(window.Width,window.Height)){window.DrawToBitmap(frame,new Rectangle(Point.Empty,frame.Size));frame.Save(Path.Combine(directory,"windows-game-ready.png"));}
                 window.StartRound();var game=window.Game;
+                var key=window.NativeKeyDownForTest(Keys.Right);
+                if(!key.Handled||key.SuppressKeyPress)throw new Exception("Game key handling suppresses native key release");
+                window.AdvanceGame(.05);double movedX=game.PlayerX;window.NativeKeyUpForTest(Keys.Right);window.AdvanceGame(.1);
+                if(movedX<=480||Math.Abs(game.PlayerX-movedX)>.01)throw new Exception("Releasing an arrow does not stop movement");
+                window.StartRound();
                 game.AddForTest(SnackKind.Apple,150,210);game.AddForTest(SnackKind.Cookie,325,340);game.AddForTest(SnackKind.Strawberry,600,260);game.AddForTest(SnackKind.Rock,430,185);game.AddForTest(SnackKind.Thorn,780,380);
                 game.AddForTest(SnackKind.Apple,game.PlayerX,SnackGame.PlayerY);game.Step(.01,0);
                 window.SavePreview(Path.Combine(directory,"windows-game-playing.png"));
-                window.PressGameKey(Keys.Space);window.PressGameKey(Keys.Space);
+                window.NativeKeyDownForTest(Keys.Space);window.NativeKeyDownForTest(Keys.Space);
                 if(game.State!=SnackRoundState.Paused)throw new Exception("Holding Space repeatedly toggles pause");
-                window.ReleaseGameKey(Keys.Space);window.PressGameKey(Keys.Space);window.ReleaseGameKey(Keys.Space);
+                window.NativeKeyUpForTest(Keys.Space);window.NativeKeyDownForTest(Keys.Space);window.NativeKeyUpForTest(Keys.Space);
                 if(game.State!=SnackRoundState.Playing)throw new Exception("Space does not resume");
                 window.PauseRound();double time=game.Elapsed;game.Step(.1,1);if(game.State!=SnackRoundState.Paused||game.Elapsed!=time)throw new Exception("Native game pause failed");
                 window.SavePreview(Path.Combine(directory,"windows-game-paused.png"));

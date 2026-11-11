@@ -34,6 +34,8 @@
 
 단위 검사는 시작 전 정지, 간식 세 종류·중복 점수 방지, 동시 장애물·무적·무적 중 먹기, 시간 정지·재개, 마우스 경계·잘못된 입력, 놓친 간식, 30/120FPS 일치, 게임 종료·재시작·60초 완료와 오브젝트 정리를 확인합니다. 기존 저장·성장·바탕화면 상몬 검사도 함께 실행합니다.
 
-`--snack-game-preview <출력 폴더>`는 실제 게임 창의 시작·멈춤·재개·재시작·Space 길게 누르기·작은 화면을 확인하고 PNG를 출력합니다. 전체 `--smoke-test`에도 포함합니다. 실제 Windows 게임 창에서 Space 재개와 방향키 이동을 확인했습니다.
+`--snack-game-preview <출력 폴더>`는 실제 게임 창의 시작·멈춤·재개·재시작·Space 길게 누르기·방향키를 놓았을 때 정지·작은 화면을 확인하고 PNG를 출력합니다. 전체 `--smoke-test`에도 포함합니다. 실제 Windows 게임 창에서 Space 재개와 방향키 이동을 확인했습니다.
 
 [실제 렌더링 화면](../previews/snack-game-20261111/README.md)
+
+키 처리 참고: [Microsoft WinForms 키보드 이벤트](https://learn.microsoft.com/en-us/dotnet/desktop/winforms/input-keyboard/events). `SuppressKeyPress`로 KeyUp을 없애지 않고 `Handled`와 KeyPress 처리를 분리합니다.
