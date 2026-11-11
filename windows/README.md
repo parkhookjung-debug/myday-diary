@@ -21,7 +21,7 @@ Android 프로젝트와 별도 폴더에서 개발하며 외부 패키지, 브�
 
 Windows 10/11과 .NET Framework 4.8 이상을 사용합니다.
 `실행.cmd`를 더블클릭하면 처음에는 소스를 빌드한 뒤 바탕화면에 캐릭터가 나타납니다.
-캐릭터를 한 번 클릭하면 일기 창이 열립니다.
+캐릭터를 한 번 클릭하면 일기 창이 열립니다. 잡아끌면 늘어나고, 빠르게 놓으면 던진 속도에 따라 날아가 화면 가장자리에서 튕깁니다. [사용법·물리 조절 파일](../docs/DESKTOP-PET-MOTION.md).
 빌드 후에는 `bin/MyDay.exe`만 더블클릭해도 실행할 수 있습니다.
 GitHub CI의 Windows artifact에서도 실행 파일을 받을 수 있습니다.
 [EXE 직접 다운로드](https://github.com/parkhookjung-debug/myday-diary/releases/download/v0.3.10-preview/MyDay.exe)는 다운로드한 파일을 실행합니다. [전체 ZIP과 안내서](https://github.com/parkhookjung-debug/myday-diary/releases/tag/v0.3.10-preview)는 압축을 풀고 `MyDay.exe`를 실행합니다.

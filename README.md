@@ -18,6 +18,8 @@ Windows·Mac·Android에서 쓰는 일기 앱입니다. 사진과 일기 블록�
 
 > **현재 작업 버전 0.15.0**: 상몬 변신·코디·뽑기·재화·합성 화면을 제거하고 일기와 레벨업에 집중합니다. 로컬 채팅과 카카오 연동 원본은 유지하며 공개 서버는 이전처럼 비활성입니다. [간소화 내용·호환성·수정 파일](docs/FOCUSED-APP.md). [0.14 통합 기록](docs/INTEGRATION-2026-10-29.md)
 
+**Windows 상몬 새 동작:** [잡으면 늘어나고, 빠르게 던지면 화면 가장자리에서 튕깁니다](docs/DESKTOP-PET-MOTION.md) · [동작 미리보기](previews/pet-motion-20261111/README.md)
+
 ## 설치
 
 정식 릴리스는 아직 없습니다. 최신 개발 빌드는 GitHub Actions 실행 결과의 **Artifacts**에서 받습니다(GitHub 로그인 필요, 7~14일 보관).

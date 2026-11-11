@@ -36,6 +36,12 @@ namespace MyDay.Windows
                 Application.SetUnhandledExceptionMode(UnhandledExceptionMode.ThrowException);
                 try { Tests.Smoke(Path.GetFullPath(args[1])); return 0; } catch(Exception ex) { Console.Error.WriteLine(ex); return 1; }
             }
+            if(args.Length==2 && args[0]=="--pet-physics-preview") {
+                try {Tests.PetPhysicsPreview(Path.GetFullPath(args[1]));return 0;}catch(Exception ex){Console.Error.WriteLine(ex);return 1;}
+            }
+            if(args.Length==1 && args[0]=="--pet-playground") {
+                using(var pet=new MyDay.Windows.Character.DesktopPet(delegate{})){pet.Text="MyDay 상몬 탄성 미리보기";Application.Run(pet);}return 0;
+            }
             if(args.Length==2 && args[0]=="--character-preview")
             {
                 try { Tests.Preview(Path.GetFullPath(args[1])); return 0; } catch(Exception ex) { Console.Error.WriteLine(ex); return 1; }
