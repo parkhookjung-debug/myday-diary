@@ -86,13 +86,20 @@ class NotebookStorageDeviceTest {
         assertThrows(IllegalArgumentException::class.java) {store.saveBook(book.copy(equipment=book.equipment.equip(slot,id)))}
         assertEquals(previous,File(directory,"notebook.json").readText());assertEquals(book,store.loadBook())
     }
-    @Test fun catalogAndAnimatedArtworkMatchWindowsCountsAndKeepIdleQuiet() {
+    @Test fun legacyCatalogAndFocusedArtworkKeepIdleQuiet() {
         val catalog=NotebookCatalog(target);assertEquals(100,catalog.templates.size);assertEquals(64,catalog.characters.size);assertEquals(300,catalog.items.size)
         assertEquals(100,catalog.templates.map {it.id}.distinct().size);assertEquals(64,catalog.characters.map {it.id}.distinct().size)
         assertTrue(catalog.templates.all {it.categoryName.any {c->c in '가'..'힣'}})
-        catalog.characters.forEach {skin->val icon=target.assets.open("portraits/${skin.id}.png").use {BitmapFactory.decodeStream(it)};assertEquals(192,icon.width);assertEquals(192,icon.height);icon.recycle()}
-        catalog.characters.forEach {skin->val atlas=target.assets.open("sangmon/${skin.id}.png").use {BitmapFactory.decodeStream(it)};assertEquals(1536,atlas.width);assertEquals(1536,atlas.height);atlas.recycle()}
+        assertEquals(listOf("original.png"),target.assets.list("sangmon")!!.toList())
+        for(folder in listOf("portraits","items","equipment"))assertTrue(target.assets.list(folder).isNullOrEmpty())
+        val sprites=com.myday.diary.ui.character.SangmonSprites(target)
+        val plain=Bitmap.createBitmap(240,220,Bitmap.Config.ARGB_8888)
+        val retired=Bitmap.createBitmap(240,220,Bitmap.Config.ARGB_8888)
+        sprites.draw(Canvas(plain),"original",Equipment(),120f,110f,96f,0L)
+        sprites.draw(Canvas(retired),"frost",Equipment("solar-sword","astral-orb"),120f,110f,96f,0L)
+        assertTrue(plain.sameAs(retired));plain.recycle();retired.recycle()
         val original=target.assets.open("sangmon/original.png").use {BitmapFactory.decodeStream(it)}
+        assertEquals(1536,original.width);assertEquals(1536,original.height)
         fun warm(row: Int,frame: Int): Int {var count=0;for(y in 0 until 192) for(x in 0 until 192) {val p=original.getPixel(frame*192+x,row*192+y);if(Color.alpha(p)>0 && Color.red(p)>240 && Color.green(p) in 171..234 && Color.blue(p)<180) count++};return count}
         assertEquals(0,warm(0,0));assertTrue(warm(2,2)>10);original.recycle()
     }
