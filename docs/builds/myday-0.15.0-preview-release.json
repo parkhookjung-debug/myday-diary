@@ -1,0 +1,50 @@
+{
+  "release": "v0.15.0-preview",
+  "date": "2026-11-11",
+  "packagingSource": "dd837e20db2f200a439c63b0dbeb99f0ad3d8668",
+  "files": [
+    {
+      "platform": "windows",
+      "file": "MyDay-Windows.exe",
+      "sourceCommit": "a5c9093b2886e44f7eca8aed2789ddd0b29f367e",
+      "ci": "https://github.com/parkhookjung-debug/myday-diary/actions/runs/43032278564",
+      "artifact": "myday-windows-70",
+      "sha256": "70e16c22cf66228ed4e1c97a132e2575e0d6cd724bf768a4b720e0b5d74dbfa3",
+      "bytes": 584704
+    },
+    {
+      "platform": "macos",
+      "file": "MyDay-macOS-arm64.zip",
+      "sourceCommit": "df85eb9cc8e239108bc4bc9b30809ca2200487ce",
+      "ci": "https://github.com/parkhookjung-debug/myday-diary/actions/runs/43026084065",
+      "artifact": "myday-chat-macOS-ARM64",
+      "sha256": "08ef76a4c87d98bce661b1ac291641a18ca1454ec4aba3c855896e585e61a4e7",
+      "bytes": 1931281
+    },
+    {
+      "platform": "android",
+      "file": "MyDay-Android.apk",
+      "sourceCommit": "c5e24bd31a31a8a2e8b643b02a9575aa03119677",
+      "ci": "https://github.com/parkhookjung-debug/myday-diary/actions/runs/43025057825",
+      "artifact": "myday-debug-76",
+      "sha256": "94bf87cebd3c7e0684841f4ad4c5d16836f779f02967fd46052ec1719f60309e",
+      "bytes": 15974676
+    }
+  ],
+  "windowsChecks": {
+    "assertions": 346,
+    "nativeDiarySmoke": true,
+    "nativePointerRoutingAndUnclippedFourDirectionStretch": true,
+    "localChatServerAndTwoWindowsClients": true
+  },
+  "androidChecks": {
+    "jvm": 56,
+    "api35Device": 19,
+    "lintErrors": 0
+  },
+  "macOSChecks": {
+    "nativeBuild": true,
+    "desktopBackupInterop": true
+  },
+  "note": "The three binaries are the verified 0.15.0 focused app. Elastic throws are Windows-only. Android is the CI debug-signed preview; macOS is Apple Silicon, ad-hoc signed without notarization."
+}
