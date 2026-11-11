@@ -280,7 +280,7 @@ struct DesktopPetView: View {
                 openWindow(id: "diary")
             }.buttonStyle(.borderless).padding(8).background(.regularMaterial, in: Capsule())
         }.padding(12).contextMenu {
-            Button("성장 · 장비") { store.showingCompanion = true; NSApp.activate(ignoringOtherApps: true) }
+            Button("상몬 성장") { store.showingCompanion = true; NSApp.activate(ignoringOtherApps: true) }
             Button("숨기기") { DesktopCompanion.shared.hide() }
         }
     }
