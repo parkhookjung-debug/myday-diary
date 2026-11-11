@@ -1,0 +1,10 @@
+{
+  "format": "myday-snack-game",
+  "version": 1,
+  "roundSeconds": 60,
+  "startingLives": 3,
+  "foodPoints": 10,
+  "playerSpeed": 850,
+  "invulnerableSeconds": 1.2,
+  "hazardProbability": 0.32
+}

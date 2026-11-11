@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Drawing;
@@ -40,7 +40,7 @@ namespace MyDay.Windows.Character
         public MonsterVariant Variant {get{return MonsterVariant.Original;}set{variant=MonsterVariant.Original;if(Visible)RenderFrame();}}
         public bool Roaming { get { return roaming; } }
         public event EventHandler PetHidden;
-        public DesktopPet(Action openDiary,Action openGrowth=null)
+        public DesktopPet(Action openDiary,Action openGrowth=null,Action openGame=null)
         {
             this.openDiary = openDiary;
             Text = "MyDay 상몬"; FormBorderStyle = FormBorderStyle.None;
@@ -54,6 +54,7 @@ namespace MyDay.Windows.Character
             var menu = new ContextMenuStrip();
             menu.Items.Add("일기 열기", null, delegate { openDiary(); });
             if(openGrowth!=null) menu.Items.Add("상몬 성장",null,delegate { openGrowth(); });
+            if(openGame!=null)menu.Items.Add("상몬 게임 · 간식 산책",null,delegate {openGame();});
             var roam = new ToolStripMenuItem("자유롭게 움직이기") { Checked = true, CheckOnClick = true };
             roam.CheckedChanged += delegate { roaming = roam.Checked; }; menu.Items.Add(roam);
             var top = new ToolStripMenuItem("다른 창 위에 표시") { Checked = true, CheckOnClick = true };

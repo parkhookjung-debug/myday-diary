@@ -27,3 +27,7 @@
 뽑기·수집 도감은 [CollectionWindow.cs](https://github.com/parkhookjung-debug/myday-diary/blob/f29da72f23ed7a49aa3dfd28d85311f59b6bd7bc/windows/UI/CollectionWindow.cs), 저장 성공/실패 처리는 [DiaryWindow.Collection.cs](https://github.com/parkhookjung-debug/myday-diary/blob/f29da72f23ed7a49aa3dfd28d85311f59b6bd7bc/windows/UI/DiaryWindow.Collection.cs)에서 수정합니다. [규칙 안내](../../docs/SANGMON-COLLECTION.md)
 
 채팅 화면은 [ChatWindow.cs](ChatWindow.cs), 말풍선은 [ChatTranscript.cs](ChatTranscript.cs), 일기 앱 진입은 [DiaryWindow.Chat.cs](DiaryWindow.Chat.cs)에서 수정합니다. 통신은 [ChatClient.cs](../Chat/ChatClient.cs)입니다.
+
+## 상몬 게임
+
+[SnackGameWindow.cs](SnackGameWindow.cs)는 게임 그림·입력·자동 정지, [DiaryWindow.Game.cs](DiaryWindow.Game.cs)는 일기 창 연결을 담당합니다. [공통 규칙·모델·사용법](../../docs/SANGMON-SNACK-GAME.md).

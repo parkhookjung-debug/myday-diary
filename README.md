@@ -34,6 +34,8 @@ Windows·Mac·Android에서 쓰는 일기 앱입니다. 사진과 일기 블록�
 
 **Windows 상몬 새 동작:** [잡으면 늘어나고, 빠르게 던지면 화면 가장자리에서 튕깁니다](docs/DESKTOP-PET-MOTION.md) · [동작 미리보기](previews/pet-motion-20261111/README.md)
 
+**Windows 개발 초안:** [상몬 게임 · 간식 산책](docs/SANGMON-SNACK-GAME.md) — 먹을거리는 먹고 장애물은 피하는 60초 미니게임. 현재 공개 Release에는 아직 포함하지 않습니다.
+
 ## 직접 빌드하기
 
 ```sh
