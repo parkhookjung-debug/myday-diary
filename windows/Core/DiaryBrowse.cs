@@ -8,7 +8,8 @@ namespace MyDay.Windows.Core
     public sealed class CalendarDay
     {
         public DateTime? Date;
-        public bool InMonth,HasEntry,HasPhoto;
+        public bool InMonth,HasEntry,HasPhoto,HasAnniversary;
+        public string AnniversaryNames;
     }
     public sealed class DiaryMatch
     {
@@ -31,11 +32,14 @@ namespace MyDay.Windows.Core
                     var date=new DateTime(ticks); cell.Date=date; cell.InMonth=date.Year==month.Year && date.Month==month.Month;
                     DiaryEntry entry; cell.HasEntry=book.Days.TryGetValue(DiaryStore.Key(date),out entry);
                     cell.HasPhoto=cell.HasEntry && HasPhoto(entry);
+                    var anniversaries=book.Studio==null?new Anniversary[0]:book.Studio.Anniversaries.Where(a=>Matches(a,date)).ToArray();
+                    cell.HasAnniversary=anniversaries.Length>0;cell.AnniversaryNames=string.Join(", ",anniversaries.Select(a=>a.Name));
                 }
                 result.Add(cell);
             }
             return result;
         }
+        private static bool Matches(Anniversary anniversary,DateTime date){DateTime saved;if(!DateTime.TryParseExact(anniversary.Date,"yyyy-MM-dd",CultureInfo.InvariantCulture,DateTimeStyles.None,out saved))return false;return anniversary.RepeatYearly?saved.Month==date.Month&&saved.Day==date.Day:saved.Date==date.Date;}
         public static List<DiaryMatch> Find(DiaryBook book,string query,DateTime? month=null)
         {
             query=(query??"").Trim(); var result=new List<DiaryMatch>();

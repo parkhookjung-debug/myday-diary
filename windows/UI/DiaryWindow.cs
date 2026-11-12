@@ -170,7 +170,7 @@ namespace MyDay.Windows.UI
         private void BrowseDiary(Action<JournalBrowser> shown=null)
         {
             board.CancelPlacement(); if(!FlushSave()) return;
-            using(var browser=new JournalBrowser(book,date,picker.MinDate,picker.MaxDate)) {
+            using(var browser=new JournalBrowser(book,date,picker.MinDate,picker.MaxDate,()=>store.Save(book))) {
                 if(testMode) { browser.StartPosition=FormStartPosition.Manual; browser.Location=new Point(-30000,-30000); }
                 if(shown!=null) browser.Shown+=delegate { browser.BeginInvoke((MethodInvoker)delegate { shown(browser); }); };
                 if(browser.ShowDialog(this)==DialogResult.OK && browser.SelectedDate.HasValue) ChangeDate(browser.SelectedDate.Value);
