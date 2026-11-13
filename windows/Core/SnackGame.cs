@@ -19,7 +19,7 @@ namespace MyDay.Windows.Core
     {
         public const int Width=960, Height=600, PlayerY=490;
         public const double Left=60,Right=900;
-        private readonly Random random;
+        private MiniGameRandom random;
         private readonly List<SnackDrop> drops=new List<SnackDrop>();
         private readonly ReadOnlyCollection<SnackDrop> view;
         private double target=Width/2,spawnIn=.4,remainder;
@@ -34,8 +34,11 @@ namespace MyDay.Windows.Core
         public double Bite {get;private set;}
         public double Hit {get;private set;}
         public double SecondsLeft {get{return Math.Max(0,SnackRules.RoundSeconds-Elapsed);}}
-        public SnackGame(int seed){random=new Random(seed);view=drops.AsReadOnly();PlayerX=target=Width/2;Lives=SnackRules.StartingLives;}
-        public void Start(){drops.Clear();Score=Eaten=0;Lives=SnackRules.StartingLives;Elapsed=Invulnerable=Bite=Hit=remainder=0;spawnIn=.4;PlayerX=target=Width/2;State=SnackRoundState.Playing;}
+        public SnackGame(int seed){random=new MiniGameRandom(seed);view=drops.AsReadOnly();PlayerX=target=Width/2;Lives=SnackRules.StartingLives;}
+        public int LastGain {get;private set;}
+        public int Combo {get;private set;}
+        public int MaxCombo {get;private set;}
+        public void Start(int? seed=null){if(seed.HasValue)random=new MiniGameRandom(seed.Value);drops.Clear();Score=Eaten=Combo=MaxCombo=LastGain=0;Lives=SnackRules.StartingLives;Elapsed=Invulnerable=Bite=Hit=remainder=0;spawnIn=.4;PlayerX=target=Width/2;State=SnackRoundState.Playing;}
         public void Pause(){if(State==SnackRoundState.Playing)State=SnackRoundState.Paused;remainder=0;}
         public void Resume(){if(State==SnackRoundState.Paused)State=SnackRoundState.Playing;}
         public void Aim(double x){if(!double.IsNaN(x)&&!double.IsInfinity(x))target=Math.Max(Left,Math.Min(Right,x));}
@@ -66,9 +69,9 @@ namespace MyDay.Windows.Core
                 // A forgiving inner-body hit circle; the snout/eye tips are not hurt boxes.
                 if(dx*dx+dy*dy<=46*46){
                     drops.RemoveAt(i);
-                    if(drop.Food){Score+=SnackRules.FoodPoints;Eaten++;Bite=.45;}
-                    else if(Invulnerable<=0){Lives--;Invulnerable=SnackRules.InvulnerableSeconds;Hit=.7;if(Lives<=0){State=SnackRoundState.Finished;break;}}
-                } else if(drop.Y>Height+30)drops.RemoveAt(i);
+                    if(drop.Food){Combo++;MaxCombo=Math.Max(MaxCombo,Combo);LastGain=SnackRules.FoodPoints+(Combo%SnackRules.ComboLength==0?SnackRules.ComboBonus:0);Score+=LastGain;Eaten++;Bite=.45;}
+                    else if(Invulnerable<=0){Lives--;Combo=0;Invulnerable=SnackRules.InvulnerableSeconds;Hit=.7;if(Lives<=0){State=SnackRoundState.Finished;break;}}
+                } else if(drop.Y>Height+30){if(drop.Food)Combo=0;drops.RemoveAt(i);}
             }
             if(Elapsed>=SnackRules.RoundSeconds-1e-8){Elapsed=SnackRules.RoundSeconds;State=SnackRoundState.Finished;}
         }

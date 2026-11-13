@@ -31,3 +31,5 @@
 ## 상몬 게임
 
 [SnackGameWindow.cs](SnackGameWindow.cs)는 게임 그림·입력·자동 정지, [DiaryWindow.Game.cs](DiaryWindow.Game.cs)는 일기 창 연결을 담당합니다. [공통 규칙·모델·사용법](../../docs/SANGMON-SNACK-GAME.md).
+
+[상몬 플레이룸](GameHubWindow.cs) · [슬링샷/낚시 화면](ArcadeGameWindow.cs) · [공통 그림/결과 카드](MiniGameArt.cs). [세 게임의 규칙·저장·검사·수정 파일](../../docs/SANGMON-PLAYROOM.md).

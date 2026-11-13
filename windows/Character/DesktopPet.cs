@@ -54,7 +54,7 @@ namespace MyDay.Windows.Character
             var menu = new ContextMenuStrip();
             menu.Items.Add("일기 열기", null, delegate { openDiary(); });
             if(openGrowth!=null) menu.Items.Add("상몬 성장",null,delegate { openGrowth(); });
-            if(openGame!=null)menu.Items.Add("상몬 게임 · 간식 산책",null,delegate {openGame();});
+            if(openGame!=null)menu.Items.Add("상몬 게임 · 플레이룸",null,delegate {openGame();});
             var roam = new ToolStripMenuItem("자유롭게 움직이기") { Checked = true, CheckOnClick = true };
             roam.CheckedChanged += delegate { roaming = roam.Checked; }; menu.Items.Add(roam);
             var top = new ToolStripMenuItem("다른 창 위에 표시") { Checked = true, CheckOnClick = true };

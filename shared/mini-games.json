@@ -1,0 +1,14 @@
+{
+  "format": "myday-mini-games",
+  "version": 1,
+  "SlingSeconds": 60,
+  "SlingShots": 10,
+  "SlingGravity": 650,
+  "SlingStrength": 8,
+  "SlingMaxPull": 140,
+  "FishSeconds": 60,
+  "FishBiteWindow": 1.1,
+  "FishWaitMin": 1.2,
+  "FishWaitMax": 3.0,
+  "FishZoneWidth": 0.25
+}

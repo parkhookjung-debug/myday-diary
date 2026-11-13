@@ -31,6 +31,8 @@ jobs:
       - name: Verify journal policy and temporary LAN transfer
         shell: pwsh
         run: |
+          python tools/sync-mini-games.py --check
+          if ($LASTEXITCODE -ne 0) { throw 'Mini-game rules out of date' }
           python tools/sync-snack-game.py --check
           if ($LASTEXITCODE -ne 0) { throw 'Snack game rules out of date' }
           python tools/sync-experience.py --check

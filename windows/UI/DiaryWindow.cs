@@ -140,7 +140,7 @@ namespace MyDay.Windows.UI
         private void EnsurePet()
         {
             if(pet!=null && !pet.IsDisposed) return;
-            pet=new DesktopPet(OpenDiary,delegate { OpenGrowth(); },OpenSnackGame);
+            pet=new DesktopPet(OpenDiary,delegate { OpenGrowth(); },OpenGames);
             pet.Variant=MonsterVariant.Original;
             pet.Equipment=null;
             pet.PetHidden+=delegate { petToggle.Text="캐릭터 띄우기"; };
@@ -635,7 +635,7 @@ namespace MyDay.Windows.UI
         }
         protected override void Dispose(bool disposing)
         {
-            if(disposing) { saveTimer.Dispose(); tray.Visible=false; if(tray.ContextMenuStrip!=null) tray.ContextMenuStrip.Dispose(); tray.Dispose(); if(pet!=null) pet.Dispose(); if(snackGame!=null) snackGame.Dispose(); }
+            if(disposing) { saveTimer.Dispose(); tray.Visible=false; if(tray.ContextMenuStrip!=null) tray.ContextMenuStrip.Dispose(); tray.Dispose(); if(pet!=null) pet.Dispose(); if(gameHub!=null) gameHub.Dispose(); }
             base.Dispose(disposing);
         }
     }

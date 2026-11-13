@@ -6,5 +6,7 @@
   "foodPoints": 10,
   "playerSpeed": 850,
   "invulnerableSeconds": 1.2,
-  "hazardProbability": 0.32
+  "hazardProbability": 0.32,
+  "comboLength": 5,
+  "comboBonus": 10
 }
