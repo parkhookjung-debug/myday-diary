@@ -9,7 +9,7 @@ using MyDay.Windows.Core;
 
 namespace MyDay.Windows.Character
 {
-    public sealed class DesktopPet : Form
+    public sealed partial class DesktopPet : Form
     {
         private readonly Timer timer = new Timer { Interval = 33 };
         private readonly Stopwatch clock = Stopwatch.StartNew();
@@ -58,13 +58,15 @@ namespace MyDay.Windows.Character
             var roam = new ToolStripMenuItem("자유롭게 움직이기") { Checked = true, CheckOnClick = true };
             roam.CheckedChanged += delegate { roaming = roam.Checked; }; menu.Items.Add(roam);
             var top = new ToolStripMenuItem("다른 창 위에 표시") { Checked = true, CheckOnClick = true };
-            top.CheckedChanged += delegate { TopMost = top.Checked; }; menu.Items.Add(top);
+            top.CheckedChanged += delegate { TopMost = top.Checked; if(toy!=null)toy.TopMost=TopMost; }; menu.Items.Add(top);
             menu.Items.Add("불 뿜기", null, delegate { Fire(); });
             menu.Items.Add("통통 뛰기", null, delegate { behavior.Hop(); });
+            menu.Items.Add("공놀이 시작 / 공 다시 꺼내기",null,delegate{StartFetch();});
+            menu.Items.Add("공놀이 끝내기",null,delegate{StopFetch();});
             menu.Items.Add("캐릭터 숨기기", null, delegate { Hide(); if (PetHidden != null) PetHidden(this, EventArgs.Empty); });
             ContextMenuStrip = menu;
             timer.Tick += delegate { Advance(); };
-            VisibleChanged += delegate { if (Visible) { lastFrame = clock.Elapsed.TotalSeconds; timer.Start(); RenderFrame(); } else timer.Stop(); };
+            VisibleChanged += delegate { if (Visible) { lastFrame = clock.Elapsed.TotalSeconds; timer.Start(); RenderFrame(); } else {timer.Stop();StopFetch();} };
             MouseDown += OnPetDown; MouseMove += OnPetMove; MouseUp += OnPetUp;
         }
         protected override bool ShowWithoutActivation { get { return true; } }
@@ -90,7 +92,7 @@ namespace MyDay.Windows.Character
         }
         internal void BeginPointer(Point point,double time)
         {
-            gesture.Press(point);windowStart=Location;dynamics.Place(Location);dynamics.BeginDrag(time);
+            StopFetch();gesture.Press(point);windowStart=Location;dynamics.Place(Location);dynamics.BeginDrag(time);
             behavior.Step(0,roaming,true,false);RenderFrame();
         }
         internal void MovePointer(Point point,double time)
@@ -121,17 +123,20 @@ namespace MyDay.Windows.Character
         internal void StepMotion(double delta,bool hover)
         {
             var bodyPoint=new Point((int)(dynamics.Position.X+artworkBounds.Left+artworkBounds.Width/2),(int)(dynamics.Position.Y+artworkBounds.Top+artworkBounds.Height/2));
-            dynamics.SetBounds(OriginBounds(Screen.FromPoint(bodyPoint).WorkingArea));
+            var activeArea=Screen.FromPoint(bodyPoint).WorkingArea;
+            dynamics.SetBounds(OriginBounds(activeArea));
+            bool fetching=FetchPlaying;var fetchMotion=StepFetch(delta,activeArea);
             bool wasFlying=dynamics.Flying;
-            var motion=behavior.Step(delta,roaming&&!wasFlying,gesture.Active,hover&&!wasFlying);
+            var motion=behavior.Step(delta,roaming&&!wasFlying&&!fetching,gesture.Active,hover&&!wasFlying&&!fetching);
             if(!gesture.Active&&!wasFlying){
+                if(fetching)motion=fetchMotion;
                 var p=dynamics.Position;var bounds=dynamics.Bounds;
                 behavior.Bounce(p.X+motion.X<=bounds.Left&&motion.X<0||p.X+motion.X>=bounds.Right&&motion.X>0,p.Y+motion.Y<=bounds.Top&&motion.Y<0||p.Y+motion.Y>=bounds.Bottom&&motion.Y>0);
                 dynamics.Translate(motion);
             }
             dynamics.Step(delta);
             if(wasFlying&&!dynamics.Flying)behavior.Land();
-            SyncPosition();
+            SyncPosition();if(toy!=null)toy.RefreshFrame();
         }
         private void Advance()
         {
@@ -150,10 +155,11 @@ namespace MyDay.Windows.Character
                 float lookY=(pointer.Y-(Top+Height/2f))/Height;
                 PetActivity activity=gesture.Active && gesture.Moved?PetActivity.Drag:happy?PetActivity.Fire:behavior.Activity;
                 double age=activity==behavior.Activity?behavior.Age:Math.Min(seconds,.9);
+                if(FetchPlaying&&fetch.Moving&&activity!=PetActivity.Fire)activity=PetActivity.Walk;
                 var pose=MonsterPose.ForActivity(seconds,activity,age,lookX,lookY);
                 if(dynamics.Flying){pose.Closed=false;pose.Sleeping=false;pose.Bob=0;pose.EyeScale=1.12f;}
                 pose.WidthScale*=dynamics.ScaleX;pose.BodyScale*=dynamics.ScaleY;pose.Tilt+=dynamics.Tilt;
-                bool facing=dynamics.Flying&&Math.Abs(dynamics.Velocity.X)>30?dynamics.Velocity.X<0:behavior.FacingLeft;
+                bool facing=FetchPlaying?fetch.FacingLeft:dynamics.Flying&&Math.Abs(dynamics.Velocity.X)>30?dynamics.Velocity.X<0:behavior.FacingLeft;
                 MonsterPainter.Draw(g,RenderArea(Size),pose,facing,variant,equipment);
             }
             return bitmap;
@@ -165,7 +171,7 @@ namespace MyDay.Windows.Character
         }
         protected override void Dispose(bool disposing)
         {
-            if (disposing) { timer.Dispose(); if (ContextMenuStrip != null) ContextMenuStrip.Dispose(); }
+            if (disposing) { StopFetch();timer.Dispose(); if (ContextMenuStrip != null) ContextMenuStrip.Dispose(); }
             base.Dispose(disposing);
         }
     }

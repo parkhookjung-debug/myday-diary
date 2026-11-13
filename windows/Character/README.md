@@ -21,3 +21,7 @@
 | 걷기·쉬기·하품·클릭 반응 | [PetBehavior.cs](PetBehavior.cs) | 행동 전환·가속·반응 시간 |
 | 바탕화면 이동·마우스·메뉴 | [DesktopPet.cs](DesktopPet.cs) | 투명 창·드래그·경계·우클릭 메뉴 |
 | 탄성·던지기·중력·화면 충돌 | [PetDynamics.cs](PetDynamics.cs) | [사용법과 조절 값](../../docs/DESKTOP-PET-MOTION.md) |
+
+## 바탕화면 공놀이
+
+[FetchGame.cs](FetchGame.cs)는 추적·운반·귀환, [DesktopBallWindow.cs](DesktopBallWindow.cs)는 작은 투명 공 창과 드래그, [DesktopPet.Fetch.cs](DesktopPet.Fetch.cs)는 기존 상몬과의 연결/정리를 담당합니다. [사용법·공통 규칙·검사](../../docs/JUMP-AND-DESKTOP-FETCH.md).

@@ -34,7 +34,7 @@ Windows·Mac·Android에서 쓰는 일기 앱입니다. 사진과 일기 블록�
 
 **Windows 상몬 새 동작:** [잡으면 늘어나고, 빠르게 던지면 화면 가장자리에서 튕깁니다](docs/DESKTOP-PET-MOTION.md) · [동작 미리보기](previews/pet-motion-20261111/README.md)
 
-**Windows 개발 버전:** [상몬 플레이룸 · 간식 도전 / 슬링샷 / 낚시](docs/SANGMON-PLAYROOM.md) — 콤보·최고점수·오늘의 같은 배치·결과 카드. [실제 화면](previews/playroom-20261113/README.md). 현재 공개 Release와 별도인 작업 브랜치 빌드입니다.
+**Windows 개발 버전:** [플레이룸 4종 + 바탕화면 공놀이](docs/JUMP-AND-DESKTOP-FETCH.md) — 간식 도전·슬링샷·낚시·통통 점프, 공을 던지면 가져오는 상몬. [실제 화면](previews/jump-fetch-20261113/README.md). 현재 공개 Release와 별도인 작업 브랜치 빌드입니다.
 
 ## 직접 빌드하기
 

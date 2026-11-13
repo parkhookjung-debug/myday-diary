@@ -38,6 +38,8 @@ namespace MyDay.Windows.Character
             if(!Finite(point.X)||!Finite(point.Y))throw new ArgumentException("Finite position required");
             Position=point;target=point;Velocity=PointF.Empty;Flying=false;
         }
+        // A released toy falls even when the pointer was moving too slowly to fling it.
+        public void StartFlight(PointF velocity){if(!Finite(velocity.X)||!Finite(velocity.Y))throw new ArgumentException("Finite velocity required");Held=false;Flying=true;float speed=(float)Math.Sqrt(velocity.X*velocity.X+velocity.Y*velocity.Y),factor=Math.Min(1,MaxThrowSpeed/Math.Max(1,speed));Velocity=new PointF(velocity.X*factor,velocity.Y*factor);Clamp();}
         public void Translate(PointF delta){Position=new PointF(Position.X+delta.X,Position.Y+delta.Y);Clamp();}
         public void Clamp(){Position=new PointF(Limit(Position.X,Bounds.Left,Bounds.Right),Limit(Position.Y,Bounds.Top,Bounds.Bottom));}
         public void BeginDrag(double now)
