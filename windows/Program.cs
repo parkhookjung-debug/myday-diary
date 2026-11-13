@@ -39,6 +39,8 @@ namespace MyDay.Windows
             if(args.Length==1 && args[0]=="--snack-game"){using(var game=new SnackGameWindow(GameRecords.Local()))Application.Run(game);return 0;}
             if((args.Length==1 && args[0]=="--game-hub")||(args.Length==0 && string.Equals(Path.GetFileNameWithoutExtension(Application.ExecutablePath),"SangmonGame",StringComparison.OrdinalIgnoreCase))){using(var games=new GameHubWindow())Application.Run(games);return 0;}
             if((args.Length==1 && args[0]=="--desktop-fetch")||(args.Length==0 && string.Equals(Path.GetFileNameWithoutExtension(Application.ExecutablePath),"SangmonFetch",StringComparison.OrdinalIgnoreCase))){using(var hub=new GameHubWindow()){hub.Shown+=delegate{hub.StartFetchOnDesktop();};Application.Run(hub);}return 0;}
+            if(args.Length==1 && args[0]=="--blocks-game"){using(var game=new BlockGameWindow(GameRecords.Local()))Application.Run(game);return 0;}
+            if(args.Length==2 && args[0]=="--blocks-preview"){try{Tests.BlocksPreview(Path.GetFullPath(args[1]));return 0;}catch(Exception ex){Console.Error.WriteLine(ex);return 1;}}
             if(args.Length==1 && args[0]=="--cooking-game"){using(var game=new CookingGameWindow(GameRecords.Local()))Application.Run(game);return 0;}
             if(args.Length==2 && args[0]=="--cooking-preview"){try{Tests.CookingPreview(Path.GetFullPath(args[1]));return 0;}catch(Exception ex){Console.Error.WriteLine(ex);return 1;}}
             if(args.Length==2 && args[0]=="--jump-fetch-preview"){try{Tests.JumpFetchPreview(Path.GetFullPath(args[1]));return 0;}catch(Exception ex){Console.Error.WriteLine(ex);return 1;}}

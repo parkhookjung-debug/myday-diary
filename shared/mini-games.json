@@ -26,5 +26,11 @@
   "BakePerfectWidth": 6,
   "BakeFeedbackSeconds": 0.9,
   "BakeGoodPoints": 30,
-  "BakePerfectPoints": 50
+  "BakePerfectPoints": 50,
+  "BlocksColumns": 10,
+  "BlocksRows": 20,
+  "BlocksFallSeconds": 0.85,
+  "BlocksMinFallSeconds": 0.12,
+  "BlocksLockSeconds": 0.4,
+  "BlocksLinesPerLevel": 5
 }
