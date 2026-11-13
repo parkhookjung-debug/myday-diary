@@ -28,9 +28,9 @@ namespace MyDay.Windows.UI
             this.records=records??new GameRecords();Text="MyDay · 상몬 불꽃 요리";BackColor=Design.Paper;Font=Design.Font(10);KeyPreview=true;StartPosition=FormStartPosition.CenterParent;ClientSize=Design.Size(960,740);MinimumSize=Design.Size(680,570);
             var header=new Panel{Dock=DockStyle.Top,Height=Design.P(78)};var title=Design.Label("상몬 불꽃 요리",20,true);title.Location=Design.Point(26,12);header.Controls.Add(title);var note=Design.Label("Space / 마우스 꾹 누르기 → 황금색 구간에서 놓기 · 60초 안에 간식 8개",9);note.ForeColor=Design.Muted;note.Location=Design.Point(28,48);header.Controls.Add(note);
             var footer=new FlowLayoutPanel{Dock=DockStyle.Bottom,Height=Design.P(66),Padding=Design.Pad(20,12,8,8),WrapContents=false};start.Size=Design.Size(110,36);pause.Size=Design.Size(100,36);export.Size=Design.Size(132,36);fire.Size=Design.Size(154,36);status.Margin=Design.Pad(10,8,0,0);footer.Controls.AddRange(new Control[]{start,pause,fire,export,status});footer.Resize+=delegate{status.Visible=footer.ClientSize.Width>=Design.P(1100);};
-            canvas.Dock=DockStyle.Fill;canvas.AccessibleName="누르고 있다 황금색 구간에서 놓아 간식을 굽는 상몬 불꽃 요리";canvas.Render=DrawScene;canvas.Press=p=>BeginPointer();canvas.Release=p=>EndHeat(2);canvas.Cancel=CancelInput;Controls.Add(canvas);Controls.Add(header);Controls.Add(footer);
+            canvas.Dock=DockStyle.Fill;canvas.AccessibleName="누르고 있다 황금색 구간에서 놓아 간식을 굽는 상몬 불꽃 요리";canvas.Render=DrawScene;canvas.Press=p=>BeginPointer();canvas.Release=p=>EndHeat(2);canvas.Cancel=delegate{if(source==2)CancelInput();};Controls.Add(canvas);Controls.Add(header);Controls.Add(footer);
             start.Click+=delegate{StartRound();};pause.Click+=delegate{TogglePause();};export.Click+=delegate{MiniGameArt.Export(this,result);};
-            fire.MouseDown+=delegate(object s,MouseEventArgs e){if(e.Button==MouseButtons.Left)BeginHeat(2);};fire.MouseUp+=delegate(object s,MouseEventArgs e){if(e.Button==MouseButtons.Left)EndHeat(2);};fire.MouseCaptureChanged+=delegate{if(!fire.Capture)CancelInput();};
+            fire.MouseDown+=delegate(object s,MouseEventArgs e){if(e.Button==MouseButtons.Left)BeginHeat(2);};fire.MouseUp+=delegate(object s,MouseEventArgs e){if(e.Button==MouseButtons.Left)EndHeat(2);};fire.MouseCaptureChanged+=delegate{if(!fire.Capture&&source==2)CancelInput();};
             KeyDown+=delegate(object s,KeyEventArgs e){e.Handled=PressKey(e.KeyCode);};KeyUp+=delegate(object s,KeyEventArgs e){held.Remove(e.KeyCode);if(e.KeyCode==Keys.Space)EndHeat(1);};KeyPress+=delegate(object s,KeyPressEventArgs e){if(" pPrR".IndexOf(e.KeyChar)>=0||e.KeyChar==(char)27)e.Handled=true;};
             Deactivate+=delegate{held.Clear();PauseRound();};timer.Tick+=delegate{double now=clock.Elapsed.TotalSeconds;if(game.State==SnackRoundState.Playing){Advance(now-last);canvas.Invalidate();}last=now;};Shown+=delegate{last=clock.Elapsed.TotalSeconds;timer.Start();canvas.Focus();};UpdateUi();
         }
@@ -43,6 +43,7 @@ namespace MyDay.Windows.UI
         internal void EndPointer(){EndHeat(2);}
         internal void LoseFocusForTest(){OnDeactivate(EventArgs.Empty);}
         internal void CaptureLossForTest(){canvas.Capture=true;canvas.Capture=false;}
+        internal void ButtonCaptureLossForTest(){fire.Capture=true;fire.Capture=false;}
         internal void VerifyFooterForTest(){foreach(var button in new[]{start,pause,fire,export})if(!button.Parent.ClientRectangle.Contains(button.Bounds))throw new InvalidOperationException("Cooking footer button clipped");}
         internal void Advance(double seconds){game.Step(seconds);if(!game.Breathing)ClearCapture();UpdateUi();}
         internal void PauseRound(){CancelInput();game.Pause();UpdateUi();canvas.Invalidate();}
