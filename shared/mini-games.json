@@ -18,5 +18,13 @@
   "JumpSpeed": 280,
   "FetchSpeed": 380,
   "FetchRadius": 18,
-  "FetchCatchRadius": 86
+  "FetchCatchRadius": 86,
+  "BakeSeconds": 60,
+  "BakeOrders": 8,
+  "BakeHeatRate": 30,
+  "BakeTargetWidth": 18,
+  "BakePerfectWidth": 6,
+  "BakeFeedbackSeconds": 0.9,
+  "BakeGoodPoints": 30,
+  "BakePerfectPoints": 50
 }

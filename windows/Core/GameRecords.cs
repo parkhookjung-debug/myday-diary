@@ -18,7 +18,7 @@ namespace MyDay.Windows.Core
         public bool Persistent {get{return file!=null;}}
         public GameRecords(string file=null){this.file=file;Refresh();}
         public static GameRecords Local(){return new GameRecords(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),"MyDay","Windows","Games","scores.json"));}
-        private static bool ValidId(string id){DateTime day;return id=="snack"||id=="sling"||id=="fish"||id=="jump"||(id!=null&&id.StartsWith("snack-daily-v1:",StringComparison.Ordinal)&&DateTime.TryParseExact(id.Substring(15),"yyyy-MM-dd",CultureInfo.InvariantCulture,DateTimeStyles.None,out day));}
+        private static bool ValidId(string id){DateTime day;return id=="snack"||id=="sling"||id=="fish"||id=="jump"||id=="bake"||(id!=null&&id.StartsWith("snack-daily-v1:",StringComparison.Ordinal)&&DateTime.TryParseExact(id.Substring(15),"yyyy-MM-dd",CultureInfo.InvariantCulture,DateTimeStyles.None,out day));}
         public static string DailyId(DateTime day){return "snack-daily-v1:"+day.ToString("yyyy-MM-dd",CultureInfo.InvariantCulture);}
         private static GameScoreBook Read(string path){
             if(!File.Exists(path))return new GameScoreBook();
