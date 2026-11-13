@@ -38,3 +38,5 @@
 `MyDay.exe --cooking-preview <출력 폴더>`는 메모리 기록으로 실제 WinForms 창을 열어 키 내려감/올라감, 혼합 입력, 마우스 캡처 해제, 창 비활성화, 과열 후 키 반복, 한 번만 점수 저장, 결과 PNG를 확인합니다. 전체 `--smoke-test`에도 포함되어 기존 일기·게임·공놀이를 함께 검사합니다.
 
 [실제 폼과 게임 렌더러 화면](../previews/cooking-20261114/README.md). 개인 기록을 사용하지 않은 재현 가능한 검사 장면입니다.
+
+최종 검증: [Windows CI](https://github.com/parkhookjung-debug/myday-diary/actions/runs/43452732024)에서 448개 assertion, 기존 일기·게임·공놀이의 실제 화면과 로컬 채팅이 모두 통과했습니다. [실행 파일의 소스·크기·SHA256](builds/windows-cooking-2026-11-14.json). GitHub에서 실행 파일을 받으려면 이 CI의 **Artifacts → myday-windows-77**을 내려받아 압축을 풀고 `bin/MyDay.exe`를 실행하세요. GitHub 로그인이 필요하며 게임만 실행하려면 `MyDay.exe --game-hub`를 사용합니다. 현재 공개 Release의 첨부 파일은 바꾸지 않았습니다.
