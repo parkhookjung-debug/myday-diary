@@ -1,0 +1,32 @@
+{
+  "date": "2026-11-14",
+  "variant": "Windows six-game playroom, Sangmon-shaped falling blocks and desktop fetch development build",
+  "sourceCommit": "a204c27463cac3c1f532d30c0826f2a93f140a03",
+  "ci": "https://github.com/parkhookjung-debug/myday-diary/actions/runs/43455658004",
+  "ciConclusion": "success",
+  "files": [
+    "MyDay.exe",
+    "SangmonGame.exe",
+    "SangmonFetch.exe"
+  ],
+  "bytes": 735744,
+  "sha256": "32dbac46d27dfbb98e3dc4be3193d3debfeb5c39e5ce5e7724c3066011e03701",
+  "checks": {
+    "assertions": 473,
+    "nativeDiarySixGamesAndFetch": true,
+    "blocksSevenBagAndRotation": true,
+    "blocksSingleMultipleAndNonadjacentRows": true,
+    "blocksMixedInputSimulation1500": true,
+    "blocksKeyboardRepeatReleaseAndFocus": true,
+    "smallWindowLaunchButtonsVisible": true,
+    "blocksResultSavedOnce": true,
+    "transparentSangmonSpritesAndResultPng": true,
+    "localChat": true
+  },
+  "journalExperienceChanged": false,
+  "newGames": [
+    "sangmon-falling-blocks"
+  ],
+  "macAndroidGamesImplemented": false,
+  "publishedBaselineReplaced": false
+}
