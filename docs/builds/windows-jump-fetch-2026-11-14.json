@@ -1,0 +1,28 @@
+{
+  "date": "2026-11-14",
+  "variant": "Windows four-game playroom and desktop fetch development build",
+  "sourceCommit": "8e6ddd96004d712c44b697a839162f0077dd8130",
+  "ci": "https://github.com/parkhookjung-debug/myday-diary/actions/runs/43448623303",
+  "ciConclusion": "success",
+  "files": [
+    "MyDay.exe",
+    "SangmonGame.exe",
+    "SangmonFetch.exe"
+  ],
+  "bytes": 684032,
+  "sha256": "affff406461a442126a363e5de1f60f79cec3d512321413beba3f2c5153f2ab2",
+  "checks": {
+    "assertions": 428,
+    "nativeDiaryFourGamesAndFetch": true,
+    "fetchChaseCarryReturnAndHideCleanup": true,
+    "smallWindowLaunchButtonsVisible": true,
+    "localChat": true
+  },
+  "journalExperienceChanged": false,
+  "newGames": [
+    "jump-runner"
+  ],
+  "desktopActivity": "throw a transparent ball, chase, carry, return, cheer",
+  "macAndroidGamesImplemented": false,
+  "publishedBaselineReplaced": false
+}

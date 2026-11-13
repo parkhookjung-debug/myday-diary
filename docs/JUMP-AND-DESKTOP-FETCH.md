@@ -51,3 +51,5 @@
 `--jump-fetch-preview <폴더>`는 개인 기록 없이 네 게임 선택 화면·작은 창·점프·공 투명도·실제 포인터 경로·실제 상몬 이동의 전체 가져오기·직접 상몬 조작·숨기기 정리를 검사합니다. 공놀이 미리보기는 재현 가능한 테스트 장면이며 실제 바탕화면 녹화는 아닙니다. 전체 `--smoke-test`에도 포함합니다.
 
 [화면 미리보기](../previews/jump-fetch-20261113/README.md)
+
+최종 검증: [Windows CI](https://github.com/parkhookjung-debug/myday-diary/actions/runs/43448623303)의 428개 assertion·실제 일기/네 게임/공놀이 화면·포인터·키·정리·로컬 채팅이 통과했습니다. [실행 파일의 소스·크기·SHA256](builds/windows-jump-fetch-2026-11-14.json).
