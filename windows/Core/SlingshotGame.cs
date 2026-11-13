@@ -5,7 +5,7 @@ namespace MyDay.Windows.Core
     {
         public const double OriginX=225,OriginY=450,MinX=85,MaxX=875,MinY=135,MaxY=530;
         private static readonly double[] goalX={610,780,660,805,735},goalY={330,220,420,340,185};
-        private double pullX,pullY,vx,vy,remainder,flightAge;
+        private double pullX,pullY,grabX,grabY,vx,vy,remainder,flightAge;
         private int bounces;
         public SnackRoundState State {get;private set;}
         public double X {get;private set;}
@@ -25,10 +25,10 @@ namespace MyDay.Windows.Core
         public double TargetY {get{return goalY[Math.Min(Goals,4)];}}
         public double SecondsLeft {get{return Math.Max(0,MiniGameRules.SlingSeconds-Elapsed);}}
         public SlingshotGame(){ResetBall();}
-        private void ResetBall(){X=OriginX;Y=OriginY;vx=vy=pullX=pullY=0;Flying=Aiming=false;flightAge=0;bounces=0;}
+        private void ResetBall(){X=OriginX;Y=OriginY;vx=vy=pullX=pullY=grabX=grabY=0;Flying=Aiming=false;flightAge=0;bounces=0;}
         public void Start(){Shots=Goals=Score=0;Elapsed=Impact=Success=remainder=0;ResetBall();State=SnackRoundState.Playing;}
-        public bool BeginAim(double x,double y){if(State!=SnackRoundState.Playing||Shots>=MiniGameRules.SlingShots||Flying||!Finite(x)||!Finite(y)||(x-X)*(x-X)+(y-Y)*(y-Y)>80*80)return false;Aiming=true;Aim(x,y);return true;}
-        public void Aim(double x,double y){if(!Aiming||!Finite(x)||!Finite(y))return;pullX=x-OriginX;pullY=Math.Min(95,y-OriginY);double d=Pull;if(d>MiniGameRules.SlingMaxPull){pullX*=MiniGameRules.SlingMaxPull/d;pullY*=MiniGameRules.SlingMaxPull/d;}X=OriginX+pullX;Y=OriginY+pullY;}
+        public bool BeginAim(double x,double y){if(State!=SnackRoundState.Playing||Shots>=MiniGameRules.SlingShots||Flying||!Finite(x)||!Finite(y)||(x-X)*(x-X)+(y-Y)*(y-Y)>80*80)return false;grabX=x-OriginX;grabY=y-OriginY;pullX=pullY=0;Aiming=true;return true;}
+        public void Aim(double x,double y){if(!Aiming||!Finite(x)||!Finite(y))return;pullX=x-OriginX-grabX;pullY=Math.Min(95,y-OriginY-grabY);double d=Pull;if(d>MiniGameRules.SlingMaxPull){pullX*=MiniGameRules.SlingMaxPull/d;pullY*=MiniGameRules.SlingMaxPull/d;}X=OriginX+pullX;Y=OriginY+pullY;}
         public bool Launch(){if(!Aiming||State!=SnackRoundState.Playing)return false;Aiming=false;if(Pull<12){ResetBall();return false;}vx=-pullX*MiniGameRules.SlingStrength;vy=-pullY*MiniGameRules.SlingStrength;Flying=true;Shots++;flightAge=0;return true;}
         public void CancelAim(){if(Aiming)ResetBall();}
         public void Pause(){if(State==SnackRoundState.Playing){CancelAim();State=SnackRoundState.Paused;}remainder=0;}

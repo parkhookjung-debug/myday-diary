@@ -21,6 +21,7 @@ namespace MyDay.Windows
             Check(MiniGameRandom.DailySeed(new DateTime(2026,11,14))!=seed,"Another calendar day gets a different challenge seed");
             var sling=new SlingshotGame();sling.Start();
             Check(!sling.BeginAim(900,300)&&sling.Shots==0,"A slingshot must be grabbed on the character rather than anywhere");
+            sling.BeginAim(SlingshotGame.OriginX+25,SlingshotGame.OriginY+15);sling.Aim(SlingshotGame.OriginX+25,SlingshotGame.OriginY+15);Check(!sling.Launch()&&sling.Shots==0,"Clicking an off-center part of Sangmon does not fire or spend a shot");
             sling.BeginAim(SlingshotGame.OriginX,SlingshotGame.OriginY);sling.Aim(-1000,5000);
             Check(sling.Pull<=MiniGameRules.SlingMaxPull+.001&&sling.Y<=545,"Slingshot pull has bounded strength and stays in the scene");
             sling.CancelAim();Check(sling.X==SlingshotGame.OriginX&&!sling.Flying&&sling.Shots==0,"Cancelling capture returns the character without spending a shot");
@@ -67,6 +68,7 @@ namespace MyDay.Windows
             using(var snack=new SnackGameWindow(records,true,new DateTime(2026,11,13))){snack.StartRound();for(int i=0;i<5;i++)snack.Game.AddForTest(SnackKind.Cookie,snack.Game.PlayerX,SnackGame.PlayerY);snack.AdvanceGame(.01);snack.Game.AddForTest(SnackKind.Strawberry,180,240);snack.Game.AddForTest(SnackKind.Rock,710,290);snack.SavePreview(Path.Combine(directory,"windows-snack-challenge.png"));}
             using(var sling=new ArcadeGameWindow(ArcadeKind.Slingshot,records)){
                 sling.Show();Application.DoEvents();sling.StartRound();var key=sling.NativeKeyDownForTest(Keys.Space);sling.NativeKeyDownForTest(Keys.Space);if(!key.Handled||key.SuppressKeyPress||sling.Sling.State!=SnackRoundState.Paused)throw new Exception("Native slingshot pause repeat/key-up routing failed");sling.NativeKeyUpForTest(Keys.Space);sling.NativeKeyDownForTest(Keys.Space);sling.NativeKeyUpForTest(Keys.Space);
+                var tap=new PointF((float)SlingshotGame.OriginX+25,465);sling.BeginPointer(tap);sling.EndPointer(tap);if(sling.Sling.Shots!=0)throw new Exception("Native character tap launches without a drag");
                 sling.BeginPointer(new PointF((float)SlingshotGame.OriginX,450));sling.MovePointer(new PointF((float)SlingshotGame.OriginX-105,515));sling.SavePreview(Path.Combine(directory,"windows-slingshot.png"));sling.PauseRound();sling.EndPointer(new PointF(50,540));if(sling.Sling.Shots!=0||sling.Sling.Flying)throw new Exception("Cancelling a slingshot drag launches a phantom shot");sling.TogglePause();
                 for(int i=0;i<5;i++){sling.Sling.BallForTest(sling.Sling.TargetX,sling.Sling.TargetY,0,0);sling.Advance(.01);}sling.Advance(.1);if(records.Best("sling")!=750||records.Plays("sling")!=1)throw new Exception("Native slingshot records a result more than once");sling.SavePreview(Path.Combine(directory,"windows-slingshot-result.png"));sling.Close();
             }
