@@ -1,0 +1,11 @@
+{
+  "appVersion": "0.15.0",
+  "date": "2026-11-14",
+  "scope": "Windows Tetris: speed increases every five locked pieces; translucent piece colors over Sangmon backdrop",
+  "sourceCommit": "c178931000fd96f2105ca9fbe552d3eb6e26b31d",
+  "branch": "codex/anniversary-calendar",
+  "buildCommand": "windows/build.ps1",
+  "file": "builds/windows-tetris-0.15.0/MyDay.exe",
+  "bytes": 624640,
+  "sha256": "4bffea8ed9ffb32a2c569167f149806219affb2c1395e112c846a04e4c8a5153"
+}
