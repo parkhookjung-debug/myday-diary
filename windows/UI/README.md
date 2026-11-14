@@ -30,4 +30,4 @@
 
 ## 게임
 
-[SnackGameWindow.cs](SnackGameWindow.cs)는 간식 산책 게임, [TetrisGameWindow.cs](TetrisGameWindow.cs)는 점수·레벨이 표시되는 테트리스 화면을 담당합니다. [DiaryWindow.Game.cs](DiaryWindow.Game.cs)는 두 게임을 앱 메뉴에 연결합니다. [간식 산책 안내](../../docs/SANGMON-SNACK-GAME.md) · [테트리스 안내](../../docs/TETRIS.md).
+[SnackGameWindow.cs](SnackGameWindow.cs)는 간식 산책 게임, [TetrisGameWindow.cs](TetrisGameWindow.cs)는 점수·레벨이 표시되는 테트리스 화면을 담당합니다. 두 선택지는 사이드바 **상몬 게임** 카드에 모았습니다. [DiaryWindow.Game.cs](DiaryWindow.Game.cs)는 게임 창 연결을 담당합니다. [간식 산책 안내](../../docs/SANGMON-SNACK-GAME.md) · [테트리스 안내](../../docs/TETRIS.md).
