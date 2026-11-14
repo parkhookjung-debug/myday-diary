@@ -170,10 +170,11 @@ namespace MyDay.Windows.UI
         private void BrowseDiary(Action<JournalBrowser> shown=null)
         {
             board.CancelPlacement(); if(!FlushSave()) return;
-            using(var browser=new JournalBrowser(book,date,picker.MinDate,picker.MaxDate)) {
+            using(var browser=new JournalBrowser(book,date,picker.MinDate,picker.MaxDate,()=>store.Save(book))) {
                 if(testMode) { browser.StartPosition=FormStartPosition.Manual; browser.Location=new Point(-30000,-30000); }
                 if(shown!=null) browser.Shown+=delegate { browser.BeginInvoke((MethodInvoker)delegate { shown(browser); }); };
                 if(browser.ShowDialog(this)==DialogResult.OK && browser.SelectedDate.HasValue) ChangeDate(browser.SelectedDate.Value);
+                RefreshSidebarCalendar();
             }
         }
         private void ManageLayouts(Action<MyLayoutsWindow> shown=null)
@@ -635,7 +636,7 @@ namespace MyDay.Windows.UI
         }
         protected override void Dispose(bool disposing)
         {
-            if(disposing) { saveTimer.Dispose(); tray.Visible=false; if(tray.ContextMenuStrip!=null) tray.ContextMenuStrip.Dispose(); tray.Dispose(); if(pet!=null) pet.Dispose(); if(gameHub!=null) gameHub.Dispose(); }
+            if(disposing) { saveTimer.Dispose(); tray.Visible=false; if(tray.ContextMenuStrip!=null) tray.ContextMenuStrip.Dispose(); tray.Dispose(); if(pet!=null) pet.Dispose(); if(gameHub!=null) gameHub.Dispose(); if(gamesMenu!=null)gamesMenu.Dispose(); }
             base.Dispose(disposing);
         }
     }
