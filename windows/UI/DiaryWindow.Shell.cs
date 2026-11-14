@@ -33,10 +33,7 @@ namespace MyDay.Windows.UI
             var today=Design.Button("오늘로 돌아가기 ↗"); today.Size=Design.Size(216,32); today.Margin=Design.Pad(0,12,0,0); today.Click+=delegate { ChangeDate(DateTime.Today); }; sidebarFlow.Controls.Add(today);
             var tools=Design.Button("기록 도구 · 복구 / 리포트");tools.Size=Design.Size(216,34);tools.Click+=delegate {OpenJournalTools();};sidebarFlow.Controls.Add(tools);
             var studio=Design.Button("하루 꾸미기 · 사진 / 방 / 태그");studio.Size=Design.Size(216,36);studio.Click+=delegate {OpenStudio();};sidebarFlow.Controls.Add(studio);
-            var games=new CardPanel{Size=Design.Size(216,112),Margin=Design.Pad(0),Padding=Design.Pad(0),Fill=Color.White};
-            var gamesTitle=Design.Label("상몬 게임",10,true);gamesTitle.ForeColor=Design.Olive;gamesTitle.Location=Design.Point(12,7);games.Controls.Add(gamesTitle);
-            var snack=Design.Button("간식 산책");snack.Size=Design.Size(196,30);snack.Location=Design.Point(10,32);snack.AccessibleName="상몬 게임에서 간식 산책 선택";snack.Click+=delegate{OpenSnackGame();};games.Controls.Add(snack);
-            var tetris=Design.Button("테트리스 · 점수 도전");tetris.Size=Design.Size(196,30);tetris.Location=Design.Point(10,68);tetris.AccessibleName="상몬 게임에서 테트리스 선택";tetris.Click+=delegate{OpenTetrisGame();};games.Controls.Add(tetris);sidebarFlow.Controls.Add(games);
+            var games=Design.Button("상몬 게임  ▾");games.Size=Design.Size(216,36);games.AccessibleName="상몬 게임 선택 메뉴 열기";games.Click+=delegate{ShowGamesMenu(games);};sidebarFlow.Controls.Add(games);
             var delete=Design.Button("이 날짜 일기 휴지통으로");delete.Size=Design.Size(216,30);delete.Click+=delegate {DeleteCurrentDay();};sidebarFlow.Controls.Add(delete);
             sidebarCalendar=new MonthCalendar(book,date,picker.MinDate,picker.MaxDate,ChangeDate) {Size=Design.Size(216,262),Margin=Design.Pad(0,14,0,10)};
             sidebarFlow.Controls.Add(sidebarCalendar);

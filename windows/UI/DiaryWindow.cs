@@ -635,7 +635,7 @@ namespace MyDay.Windows.UI
         }
         protected override void Dispose(bool disposing)
         {
-            if(disposing) { saveTimer.Dispose(); tray.Visible=false; if(tray.ContextMenuStrip!=null) tray.ContextMenuStrip.Dispose(); tray.Dispose(); if(pet!=null) pet.Dispose(); if(snackGame!=null) snackGame.Dispose(); if(tetrisGame!=null)tetrisGame.Dispose(); }
+            if(disposing) { saveTimer.Dispose(); tray.Visible=false; if(tray.ContextMenuStrip!=null) tray.ContextMenuStrip.Dispose(); tray.Dispose(); if(pet!=null) pet.Dispose(); if(snackGame!=null) snackGame.Dispose(); if(tetrisGame!=null)tetrisGame.Dispose(); if(gamesMenu!=null)gamesMenu.Dispose(); }
             base.Dispose(disposing);
         }
     }
