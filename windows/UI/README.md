@@ -28,6 +28,6 @@
 
 채팅 화면은 [ChatWindow.cs](ChatWindow.cs), 말풍선은 [ChatTranscript.cs](ChatTranscript.cs), 일기 앱 진입은 [DiaryWindow.Chat.cs](DiaryWindow.Chat.cs)에서 수정합니다. 통신은 [ChatClient.cs](../Chat/ChatClient.cs)입니다.
 
-## 상몬 게임
+## 게임
 
-[SnackGameWindow.cs](SnackGameWindow.cs)는 게임 그림·입력·자동 정지, [DiaryWindow.Game.cs](DiaryWindow.Game.cs)는 일기 창 연결을 담당합니다. [공통 규칙·모델·사용법](../../docs/SANGMON-SNACK-GAME.md).
+[SnackGameWindow.cs](SnackGameWindow.cs)는 간식 산책 게임, [TetrisGameWindow.cs](TetrisGameWindow.cs)는 점수·레벨이 표시되는 테트리스 화면을 담당합니다. [DiaryWindow.Game.cs](DiaryWindow.Game.cs)는 두 게임을 앱 메뉴에 연결합니다. [간식 산책 안내](../../docs/SANGMON-SNACK-GAME.md) · [테트리스 안내](../../docs/TETRIS.md).

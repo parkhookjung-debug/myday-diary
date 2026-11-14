@@ -37,6 +37,7 @@ namespace MyDay.Windows
                 try { Tests.Smoke(Path.GetFullPath(args[1])); return 0; } catch(Exception ex) { Console.Error.WriteLine(ex); return 1; }
             }
             if((args.Length==1 && args[0]=="--snack-game")||(args.Length==0 && string.Equals(Path.GetFileNameWithoutExtension(Application.ExecutablePath),"SangmonGame",StringComparison.OrdinalIgnoreCase))){using(var game=new SnackGameWindow())Application.Run(game);return 0;}
+            if((args.Length==1 && args[0]=="--tetris-game")||(args.Length==0 && string.Equals(Path.GetFileNameWithoutExtension(Application.ExecutablePath),"TetrisGame",StringComparison.OrdinalIgnoreCase))){using(var game=new TetrisGameWindow())Application.Run(game);return 0;}
             if(args.Length==2 && args[0]=="--snack-game-preview"){try{Tests.SnackGamePreview(Path.GetFullPath(args[1]));return 0;}catch(Exception ex){Console.Error.WriteLine(ex);return 1;}}
             if(args.Length==2 && args[0]=="--pet-physics-preview") {
                 try {Tests.PetPhysicsPreview(Path.GetFullPath(args[1]));return 0;}catch(Exception ex){Console.Error.WriteLine(ex);return 1;}

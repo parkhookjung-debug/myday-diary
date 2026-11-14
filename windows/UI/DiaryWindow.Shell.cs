@@ -34,6 +34,7 @@ namespace MyDay.Windows.UI
             var tools=Design.Button("기록 도구 · 복구 / 리포트");tools.Size=Design.Size(216,34);tools.Click+=delegate {OpenJournalTools();};sidebarFlow.Controls.Add(tools);
             var studio=Design.Button("하루 꾸미기 · 사진 / 방 / 태그");studio.Size=Design.Size(216,36);studio.Click+=delegate {OpenStudio();};sidebarFlow.Controls.Add(studio);
             var game=Design.Button("상몬 게임 · 간식 산책");game.Size=Design.Size(216,36);game.AccessibleName="상몬 간식 게임 열기";game.Click+=delegate {OpenSnackGame();};sidebarFlow.Controls.Add(game);
+            var tetris=Design.Button("테트리스 · 점수 도전");tetris.Size=Design.Size(216,36);tetris.AccessibleName="테트리스 게임 열기";tetris.Click+=delegate {OpenTetrisGame();};sidebarFlow.Controls.Add(tetris);
             var delete=Design.Button("이 날짜 일기 휴지통으로");delete.Size=Design.Size(216,30);delete.Click+=delegate {DeleteCurrentDay();};sidebarFlow.Controls.Add(delete);
             sidebarCalendar=new MonthCalendar(book,date,picker.MinDate,picker.MaxDate,ChangeDate) {Size=Design.Size(216,262),Margin=Design.Pad(0,14,0,10)};
             sidebarFlow.Controls.Add(sidebarCalendar);
