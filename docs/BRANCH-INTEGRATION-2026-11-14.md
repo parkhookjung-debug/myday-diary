@@ -40,3 +40,7 @@
 Windows는 기존 검사에 더해 기념일 반복·윤년·구형 자료·병합·저장 실패 복구·이전 테트리스 기록의 무손실 가져오기를 검사합니다. `--branch-integration-preview <폴더>`는 개인 자료 없이 실제 관리 창·달력·검색·게임 메뉴와 상몬 블록 연결을 확인합니다. 전체 `--smoke-test`에도 포함합니다. Android와 Mac은 실제 네이티브 모델의 백업 왕복으로 기념일 보존을 확인합니다.
 
 [실제 화면](../previews/branch-integration-20261114/README.md). 현재 공개 Release 첨부 파일과 main 앱 소스는 교체하지 않습니다. 공개 서버나 유료 서비스를 추가하지 않습니다.
+
+최종 검증: [Windows CI](https://github.com/parkhookjung-debug/myday-diary/actions/runs/43566437095)의 **491개 검사·실제 화면/조작·로컬 채팅**, [Android CI](https://github.com/parkhookjung-debug/myday-diary/actions/runs/43566439349)의 **JVM 57·API35 기기 19·lint 오류 0·Windows 백업 왕복**, [Mac 공통 검증](https://github.com/parkhookjung-debug/myday-diary/actions/runs/43567082444)의 **Apple Silicon 빌드·기념일/가족 이모지 보존·Windows 백업 왕복·공통 계약·로컬 채팅**이 통과했습니다. Windows/Android 검증 후 변경은 Mac의 문자열 검증에만 한정하며 각 실행 파일의 실제 소스 커밋을 구분합니다. [파일별 소스·크기·SHA256](builds/integration-2026-11-14.json).
+
+개발 실행 파일은 각 CI의 Artifacts에서 받습니다. Windows는 `myday-windows-79`의 `bin/MyDay.exe`, Android는 `myday-debug-77`의 `outputs/apk/debug/app-debug.apk`, Mac은 `myday-chat-macOS-ARM64`의 `macos/build/MyDay-macOS-arm64-v0.15.0-preview.zip`입니다. GitHub 로그인이 필요하며 개발 아티팩트는 보관 기간이 있으므로 만료되면 같은 소스를 다시 빌드합니다. 기존 공개 Release 파일은 교체하지 않았습니다.
