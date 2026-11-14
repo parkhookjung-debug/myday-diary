@@ -26,5 +26,5 @@ import kotlinx.coroutines.*
         }
         items(files.size){index->val file=files[index];OutlinedCard{Column(Modifier.padding(12.dp)){Text(file.name.removePrefix("daily-").removeSuffix(".json"));Text("${file.length()/1024} KB",style=MaterialTheme.typography.labelSmall);TextButton({scope.launch{try{incoming=withContext(Dispatchers.IO){require(file.length()<=NotebookJson.MAX_BYTES);NotebookJson.decode(file.readText()).also(NotebookPhoto::validate)}}catch(e:Exception){message=e.message ?: "백업을 읽지 못했어요."}}},enabled=controller.saved){Text("이 백업 복원 검토")}}}}
     }}
-    incoming?.let{book->AlertDialog(onDismissRequest={incoming=null},title={Text("자동 백업을 가져올까요?")},text={Text("${book.days.size}일의 기록을 가져와요. 같은 날짜는 백업 내용으로 바뀌고 성장·소품은 기존 병합 규칙으로 보존해요.")},confirmButton={TextButton({runCatching{controller.importBook(book)}.onFailure{message=it.message ?: "가져오기 실패"};incoming=null}){Text("가져오기")}},dismissButton={TextButton({incoming=null}){Text("취소")}})}
+    incoming?.let{book->AlertDialog(onDismissRequest={incoming=null},title={Text("자동 백업을 가져올까요?")},text={Text("${book.days.size}일의 기록을 가져와요. 같은 날짜는 백업 내용으로 바뀌고 성장과 이전 백업 정보는 기존 병합 규칙으로 보존해요.")},confirmButton={TextButton({runCatching{controller.importBook(book)}.onFailure{message=it.message ?: "가져오기 실패"};incoming=null}){Text("가져오기")}},dismissButton={TextButton({incoming=null}){Text("취소")}})}
 }

@@ -50,7 +50,7 @@ import kotlin.math.*
     item{Text("독립 스티커는 일기 블록으로 추가해 자유롭게 배치할 수 있어요.");FlowRow{StudioCatalog.stickers.forEachIndexed{i,title->TextButton({scope.launch{runCatching{val encoded=withContext(Dispatchers.Default){val image=PhotoDecor.sticker(i);try{PhotoDecor.encode(image)}finally{image.recycle()}};controller.edit(NotebookRules.append(controller.entry,listOf(DiaryBlock(type="photo",photo=encoded,title="$title 스티커",height=300))),true)}.onFailure{error=it.message ?: "스티커 추가 실패"}}},enabled=controller.saved){Text("$title +")}}}}
    }
    1->Column(Modifier.fillMaxSize().verticalScroll(rememberScrollState()).padding(16.dp)){
-    Text("가구를 손가락으로 움직여요. 최대 24개, 상몬은 옷장 소품을 입고 쉬어요.")
+    Text("가구를 손가락으로 움직여요. 최대 24개, 기본 상몬이 함께 쉬어요.")
     var selected by remember{mutableStateOf<String?>(null)};var resting by remember{mutableStateOf(false)}
     BoxWithConstraints(Modifier.fillMaxWidth().height(330.dp).background(listOf(Color(0xfff3ebdc),Color(0xffe5deef),Color(0xffe0e9da))[draft.roomTheme],RoundedCornerShape(20.dp))){
      val density=LocalDensity.current;val w=with(density){maxWidth.toPx()};val h=with(density){maxHeight.toPx()};val pieceW=with(density){80.dp.toPx()};val pieceH=with(density){96.dp.toPx()}

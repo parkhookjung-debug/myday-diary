@@ -51,9 +51,9 @@
 | 검·보주의 이름·속성·설명 | [SangmonItems.cs](../windows/Core/SangmonItems.cs) | `All` 목록과 슬롯·장착·백업 규칙 |
 | 장비 300종의 추가 형태·착용 위치 | [ItemPainter.Wardrobe.cs](../windows/Character/ItemPainter.Wardrobe.cs) | 50가지 형태와 8슬롯 레이어. 이름은 SangmonItems.Forms에서 변경 |
 | 검·보주의 모양·광채·장착 위치 | [ItemPainter.cs](../windows/Character/ItemPainter.cs) | `Sword`, `Orb`, `Tone`, `DrawEquipped` |
-| 장비함 디자인·분류·장착 버튼 | [EquipmentWindow.cs](../windows/UI/EquipmentWindow.cs) | 남색·금색 화면, 카드, 슬롯 상태 |
-| 아이템의 움직이는 미리보기 | [ItemView.cs](../windows/UI/ItemView.cs) | 미리보기 타이머와 그리기 |
-| 장비 저장·일기/바탕화면 연결 | [DiaryWindow.Items.cs](../windows/UI/DiaryWindow.Items.cs) | 장착 저장·실패 복구·장비 적용 |
+| 장비함 디자인·분류·장착 버튼 | [EquipmentWindow.cs](https://github.com/parkhookjung-debug/myday-diary/blob/f29da72f23ed7a49aa3dfd28d85311f59b6bd7bc/windows/UI/EquipmentWindow.cs) | 남색·금색 화면, 카드, 슬롯 상태 |
+| 아이템의 움직이는 미리보기 | [ItemView.cs](https://github.com/parkhookjung-debug/myday-diary/blob/f29da72f23ed7a49aa3dfd28d85311f59b6bd7bc/windows/UI/ItemView.cs) | 미리보기 타이머와 그리기 |
+| 장비 저장·일기/바탕화면 연결 | [DiaryWindow.Items.cs](https://github.com/parkhookjung-debug/myday-diary/blob/f29da72f23ed7a49aa3dfd28d85311f59b6bd7bc/windows/UI/DiaryWindow.Items.cs) | 장착 저장·실패 복구·장비 적용 |
 
 ## Android: 갤럭시 앱
 
@@ -73,7 +73,7 @@
 
 ## 바로 따라 할 수 있는 수정 예
 
-**Windows 강조색 바꾸기:** [Design.cs](../windows/UI/Design.cs)의 `Accent`를 원하는 색으로 바꿉니다. 장비함의 남색·금색은 [EquipmentWindow.cs](../windows/UI/EquipmentWindow.cs)의 `Night`, `PanelColor`, `Gold`에서 따로 관리합니다.
+**Windows 강조색 바꾸기:** [Design.cs](../windows/UI/Design.cs)의 `Accent`를 원하는 색으로 바꿉니다. 장비함의 남색·금색은 [EquipmentWindow.cs](https://github.com/parkhookjung-debug/myday-diary/blob/f29da72f23ed7a49aa3dfd28d85311f59b6bd7bc/windows/UI/EquipmentWindow.cs)의 `Night`, `PanelColor`, `Gold`에서 따로 관리합니다.
 
 **검 이름이나 설명 바꾸기:** [SangmonItems.cs](../windows/Core/SangmonItems.cs)의 `All`에서 `frost-sword` 항목의 이름·설명을 고칩니다. 그림은 [ItemPainter.cs](../windows/Character/ItemPainter.cs)의 `Sword`와 `Tone`에서 바꿉니다. 저장된 선택을 유지하려면 기존 ID는 유지합니다.
 

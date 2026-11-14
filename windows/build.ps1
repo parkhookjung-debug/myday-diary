@@ -1,3 +1,4 @@
+﻿param([string]$OutputDirectory="")
 $ErrorActionPreference = 'Stop'
 $sourceRoot = $PSScriptRoot
 $compiler = Join-Path $env:WINDIR 'Microsoft.NET/Framework64/v4.0.30319/csc.exe'
@@ -5,7 +6,8 @@ if (-not (Test-Path -LiteralPath $compiler)) {
     $compiler = Join-Path $env:WINDIR 'Microsoft.NET/Framework/v4.0.30319/csc.exe'
 }
 if (-not (Test-Path -LiteralPath $compiler)) { throw '.NET Framework 4.8의 C# 컴파일러가 필요합니다.' }
-$outputDirectory = Join-Path $sourceRoot 'bin'
+if ([string]::IsNullOrWhiteSpace($OutputDirectory)) { $outputDirectory = Join-Path $sourceRoot 'bin' }
+else { $outputDirectory = [IO.Path]::GetFullPath($OutputDirectory) }
 New-Item -ItemType Directory -Path $outputDirectory -Force | Out-Null
 $sources = Get-ChildItem -LiteralPath $sourceRoot -Filter '*.cs' -Recurse | ForEach-Object { $_.FullName }
 $arguments = @('/nologo', '/target:winexe', '/platform:anycpu', '/optimize+', '/warnaserror+', '/utf8output',

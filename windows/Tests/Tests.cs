@@ -53,6 +53,7 @@ namespace MyDay.Windows
                 RunDeviceToolsTests(directory);
                 RunStudioTests(directory);
                 RunQualityTests(directory);
+                RunFocusedTests(directory);
                 RunBrowseTests(directory);
                 RunSavedLayoutTests(directory);
                 RunGrowthTests(directory);
@@ -65,6 +66,13 @@ namespace MyDay.Windows
                 RunSharedDesktopTests();
                 RunItemTests(directory);
                 RunClayTests();
+                RunPetDynamicsTests();
+                RunSnackGameTests();
+                RunMiniGamesTests(directory);
+                RunJumpFetchTests(directory);
+                RunCookingTests(directory);
+                RunBlocksTests(directory);
+                RunBranchIntegrationTests(directory);
                 var layout=DiaryEntry.FirstPage(); layout.Blocks[0].Text="이동해도 그대로"; layout.Blocks[1].Checked=true;
                 var originalIds=layout.Blocks.Select(b=>b.Id).ToArray(); DiaryLayout.EnableFree(layout,800);
                 Check(layout.LayoutMode=="free" && layout.Blocks.Select(b=>b.Id).SequenceEqual(originalIds) && layout.Blocks[0].Text=="이동해도 그대로" && layout.Blocks[1].Checked,"Entering free placement retains block IDs, text and checks");
@@ -140,8 +148,8 @@ namespace MyDay.Windows
                 Check(Math.Abs(pose.Pulse-loop.Pulse)<.001 && Math.Abs(pose.Toe-loop.Toe)<.001 && Math.Abs(pose.BodyScale-loop.BodyScale)<.001,"Animation repeats after common 16.8-second period");
                 using(var a=new Bitmap(230,190)) using(var b=new Bitmap(230,190))
                 {
-                    using(var g=Graphics.FromImage(a)) MonsterPainter.Draw(g,new Rectangle(0,0,230,190),MonsterPose.At(.15,false,false,false),true);
-                    using(var g=Graphics.FromImage(b)) MonsterPainter.Draw(g,new Rectangle(0,0,230,190),MonsterPose.At(.15,false,false,true),true);
+                    using(var g=Graphics.FromImage(a)) MonsterPainter.DrawLegacy(g,new Rectangle(0,0,230,190),MonsterPose.At(.15,false,false,false),true);
+                    using(var g=Graphics.FromImage(b)) MonsterPainter.DrawLegacy(g,new Rectangle(0,0,230,190),MonsterPose.At(.15,false,false,true),true);
                     int different=0,opaque=0;
                     for(int y=0;y<a.Height;y++) for(int x=0;x<a.Width;x++) { if(a.GetPixel(x,y)!=b.GetPixel(x,y)) different++; if(a.GetPixel(x,y).A>0) opaque++; }
                     Check(a.GetPixel(0,0).A==0 && opaque>1000 && different>500,"Monster keeps transparent margins and distinct fire reaction");
@@ -179,7 +187,7 @@ namespace MyDay.Windows
                 bool fits=true;
                 foreach(var activity in new[] { PetActivity.Walk,PetActivity.Hop,PetActivity.Look,PetActivity.Fire,PetActivity.Drag,PetActivity.Sleep,PetActivity.Yawn })
                 for(int i=0;i<24;i++) using(var image=new Bitmap(240,220)) {
-                    using(var g=Graphics.FromImage(image)) MonsterPainter.Draw(g,new Rectangle(16,22,208,176),MonsterPose.ForActivity(i*.075,activity,i*.075,1,-1),true);
+                    using(var g=Graphics.FromImage(image)) MonsterPainter.DrawLegacy(g,new Rectangle(16,22,208,176),MonsterPose.ForActivity(i*.075,activity,i*.075,1,-1),true);
                     for(int x=0;x<image.Width;x++) fits&=image.GetPixel(x,0).A==0 && image.GetPixel(x,image.Height-1).A==0;
                     for(int y=0;y<image.Height;y++) fits&=image.GetPixel(0,y).A==0 && image.GetPixel(image.Width-1,y).A==0;
                 }
@@ -188,13 +196,13 @@ namespace MyDay.Windows
                 var fingerprints=new System.Collections.Generic.HashSet<string>();
                 foreach(var variant in MonsterVariants.All) {
                     using(var image=new Bitmap(240,220)) {
-                        using(var g=Graphics.FromImage(image)) MonsterPainter.Draw(g,new Rectangle(16,22,208,176),MonsterPose.ForActivity(.2,PetActivity.Rest,.2,0,0),true,variant);
+                        using(var g=Graphics.FromImage(image)) MonsterPainter.DrawLegacy(g,new Rectangle(16,22,208,176),MonsterPose.ForActivity(.2,PetActivity.Rest,.2,0,0),true,variant);
                         using(var buffer=new MemoryStream()) { image.Save(buffer,System.Drawing.Imaging.ImageFormat.Png); fingerprints.Add(Convert.ToBase64String(buffer.ToArray())); }
                     }
                     foreach(bool left in new[] { true,false })
                     foreach(var activity in new[] { PetActivity.Walk,PetActivity.Hop,PetActivity.Drag,PetActivity.Fire,PetActivity.Yawn })
                     for(int i=0;i<16;i++) using(var image=new Bitmap(240,220)) {
-                        using(var g=Graphics.FromImage(image)) MonsterPainter.Draw(g,new Rectangle(16,22,208,176),MonsterPose.ForActivity(i*.11,activity,i*.11,1,-1),left,variant);
+                        using(var g=Graphics.FromImage(image)) MonsterPainter.DrawLegacy(g,new Rectangle(16,22,208,176),MonsterPose.ForActivity(i*.11,activity,i*.11,1,-1),left,variant);
                         bool frameFits=true;
                         for(int x=0;x<image.Width;x++) frameFits&=image.GetPixel(x,0).A==0 && image.GetPixel(x,image.Height-1).A==0;
                         for(int y=0;y<image.Height;y++) frameFits&=image.GetPixel(0,y).A==0 && image.GetPixel(image.Width-1,y).A==0;
@@ -206,7 +214,7 @@ namespace MyDay.Windows
                 Check(variantFits,"Variants fit transparent window when facing either direction: "+failingVariant);
                 bool identity=true;
                 foreach(var variant in MonsterVariants.All.Skip(8)) using(var image=new Bitmap(240,220)) {
-                    using(var g=Graphics.FromImage(image)) MonsterPainter.Draw(g,new Rectangle(16,22,208,176),MonsterPose.ForActivity(0,PetActivity.Rest,0,0,0),true,variant);
+                    using(var g=Graphics.FromImage(image)) MonsterPainter.DrawLegacy(g,new Rectangle(16,22,208,176),MonsterPose.ForActivity(0,PetActivity.Rest,0,0,0),true,variant);
                     float scale=208f/555;
                     Func<float,float,Color> sample=(x,y)=>image.GetPixel((int)Math.Round(120+(x-275)*.86f*scale),(int)Math.Round(110+((y-650)*.86f+35)*scale));
                     identity&=sample(246,455).A>120 && sample(305,455).A>120;
@@ -217,7 +225,7 @@ namespace MyDay.Windows
                 bool materials=true;
                 var colors=new System.Collections.Generic.HashSet<int>();
                 foreach(var variant in MonsterVariants.All.Where(GameSkins.IsGame)) using(var image=new Bitmap(240,220)) {
-                    using(var g=Graphics.FromImage(image)) MonsterPainter.Draw(g,new Rectangle(16,22,208,176),MonsterPose.ForActivity(0,PetActivity.Rest,0,0,0),true,variant);
+                    using(var g=Graphics.FromImage(image)) MonsterPainter.DrawLegacy(g,new Rectangle(16,22,208,176),MonsterPose.ForActivity(0,PetActivity.Rest,0,0,0),true,variant);
                     var material=image.GetPixel(145,105);
                     materials&=material.A==255 && material.R+material.G+material.B<680;
                     colors.Add(material.ToArgb());
@@ -238,7 +246,7 @@ namespace MyDay.Windows
                 }
                 Check(rare && everYawned,"Autonomous yawns have cooldown and never trigger touch fire");
                 using(var image=new Bitmap(240,220)) {
-                    using(var g=Graphics.FromImage(image)) MonsterPainter.Draw(g,new Rectangle(16,22,208,176),MonsterPose.ForActivity(.2,PetActivity.Rest,.2,0,0),true);
+                    using(var g=Graphics.FromImage(image)) MonsterPainter.DrawLegacy(g,new Rectangle(16,22,208,176),MonsterPose.ForActivity(.2,PetActivity.Rest,.2,0,0),true);
                     int warm=0;
                     for(int y=0;y<image.Height;y++) for(int x=0;x<image.Width;x++) { var p=image.GetPixel(x,y); if(p.A>0 && p.R>240 && p.G>170 && p.G<235 && p.B<180) warm++; }
                     Check(warm==0,"Idle renderer has no flame-colored pixels");
@@ -273,7 +281,7 @@ namespace MyDay.Windows
                 form.StartOnDesktop(); if(form.Visible) throw new Exception("Diary opened at desktop startup");
                 form.OpenDiary(); Console.WriteLine("Smoke: opened diary."); Application.DoEvents();
                 form.VerifyShellForTest(); Console.WriteLine("Smoke: three-column and compact shell, sidebar calendar, three themes and progress passed.");
-                form.SmokeTest(Path.Combine(directory,"windows-example.png")); form.VerifyGrowthForTest(directory); form.VerifyItemsForTest(directory);form.VerifyCollectionForTest(directory);form.VerifyCommonScreensForTest(directory);form.VerifyJournalToolsForTest(directory);form.VerifyStudioForTest(directory);form.VerifyWelcomeForTest(directory); form.Close();
+                form.SmokeTest(Path.Combine(directory,"windows-example.png")); form.VerifyGrowthForTest(directory); form.VerifyCommonScreensForTest(directory);form.VerifyJournalToolsForTest(directory);form.VerifyStudioForTest(directory);form.VerifyWelcomeForTest(directory); form.Close();
                 Console.WriteLine("Smoke: input, selection, reload and rendering passed.");
                 if(form.Visible || form.IsDisposed) throw new Exception("Close should hide and keep the session alive");
                 form.OpenDiary(); if(!form.Visible) throw new Exception("Diary did not reopen");
@@ -293,6 +301,13 @@ namespace MyDay.Windows
                 if(frame.GetPixel(0,0).A!=0) throw new Exception("Pet transparency failed");
                 frame.Save(Path.Combine(directory,"windows-pet.png"),System.Drawing.Imaging.ImageFormat.Png);
             }
+            VerifyPetPointerRouting(directory);
+            SnackGamePreview(directory);
+            MiniGamesPreview(directory);
+            JumpFetchPreview(directory);
+            CookingPreview(directory);
+            BlocksPreview(directory);
+            BranchIntegrationPreview(directory);
             File.WriteAllText(Path.Combine(directory,"smoke-result.txt"),"PASS: desktop-only startup; open; close-to-hide; reopen; explicit exit before/after first open; input; check; reorder; date navigation; mood and theme; small-window layout; disk reload; layered window; transparent pet",Encoding.UTF8);
             Console.WriteLine("Native Windows smoke test passed.");
         }
@@ -315,7 +330,7 @@ namespace MyDay.Windows
                             double age=activities[i]==PetActivity.Yawn?time-1:time;
                             var activity=activities[i];
                             if(activity==PetActivity.Fire && age>=PetBehavior.TouchFireSeconds || activity==PetActivity.Yawn && (age<0 || age>=PetBehavior.YawnSeconds)) { activity=PetActivity.Rest; age=time; }
-                            MonsterPainter.Draw(g,new Rectangle(x+50,y+62,260,180),MonsterPose.ForActivity(time,activity,age,0,0),true);
+                            MonsterPainter.DrawLegacy(g,new Rectangle(x+50,y+62,260,180),MonsterPose.ForActivity(time,activity,age,0,0),true);
                             g.DrawString(labels[i],font,text,x+98,y+255);
                         }
                     }
@@ -340,7 +355,7 @@ namespace MyDay.Windows
                             using(var rounded=Design.Rounded(new RectangleF(x+8,y+8,224,274),16)) g.FillPath(panel,rounded);
                             if(gameCards) using(var pen=new Pen(GameSkins.Tone(variant),3)) g.DrawLine(pen,x+28,y+35,x+212,y+35);
                             var activity=variant==MonsterVariant.Dazed?PetActivity.Rest:variant==MonsterVariant.Spiky?PetActivity.Look:variant==MonsterVariant.Puffy || variant==MonsterVariant.Mini || variant==MonsterVariant.Angel?PetActivity.Hop:PetActivity.Walk;
-                            MonsterPainter.Draw(g,new Rectangle(x+16,y+52,208,176),MonsterPose.ForActivity(time,activity,time,0,0),true,variant);
+                            MonsterPainter.DrawLegacy(g,new Rectangle(x+16,y+52,208,176),MonsterPose.ForActivity(time,activity,time,0,0),true,variant);
                             TextRenderer.DrawText(g,MonsterVariants.Name(variant),font,new Rectangle(x+8,y+247,224,28),gameCards?Color.FromArgb(231,238,249):Color.FromArgb(70,85,65),
                                 TextFormatFlags.HorizontalCenter|TextFormatFlags.VerticalCenter|TextFormatFlags.NoPadding|TextFormatFlags.NoPrefix);
                         }

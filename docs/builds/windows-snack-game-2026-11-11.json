@@ -1,0 +1,23 @@
+{
+  "date": "2026-11-11",
+  "variant": "Windows snack game prototype; separate from published 0.15.0 baseline",
+  "sourceCommit": "057f28f515c13ce3f9ab970e53cc3ead72690ddf",
+  "ci": "https://github.com/parkhookjung-debug/myday-diary/actions/runs/43037274582",
+  "ciConclusion": "success",
+  "files": [
+    "MyDay.exe",
+    "SangmonGame.exe"
+  ],
+  "bytes": 606208,
+  "sha256": "9b14b951efb5dbedc132d8c480d101fbe986cc6563becb993f642f2bdc7e164e",
+  "checks": {
+    "assertions": 363,
+    "nativeDiaryAndGameSmoke": true,
+    "nativeArrowReleaseAndSpaceHold": true,
+    "localChat": true
+  },
+  "rules": "shared/snack-game.json",
+  "scorePersistence": false,
+  "journalExperienceChanged": false,
+  "macAndroidGameImplemented": false
+}

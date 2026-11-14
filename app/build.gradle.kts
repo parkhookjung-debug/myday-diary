@@ -25,8 +25,8 @@ android {
         applicationId = "com.myday.diary"
         minSdk = 26
         targetSdk = 35
-        versionCode = 14
-        versionName = "0.14.0"
+        versionCode = 15
+        versionName = "0.15.0"
         manifestPlaceholders["appLabel"] = "마이데이"
         manifestPlaceholders["onlineFriendsEnabled"] = onlineFriendsEnabled.toString()
         buildConfigField("boolean", "ONLINE_FRIENDS_ENABLED", onlineFriendsEnabled.toString())
@@ -42,6 +42,8 @@ android {
     }
     kotlinOptions { jvmTarget = "17" }
     buildFeatures { compose = true; buildConfig = true }
+    // Only the generated, allowlisted asset directory enters the APK.
+    sourceSets.getByName("main").assets.setSrcDirs(listOf(layout.buildDirectory.dir("generated/focusedAssets")))
 
     val signingPath=System.getenv("MYDAY_ANDROID_KEYSTORE")
     if(!signingPath.isNullOrBlank()) {
@@ -77,5 +79,15 @@ dependencies {
 }
 
 tasks.withType<Test>().configureEach {
+    maxHeapSize = "256m"
+    maxParallelForks = 1
     systemProperty("myday.interop.output",layout.buildDirectory.file("interop/android-to-windows.json").get().asFile.absolutePath)
 }
+
+val focusedProduct = groovy.json.JsonSlurper().parse(rootProject.file("shared/product.json")) as Map<*, *>
+val prepareFocusedAssets by tasks.registering(Sync::class) {
+    from("src/main/assets")
+    include((focusedProduct["assetIncludes"] as List<*>).map { it as String })
+    into(layout.buildDirectory.dir("generated/focusedAssets"))
+}
+tasks.named("preBuild") { dependsOn(prepareFocusedAssets) }

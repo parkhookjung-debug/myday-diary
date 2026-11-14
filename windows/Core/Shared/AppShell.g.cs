@@ -5,6 +5,6 @@ namespace MyDay.Windows.Core { public static class AppShell {
     public const string Greeting="오늘은 어떤 하루였나요?";
     public const string Subtitle="완벽하지 않아도 괜찮아요. 나의 속도로, 한 줄씩.";
     public const string FriendTitle="오늘도 네 편이야";
-    public static readonly string[] Titles={"일기","달력·검색","상몬·공방","라운지","설정·백업"};
+    public static readonly string[] Titles={"일기","달력·검색","상몬 성장","라운지","설정·백업"};
     public static readonly string[] Symbols={"▤","▦","✦","◌","⚙"};
 }}

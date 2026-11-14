@@ -1,0 +1,27 @@
+{
+  "format": "myday-branch-integrations",
+  "version": 1,
+  "reviewedOn": "2026-11-14",
+  "sourceBranch": "codex/anniversary-calendar",
+  "sourceHead": "fe3ae6a9bbda9f8169d18a4fb1bbec0428f6bdad",
+  "sourceCommits": [
+    "4501cd281e8d0f16b85525fa3c97674bfddb0a07",
+    "053e429",
+    "e6c817b",
+    "c9401bb",
+    "ee7a404",
+    "fe3ae6a"
+  ],
+  "approach": "reviewed native adaptation on codex/windows-app; no unconditional branch merge",
+  "included": [
+    "annual and one-time anniversary calendar",
+    "compact menu preserving all six games and desktop fetch",
+    "separate best-score card in existing Sangmon block design",
+    "read-only import of legacy tetris-record.json without incrementing completed plays",
+    "optional anniversary data preservation across Windows Android macOS v9 backups"
+  ],
+  "gameImplementation": "windows/Core/BlockGame.cs + windows/UI/BlockGameWindow.cs",
+  "scoreImplementation": "windows/Core/GameRecords.cs",
+  "guide": "docs/BRANCH-INTEGRATION-2026-11-14.md",
+  "publishedReleaseReplaced": false
+}

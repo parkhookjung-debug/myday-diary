@@ -20,7 +20,7 @@
 
 Windows·Mac·Android에서 쓰는 일기 앱입니다. 사진과 일기 블록을 자유롭게 배치하고, 기록할수록 함께 자라는 캐릭터 **상몬**을 키웁니다.
 
-![Windows 일기 화면](https://raw.githubusercontent.com/parkhookjung-debug/myday-diary/v0.15.0-preview/previews/focused-20261111/windows-example.png)
+![Windows 일기 화면](previews/focused-20261111/windows-example.png)
 
 - **일기**: 글·할 일·습관·감정·사진 블록, 자유 배치, 일기 형식 100종(추천 20종), 내 레이아웃 저장
 - **기록 탐색**: 월간 달력, 본문·사진 설명 검색, 감정 달력, 태그·즐겨찾기, 월별 사진 앨범
@@ -30,7 +30,13 @@ Windows·Mac·Android에서 쓰는 일기 앱입니다. 사진과 일기 블록�
 
 기록은 각 기기에만 저장합니다. 플랫폼 사이의 자동 동기화는 없고, 공통 JSON 백업(버전 1~9)으로 옮깁니다.
 
-> **공개 다운로드 0.15.0 시험판**: 기본 상몬·일기·레벨업에 집중합니다. 변신·코디·뽑기·재화·합성 화면은 제거했으며 로컬 채팅과 카카오 연동 원본은 유지합니다. [기능 범위](https://github.com/parkhookjung-debug/myday-diary/blob/v0.15.0-preview/docs/FOCUSED-APP.md). 아래 개발 문서는 main의 이전 소스를 포함하므로 실제 배포 코드는 다운로드 태그를 기준으로 확인하세요.
+> **현재 작업 버전 0.15.0**: 상몬 변신·코디·뽑기·재화·합성 화면을 제거하고 일기와 레벨업에 집중합니다. 로컬 채팅과 카카오 연동 원본은 유지하며 공개 서버는 이전처럼 비활성입니다. [간소화 내용·호환성·수정 파일](docs/FOCUSED-APP.md). [0.14 통합 기록](docs/INTEGRATION-2026-10-29.md)
+
+**Windows 상몬 새 동작:** [잡으면 늘어나고, 빠르게 던지면 화면 가장자리에서 튕깁니다](docs/DESKTOP-PET-MOTION.md) · [동작 미리보기](previews/pet-motion-20261111/README.md)
+
+**Windows 개발 버전:** [플레이룸 6종 + 바탕화면 공놀이](docs/SANGMON-BLOCKS.md) — 간식 도전·슬링샷·낚시·통통 점프·불꽃 요리·**상몬 블록 쌓기**. [실제 화면](previews/blocks-20261114/README.md). 현재 공개 Release와 별도인 작업 브랜치 빌드입니다.
+
+**최신 브랜치 통합:** [기념일 달력·게임 선택 메뉴·상몬 테트리스 최고기록](docs/BRANCH-INTEGRATION-2026-11-14.md). 상몬 블록 디자인을 유지하며 이전 테트리스 기록을 보존해 가져옵니다.
 
 ## 직접 빌드하기
 
@@ -83,10 +89,10 @@ previews/   실제 앱 화면 캡처
 | 일기 형식 100종의 제목·질문 | [Windows·Mac 공통 원본](shared/catalog/templates.json) · [생성 도구](tools/sync-desktop.py) | 생성 후 [Android 자산 생성](tools/export-android-assets.ps1) |
 | 내 레이아웃 목록·이름·미리보기 | [MyLayoutsWindow.cs](windows/UI/MyLayoutsWindow.cs) | [PhoneDialogs.kt](app/src/main/java/com/myday/diary/ui/diary/PhoneDialogs.kt) |
 | 저장·백업 형식·이전 기록 | [DiaryData.cs](windows/Core/DiaryData.cs) | [DiaryStore.kt](app/src/main/java/com/myday/diary/data/DiaryStore.kt) · [NotebookJson.kt](app/src/main/java/com/myday/diary/data/NotebookJson.kt) |
-| 뽑기·클로버·꽃잎·수집 도감 | [SangmonCollection.cs](windows/Core/SangmonCollection.cs) · [CollectionWindow.cs](windows/UI/CollectionWindow.cs) | [CollectionRules.kt](app/src/main/java/com/myday/diary/diary/CollectionRules.kt) · [PhoneCollection.kt](app/src/main/java/com/myday/diary/ui/diary/PhoneCollection.kt) |
+| 이전 수집 백업 검증 (호환 전용) | [SangmonCollection.cs](windows/Core/SangmonCollection.cs) | [CollectionRules.kt](app/src/main/java/com/myday/diary/diary/CollectionRules.kt) |
 | 경험치·레벨·성장 규칙 | [SangmonGrowth.cs](windows/Core/SangmonGrowth.cs) | [NotebookRules.kt](app/src/main/java/com/myday/diary/diary/NotebookRules.kt) |
-| 상몬·소품 선택 화면 | [GrowthWindow.cs](windows/UI/GrowthWindow.cs) · [EquipmentWindow.cs](windows/UI/EquipmentWindow.cs) | [PhoneCompanion.kt](app/src/main/java/com/myday/diary/ui/diary/PhoneCompanion.kt) |
-| 상몬 외형·소품 그림·이름 | [상몬·아이템 원본 안내](windows/Character/README.md) · [SangmonItems.cs](windows/Core/SangmonItems.cs) | 원본 수정 후 [Android 자산 생성](tools/export-android-assets.ps1) |
+| 기본 상몬·성장 화면 | [GrowthWindow.cs](windows/UI/GrowthWindow.cs) | [PhoneCompanion.kt](app/src/main/java/com/myday/diary/ui/diary/PhoneCompanion.kt) |
+| 이전 상몬·소품 데이터 호환용 원본 | [상몬·아이템 원본 안내](windows/Character/README.md) · [SangmonItems.cs](windows/Core/SangmonItems.cs) | 원본 수정 후 [Android 자산 생성](tools/export-android-assets.ps1) |
 | 홈/바탕화면 캐릭터 이동·터치 | [DesktopPet.cs](windows/Character/DesktopPet.cs) · [PetBehavior.cs](windows/Character/PetBehavior.cs) | [CharacterWallpaperService.kt](app/src/main/java/com/myday/diary/CharacterWallpaperService.kt) |
 | 휴대폰 진동·햅틱 반응 | — | [DiaryHaptics.kt](app/src/main/java/com/myday/diary/platform/DiaryHaptics.kt) |
 | 자동 검사 | [windows/Tests/](windows/Tests) | [app/src/test/](app/src/test/java/com/myday/diary) |

@@ -1,5 +1,7 @@
 # Windows·Mac·Android 공통 원본
 
+**현재 0.15 제품 범위:** [product.json](product.json)에서 기본 상몬 한 마리와 배포 이미지 허용 목록을 관리합니다. 변신·코디·뽑기·재화·합성 화면은 제거했고, 기존 장비·수집 규칙은 이전 백업 검증용으로 보관합니다. [간소화 안내](../docs/FOCUSED-APP.md).
+
 **세 앱에 함께 적용할 내용은 이 폴더에서 수정합니다.** Windows 화면은 WinForms, Mac 화면은 SwiftUI를 유지합니다. 공통 JSON에서 C#·Swift 코드와 Mac 리소스를 생성하며 앱 실행 때 Python·인터넷·서버는 필요하지 않습니다.
 
 공통 화면·기능과 실행 파일: [세 플랫폼 안내](../docs/THREE-PLATFORMS.md).

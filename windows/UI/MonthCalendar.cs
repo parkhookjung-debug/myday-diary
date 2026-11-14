@@ -17,7 +17,7 @@ namespace MyDay.Windows.UI
             Day=day; this.selected=day.Date==selected.Date;
             Dock=DockStyle.Fill; Margin=Design.Pad(2); FlatStyle=FlatStyle.Flat; Cursor=Cursors.Hand;
             Enabled=day.Date.HasValue && day.Date.Value>=min.Date && day.Date.Value<=max.Date;
-            AccessibleName=day.Date.HasValue?day.Date.Value.ToString("yyyy년 M월 d일")+(day.HasEntry?" · 기록 있음":" · 기록 없음")+(day.HasPhoto?" · 사진 있음":""):"날짜 없음";
+            AccessibleName=day.Date.HasValue?day.Date.Value.ToString("yyyy년 M월 d일")+(day.HasEntry?" · 기록 있음":" · 기록 없음")+(day.HasPhoto?" · 사진 있음":"")+(day.HasAnniversary?" · 기념일: "+day.AnniversaryNames:""):"날짜 없음";
             SetStyle(ControlStyles.UserPaint|ControlStyles.AllPaintingInWmPaint|ControlStyles.OptimizedDoubleBuffer,true);
         }
         protected override void OnMouseEnter(EventArgs e) { hover=true; Invalidate(); base.OnMouseEnter(e); }
@@ -38,6 +38,7 @@ namespace MyDay.Windows.UI
                 var frame=new Rectangle(middle+Design.P(1),bottom-Design.P(2),Design.P(8),Design.P(6));
                 g.DrawRectangle(pen,frame); g.DrawLines(pen,new[] {new Point(frame.Left,frame.Bottom),new Point(frame.Left+Design.P(3),frame.Top+Design.P(2)),new Point(frame.Right,frame.Bottom)});
             }
+            if(Day.HasAnniversary)TextRenderer.DrawText(g,"★",Design.Font(6,true),new Rectangle(Math.Max(0,Width-Design.P(12)),0,Design.P(11),Design.P(12)),Color.FromArgb(194,112,71),TextFormatFlags.NoPadding|TextFormatFlags.HorizontalCenter);
             if(Focused && ShowFocusCues) ControlPaint.DrawFocusRectangle(g,Rectangle.Inflate(ClientRectangle,-Design.P(3),-Design.P(3)));
         }
     }
@@ -48,6 +49,7 @@ namespace MyDay.Windows.UI
         private readonly Action<DateTime> open;
         private readonly Label heading;
         private readonly TableLayoutPanel days;
+        private readonly ToolTip anniversaryTips=new ToolTip();
         internal readonly Button Previous,Next;
         public DateTime Month { get; private set; }
         public event EventHandler MonthChanged;
@@ -70,14 +72,16 @@ namespace MyDay.Windows.UI
             if(target<min) target=min; if(target>max) target=max;
             Month=new DateTime(target.Year,target.Month,1); heading.Text=Month.ToString("yyyy년 M월");
             Previous.Enabled=Month>new DateTime(min.Year,min.Month,1); Next.Enabled=Month<new DateTime(max.Year,max.Month,1);
-            days.SuspendLayout(); foreach(Control control in days.Controls.Cast<Control>().ToArray()) control.Dispose(); days.Controls.Clear();
+            anniversaryTips.RemoveAll(); days.SuspendLayout(); foreach(Control control in days.Controls.Cast<Control>().ToArray()) control.Dispose(); days.Controls.Clear();
             string[] names={"일","월","화","수","목","금","토"};
             for(int i=0;i<7;i++) { var label=Design.Label(names[i],8); label.ForeColor=i==0?Color.FromArgb(173,91,78):Design.Muted; label.Dock=DockStyle.Fill; label.AutoSize=false; label.TextAlign=ContentAlignment.MiddleCenter; days.Controls.Add(label,i,0); }
             var cells=DiaryBrowse.Month(book,Month);
             for(int i=0;i<cells.Count;i++) { var day=cells[i]; var button=new CalendarDayButton(day,selected,min,max);
+                if(day.HasAnniversary)anniversaryTips.SetToolTip(button,day.AnniversaryNames);
                 button.Click+=delegate { if(day.Date.HasValue) open(day.Date.Value); }; days.Controls.Add(button,i%7,i/7+1); }
             days.ResumeLayout(); if(MonthChanged!=null) MonthChanged(this,EventArgs.Empty);
         }
         internal CalendarDayButton FindDay(DateTime date) { return days.Controls.OfType<CalendarDayButton>().First(b=>b.Day.Date==date.Date); }
+        protected override void Dispose(bool disposing){if(disposing)anniversaryTips.Dispose();base.Dispose(disposing);}
     }
 }

@@ -36,6 +36,23 @@ namespace MyDay.Windows
                 Application.SetUnhandledExceptionMode(UnhandledExceptionMode.ThrowException);
                 try { Tests.Smoke(Path.GetFullPath(args[1])); return 0; } catch(Exception ex) { Console.Error.WriteLine(ex); return 1; }
             }
+            if(args.Length==1 && args[0]=="--snack-game"){using(var game=new SnackGameWindow(GameRecords.Local()))Application.Run(game);return 0;}
+            if((args.Length==1 && args[0]=="--game-hub")||(args.Length==0 && string.Equals(Path.GetFileNameWithoutExtension(Application.ExecutablePath),"SangmonGame",StringComparison.OrdinalIgnoreCase))){using(var games=new GameHubWindow())Application.Run(games);return 0;}
+            if((args.Length==1 && args[0]=="--desktop-fetch")||(args.Length==0 && string.Equals(Path.GetFileNameWithoutExtension(Application.ExecutablePath),"SangmonFetch",StringComparison.OrdinalIgnoreCase))){using(var hub=new GameHubWindow()){hub.Shown+=delegate{hub.StartFetchOnDesktop();};Application.Run(hub);}return 0;}
+            if(args.Length==2 && args[0]=="--branch-integration-preview"){try{Tests.BranchIntegrationPreview(Path.GetFullPath(args[1]));return 0;}catch(Exception ex){Console.Error.WriteLine(ex);return 1;}}
+            if(args.Length==1 && (args[0]=="--blocks-game"||args[0]=="--tetris-game")){using(var game=new BlockGameWindow(GameRecords.Local()))Application.Run(game);return 0;}
+            if(args.Length==2 && args[0]=="--blocks-preview"){try{Tests.BlocksPreview(Path.GetFullPath(args[1]));return 0;}catch(Exception ex){Console.Error.WriteLine(ex);return 1;}}
+            if(args.Length==1 && args[0]=="--cooking-game"){using(var game=new CookingGameWindow(GameRecords.Local()))Application.Run(game);return 0;}
+            if(args.Length==2 && args[0]=="--cooking-preview"){try{Tests.CookingPreview(Path.GetFullPath(args[1]));return 0;}catch(Exception ex){Console.Error.WriteLine(ex);return 1;}}
+            if(args.Length==2 && args[0]=="--jump-fetch-preview"){try{Tests.JumpFetchPreview(Path.GetFullPath(args[1]));return 0;}catch(Exception ex){Console.Error.WriteLine(ex);return 1;}}
+            if(args.Length==2 && args[0]=="--mini-games-preview"){try{Tests.MiniGamesPreview(Path.GetFullPath(args[1]));return 0;}catch(Exception ex){Console.Error.WriteLine(ex);return 1;}}
+            if(args.Length==2 && args[0]=="--snack-game-preview"){try{Tests.SnackGamePreview(Path.GetFullPath(args[1]));return 0;}catch(Exception ex){Console.Error.WriteLine(ex);return 1;}}
+            if(args.Length==2 && args[0]=="--pet-physics-preview") {
+                try {Tests.PetPhysicsPreview(Path.GetFullPath(args[1]));return 0;}catch(Exception ex){Console.Error.WriteLine(ex);return 1;}
+            }
+            if(args.Length==1 && args[0]=="--pet-playground") {
+                using(var pet=new MyDay.Windows.Character.DesktopPet(delegate{})){pet.Text="MyDay 상몬 탄성 미리보기";Application.Run(pet);}return 0;
+            }
             if(args.Length==2 && args[0]=="--character-preview")
             {
                 try { Tests.Preview(Path.GetFullPath(args[1])); return 0; } catch(Exception ex) { Console.Error.WriteLine(ex); return 1; }

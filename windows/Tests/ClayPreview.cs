@@ -25,10 +25,10 @@ namespace MyDay.Windows
                         using(var brush=new SolidBrush(dark?Color.FromArgb(34,39,48):Color.FromArgb(250,248,243))) g.FillRectangle(brush,x+6,y+6,308,288);
                         var pose=MonsterPose.ForActivity(ages[i],activities[i],ages[i],0,0);
                         var equipment=i==8?new SangmonEquipment {WeaponId="frost-sword",CharmId="astral-orb"}:null;
-                        MonsterPainter.Draw(g,new Rectangle(x+12,y+25,296,226),pose,true,MonsterVariant.Original,equipment);
+                        MonsterPainter.DrawLegacy(g,new Rectangle(x+12,y+25,296,226),pose,true,MonsterVariant.Original,equipment);
                         using(var brush=new SolidBrush(dark?Color.FromArgb(234,231,225):Color.FromArgb(84,75,67))) g.DrawString(labels[i],font,brush,x+20,y+266);
                         using(var sprite=new Bitmap(320,280)) {
-                            using(var sg=Graphics.FromImage(sprite)) MonsterPainter.Draw(sg,new Rectangle(12,18,296,226),pose,true,MonsterVariant.Original,equipment);
+                            using(var sg=Graphics.FromImage(sprite)) MonsterPainter.DrawLegacy(sg,new Rectangle(12,18,296,226),pose,true,MonsterVariant.Original,equipment);
                             sprite.Save(Path.Combine(directory,"pose-"+i+".png"),ImageFormat.Png);
                         }
                     }
