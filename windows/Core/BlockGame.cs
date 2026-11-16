@@ -35,7 +35,8 @@ namespace MyDay.Windows.Core
         public double Flash {get;private set;}
         public string Message {get;private set;}
         public int Level {get{return Math.Min(20,1+Lines/MiniGameRules.BlocksLinesPerLevel);}}
-        public double FallSeconds {get{return Math.Max(MiniGameRules.BlocksMinFallSeconds,MiniGameRules.BlocksFallSeconds*Math.Pow(.84,Level-1));}}
+        public int SpeedLevel {get{return Math.Min(20,1+Pieces/MiniGameRules.BlocksPiecesPerSpeed);}}
+        public double FallSeconds {get{return Math.Max(MiniGameRules.BlocksMinFallSeconds,MiniGameRules.BlocksFallSeconds-(SpeedLevel-1)*MiniGameRules.BlocksFallStep);}}
         public int CellAt(int x,int y){return board[y,x];}
         public BlockKind[] Next {get{return next.ToArray();}}
         public int[] ClearedRows {get{return (int[])clearedRows.Clone();}}

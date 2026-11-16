@@ -1,7 +1,7 @@
 {
   "format": "myday-product",
   "version": 1,
-  "appVersion": "0.15.0",
+  "appVersion": "0.15.1",
   "characterId": "original",
   "retained": [
     "diary",

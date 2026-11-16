@@ -32,5 +32,7 @@
   "BlocksFallSeconds": 0.85,
   "BlocksMinFallSeconds": 0.12,
   "BlocksLockSeconds": 0.4,
-  "BlocksLinesPerLevel": 5
+  "BlocksLinesPerLevel": 5,
+  "BlocksPiecesPerSpeed": 5,
+  "BlocksFallStep": 0.055
 }
