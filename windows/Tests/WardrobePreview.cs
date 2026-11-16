@@ -43,7 +43,7 @@ namespace MyDay.Windows
                         };
                         foreach(string id in looks[i]){var chosen=SangmonItems.Find(id);gear=SangmonItems.Select(gear,chosen.Slot,chosen.Id);}
                         using(var fill=new SolidBrush(i%2==0?Color.FromArgb(250,248,243):Color.FromArgb(255,250,243)))g.FillRectangle(fill,x+4,y+4,292,292);
-                        MonsterPainter.Draw(g,new Rectangle(x+8,y+28,284,220),MonsterPose.ForActivity(.2,PetActivity.Rest,.2,0,0),true,MonsterVariant.Original,gear);
+                        MonsterPainter.DrawLegacy(g,new Rectangle(x+8,y+28,284,220),MonsterPose.ForActivity(.2,PetActivity.Rest,.2,0,0),true,MonsterVariant.Original,gear);
                         using(var fill=new SolidBrush(i%2==0?Color.FromArgb(84,75,67):Color.FromArgb(111,90,77)))g.DrawString(new[]{"책상 위 작은 친구","꽃길 산책","포근한 낮잠","기분 좋은 날","나만의 기록 시간","따뜻한 한 잔","비 오는 오후","토끼와 사탕"}[i],font,fill,x+16,y+268);
                     }
                 }

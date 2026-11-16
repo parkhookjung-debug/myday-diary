@@ -1,0 +1,76 @@
+{
+  "format": "myday-native-release",
+  "appVersion": "0.15.1",
+  "date": "2026-11-16",
+  "releaseTag": "v0.15.1-preview",
+  "releasePage": "https://github.com/parkhookjung-debug/myday-diary/releases/tag/v0.15.1-preview",
+  "buildSourceCommit": "6fc3667fcb904d5f8e06d92f268773c5790eebd9",
+  "files": [
+    {
+      "file": "MyDay-Windows.exe",
+      "platform": "windows",
+      "bytes": 758272,
+      "sha256": "97425d629a63d5ec82b159a98310fb3531fd72add3385fa4909d2ba0df4ca383",
+      "sourceCommit": "6fc3667fcb904d5f8e06d92f268773c5790eebd9",
+      "ci": "https://github.com/parkhookjung-debug/myday-diary/actions/runs/43834756733",
+      "url": "https://github.com/parkhookjung-debug/myday-diary/releases/download/v0.15.1-preview/MyDay-Windows.exe"
+    },
+    {
+      "file": "SangmonGame.exe",
+      "platform": "windows",
+      "bytes": 758272,
+      "sha256": "97425d629a63d5ec82b159a98310fb3531fd72add3385fa4909d2ba0df4ca383",
+      "sourceCommit": "6fc3667fcb904d5f8e06d92f268773c5790eebd9",
+      "ci": "https://github.com/parkhookjung-debug/myday-diary/actions/runs/43834756733",
+      "url": "https://github.com/parkhookjung-debug/myday-diary/releases/download/v0.15.1-preview/SangmonGame.exe"
+    },
+    {
+      "file": "SangmonFetch.exe",
+      "platform": "windows",
+      "bytes": 758272,
+      "sha256": "97425d629a63d5ec82b159a98310fb3531fd72add3385fa4909d2ba0df4ca383",
+      "sourceCommit": "6fc3667fcb904d5f8e06d92f268773c5790eebd9",
+      "ci": "https://github.com/parkhookjung-debug/myday-diary/actions/runs/43834756733",
+      "url": "https://github.com/parkhookjung-debug/myday-diary/releases/download/v0.15.1-preview/SangmonFetch.exe"
+    },
+    {
+      "file": "MyDay-Android.apk",
+      "platform": "android",
+      "bytes": 15991060,
+      "sha256": "e579f7ade455253c5653843fb6162b7ebe4c96263be109160b91f22111264224",
+      "sourceCommit": "6fc3667fcb904d5f8e06d92f268773c5790eebd9",
+      "ci": "https://github.com/parkhookjung-debug/myday-diary/actions/runs/43834762469",
+      "url": "https://github.com/parkhookjung-debug/myday-diary/releases/download/v0.15.1-preview/MyDay-Android.apk"
+    },
+    {
+      "file": "MyDay-macOS-arm64.zip",
+      "platform": "macos",
+      "bytes": 1945274,
+      "sha256": "b8c323735adeb62df80e7908b6e757bfb60d1255256c0ccd86d10fb398eb30af",
+      "sourceCommit": "6fc3667fcb904d5f8e06d92f268773c5790eebd9",
+      "ci": "https://github.com/parkhookjung-debug/myday-diary/actions/runs/43834767353",
+      "url": "https://github.com/parkhookjung-debug/myday-diary/releases/download/v0.15.1-preview/MyDay-macOS-arm64.zip"
+    }
+  ],
+  "checks": {
+    "windowsAssertions": 496,
+    "nativeSixGamesDiaryAnniversariesAndFetch": true,
+    "fivePieceSpeedIndependentOfScoreLevel": true,
+    "legacyTetrisScorePreserved": true,
+    "androidJvmTests": 57,
+    "androidDeviceApi35Tests": 19,
+    "androidLintErrors": 0,
+    "windowsAndroidMacBackupRoundTrips": true,
+    "macBuildAndNativeContracts": true,
+    "localChat": true,
+    "focusedAssetsOnly": true
+  },
+  "integratedBranch": "codex/anniversary-calendar@40b718ffccba58a1edb9fd6cae23d3e961f4c8fd",
+  "sourcePusher": "hongmin060115-create",
+  "windowsGamesAndAnniversaryUI": true,
+  "macAndroidAnniversaryMetadataPreserved": true,
+  "macAndroidNewGameScreens": false,
+  "mainAppCodeMerged": false,
+  "oldReleaseAssetsReplaced": false,
+  "cloudDeployed": false
+}

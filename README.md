@@ -1,18 +1,18 @@
 # 마이데이 (MyDay)
 
-## 앱 다운로드 · 0.15.0 시험판
+## 앱 다운로드 · 0.15.1 시험판
 
-**[다운로드 페이지 열기](https://github.com/parkhookjung-debug/myday-diary/releases/tag/v0.15.0-preview)** — 내 운영체제에 맞는 파일 하나를 받으세요. GitHub 로그인과 개발 도구가 필요 없습니다.
+**[다운로드 페이지 열기](https://github.com/parkhookjung-debug/myday-diary/releases/tag/v0.15.1-preview)** — 내 운영체제에 맞는 파일 하나를 받으세요. GitHub 로그인과 개발 도구가 필요 없습니다.
 
 | 운영체제 | 다운로드 | 실행 방법 |
 | --- | --- | --- |
-| Windows 10/11 · .NET Framework 4.8+ | [Windows 실행 파일 (.exe)](https://github.com/parkhookjung-debug/myday-diary/releases/download/v0.15.0-preview/MyDay-Windows.exe) | 기존 앱 종료 후 EXE 실행 |
-| Mac · Apple Silicon(M1 이상) · macOS 13+ | [Mac 앱 (.zip)](https://github.com/parkhookjung-debug/myday-diary/releases/download/v0.15.0-preview/MyDay-macOS-arm64.zip) | 압축을 풀고 `MyDay.app` 실행 |
-| Android 8 이상 · Galaxy 등 | [Android 설치 파일 (.apk)](https://github.com/parkhookjung-debug/myday-diary/releases/download/v0.15.0-preview/MyDay-Android.apk) | 휴대폰에서 APK 다운로드 후 설치 |
+| Windows 10/11 · .NET Framework 4.8+ | [Windows 실행 파일 (.exe)](https://github.com/parkhookjung-debug/myday-diary/releases/download/v0.15.1-preview/MyDay-Windows.exe) | 기존 앱 종료 후 EXE 실행 |
+| Mac · Apple Silicon(M1 이상) · macOS 13+ | [Mac 앱 (.zip)](https://github.com/parkhookjung-debug/myday-diary/releases/download/v0.15.1-preview/MyDay-macOS-arm64.zip) | 압축을 풀고 `MyDay.app` 실행 |
+| Android 8 이상 · Galaxy 등 | [Android 설치 파일 (.apk)](https://github.com/parkhookjung-debug/myday-diary/releases/download/v0.15.1-preview/MyDay-Android.apk) | 휴대폰에서 APK 다운로드 후 설치 |
 
 [자세한 설치·업데이트 안내](docs/DOWNLOADS.md). Mac은 **Apple Silicon 전용**이며 Apple 공증 미적용 시험판입니다. Android는 **디버그 서명 APK**입니다. 기존 사용자는 **공통 백업 → 앱 완전 종료 → 새 앱 실행 → 기록 확인** 순서로 업데이트하세요. Android 서명이 달라 설치가 안 되더라도 백업 확인 전 기존 앱을 삭제하지 마세요.
 
-배포 소스는 [v0.15.0-preview 태그](https://github.com/parkhookjung-debug/myday-diary/tree/v0.15.0-preview)에서 확인합니다. Windows 파일에는 상몬의 탄성 드래그·속도 비례 던지기가 포함됩니다. [플랫폼별 파일 출처·SHA256](https://github.com/parkhookjung-debug/myday-diary/releases/download/v0.15.0-preview/SOURCE.json)
+배포 소스는 [v0.15.1-preview 태그](https://github.com/parkhookjung-debug/myday-diary/tree/v0.15.1-preview)에서 확인합니다. Windows 파일에는 탄성 드래그·던지기, 여섯 게임·공놀이, 기념일 달력과 이전 테트리스 최고기록 가져오기가 포함됩니다. Mac·Android도 기념일 백업 자료를 보존하며 게임 화면과 기념일 편집은 Windows에 먼저 제공합니다. [플랫폼별 파일 출처·SHA256](https://github.com/parkhookjung-debug/myday-diary/releases/download/v0.15.1-preview/SOURCE.json)
 
 [![Android CI](https://github.com/parkhookjung-debug/myday-diary/actions/workflows/android.yml/badge.svg)](https://github.com/parkhookjung-debug/myday-diary/actions/workflows/android.yml)
 [![Windows CI](https://github.com/parkhookjung-debug/myday-diary/actions/workflows/windows.yml/badge.svg)](https://github.com/parkhookjung-debug/myday-diary/actions/workflows/windows.yml)
@@ -20,7 +20,7 @@
 
 Windows·Mac·Android에서 쓰는 일기 앱입니다. 사진과 일기 블록을 자유롭게 배치하고, 기록할수록 함께 자라는 캐릭터 **상몬**을 키웁니다.
 
-![Windows 일기 화면](https://raw.githubusercontent.com/parkhookjung-debug/myday-diary/v0.15.0-preview/previews/focused-20261111/windows-example.png)
+![Windows 일기 화면](previews/focused-20261111/windows-example.png)
 
 - **일기**: 글·할 일·습관·감정·사진 블록, 자유 배치, 일기 형식 100종(추천 20종), 내 레이아웃 저장
 - **기록 탐색**: 월간 달력, 본문·사진 설명 검색, 감정 달력, 태그·즐겨찾기, 월별 사진 앨범
@@ -30,7 +30,15 @@ Windows·Mac·Android에서 쓰는 일기 앱입니다. 사진과 일기 블록�
 
 기록은 각 기기에만 저장합니다. 플랫폼 사이의 자동 동기화는 없고, 공통 JSON 백업(버전 1~9)으로 옮깁니다.
 
-> **공개 다운로드 0.15.0 시험판**: 기본 상몬·일기·레벨업에 집중합니다. 변신·코디·뽑기·재화·합성 화면은 제거했으며 로컬 채팅과 카카오 연동 원본은 유지합니다. [기능 범위](https://github.com/parkhookjung-debug/myday-diary/blob/v0.15.0-preview/docs/FOCUSED-APP.md). 아래 개발 문서는 main의 이전 소스를 포함하므로 실제 배포 코드는 다운로드 태그를 기준으로 확인하세요.
+> **현재 버전 0.15.1**: 상몬 변신·코디·뽑기·재화·합성 화면을 제거하고 일기와 레벨업에 집중합니다. 로컬 채팅과 카카오 연동 원본은 유지하며 공개 서버는 이전처럼 비활성입니다. [간소화 내용·호환성·수정 파일](docs/FOCUSED-APP.md). [0.14 통합 기록](docs/INTEGRATION-2026-10-29.md)
+
+**Windows 상몬 새 동작:** [잡으면 늘어나고, 빠르게 던지면 화면 가장자리에서 튕깁니다](docs/DESKTOP-PET-MOTION.md) · [동작 미리보기](previews/pet-motion-20261111/README.md)
+
+**Windows 0.15.1 공개 시험판:** [플레이룸 6종 + 바탕화면 공놀이](docs/SANGMON-BLOCKS.md) — 간식 도전·슬링샷·낚시·통통 점프·불꽃 요리·**상몬 블록 쌓기**. [실제 화면](previews/blocks-20261114/README.md). 새 Release에서 바로 받을 수 있습니다.
+
+**최신 통합:** [기념일 달력·게임 선택 메뉴·상몬 테트리스 최고기록](docs/BRANCH-INTEGRATION-2026-11-14.md). 상몬 블록 디자인을 유지하며 이전 테트리스 기록을 보존해 가져옵니다.
+
+**팀원 변경 확인:** [전체 브랜치·푸시 점검과 반영 결과](docs/TEAM-UPDATES-2026-11-16.md). hongmin060115-create의 미반영 변경을 상몬 디자인에 맞춰 통합했습니다. 앱 안의 **기록 도구 → 업데이트 → 0.15.1 시험판 받기**도 같은 다운로드 페이지로 연결합니다.
 
 ## 직접 빌드하기
 
@@ -83,10 +91,10 @@ previews/   실제 앱 화면 캡처
 | 일기 형식 100종의 제목·질문 | [Windows·Mac 공통 원본](shared/catalog/templates.json) · [생성 도구](tools/sync-desktop.py) | 생성 후 [Android 자산 생성](tools/export-android-assets.ps1) |
 | 내 레이아웃 목록·이름·미리보기 | [MyLayoutsWindow.cs](windows/UI/MyLayoutsWindow.cs) | [PhoneDialogs.kt](app/src/main/java/com/myday/diary/ui/diary/PhoneDialogs.kt) |
 | 저장·백업 형식·이전 기록 | [DiaryData.cs](windows/Core/DiaryData.cs) | [DiaryStore.kt](app/src/main/java/com/myday/diary/data/DiaryStore.kt) · [NotebookJson.kt](app/src/main/java/com/myday/diary/data/NotebookJson.kt) |
-| 뽑기·클로버·꽃잎·수집 도감 | [SangmonCollection.cs](windows/Core/SangmonCollection.cs) · [CollectionWindow.cs](windows/UI/CollectionWindow.cs) | [CollectionRules.kt](app/src/main/java/com/myday/diary/diary/CollectionRules.kt) · [PhoneCollection.kt](app/src/main/java/com/myday/diary/ui/diary/PhoneCollection.kt) |
+| 이전 수집 백업 검증 (호환 전용) | [SangmonCollection.cs](windows/Core/SangmonCollection.cs) | [CollectionRules.kt](app/src/main/java/com/myday/diary/diary/CollectionRules.kt) |
 | 경험치·레벨·성장 규칙 | [SangmonGrowth.cs](windows/Core/SangmonGrowth.cs) | [NotebookRules.kt](app/src/main/java/com/myday/diary/diary/NotebookRules.kt) |
-| 상몬·소품 선택 화면 | [GrowthWindow.cs](windows/UI/GrowthWindow.cs) · [EquipmentWindow.cs](windows/UI/EquipmentWindow.cs) | [PhoneCompanion.kt](app/src/main/java/com/myday/diary/ui/diary/PhoneCompanion.kt) |
-| 상몬 외형·소품 그림·이름 | [상몬·아이템 원본 안내](windows/Character/README.md) · [SangmonItems.cs](windows/Core/SangmonItems.cs) | 원본 수정 후 [Android 자산 생성](tools/export-android-assets.ps1) |
+| 기본 상몬·성장 화면 | [GrowthWindow.cs](windows/UI/GrowthWindow.cs) | [PhoneCompanion.kt](app/src/main/java/com/myday/diary/ui/diary/PhoneCompanion.kt) |
+| 이전 상몬·소품 데이터 호환용 원본 | [상몬·아이템 원본 안내](windows/Character/README.md) · [SangmonItems.cs](windows/Core/SangmonItems.cs) | 원본 수정 후 [Android 자산 생성](tools/export-android-assets.ps1) |
 | 홈/바탕화면 캐릭터 이동·터치 | [DesktopPet.cs](windows/Character/DesktopPet.cs) · [PetBehavior.cs](windows/Character/PetBehavior.cs) | [CharacterWallpaperService.kt](app/src/main/java/com/myday/diary/CharacterWallpaperService.kt) |
 | 휴대폰 진동·햅틱 반응 | — | [DiaryHaptics.kt](app/src/main/java/com/myday/diary/platform/DiaryHaptics.kt) |
 | 자동 검사 | [windows/Tests/](windows/Tests) | [app/src/test/](app/src/test/java/com/myday/diary) |

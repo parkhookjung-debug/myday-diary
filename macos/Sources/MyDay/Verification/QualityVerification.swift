@@ -18,6 +18,6 @@ import Foundation
     let metadata=profileDirectory.appendingPathComponent("windows-metadata.json");try FileManager.default.removeItem(at:metadata)
     let missing=DiaryStore(directory:profileDirectory);try MacVerification.check(!missing.metadataLoaded && missing.recoveryAvailable,"missing metadata cannot silently reset companion or currency")
     missing.recoverPrevious();try MacVerification.check(missing.metadataLoaded,"missing metadata recovers from validated prior generation")
-    try MacVerification.check(ExperienceCatalog.titles.count==4 && ExperienceCatalog.bodies[2].contains("65%"),"shared onboarding and transparent economy help loaded")
+    try MacVerification.check(ExperienceCatalog.titles.count==4 && ExperienceCatalog.bodies[2].contains("3,590") && !ExperienceCatalog.bodies[2].contains("클로버"),"shared focused growth help replaces the retired economy")
  }
 }

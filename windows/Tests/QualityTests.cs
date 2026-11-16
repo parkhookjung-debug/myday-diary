@@ -23,6 +23,6 @@ namespace MyDay.Windows { internal static partial class Tests {
     var raw=new DiaryBook{Studio=new StudioData()};var portable=Path.Combine(folder,"studio-new.json");store.Export(portable,raw);using(var s=File.OpenRead(portable))Check(DiaryStore.Read(s).Version==9,"Fresh studio backup upgrades ownership before version-nine serialization");
     File.Delete(store.FilePath);rejected=false;try{store.Load();}catch{rejected=true;}Check(rejected,"Missing current with a prior generation cannot become an empty diary");
     var fresh=Path.Combine(directory,"new-welcome");Check(WelcomeState.ShouldShow(fresh,false)&&!WelcomeState.ShouldShow(fresh,true),"Welcome appears only for new empty users");WelcomeState.Complete(fresh);Check(!WelcomeState.ShouldShow(fresh,false),"Welcome completion stays local across restarts");
-    Check(RewardOverview.Text(new DiaryBook()).Contains("2회 뽑기 가능"),"Reward overview uses actual earned starting currency");
+    Check(RewardOverview.Text(new DiaryBook()).Contains("3590 XP") && !RewardOverview.Text(new DiaryBook()).Contains("클로버"),"Focused overview shows XP without retired currency");
  }
 }}

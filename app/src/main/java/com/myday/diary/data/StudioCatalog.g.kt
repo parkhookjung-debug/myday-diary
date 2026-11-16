@@ -6,4 +6,6 @@ val furnitureNames=listOf("화분","의자","러그","조명","테이블","쿠�
 val furnitureSymbols=listOf("♧","▥","▰","☀","▤","♡")
 val moods=listOf("평온해요","행복해요","피곤해요","속상해요","설레요")
 val stickers=listOf("꽃","하트","별","테이프")
+const val anniversaryLimit=500
+const val anniversaryNameLength=40
 }

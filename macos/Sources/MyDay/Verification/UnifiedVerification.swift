@@ -10,8 +10,8 @@ enum UnifiedVerification {
         try StudioVerification.run(root:root)
         let catalog = SharedArtCatalog.shared
         try check(catalog.characters.count == 64 && catalog.items.count == 300, "shared catalog completeness")
-        for skin in catalog.characters { try check(SangmonImages.image("portraits/\(skin.id).png") != nil && SangmonImages.image("sangmon/\(skin.id).png") != nil, "shared character artwork \(skin.id)") }
-        for item in catalog.items { try check(SangmonImages.image("items/\(item.id).png") != nil && SangmonImages.image("equipment/\(item.id).png") != nil, "shared item artwork \(item.id)") }
+        try check(SangmonImages.image("sangmon/original.png") != nil, "focused original artwork is bundled")
+        try check(!FileManager.default.fileExists(atPath: SharedArtCatalog.artURL.appendingPathComponent("items").path), "retired outfit images are not bundled")
         let fixture = try Data(contentsOf: SharedArtCatalog.artURL.appendingPathComponent("fixtures/windows-v8.json"))
         let incoming = try WindowsCompatibility.decode(fixture)
         var s = SharedCompanion(incoming.windowsMetadata!.fields)

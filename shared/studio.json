@@ -55,5 +55,7 @@
     "tags": 10,
     "tagLength": 20,
     "lockMinutes": 5
-  }
+  },
+  "anniversaryLimit": 500,
+  "anniversaryNameLength": 40
 }

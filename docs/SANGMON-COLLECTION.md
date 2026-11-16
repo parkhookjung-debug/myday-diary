@@ -1,5 +1,7 @@
 # 상몬의 선물 상자 · 뽑기와 수집 도감
 
+> 이 문서는 0.14까지의 기능 기록입니다. 0.15의 변신·코디·뽑기·합성 제거 범위는 [현재 간소화 안내](FOCUSED-APP.md)를 확인하세요.
+
 Windows는 **옷장 → 소품 뽑기**, Android는 **상몬 → 소품 뽑기**에서 엽니다. **기본 소품 8종은 무료**이며, 나머지 292종은 뽑기나 꽃잎 교환으로 얻어야 입힐 수 있습니다. 옷장에서 모든 모양을 미리 보고, 보유한 소품만 골라 입힙니다. 현금 결제는 없습니다.
 
 ## 무료 기본 소품
@@ -57,8 +59,8 @@ Windows는 **옷장 → 소품 뽑기**, Android는 **상몬 → 소품 뽑기**
 | --- | --- | --- |
 | 레벨 구간·출석 주 보상 계산 | [SangmonGrowth.cs](../windows/Core/SangmonGrowth.cs) | [NotebookRules.kt](../app/src/main/java/com/myday/diary/diary/NotebookRules.kt) |
 | 클로버·비용·확률·보장·꽃잎·병합 | [SangmonCollection.cs](../windows/Core/SangmonCollection.cs) | [CollectionRules.kt](../app/src/main/java/com/myday/diary/diary/CollectionRules.kt) |
-| 선물 상자·수집 도감 화면 | [CollectionWindow.cs](../windows/UI/CollectionWindow.cs) | [PhoneCollection.kt](../app/src/main/java/com/myday/diary/ui/diary/PhoneCollection.kt) |
-| 저장 성공 후 결과·실패 복구 | [DiaryWindow.Collection.cs](../windows/UI/DiaryWindow.Collection.cs) | [NotebookController.kt](../app/src/main/java/com/myday/diary/diary/NotebookController.kt) |
+| 선물 상자·수집 도감 화면 | [CollectionWindow.cs](https://github.com/parkhookjung-debug/myday-diary/blob/f29da72f23ed7a49aa3dfd28d85311f59b6bd7bc/windows/UI/CollectionWindow.cs) | [PhoneCollection.kt](https://github.com/parkhookjung-debug/myday-diary/blob/f29da72f23ed7a49aa3dfd28d85311f59b6bd7bc/app/src/main/java/com/myday/diary/ui/diary/PhoneCollection.kt) |
+| 저장 성공 후 결과·실패 복구 | [DiaryWindow.Collection.cs](https://github.com/parkhookjung-debug/myday-diary/blob/f29da72f23ed7a49aa3dfd28d85311f59b6bd7bc/windows/UI/DiaryWindow.Collection.cs) | [NotebookController.kt](../app/src/main/java/com/myday/diary/diary/NotebookController.kt) |
 | 버전 8 JSON | [DiaryData.cs](../windows/Core/DiaryData.cs) | [DiaryModels.kt](../app/src/main/java/com/myday/diary/data/DiaryModels.kt) · [NotebookJson.kt](../app/src/main/java/com/myday/diary/data/NotebookJson.kt) |
 | 검사 | [CollectionTests.cs](../windows/Tests/CollectionTests.cs) | [CollectionTest.kt](../app/src/test/java/com/myday/diary/diary/CollectionTest.kt) |
 

@@ -5,4 +5,6 @@ public static readonly string[] FurnitureNames={"화분","의자","러그","조�
 public static readonly string[] FurnitureSymbols={"♧","▥","▰","☀","▤","♡"};
 public static readonly string[] Moods={"평온해요","행복해요","피곤해요","속상해요","설레요"};
 public static readonly string[] Stickers={"꽃","하트","별","테이프"};
+public const int AnniversaryLimit=500;
+public const int AnniversaryNameLength=40;
 }}

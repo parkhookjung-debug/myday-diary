@@ -17,4 +17,4 @@
 
 [Android 전체 파일 안내](../../README.md) · [디자인 가이드](../../../../../../../../../docs/DESIGN.md)
 
-소품 뽑기·수집 도감 화면은 [PhoneCollection.kt](PhoneCollection.kt), 성장 카드와 진입 탭은 [PhoneCompanion.kt](PhoneCompanion.kt)에서 수정합니다.
+소품 뽑기·수집 도감 화면은 [PhoneCollection.kt](https://github.com/parkhookjung-debug/myday-diary/blob/f29da72f23ed7a49aa3dfd28d85311f59b6bd7bc/app/src/main/java/com/myday/diary/ui/diary/PhoneCollection.kt), 성장 카드와 진입 탭은 [PhoneCompanion.kt](PhoneCompanion.kt)에서 수정합니다.

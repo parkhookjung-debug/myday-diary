@@ -1,5 +1,7 @@
 # 상몬의 작은 옷장 · 소품 300종
 
+> 이 문서는 0.14까지의 기능 기록입니다. 0.15의 변신·코디·뽑기·합성 제거 범위는 [현재 간소화 안내](FOCUSED-APP.md)를 확인하세요.
+
 상몬과 함께하는 일상 소품입니다. **50가지 형태 × 6가지 파스텔 색감 = 300종**으로, 크림·살구·하늘·민트·라벤더·딸기를 고를 수 있습니다. 둥근 모양과 따뜻한 갈색 윤곽선으로 문구·인형·니트 느낌을 냈습니다. 기본 8종은 무료이고, 나머지는 뽑기·꽃잎 교환으로 얻어 입힙니다.
 
 ![소품 조합 예시](../previews/applied/cozy-v1/outfits-eight-slots.png)
@@ -34,7 +36,7 @@
 | 50가지 그림·파스텔 RGB·선·음영 | [CozyItems.cs](../windows/Character/CozyItems.cs) |
 | 아이콘 크기·손 소품의 움직임 | [ItemPainter.cs](../windows/Character/ItemPainter.cs) |
 | 착용 위치·앞/뒤 순서·Android 레이어 | [ItemPainter.Wardrobe.cs](../windows/Character/ItemPainter.Wardrobe.cs) |
-| Windows 옷장 화면·검색·필터 | [EquipmentWindow.cs](../windows/UI/EquipmentWindow.cs) |
+| Windows 옷장 화면·검색·필터 | [EquipmentWindow.cs](https://github.com/parkhookjung-debug/myday-diary/blob/f29da72f23ed7a49aa3dfd28d85311f59b6bd7bc/windows/UI/EquipmentWindow.cs) |
 | Android 옷장 화면·검색·필터 | [PhoneCompanion.kt](../app/src/main/java/com/myday/diary/ui/diary/PhoneCompanion.kt) |
 | Android 착용 레이어·포즈 | [SangmonSprites.kt](../app/src/main/java/com/myday/diary/ui/character/SangmonSprites.kt) |
 | Android 공통 자산 다시 생성 | [export-android-assets.ps1](../tools/export-android-assets.ps1) |
