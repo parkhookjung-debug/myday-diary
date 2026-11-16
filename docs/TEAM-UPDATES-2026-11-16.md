@@ -34,3 +34,7 @@
 ## 통합 빌드 검증
 
 [Windows CI](https://github.com/parkhookjung-debug/myday-diary/actions/runs/43834756733) 496개 검사·실제 일기/6종 게임/포인터·기념일·로컬 채팅, [Android CI](https://github.com/parkhookjung-debug/myday-diary/actions/runs/43834762469) JVM 57·API35 기기 19·lint 오류 0·Windows 백업 호환, [Mac 공통 CI](https://github.com/parkhookjung-debug/myday-diary/actions/runs/43834767353) Apple Silicon 빌드·공통 계약·기념일/이모지 보존·Windows 백업 교환·로컬 채팅이 통과했습니다. [파일별 실제 소스·SHA256](builds/release-0.15.1-2026-11-16.json).
+
+## 게시와 링크 확인
+
+[0.15.1 시험판](https://github.com/parkhookjung-debug/myday-diary/releases/tag/v0.15.1-preview)을 공개했고 main의 README·Windows 안내·설치 안내·세 플랫폼 표를 새 다운로드로 연결했습니다. main 앱 코드는 병합하지 않았습니다. 공개 링크에서 로그인 없이 9개 첨부 파일을 직접 읽어 모두 HTTP 200과 SHA256 일치를 확인했습니다. [공개 다운로드 확인 기록](builds/release-0.15.1-public-download-check.json).

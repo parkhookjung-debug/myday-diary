@@ -34,7 +34,7 @@ Windows·Mac·Android에서 쓰는 일기 앱입니다. 사진과 일기 블록�
 
 **Windows 상몬 새 동작:** [잡으면 늘어나고, 빠르게 던지면 화면 가장자리에서 튕깁니다](docs/DESKTOP-PET-MOTION.md) · [동작 미리보기](previews/pet-motion-20261111/README.md)
 
-**Windows 0.15.1 공개 시험판:** [플레이룸 6종 + 바탕화면 공놀이](docs/SANGMON-BLOCKS.md) — 간식 도전·슬링샷·낚시·통통 점프·불꽃 요리·**상몬 블록 쌓기**. [실제 화면](previews/blocks-20261114/README.md). 새 Release에서 바로 받을 수 있습니다.
+**Windows 0.15.1 공개 시험판:** [플레이룸 6종 + 바탕화면 공놀이](docs/SANGMON-BLOCKS.md) — 간식 도전·슬링샷·낚시·통통 점프·불꽃 요리·**상몬 블록 쌓기**. [실제 화면](previews/release-0151-20261116/README.md). 새 Release에서 바로 받을 수 있습니다.
 
 **최신 통합:** [기념일 달력·게임 선택 메뉴·상몬 테트리스 최고기록](docs/BRANCH-INTEGRATION-2026-11-14.md). 상몬 블록 디자인을 유지하며 이전 테트리스 기록을 보존해 가져옵니다.
 

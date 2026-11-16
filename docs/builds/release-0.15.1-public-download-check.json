@@ -1,0 +1,70 @@
+{
+  "date": "2026-11-16",
+  "release": "https://github.com/parkhookjung-debug/myday-diary/releases/tag/v0.15.1-preview",
+  "authenticated": false,
+  "checks": [
+    {
+      "file": "DeviceQr.LICENSE.txt",
+      "status": 200,
+      "bytes": 1205,
+      "hashMatches": true,
+      "authenticated": false
+    },
+    {
+      "file": "LICENSE.txt",
+      "status": 200,
+      "bytes": 1075,
+      "hashMatches": true,
+      "authenticated": false
+    },
+    {
+      "file": "MyDay-Android.apk",
+      "status": 200,
+      "bytes": 15991060,
+      "hashMatches": true,
+      "authenticated": false
+    },
+    {
+      "file": "MyDay-macOS-arm64.zip",
+      "status": 200,
+      "bytes": 1945274,
+      "hashMatches": true,
+      "authenticated": false
+    },
+    {
+      "file": "MyDay-Windows.exe",
+      "status": 200,
+      "bytes": 758272,
+      "hashMatches": true,
+      "authenticated": false
+    },
+    {
+      "file": "SangmonFetch.exe",
+      "status": 200,
+      "bytes": 758272,
+      "hashMatches": true,
+      "authenticated": false
+    },
+    {
+      "file": "SangmonGame.exe",
+      "status": 200,
+      "bytes": 758272,
+      "hashMatches": true,
+      "authenticated": false
+    },
+    {
+      "file": "SHA256SUMS.txt",
+      "status": 200,
+      "bytes": 672,
+      "hashMatches": true,
+      "authenticated": false
+    },
+    {
+      "file": "SOURCE.json",
+      "status": 200,
+      "bytes": 3450,
+      "hashMatches": true,
+      "authenticated": false
+    }
+  ]
+}
