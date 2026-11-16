@@ -51,3 +51,5 @@ Release의 `SHA256SUMS.txt`로 세 실행 파일의 SHA256을 확인할 수 있�
 - [전체 사용자 설명서](https://github.com/parkhookjung-debug/myday-diary/blob/v0.15.1-preview/docs/USER-MANUAL.md): 이전 기능 설명도 포함하므로 현재 제공 범위는 간소화 안내를 우선합니다.
 
 검증 완료: Windows 496 assertions·네이티브 일기/포인터/렌더링·로컬 채팅, Android JVM 57개·API35 기기 19개·lint 오류 0개, Mac Apple Silicon 빌드·공통 계약·Windows 백업 교환·로컬 채팅. Intel Mac 실행과 실제 Galaxy의 햅틱 느낌은 별도 실기기 확인 범위입니다.
+
+[0.15.1 파일별 검증 기록](builds/release-0.15.1-2026-11-16.json) · [팀원 변경과 통합 범위](TEAM-UPDATES-2026-11-16.md).

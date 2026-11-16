@@ -30,3 +30,7 @@
 - [다운로드 안내](DOWNLOADS.md), GitHub 첫 화면, Windows 사용 안내, 세 플랫폼 안내와 앱 안의 다운로드 버튼을 0.15.1로 연결합니다. 과거 빌드 기록의 커밋·해시는 이력으로 남깁니다.
 
 [반영 기준](../shared/branch-integrations.json) · [기념일/최고기록 통합](BRANCH-INTEGRATION-2026-11-14.md) · [상몬 블록 사용법](SANGMON-BLOCKS.md)
+
+## 통합 빌드 검증
+
+[Windows CI](https://github.com/parkhookjung-debug/myday-diary/actions/runs/43834756733) 496개 검사·실제 일기/6종 게임/포인터·기념일·로컬 채팅, [Android CI](https://github.com/parkhookjung-debug/myday-diary/actions/runs/43834762469) JVM 57·API35 기기 19·lint 오류 0·Windows 백업 호환, [Mac 공통 CI](https://github.com/parkhookjung-debug/myday-diary/actions/runs/43834767353) Apple Silicon 빌드·공통 계약·기념일/이모지 보존·Windows 백업 교환·로컬 채팅이 통과했습니다. [파일별 실제 소스·SHA256](builds/release-0.15.1-2026-11-16.json).
