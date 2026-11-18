@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
@@ -18,7 +18,10 @@ namespace MyDay.Windows.Core
         public bool Persistent {get{return file!=null;}}
         public GameRecords(string file=null){this.file=file;Refresh();}
         public static GameRecords Local(){var root=Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),"MyDay","Windows");var result=new GameRecords(Path.Combine(root,"Games","scores.json"));result.ImportLegacyTetris(Path.Combine(root,"tetris-record.json"));return result;}
-        private static bool ValidId(string id){DateTime day;return id=="snack"||id=="sling"||id=="fish"||id=="jump"||id=="bake"||id=="blocks"||(id!=null&&id.StartsWith("snack-daily-v1:",StringComparison.Ordinal)&&DateTime.TryParseExact(id.Substring(15),"yyyy-MM-dd",CultureInfo.InvariantCulture,DateTimeStyles.None,out day));}
+        // A new puzzle never adds an unknown ID to the older six-game score file.
+        public GameRecords ForBlockPuzzle(){return new GameRecords(file==null?null:Path.Combine(Path.GetDirectoryName(file),"block-puzzle.json"));}
+        public static GameRecords BlockPuzzleLocal(){return new GameRecords(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),"MyDay","BlockPuzzleReview","scores.json"));}
+        private static bool ValidId(string id){DateTime day;return id=="snack"||id=="sling"||id=="fish"||id=="jump"||id=="bake"||id=="blocks"||id=="block-puzzle"||(id!=null&&id.StartsWith("snack-daily-v1:",StringComparison.Ordinal)&&DateTime.TryParseExact(id.Substring(15),"yyyy-MM-dd",CultureInfo.InvariantCulture,DateTimeStyles.None,out day));}
         public static string DailyId(DateTime day){return "snack-daily-v1:"+day.ToString("yyyy-MM-dd",CultureInfo.InvariantCulture);}
         private static GameScoreBook Read(string path){
             if(!File.Exists(path))return new GameScoreBook();

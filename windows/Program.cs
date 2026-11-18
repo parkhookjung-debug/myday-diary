@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.IO;
 using System.Runtime.InteropServices;
 using System.Threading;
@@ -36,6 +36,8 @@ namespace MyDay.Windows
                 Application.SetUnhandledExceptionMode(UnhandledExceptionMode.ThrowException);
                 try { Tests.Smoke(Path.GetFullPath(args[1])); return 0; } catch(Exception ex) { Console.Error.WriteLine(ex); return 1; }
             }
+            if(args.Length==2 && args[0]=="--block-puzzle-preview"){try{Tests.BlockPuzzlePreview(Path.GetFullPath(args[1]));return 0;}catch(Exception ex){Console.Error.WriteLine(ex);return 1;}}
+            if((args.Length==1 && args[0]=="--block-puzzle")||(args.Length==0 && string.Equals(Path.GetFileNameWithoutExtension(Application.ExecutablePath),"SangmonBlockPuzzle",StringComparison.OrdinalIgnoreCase))){using(var game=new BlockPuzzleWindow(GameRecords.BlockPuzzleLocal()))Application.Run(game);return 0;}
             if(args.Length==1 && args[0]=="--snack-game"){using(var game=new SnackGameWindow(GameRecords.Local()))Application.Run(game);return 0;}
             if((args.Length==1 && args[0]=="--game-hub")||(args.Length==0 && string.Equals(Path.GetFileNameWithoutExtension(Application.ExecutablePath),"SangmonGame",StringComparison.OrdinalIgnoreCase))){using(var games=new GameHubWindow())Application.Run(games);return 0;}
             if((args.Length==1 && args[0]=="--desktop-fetch")||(args.Length==0 && string.Equals(Path.GetFileNameWithoutExtension(Application.ExecutablePath),"SangmonFetch",StringComparison.OrdinalIgnoreCase))){using(var hub=new GameHubWindow()){hub.Shown+=delegate{hub.StartFetchOnDesktop();};Application.Run(hub);}return 0;}

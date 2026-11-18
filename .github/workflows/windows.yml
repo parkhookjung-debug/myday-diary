@@ -78,11 +78,14 @@ jobs:
           name: myday-windows-${{ github.run_number }}
           path: |
             windows/bin/MyDay.exe
+            windows/bin/SangmonBlockPuzzle.exe
             windows/bin/test-results.txt
             windows/bin/test-errors.txt
             windows/bin/native-results.txt
             windows/bin/native-errors.txt
             windows/bin/smoke-output/windows-*.png
+            windows/bin/smoke-output/block-puzzle-*.png
+            windows/bin/smoke-output/block-puzzle-ui-result.txt
             windows/bin/smoke-output/smoke-result.txt
             windows/README.md
             windows/Core/DeviceQr.LICENSE.txt
