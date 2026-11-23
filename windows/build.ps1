@@ -16,4 +16,5 @@ $arguments = @('/nologo', '/target:winexe', '/platform:anycpu', '/optimize+', '/
     '/reference:System.Windows.Forms.dll', '/reference:System.Runtime.Serialization.dll')
 & $compiler @arguments @sources
 if ($LASTEXITCODE -ne 0) { throw 'Windows 앱 빌드에 실패했습니다.' }
+Copy-Item -LiteralPath (Join-Path $outputDirectory 'MyDay.exe') -Destination (Join-Path $outputDirectory 'SangmonBlockPuzzle.exe') -Force
 Write-Output ('Built: ' + (Join-Path $outputDirectory 'MyDay.exe'))

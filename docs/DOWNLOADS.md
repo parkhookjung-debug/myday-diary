@@ -1,12 +1,12 @@
-# MyDay 0.15.1 다운로드와 설치
+# MyDay 0.15.2 다운로드와 설치
 
-2026-11-16 · 세 플랫폼 시험판. [다운로드 페이지](https://github.com/parkhookjung-debug/myday-diary/releases/tag/v0.15.1-preview)에서 운영체제에 맞는 파일 **하나**를 받습니다. 공개 Release 첨부 파일이므로 GitHub Actions 로그인이나 개발 도구 없이 다운로드할 수 있습니다. `Source code (zip)`과 `Source code (tar.gz)`는 실행 앱이 아닌 개발 소스입니다.
+2026-11-23 · 세 플랫폼 시험판. [다운로드 페이지](https://github.com/parkhookjung-debug/myday-diary/releases/tag/v0.15.2-preview)에서 운영체제에 맞는 파일 **하나**를 받습니다. 공개 Release 첨부 파일이므로 GitHub Actions 로그인이나 개발 도구 없이 다운로드할 수 있습니다. `Source code (zip)`과 `Source code (tar.gz)`는 실행 앱이 아닌 개발 소스입니다.
 
 | 운영체제 | 다운로드 | 실행 방법 |
 | --- | --- | --- |
-| Windows 10/11 · .NET Framework 4.8+ | [Windows 실행 파일 (.exe)](https://github.com/parkhookjung-debug/myday-diary/releases/download/v0.15.1-preview/MyDay-Windows.exe) | 기존 앱 종료 후 EXE 실행 |
-| Mac · Apple Silicon(M1 이상) · macOS 13+ | [Mac 앱 (.zip)](https://github.com/parkhookjung-debug/myday-diary/releases/download/v0.15.1-preview/MyDay-macOS-arm64.zip) | 압축을 풀고 `MyDay.app` 실행 |
-| Android 8 이상 · Galaxy 등 | [Android 설치 파일 (.apk)](https://github.com/parkhookjung-debug/myday-diary/releases/download/v0.15.1-preview/MyDay-Android.apk) | 휴대폰에서 APK 다운로드 후 설치 |
+| Windows 10/11 · .NET Framework 4.8+ | [Windows 실행 파일 (.exe)](https://github.com/parkhookjung-debug/myday-diary/releases/download/v0.15.2-preview/MyDay-Windows.exe) | 기존 앱 종료 후 EXE 실행 |
+| Mac · Apple Silicon(M1 이상) · macOS 13+ | [Mac 앱 (.zip)](https://github.com/parkhookjung-debug/myday-diary/releases/download/v0.15.2-preview/MyDay-macOS-arm64.zip) | 압축을 풀고 `MyDay.app` 실행 |
+| Android 8 이상 · Galaxy 등 | [Android 설치 파일 (.apk)](https://github.com/parkhookjung-debug/myday-diary/releases/download/v0.15.2-preview/MyDay-Android.apk) | 휴대폰에서 APK 다운로드 후 설치 |
 
 ## 처음 실행하기
 
@@ -15,7 +15,7 @@
 1. `MyDay-Windows.exe`를 내려받습니다. 별도 설치 프로그램 없이 실행합니다. Windows 10/11과 .NET Framework 4.8 이상이 필요합니다.
 2. 기존 MyDay가 실행 중이면 앱의 종료 기능으로 완전히 종료한 뒤 새 파일을 실행합니다. 일기 창만 닫는 동작은 앱 전체 종료와 다를 수 있습니다.
 3. 바탕화면의 상몬을 클릭해 일기 창을 엽니다. 잡아끌면 몸이 늘어나고, 빠르게 놓으면 던진 속도에 비례해 날아가 화면 가장자리에서 튕깁니다.
-4. 이 Windows 파일에는 여섯 게임·바탕화면 공놀이·게임 선택 메뉴·기념일 달력과 테트리스 최고기록 통합도 포함합니다. 상몬 블록은 다섯 개를 놓을 때마다 낙하 속도가 올라갑니다. Mac·Android는 기념일 백업 자료를 보존하며 게임 화면과 기념일 편집은 Windows에 먼저 제공합니다.
+4. 이 Windows 파일에는 일곱 게임(상몬 블록 퍼즐 포함)·바탕화면 공놀이·게임 선택 메뉴·기념일 달력과 테트리스 최고기록 통합도 포함합니다. 상몬 블록은 다섯 개를 놓을 때마다 낙하 속도가 올라갑니다. Mac·Android는 기념일 백업 자료를 보존하며 게임 화면과 기념일 편집은 Windows에 먼저 제공합니다.
 
 ### Mac
 
@@ -39,17 +39,19 @@
 
 ## 게임만 실행하기
 
-Windows에서 [SangmonGame.exe](https://github.com/parkhookjung-debug/myday-diary/releases/download/v0.15.1-preview/SangmonGame.exe)는 여섯 게임 플레이룸을 바로 엽니다. [SangmonFetch.exe](https://github.com/parkhookjung-debug/myday-diary/releases/download/v0.15.1-preview/SangmonFetch.exe)는 바탕화면 공놀이를 시작합니다. 두 파일은 일기 앱과 같은 검증 바이너리이며 파일 이름에 따라 처음 열리는 화면만 다릅니다.
+Windows에서 [SangmonGame.exe](https://github.com/parkhookjung-debug/myday-diary/releases/download/v0.15.2-preview/SangmonGame.exe)는 일곱 게임 플레이룸을 바로 엽니다. [SangmonFetch.exe](https://github.com/parkhookjung-debug/myday-diary/releases/download/v0.15.2-preview/SangmonFetch.exe)는 바탕화면 공놀이를 시작합니다. 두 파일은 일기 앱과 같은 검증 바이너리이며 파일 이름에 따라 처음 열리는 화면만 다릅니다.
+
+상몬 블록 퍼즐만 열려면 Release의 `SangmonBlockPuzzle.exe`를 실행합니다. 기존 낙하형 블록 쌓기와 별개의 8×8 배치 퍼즐입니다.
 
 ## 파일 확인과 소스
 
-Release의 `SHA256SUMS.txt`로 세 실행 파일의 SHA256을 확인할 수 있습니다. `SOURCE.json`은 각 운영체제 파일의 실제 빌드 커밋·CI·크기·SHA256을 기록합니다. 검증된 파일을 그대로 게시했으며 Mac ZIP의 실행 권한과 서명을 유지하도록 재압축하지 않았습니다.
+Release의 `SHA256SUMS.txt`로 배포 파일의 SHA256을 확인할 수 있습니다. `SOURCE.json`은 각 운영체제 파일의 실제 빌드 커밋·CI·크기·SHA256을 기록합니다. 검증된 파일을 그대로 게시했으며 Mac ZIP의 실행 권한과 서명을 유지하도록 재압축하지 않았습니다.
 
-- [파일 출처·해시](https://github.com/parkhookjung-debug/myday-diary/releases/download/v0.15.1-preview/SOURCE.json) · [SHA256 목록](https://github.com/parkhookjung-debug/myday-diary/releases/download/v0.15.1-preview/SHA256SUMS.txt)
-- [배포 소스](https://github.com/parkhookjung-debug/myday-diary/tree/v0.15.1-preview) · [간소화 기능·호환성](https://github.com/parkhookjung-debug/myday-diary/blob/v0.15.1-preview/docs/FOCUSED-APP.md)
-- [Windows 상몬 사용법·조절 파일](https://github.com/parkhookjung-debug/myday-diary/blob/v0.15.1-preview/docs/DESKTOP-PET-MOTION.md)
-- [전체 사용자 설명서](https://github.com/parkhookjung-debug/myday-diary/blob/v0.15.1-preview/docs/USER-MANUAL.md): 이전 기능 설명도 포함하므로 현재 제공 범위는 간소화 안내를 우선합니다.
+- [파일 출처·해시](https://github.com/parkhookjung-debug/myday-diary/releases/download/v0.15.2-preview/SOURCE.json) · [SHA256 목록](https://github.com/parkhookjung-debug/myday-diary/releases/download/v0.15.2-preview/SHA256SUMS.txt)
+- [배포 소스](https://github.com/parkhookjung-debug/myday-diary/tree/v0.15.2-preview) · [간소화 기능·호환성](https://github.com/parkhookjung-debug/myday-diary/blob/v0.15.2-preview/docs/FOCUSED-APP.md)
+- [Windows 상몬 사용법·조절 파일](https://github.com/parkhookjung-debug/myday-diary/blob/v0.15.2-preview/docs/DESKTOP-PET-MOTION.md)
+- [전체 사용자 설명서](https://github.com/parkhookjung-debug/myday-diary/blob/v0.15.2-preview/docs/USER-MANUAL.md): 이전 기능 설명도 포함하므로 현재 제공 범위는 간소화 안내를 우선합니다.
 
-검증 완료: Windows 496 assertions·네이티브 일기/포인터/렌더링·로컬 채팅, Android JVM 57개·API35 기기 19개·lint 오류 0개, Mac Apple Silicon 빌드·공통 계약·Windows 백업 교환·로컬 채팅. Intel Mac 실행과 실제 Galaxy의 햅틱 느낌은 별도 실기기 확인 범위입니다.
+검증 완료: Windows 512 assertions·네이티브 일기/포인터/렌더링·로컬 채팅, Android JVM 57개·API35 기기 19개·lint 오류 0개, Mac Apple Silicon 빌드·공통 계약·Windows 백업 교환·로컬 채팅. Intel Mac 실행과 실제 Galaxy의 햅틱 느낌은 별도 실기기 확인 범위입니다.
 
-[0.15.1 파일별 검증 기록](builds/release-0.15.1-2026-11-16.json) · [팀원 변경과 통합 범위](TEAM-UPDATES-2026-11-16.md).
+[0.15.2 파일별 검증 기록](builds/release-0.15.2-2026-11-23.json) · [팀원 변경과 통합 범위](TEAM-UPDATES-2026-11-23.md).

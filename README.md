@@ -1,18 +1,18 @@
 # 마이데이 (MyDay)
 
-## 앱 다운로드 · 0.15.1 시험판
+## 앱 다운로드 · 0.15.2 시험판
 
-**[다운로드 페이지 열기](https://github.com/parkhookjung-debug/myday-diary/releases/tag/v0.15.1-preview)** — 내 운영체제에 맞는 파일 하나를 받으세요. GitHub 로그인과 개발 도구가 필요 없습니다.
+**[다운로드 페이지 열기](https://github.com/parkhookjung-debug/myday-diary/releases/tag/v0.15.2-preview)** — 내 운영체제에 맞는 파일 하나를 받으세요. GitHub 로그인과 개발 도구가 필요 없습니다.
 
 | 운영체제 | 다운로드 | 실행 방법 |
 | --- | --- | --- |
-| Windows 10/11 · .NET Framework 4.8+ | [Windows 실행 파일 (.exe)](https://github.com/parkhookjung-debug/myday-diary/releases/download/v0.15.1-preview/MyDay-Windows.exe) | 기존 앱 종료 후 EXE 실행 |
-| Mac · Apple Silicon(M1 이상) · macOS 13+ | [Mac 앱 (.zip)](https://github.com/parkhookjung-debug/myday-diary/releases/download/v0.15.1-preview/MyDay-macOS-arm64.zip) | 압축을 풀고 `MyDay.app` 실행 |
-| Android 8 이상 · Galaxy 등 | [Android 설치 파일 (.apk)](https://github.com/parkhookjung-debug/myday-diary/releases/download/v0.15.1-preview/MyDay-Android.apk) | 휴대폰에서 APK 다운로드 후 설치 |
+| Windows 10/11 · .NET Framework 4.8+ | [Windows 실행 파일 (.exe)](https://github.com/parkhookjung-debug/myday-diary/releases/download/v0.15.2-preview/MyDay-Windows.exe) | 기존 앱 종료 후 EXE 실행 |
+| Mac · Apple Silicon(M1 이상) · macOS 13+ | [Mac 앱 (.zip)](https://github.com/parkhookjung-debug/myday-diary/releases/download/v0.15.2-preview/MyDay-macOS-arm64.zip) | 압축을 풀고 `MyDay.app` 실행 |
+| Android 8 이상 · Galaxy 등 | [Android 설치 파일 (.apk)](https://github.com/parkhookjung-debug/myday-diary/releases/download/v0.15.2-preview/MyDay-Android.apk) | 휴대폰에서 APK 다운로드 후 설치 |
 
 [자세한 설치·업데이트 안내](docs/DOWNLOADS.md). Mac은 **Apple Silicon 전용**이며 Apple 공증 미적용 시험판입니다. Android는 **디버그 서명 APK**입니다. 기존 사용자는 **공통 백업 → 앱 완전 종료 → 새 앱 실행 → 기록 확인** 순서로 업데이트하세요. Android 서명이 달라 설치가 안 되더라도 백업 확인 전 기존 앱을 삭제하지 마세요.
 
-배포 소스는 [v0.15.1-preview 태그](https://github.com/parkhookjung-debug/myday-diary/tree/v0.15.1-preview)에서 확인합니다. Windows 파일에는 탄성 드래그·던지기, 여섯 게임·공놀이, 기념일 달력과 이전 테트리스 최고기록 가져오기가 포함됩니다. Mac·Android도 기념일 백업 자료를 보존하며 게임 화면과 기념일 편집은 Windows에 먼저 제공합니다. [플랫폼별 파일 출처·SHA256](https://github.com/parkhookjung-debug/myday-diary/releases/download/v0.15.1-preview/SOURCE.json)
+배포 소스는 [v0.15.2-preview 태그](https://github.com/parkhookjung-debug/myday-diary/tree/v0.15.2-preview)에서 확인합니다. Windows 파일에는 탄성 드래그·던지기, 일곱 게임·공놀이, 기념일 달력과 이전 테트리스 최고기록 가져오기가 포함됩니다. Mac·Android도 기념일 백업 자료를 보존하며 게임 화면과 기념일 편집은 Windows에 먼저 제공합니다. [플랫폼별 파일 출처·SHA256](https://github.com/parkhookjung-debug/myday-diary/releases/download/v0.15.2-preview/SOURCE.json)
 
 [![Android CI](https://github.com/parkhookjung-debug/myday-diary/actions/workflows/android.yml/badge.svg)](https://github.com/parkhookjung-debug/myday-diary/actions/workflows/android.yml)
 [![Windows CI](https://github.com/parkhookjung-debug/myday-diary/actions/workflows/windows.yml/badge.svg)](https://github.com/parkhookjung-debug/myday-diary/actions/workflows/windows.yml)
@@ -30,15 +30,17 @@ Windows·Mac·Android에서 쓰는 일기 앱입니다. 사진과 일기 블록�
 
 기록은 각 기기에만 저장합니다. 플랫폼 사이의 자동 동기화는 없고, 공통 JSON 백업(버전 1~9)으로 옮깁니다.
 
-> **현재 버전 0.15.1**: 상몬 변신·코디·뽑기·재화·합성 화면을 제거하고 일기와 레벨업에 집중합니다. 로컬 채팅과 카카오 연동 원본은 유지하며 공개 서버는 이전처럼 비활성입니다. [간소화 내용·호환성·수정 파일](docs/FOCUSED-APP.md). [0.14 통합 기록](docs/INTEGRATION-2026-10-29.md)
+> **현재 버전 0.15.2**: 상몬 변신·코디·뽑기·재화·합성 화면을 제거하고 일기와 레벨업에 집중합니다. 로컬 채팅과 카카오 연동 원본은 유지하며 공개 서버는 이전처럼 비활성입니다. [간소화 내용·호환성·수정 파일](docs/FOCUSED-APP.md). [0.14 통합 기록](docs/INTEGRATION-2026-10-29.md)
 
 **Windows 상몬 새 동작:** [잡으면 늘어나고, 빠르게 던지면 화면 가장자리에서 튕깁니다](docs/DESKTOP-PET-MOTION.md) · [동작 미리보기](previews/pet-motion-20261111/README.md)
 
-**Windows 0.15.1 공개 시험판:** [플레이룸 6종 + 바탕화면 공놀이](docs/SANGMON-BLOCKS.md) — 간식 도전·슬링샷·낚시·통통 점프·불꽃 요리·**상몬 블록 쌓기**. [실제 화면](previews/release-0151-20261116/README.md). 새 Release에서 바로 받을 수 있습니다.
+**Windows 0.15.2 공개 시험판:** [플레이룸 7종 + 바탕화면 공놀이](docs/BLOCK-PUZZLE-INTEGRATION-2026-11-23.md) — 간식 도전·슬링샷·낚시·통통 점프·불꽃 요리·**상몬 블록 쌓기**·**상몬 블록 퍼즐**. [실제 화면](previews/block-puzzle-integration-20261123/README.md). 새 Release에서 바로 받을 수 있습니다.
 
 **최신 통합:** [기념일 달력·게임 선택 메뉴·상몬 테트리스 최고기록](docs/BRANCH-INTEGRATION-2026-11-14.md). 상몬 블록 디자인을 유지하며 이전 테트리스 기록을 보존해 가져옵니다.
 
-**팀원 변경 확인:** [전체 브랜치·푸시 점검과 반영 결과](docs/TEAM-UPDATES-2026-11-16.md). hongmin060115-create의 미반영 변경을 상몬 디자인에 맞춰 통합했습니다. 앱 안의 **기록 도구 → 업데이트 → 0.15.1 시험판 받기**도 같은 다운로드 페이지로 연결합니다.
+**11월 23일 Windows 통합:** cms6727의 [상몬 블록 퍼즐 PR #11](https://github.com/parkhookjung-debug/myday-diary/pull/11)을 기존 앱에 통합했습니다. 8×8 보드에 블록을 놓아 가로·세로 줄을 지우는 일곱 번째 게임입니다. 기존 여섯 게임과 일기·사진·성장은 유지하며 퍼즐 점수는 별도 파일에 저장합니다. [실행·수정 파일·검증 안내](docs/BLOCK-PUZZLE-INTEGRATION-2026-11-23.md). 0.15.2 공개 다운로드의 Windows 앱에 일곱 게임을 함께 제공합니다.
+
+**팀원 변경 확인:** [전체 브랜치·푸시 점검과 반영 결과](docs/TEAM-UPDATES-2026-11-16.md). hongmin060115-create의 미반영 변경을 상몬 디자인에 맞춰 통합했습니다. 앱 안의 **기록 도구 → 업데이트 → 0.15.2 시험판 받기**도 같은 다운로드 페이지로 연결합니다.
 
 ## 직접 빌드하기
 

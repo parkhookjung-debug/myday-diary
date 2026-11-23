@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Drawing;
 using System.IO;
 using System.Linq;
@@ -72,6 +72,7 @@ namespace MyDay.Windows
                 RunJumpFetchTests(directory);
                 RunCookingTests(directory);
                 RunBlocksTests(directory);
+                RunBlockPuzzleTests(directory);
                 RunBranchIntegrationTests(directory);
                 var layout=DiaryEntry.FirstPage(); layout.Blocks[0].Text="이동해도 그대로"; layout.Blocks[1].Checked=true;
                 var originalIds=layout.Blocks.Select(b=>b.Id).ToArray(); DiaryLayout.EnableFree(layout,800);
@@ -307,6 +308,7 @@ namespace MyDay.Windows
             JumpFetchPreview(directory);
             CookingPreview(directory);
             BlocksPreview(directory);
+            BlockPuzzlePreview(directory);
             BranchIntegrationPreview(directory);
             File.WriteAllText(Path.Combine(directory,"smoke-result.txt"),"PASS: desktop-only startup; open; close-to-hide; reopen; explicit exit before/after first open; input; check; reorder; date navigation; mood and theme; small-window layout; disk reload; layered window; transparent pet",Encoding.UTF8);
             Console.WriteLine("Native Windows smoke test passed.");

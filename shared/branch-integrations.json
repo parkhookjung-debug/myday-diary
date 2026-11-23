@@ -29,5 +29,20 @@
   "scoreImplementation": "windows/Core/GameRecords.cs",
   "guide": "docs/BRANCH-INTEGRATION-2026-11-14.md",
   "publishedReleaseReplaced": false,
-  "sourcePusher": "hongmin060115-create"
+  "sourcePusher": "hongmin060115-create",
+  "blockPuzzleIntegration": {
+    "reviewedOn": "2026-11-23",
+    "author": "cms6727",
+    "pullRequest": 11,
+    "sourceBranch": "codex/block-puzzle-review",
+    "sourceHead": "06045194dae05bef139b45bc3606f61b9903f996",
+    "targetBranch": "codex/windows-app",
+    "approach": "source reviewed before merge; native build and isolated data validation",
+    "gameCount": 7,
+    "releaseTag": "v0.15.2-preview",
+    "gameImplementation": "windows/Core/BlockPuzzle.cs + windows/UI/BlockPuzzleWindow.cs",
+    "scoreFile": "Games/block-puzzle.json (separate from Games/scores.json)",
+    "guide": "docs/BLOCK-PUZZLE-INTEGRATION-2026-11-23.md",
+    "publishedReleaseReplaced": false
+  }
 }

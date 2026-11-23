@@ -20,7 +20,7 @@
     {
       "id": "update",
       "title": "설치·업데이트",
-      "body": "업데이트 순서\n1. 설정·백업 → 공통 백업 다운로드\n2. 공식 저장소의 Actions에서 codex/windows-app 브랜치의 성공한 실행을 열고 운영체제별 Artifacts를 받아요.\n3. 앱을 완전히 종료한 뒤 새 앱으로 교체해요. 기록 저장 폴더는 삭제하지 않아요.\n4. 새 버전에서 글·사진·상몬·재화를 확인해요.\n\nWindows: Windows CI → myday-windows-* → MyDay.exe\nMac: Desktop shared core and native chat → myday-chat-macOS-ARM64 → MyDay.app\nAndroid: Android CI → myday-debug-* → app-debug.apk\n\nMac 배포 파일은 Apple Silicon·macOS 13 이상용이에요.\nAndroid 서명이 달라 설치되지 않으면 먼저 기존 앱에서 백업해요. 백업 확인 없이 삭제하지 마세요.\n\n기록 손상 시 자동으로 빈 파일로 덮어쓰지 않아요. 시작 오류 화면에서 검증된 직전 저장본으로 복구할 수 있어요. 복구 전 현재 파일은 별도로 보관해요.\nPIN은 화면 잠금이며 파일 암호화가 아니에요. 서버는 로컬만 사용하며 자동 동기화·공개 서버는 제공하지 않아요."
+      "body": "업데이트 순서\n1. 설정·백업 → 공통 백업 다운로드\n2. 공식 GitHub Releases의 0.15.2 시험판에서 내 운영체제 파일을 받아요.\n3. 앱을 완전히 종료한 뒤 새 앱으로 교체해요. 기록 저장 폴더는 삭제하지 않아요.\n4. 새 버전에서 글·사진·배치·경험치를 확인해요.\n\nWindows: MyDay-Windows.exe (일기와 일곱 게임)\nMac: MyDay-macOS-arm64.zip 안의 MyDay.app\nAndroid: MyDay-Android.apk\n\n게임 화면은 Windows에 제공하며 Mac·Android는 공통 일기와 성장 기능을 유지해요. Mac은 Apple Silicon·macOS 13 이상용이에요. Android 서명이 다르면 백업 확인 없이 기존 앱을 삭제하지 마세요.\n\n기록 손상 시 빈 파일로 덮어쓰지 않아요. 검증된 직전 저장본이 있을 때 복구를 제안해요. PIN은 화면 잠금이며 파일 암호화가 아니에요. 공개 서버와 자동 클라우드 동기화는 제공하지 않아요."
     }
   ]
 }
