@@ -38,6 +38,11 @@
 - 실제 WinForms 전체 smoke: 일기·자유 배치·성장·상몬 탄성·기존 여섯 게임·새 퍼즐·기념일·메뉴·작은 창 검증 통과.
 - 퍼즐의 1,800회 배치와 가로·세로 동시 삭제, 기존 게임 점수 파일의 바이트 단위 보존 확인.
 - 공통 생성 검사 14개, 간소화 제품 원본 계약, 로컬 채팅 서버 8개와 실제 Windows 클라이언트 검사 통과.
-- Mac·Android 패키징은 해당 OS의 새 CI 빌드에서 검증합니다.
+- Windows CI: 512개 검사와 실제 화면·로컬 채팅 통과.
+- Android CI: JVM 57개·API35 기기 19개·Lint 오류 0·Windows 백업 왕복 통과. 외부 카카오 Maven 연결 시간 초과 후 같은 소스로 재시도해 성공했습니다.
+- Mac CI: Apple Silicon 빌드·화면·로컬 채팅·공통 계약과 Windows 백업 왕복 통과.
+- Android APK와 Mac ZIP에 기본 상몬 자산만 포함하는지 확인했습니다.
+
+[파일 출처·해시](builds/release-0.15.2-2026-11-23.json) · [Windows CI](https://github.com/parkhookjung-debug/myday-diary/actions/runs/45143148077) · [Android CI](https://github.com/parkhookjung-debug/myday-diary/actions/runs/45143153663) · [Mac CI](https://github.com/parkhookjung-debug/myday-diary/actions/runs/45143160441).
 
 [실제 통합 화면](../previews/block-puzzle-integration-20261123/README.md).
