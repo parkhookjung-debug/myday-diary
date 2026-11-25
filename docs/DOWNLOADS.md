@@ -57,3 +57,5 @@ Release의 `SHA256SUMS.txt`로 배포 파일의 SHA256을 확인할 수 있습�
 검증 완료: Windows 522 assertions·네이티브 일기/포인터/렌더링·로컬 채팅, Android JVM 60개·API35 기기 19개·lint 오류 0개, Mac Apple Silicon 빌드·공통 계약·Windows 백업 교환·로컬 채팅. Intel Mac 실행과 실제 Galaxy의 햅틱 느낌은 별도 실기기 확인 범위입니다.
 
 [0.15.3 파일별 검증 기록](builds/release-0.15.3-2026-11-25.json) · [팀원 변경과 통합 범위](TEAM-UPDATES-2026-11-23.md).
+
+[로그인 없이 공개 다운로드 10개·SHA256 대조 완료](builds/release-0.15.3-public-download-check.json).
