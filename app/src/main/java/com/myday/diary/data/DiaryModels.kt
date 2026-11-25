@@ -15,8 +15,13 @@ data class DiaryBlock(
     val x: Int = 0,
     val y: Int = 0,
     val width: Int = 0,
-    val height: Int = 0
+    val height: Int = 0,
+    val todoItems: List<DiaryTodoItem>? = null,
+    val todoLayoutVersion: Int = 0
 )
+
+// Preserve Windows checklist details when a backup passes through Android.
+data class DiaryTodoItem(val text: String, val checked: Boolean = false, val importance: Int = 0)
 
 const val DEFAULT_CHARACTER = "sketch-monster"
 

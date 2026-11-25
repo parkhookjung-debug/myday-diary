@@ -19,7 +19,11 @@ object NotebookJson {
         val o=array.getJSONObject(i)
         DiaryBlock(id=if(layout) "" else o.getString("Id"),type=o.getString("Kind"),text=o.optString("Text").takeUnless {it=="null"} ?: "",checked=boolean(o,"Checked"),
             title=o.optString("Title").takeUnless {it=="null"} ?: "",prompt=o.optString("Prompt").takeUnless {it=="null"} ?: "",
-            photo=if(o.isNull("Photo")) null else o.getString("Photo"),wide=boolean(o,"Wide"),x=integer(o,"X"),y=integer(o,"Y"),width=integer(o,"Width"),height=integer(o,"Height"))
+            photo=if(o.isNull("Photo")) null else o.getString("Photo"),wide=boolean(o,"Wide"),x=integer(o,"X"),y=integer(o,"Y"),width=integer(o,"Width"),height=integer(o,"Height"),
+            todoItems=if(layout || o.isNull("TodoItems")) null else o.getJSONArray("TodoItems").let {a -> (0 until a.length()).map {j ->
+                val item=a.getJSONObject(j);require(item.get("Text") is String)
+                DiaryTodoItem(item.getString("Text"),boolean(item,"Checked"),integer(item,"Importance"))
+            }},todoLayoutVersion=if(layout) 0 else integer(o,"TodoLayoutVersion"))
     }
     fun decode(raw: String): DiaryBook {
         require(raw.toByteArray(Charsets.UTF_8).size<=MAX_BYTES) {"백업은 128MB 이하로 선택해 주세요."}
@@ -56,6 +60,10 @@ object NotebookJson {
     }
     private fun block(b: DiaryBlock, layout: Boolean=false): JSONObject = JSONObject().apply {
         if(!layout) {put("Id",b.id);put("Text",b.text);put("Checked",b.checked);b.photo?.let {put("Photo",it)}}
+        if(!layout) {
+            b.todoItems?.let {items -> put("TodoItems",JSONArray(items.map {item -> JSONObject().put("Text",item.text).put("Checked",item.checked).put("Importance",item.importance)}))}
+            if(b.todoLayoutVersion!=0) put("TodoLayoutVersion",b.todoLayoutVersion)
+        }
         put("Kind",b.type);put("Title",b.title);put("Prompt",b.prompt);put("Wide",b.wide)
         put("X",b.x);put("Y",b.y);put("Width",b.width);put("Height",b.height)
     }

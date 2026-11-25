@@ -55,6 +55,7 @@ namespace MyDay.Windows
                 RunQualityTests(directory);
                 RunFocusedTests(directory);
                 RunBrowseTests(directory);
+                RunTodoTests(directory);
                 RunSavedLayoutTests(directory);
                 RunGrowthTests(directory);
                 RunActivityTests(directory);
@@ -274,6 +275,7 @@ namespace MyDay.Windows
         }
         private static void SmokeWithStore(string directory,DiaryStore store)
         {
+            SmokeTodo(directory);
             var fixture=new DiaryBook(); fixture.Days[DiaryStore.Key(DateTime.Today)]=DiaryEntry.FirstPage();
             using(var form=new DiaryWindow(store,fixture,true))
             {

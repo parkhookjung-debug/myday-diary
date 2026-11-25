@@ -37,7 +37,7 @@ namespace MyDay.Windows.Core
         [DataMember(EmitDefaultValue=false)] public int Height;
         public static DiaryBlock Create(string kind)
         {
-            return new DiaryBlock { Id = Guid.NewGuid().ToString("N"), Kind = kind, Text = "", Wide=kind=="todo", TodoItems = kind=="todo" ? new List<DiaryTodoItem>() : null, TodoLayoutVersion=kind=="todo"?1:0 };
+            return new DiaryBlock { Id = Guid.NewGuid().ToString("N"), Kind = kind, Text = "", Wide=kind=="todo", TodoItems = null, TodoLayoutVersion=kind=="todo"?1:0 };
         }
     }
 
@@ -127,19 +127,7 @@ namespace MyDay.Windows.Core
                     if (block == null || String.IsNullOrWhiteSpace(block.Id) || !ids.Add(block.Id) ||
                         !DesktopContract.BlockKinds.Contains(block.Kind) || block.Text == null || block.Text.Length > DesktopContract.MaxTextUtf16)
                         throw new InvalidDataException("일기 블록 형식이 올바르지 않습니다.");
-                    if(block.Kind=="todo") {
-                        if(block.TodoLayoutVersion<1) { block.Wide=true; block.TodoLayoutVersion=1; }
-                        if(block.TodoItems==null) {
-                            block.TodoItems=(block.Text??"").Split(new[]{"\r\n","\n"},StringSplitOptions.RemoveEmptyEntries)
-                                .Select(line=>new DiaryTodoItem {Text=line.TrimEnd('\r'),Checked=block.Checked}).ToList();
-                        }
-                        if(block.TodoItems.Count>100 || block.TodoItems.Any(item=>item==null || item.Text==null || item.Text.Length>DesktopContract.MaxTextUtf16) ||
-                            block.TodoItems.Sum(item=>(long)item.Text.Length)+Math.Max(0,block.TodoItems.Count-1)>DesktopContract.MaxTextUtf16)
-                            throw new InvalidDataException("할 일 목록이 너무 큽니다. 항목은 100개, 글자 수는 100,000자까지 저장할 수 있습니다.");
-                        if(block.TodoItems.Any(item=>item.Importance<0 || item.Importance>2)) throw new InvalidDataException("할 일 중요도 값이 올바르지 않습니다.");
-                        block.Text=String.Join("\n",block.TodoItems.Select(item=>item.Text));
-                        if(block.TodoItems.Count>0) block.Checked=block.TodoItems.All(item=>item.Checked);
-                    }
+                    DiaryTodos.Normalize(block);
                     photoCharacters+=block.Photo==null?0:block.Photo.Length;
                     if(photoCharacters>DiaryPhoto.MaxBookCharacters) throw new InvalidDataException("전체 사진 저장 공간이 가득 찼어요. 백업 후 사용하지 않는 사진 블록을 정리해주세요.");
                     DiaryPhoto.Validate(block);

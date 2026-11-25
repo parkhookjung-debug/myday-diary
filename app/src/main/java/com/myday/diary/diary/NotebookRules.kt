@@ -83,12 +83,12 @@ object NotebookRules {
             bound(b).copy(x=12,y=y,width=if(b.wide) 876 else 420).also {y+=it.height+16}
         })
         return SavedLayout(name=name.trim(),mode=entry.layoutMode,style=entry.pageStyle,theme=entry.theme,
-            blocks=positions.blocks.map {it.copy(id="",type=if(it.type=="photo") "photo-slot" else it.type,text="",checked=false,photo=null)})
+            blocks=positions.blocks.map {it.copy(id="",type=if(it.type=="photo") "photo-slot" else it.type,text="",checked=false,photo=null,todoItems=null)})
     }
     fun apply(entry: DiaryEntry, layout: SavedLayout): DiaryEntry {
         val fresh=entry.blocks.isEmpty()
         val target=if(fresh) entry.copy(theme=layout.theme,pageStyle=layout.style,layoutMode=layout.mode) else entry
-        return append(target,layout.blocks.map {it.copy(id=UUID.randomUUID().toString(),text="",checked=false,photo=null)})
+        return append(target,layout.blocks.map {it.copy(id=UUID.randomUUID().toString(),text="",checked=false,photo=null,todoItems=null)})
     }
     fun merge(current: DiaryBook, incoming: DiaryBook): DiaryBook {
         val layouts=current.layouts.toMutableList()
@@ -122,6 +122,10 @@ object NotebookRules {
             require(entry.blocks.map {it.id}.distinct().size==entry.blocks.size)
             entry.blocks.forEach {b ->
                 require(b.id.isNotBlank() && b.id.length<=64 && b.type in kinds && b.text.length<=100000 && b.title.length<=80 && b.prompt.length<=300)
+                b.todoItems?.let {items ->
+                    require(items.size<=100 && items.all {it.text.length<=100000 && it.importance in 0..2})
+                    require(items.sumOf {it.text.length.toLong()}+maxOf(0,items.size-1)<=100000)
+                }
                 require(b.x in 0..MAX_POSITION && b.y in 0..MAX_POSITION)
                 require(b.width==0 || b.width in MIN_WIDTH..MAX_WIDTH);require(b.height==0 || b.height in MIN_HEIGHT..MAX_HEIGHT)
                 require(b.type!="photo" || !b.photo.isNullOrEmpty()); require(b.type=="photo" || b.photo==null)

@@ -53,7 +53,7 @@ namespace MyDay.Windows.UI
                 Anchor=AnchorStyles.Top|AnchorStyles.Bottom|AnchorStyles.Left|AnchorStyles.Right };
             Controls.Add(Editor);
             if(block.Kind=="todo") {
-                if(block.TodoItems==null) block.TodoItems=(block.Text??"").Split(new[]{"\r\n","\n"},StringSplitOptions.RemoveEmptyEntries).Select(line=>new DiaryTodoItem {Text=line,Checked=block.Checked}).ToList();
+                DiaryTodos.Normalize(block);
                 todoInput=new TextBox { Font=Design.Font(10),ForeColor=Design.Ink,BackColor=Fill,BorderStyle=BorderStyle.FixedSingle,MaxLength=DesktopContract.MaxTextUtf16,AccessibleName="새 할 일 입력",AccessibleDescription="할 일을 입력하고 Enter 또는 추가 버튼을 누르세요.",Location=Design.Point(24,78),Height=Design.P(26),Anchor=AnchorStyles.Top|AnchorStyles.Left|AnchorStyles.Right };
                 todoHint=Design.Label("할 일을 입력하세요",9); todoHint.ForeColor=Design.Muted; todoHint.BackColor=Fill; todoHint.Location=Design.Point(31,82); todoHint.Click+=delegate { todoInput.Focus(); };
                 todoInput.GotFocus+=delegate { todoHint.Visible=false; };
@@ -169,7 +169,7 @@ namespace MyDay.Windows.UI
         {
             string value=todoInput.Text.Trim();
             if(value.Length==0) { todoInput.Focus(); return; }
-            if(Block.TodoItems.Count>=100) { todoInput.Enabled=false; todoAdd.Enabled=false; return; }
+            if(Block.TodoItems.Count>=DiaryTodos.MaxItems) { todoInput.Enabled=false; todoAdd.Enabled=false; return; }
             Block.TodoItems.Add(new DiaryTodoItem {Text=value,Importance=0}); todoInput.Clear(); UpdateTodoLegacy(); RefreshTodoRows();
             todoList.AutoScrollPosition=new Point(0,todoList.VerticalScroll.Maximum); changed(); todoInput.Focus();
         }
@@ -177,7 +177,7 @@ namespace MyDay.Windows.UI
         {
             var old=Block.TodoItems??new System.Collections.Generic.List<DiaryTodoItem>();
             var lines=Editor.Text.Split(new[]{"\r\n","\n"},StringSplitOptions.RemoveEmptyEntries);
-            Block.TodoItems=lines.Take(100).Select((line,index)=>new DiaryTodoItem {Text=line.TrimEnd('\r'),Checked=index<old.Count && old[index].Checked,Importance=index<old.Count?old[index].Importance:0}).ToList();
+            Block.TodoItems=lines.Take(DiaryTodos.MaxItems).Select((line,index)=>new DiaryTodoItem {Text=line.TrimEnd('\r'),Checked=index<old.Count && old[index].Checked,Importance=index<old.Count?old[index].Importance:0}).ToList();
             UpdateTodoLegacy(); RefreshTodoRows(); changed();
         }
         private void UpdateTodoLegacy()
@@ -207,7 +207,7 @@ namespace MyDay.Windows.UI
                 check.CheckedChanged+=delegate { if(syncingTodo) return; item.Checked=check.Checked; UpdateTodoLegacy(); changed(); };
                 text.TextChanged+=delegate { if(syncingTodo) return; item.Text=text.Text; UpdateTodoLegacy(); changed(); };
                 importance.SelectedIndexChanged+=delegate { if(syncingTodo || importance.SelectedIndex<0) return; item.Importance=importance.SelectedIndex==0?1:importance.SelectedIndex==2?2:0; importance.ForeColor=ImportanceColor(item.Importance); changed(); };
-                remove.Click+=delegate { Block.TodoItems.Remove(item); if(Block.TodoItems.Count<100) { todoInput.Enabled=true; todoAdd.Enabled=true; } UpdateTodoLegacy(); RefreshTodoRows(); changed(); };
+                remove.Click+=delegate { Block.TodoItems.Remove(item); if(Block.TodoItems.Count<DiaryTodos.MaxItems) { todoInput.Enabled=true; todoAdd.Enabled=true; } UpdateTodoLegacy(); RefreshTodoRows(); changed(); };
                 row.Controls.AddRange(new Control[]{check,text,importance,remove,textRule,importanceRule}); todoList.Controls.Add(row);
             }
             todoList.AutoScrollMinSize=new Size(0,Block.TodoItems.Count*rowHeight);
