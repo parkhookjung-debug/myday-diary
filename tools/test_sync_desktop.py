@@ -22,6 +22,19 @@ class DesktopGenerationTests(unittest.TestCase):
     def test_committed_outputs_match_current_sources(self):
         sync.sync(check=True)
 
+    def test_todo_limits_propagate_to_all_three_native_apps(self):
+        with tempfile.TemporaryDirectory(prefix='myday-todo-contract-') as directory:
+            root=self.fixture(directory);path=root/'shared/desktop.json'
+            contract=json.loads(path.read_text(encoding='utf-8'))
+            contract['limits']['TodoHeight']=440
+            contract['limits']['MaxTodoItems']=80
+            path.write_text(json.dumps(contract,ensure_ascii=False),encoding='utf-8')
+            sync.sync(root)
+            for name in ['windows/Core/Shared/DesktopContract.g.cs','macos/Sources/MyDay/SharedDesktop.g.swift','app/src/main/java/com/myday/diary/diary/SharedTodo.g.kt']:
+                generated=(root/name).read_text(encoding='utf-8').lower()
+                self.assertIn('todoheight=440',generated)
+                self.assertIn('maxtodoitems=80',generated)
+
     def test_one_prompt_edit_reaches_both_native_apps(self):
         with tempfile.TemporaryDirectory(prefix='myday-desktop-contract-') as directory:
             root=self.fixture(directory)

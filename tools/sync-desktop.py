@@ -156,6 +156,7 @@ def render(root=ROOT):
     swift += ['        ['+','.join(map(str,[int(case['resize']),*case['original'],*case['delta'],*case['expected']]))+'],\n' for case in cases]
     swift += ['    ]\n    static let growthProfiles: [[Int]]='+json.dumps([[p['expectedDays'],*p['week']] for p in c['growthProfiles']])+'\n}\n']
     return {
+        'app/src/main/java/com/myday/diary/diary/SharedTodo.g.kt':HEADER+'package com.myday.diary.diary\n\ninternal object SharedTodo {\n'+''.join('    const val '+key+'='+str(c['limits'][key])+'\n' for key in ['TodoHeight','MaxTodoItems'])+'}\n',
         'windows/Core/Shared/AppShell.g.cs':''.join(shell_cs),
         'app/src/main/java/com/myday/diary/ui/design/AppShell.g.kt':''.join(shell_kt),
         'macos/Sources/MyDay/AppShell.g.swift':''.join(shell_swift),

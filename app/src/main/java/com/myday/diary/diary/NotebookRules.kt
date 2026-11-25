@@ -58,7 +58,7 @@ object NotebookRules {
         return candidate.copy(awardedDays=awarded,activities=activities)
     }
     fun bound(b: DiaryBlock) = b.copy(x=b.x.coerceIn(0,MAX_POSITION),y=b.y.coerceIn(0,MAX_POSITION),
-        width=(if(b.width==0) 350 else b.width).coerceIn(MIN_WIDTH,MAX_WIDTH),height=(if(b.height==0) when(b.type) {"photo","photo-slot"->360;"emotion"->288;else->250} else b.height).coerceIn(MIN_HEIGHT,MAX_HEIGHT))
+        width=(if(b.width==0) 350 else b.width).coerceIn(MIN_WIDTH,MAX_WIDTH),height=(if(b.height==0) when(b.type) {"photo","photo-slot"->360;"emotion"->288;"todo"->SharedTodo.TodoHeight;else->250} else b.height).coerceIn(MIN_HEIGHT,MAX_HEIGHT))
     fun arrange(entry: DiaryEntry): DiaryEntry {
         var y=12
         return entry.copy(blocks=entry.blocks.map { b -> bound(b.copy(x=12,y=y,width=if(b.wide) 876 else 420)).also {y+=it.height+16} })
@@ -123,7 +123,7 @@ object NotebookRules {
             entry.blocks.forEach {b ->
                 require(b.id.isNotBlank() && b.id.length<=64 && b.type in kinds && b.text.length<=100000 && b.title.length<=80 && b.prompt.length<=300)
                 b.todoItems?.let {items ->
-                    require(items.size<=100 && items.all {it.text.length<=100000 && it.importance in 0..2})
+                    require(items.size<=SharedTodo.MaxTodoItems && items.all {it.text.length<=100000 && it.importance in 0..2})
                     require(items.sumOf {it.text.length.toLong()}+maxOf(0,items.size-1)<=100000)
                 }
                 require(b.x in 0..MAX_POSITION && b.y in 0..MAX_POSITION)

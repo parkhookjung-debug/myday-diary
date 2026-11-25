@@ -2,7 +2,7 @@
 import SwiftUI
 
 enum DesktopContract {
-    static let sourceDigest="4994d0a72c6c4e400c8ebd71ba8a6c1591e37e27991cf2072870baff48dc2f94"
+    static let sourceDigest="2d8defb4551c938206b2ea435913d30b3e5d56f32c14494663ca614bd6e71896"
     static let maxDays=50000
     static let maxBlocks=200
     static let maxTextUtf16=100000
@@ -17,6 +17,8 @@ enum DesktopContract {
     static let photoHeight=360
     static let emotionHeight=288
     static let textHeight=250
+    static let todoHeight=420
+    static let maxTodoItems=100
     static let chatProtocol=1
     static let chatMaxText=2000
     static let chatMaxTextUtf16=4000

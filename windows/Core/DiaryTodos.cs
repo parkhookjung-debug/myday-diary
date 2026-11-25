@@ -8,7 +8,7 @@ namespace MyDay.Windows.Core
     // Keep the legacy Text/Checked projection usable by clients with a single checkbox.
     public static class DiaryTodos
     {
-        public const int MaxItems = 100;
+        public const int MaxItems = DesktopContract.MaxTodoItems;
         public static void Normalize(DiaryBlock block)
         {
             if(block.Kind!="todo") return;
