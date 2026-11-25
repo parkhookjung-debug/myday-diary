@@ -16,6 +16,7 @@
 | 분류 이름·배치 이름·참고 링크 | [desktop.json](desktop.json)의 categories·layouts·references |
 | 공통 색상·종이·배경·채팅 말풍선 | [desktop.json](desktop.json)의 design |
 | 블록 수·본문·제목·질문 길이·좌표·크기 | [desktop.json](desktop.json)의 limits |
+| 할 일 기본 높이·목록 항목 한도 | [desktop.json](desktop.json)의 limits.TodoHeight·MaxTodoItems → C#·Swift·Kotlin 생성 |
 | 채팅 메시지·닉네임·페이지·내역 제한 | [desktop.json](desktop.json)의 chat |
 | 두 OS에서 같아야 하는 이동·크기 결과 | [fixtures/layout.json](fixtures/layout.json) |
 | 공동 디자인의 원본 커밋·반영 기준 | [design-source.json](design-source.json), [디자인 반영 안내](../docs/DESIGN-SYNC.md) |

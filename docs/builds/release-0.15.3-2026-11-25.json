@@ -1,0 +1,105 @@
+{
+  "format": "myday-native-release",
+  "appVersion": "0.15.3",
+  "date": "2026-11-25",
+  "releaseTag": "v0.15.3-preview",
+  "releasePage": "https://github.com/parkhookjung-debug/myday-diary/releases/tag/v0.15.3-preview",
+  "buildSourceCommit": "49acf5b5b149ffc014eb75848432a41259056ebf",
+  "files": [
+    {
+      "file": "DeviceQr.LICENSE.txt",
+      "platform": "license",
+      "bytes": 1205,
+      "sha256": "55f720c0a9f7c3d009feebc2cbb59dd5f4f4f26c20cee473200a0207f1997b4c",
+      "sourceCommit": "49acf5b5b149ffc014eb75848432a41259056ebf",
+      "ci": null,
+      "url": "https://github.com/parkhookjung-debug/myday-diary/releases/download/v0.15.3-preview/DeviceQr.LICENSE.txt"
+    },
+    {
+      "file": "LICENSE.txt",
+      "platform": "license",
+      "bytes": 1075,
+      "sha256": "9c12d9fd06bd450c28856c4583dbee7bbd2e580ebf708cb75c3f51e844024ba7",
+      "sourceCommit": "49acf5b5b149ffc014eb75848432a41259056ebf",
+      "ci": null,
+      "url": "https://github.com/parkhookjung-debug/myday-diary/releases/download/v0.15.3-preview/LICENSE.txt"
+    },
+    {
+      "file": "MyDay-Android.apk",
+      "platform": "android",
+      "bytes": 15991060,
+      "sha256": "e17890ca1297d1dfb560f5e553fe0a22ee8ef4b268cc8b067d7753a0131b3242",
+      "sourceCommit": "49acf5b5b149ffc014eb75848432a41259056ebf",
+      "ci": "https://github.com/parkhookjung-debug/myday-diary/actions/runs/45563573621",
+      "url": "https://github.com/parkhookjung-debug/myday-diary/releases/download/v0.15.3-preview/MyDay-Android.apk"
+    },
+    {
+      "file": "MyDay-macOS-arm64.zip",
+      "platform": "macos",
+      "bytes": 1945208,
+      "sha256": "11081b47ec0b0d004598caffa81b62e3a29213bc817c29be7fb0f4d2b8bc7ee8",
+      "sourceCommit": "49acf5b5b149ffc014eb75848432a41259056ebf",
+      "ci": "https://github.com/parkhookjung-debug/myday-diary/actions/runs/45563577400",
+      "url": "https://github.com/parkhookjung-debug/myday-diary/releases/download/v0.15.3-preview/MyDay-macOS-arm64.zip"
+    },
+    {
+      "file": "MyDay-Windows.exe",
+      "platform": "windows",
+      "bytes": 804864,
+      "sha256": "af400838947a7d760310d1a8d2945bbef5de40471c11a0ad0779a52a8e7edddb",
+      "sourceCommit": "49acf5b5b149ffc014eb75848432a41259056ebf",
+      "ci": "https://github.com/parkhookjung-debug/myday-diary/actions/runs/45563569615",
+      "url": "https://github.com/parkhookjung-debug/myday-diary/releases/download/v0.15.3-preview/MyDay-Windows.exe"
+    },
+    {
+      "file": "SangmonBlockPuzzle.exe",
+      "platform": "windows",
+      "bytes": 804864,
+      "sha256": "af400838947a7d760310d1a8d2945bbef5de40471c11a0ad0779a52a8e7edddb",
+      "sourceCommit": "49acf5b5b149ffc014eb75848432a41259056ebf",
+      "ci": "https://github.com/parkhookjung-debug/myday-diary/actions/runs/45563569615",
+      "url": "https://github.com/parkhookjung-debug/myday-diary/releases/download/v0.15.3-preview/SangmonBlockPuzzle.exe"
+    },
+    {
+      "file": "SangmonFetch.exe",
+      "platform": "windows",
+      "bytes": 804864,
+      "sha256": "af400838947a7d760310d1a8d2945bbef5de40471c11a0ad0779a52a8e7edddb",
+      "sourceCommit": "49acf5b5b149ffc014eb75848432a41259056ebf",
+      "ci": "https://github.com/parkhookjung-debug/myday-diary/actions/runs/45563569615",
+      "url": "https://github.com/parkhookjung-debug/myday-diary/releases/download/v0.15.3-preview/SangmonFetch.exe"
+    },
+    {
+      "file": "SangmonGame.exe",
+      "platform": "windows",
+      "bytes": 804864,
+      "sha256": "af400838947a7d760310d1a8d2945bbef5de40471c11a0ad0779a52a8e7edddb",
+      "sourceCommit": "49acf5b5b149ffc014eb75848432a41259056ebf",
+      "ci": "https://github.com/parkhookjung-debug/myday-diary/actions/runs/45563569615",
+      "url": "https://github.com/parkhookjung-debug/myday-diary/releases/download/v0.15.3-preview/SangmonGame.exe"
+    }
+  ],
+  "checks": {
+    "windowsAssertions": 522,
+    "androidJvmTests": 60,
+    "androidDeviceApi35Tests": 19,
+    "androidLintErrors": 0,
+    "nativeSevenGamesDiaryAnniversariesAndFetch": true,
+    "windowsAndroidMacBackupRoundTrips": true,
+    "macBuildAndNativeContracts": true,
+    "localChat": true,
+    "focusedAssetsOnly": true
+  },
+  "integratedTodoAuthor": "mrsandwith-76",
+  "integratedTodoCommits": [
+    "14aa3f213f5bb44916e684ac7b3fd07dcd6644e1",
+    "b408c81c02d1b07573e76ba836d2e32d6cc92e13"
+  ],
+  "todoIntegrationFix": "5edb1f2e25e0caa3d3432c6eb73fe8db6f196275",
+  "sharedTodoContractFix": "49acf5b5b149ffc014eb75848432a41259056ebf",
+  "windowsGameCount": 7,
+  "macAndroidNewTodoListUI": false,
+  "mainAppCodeMerged": false,
+  "cloudDeployed": false,
+  "sourceNote": "Each file records its actual CI build source. The release tag may also include subsequent documentation-only updates."
+}
