@@ -14,7 +14,7 @@
 | android-runtime-dependencies.txt | Gradle에서 해석한 Android 런타임 의존성 |
 | dependency-evidence.json | 사용 버전 POM 라이선스 메타데이터와 해시 |
 
-팀원은 GitHub 계정으로 표시합니다. mrsandwith-76의 할 일 UI 두 커밋과 hongmin060115-create의 실제 브랜치 푸시를 확인해 역할을 보완했습니다. PPT의 본인 확인 칸은 아직 모두 미확인입니다. 근거로 확인한 기여와 본인이 역할·결과를 확인한 사실을 구분하며, 커밋 수를 기여도 순위로 사용하지 않습니다.
+팀원은 GitHub 계정으로 표시합니다. mrsandwith-76의 할 일 UI 두 커밋과 hongmin060115-create의 실제 브랜치 푸시를 확인해 역할을 보완했습니다. 확인된 작업과 기여 근거를 표시하며, 커밋 수를 기여도 순위로 사용하지 않습니다.
 
 기존 `brief-content.json`, [0.14 Word](MyDay-Presentation-Brief-0.14.0.docx)와 [옛 기초 문서](../PRESENTATION-BRIEF.md)는 당시 조사 이력입니다. 제거된 수집·코디 기능을 현재 기능으로 소개하지 않도록 최신 발표 원문을 우선하세요. 오픈소스 버전 조사 파일은 의존성 변경이 없으므로 기존 근거를 유지합니다.
 

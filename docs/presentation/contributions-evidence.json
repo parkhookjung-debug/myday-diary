@@ -2,7 +2,7 @@
   "date": "2026-11-25",
   "sourceCommit": "49acf5b5b149ffc014eb75848432a41259056ebf",
   "display": "GitHub account",
-  "method": "PR authors, GitHub-attributed commits and verified branch push records; contributor self-confirmation is separate",
+  "method": "PR authors, GitHub-attributed commits and verified branch push records",
   "accounts": [
     {
       "account": "parkhookjung-debug",
@@ -12,8 +12,7 @@
         "https://github.com/parkhookjung-debug/myday-diary/pull/7",
         "https://github.com/parkhookjung-debug/myday-diary/commit/b2470bbbcc3646ed8e085194605fb06d10310229"
       ],
-      "note": "AI 코딩 도구 활용을 포함하며 계정 기록은 모든 코드의 수작업 작성을 뜻하지 않음",
-      "selfConfirmed": false
+      "note": "AI 코딩 도구 활용을 포함하며 계정 기록은 모든 코드의 수작업 작성을 뜻하지 않음"
     },
     {
       "account": "ceed3927",
@@ -22,8 +21,7 @@
       "evidence": [
         "https://github.com/parkhookjung-debug/myday-diary/pull/8",
         "https://github.com/parkhookjung-debug/myday-diary/commit/546d15474ce586cf34155442ff4d12ef5118f386"
-      ],
-      "selfConfirmed": false
+      ]
     },
     {
       "account": "cms6727",
@@ -34,8 +32,7 @@
         "https://github.com/parkhookjung-debug/myday-diary/commit/f33f02f",
         "https://github.com/parkhookjung-debug/myday-diary/pull/11"
       ],
-      "note": "외부 연결은 현재 통합판에서 비활성",
-      "selfConfirmed": false
+      "note": "외부 연결은 현재 통합판에서 비활성"
     },
     {
       "account": "mrsandwith-76",
@@ -45,8 +42,7 @@
         "https://github.com/parkhookjung-debug/myday-diary/commit/14aa3f213f5bb44916e684ac7b3fd07dcd6644e1",
         "https://github.com/parkhookjung-debug/myday-diary/commit/b408c81c02d1b07573e76ba836d2e32d6cc92e13"
       ],
-      "note": "항목별 추가·편집·체크·삭제·중요도 UI; 통합 시 제거 기능 참조와 저장 호환 보완",
-      "selfConfirmed": false
+      "note": "항목별 추가·편집·체크·삭제·중요도 UI; 통합 시 제거 기능 참조와 저장 호환 보완"
     },
     {
       "account": "hongmin060115-create",
@@ -56,8 +52,7 @@
         "https://github.com/parkhookjung-debug/myday-diary/blob/codex/windows-app/docs/TEAM-UPDATES-2026-11-16.md",
         "https://github.com/parkhookjung-debug/myday-diary/tree/codex/anniversary-calendar"
       ],
-      "note": "커밋 author와 별도로 확인한 브랜치 생성·푸시 이벤트 기준",
-      "selfConfirmed": false
+      "note": "커밋 author와 별도로 확인한 브랜치 생성·푸시 이벤트 기준"
     }
   ]
 }
