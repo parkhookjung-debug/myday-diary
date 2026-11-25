@@ -4,7 +4,7 @@
 
 [배포 다운로드](https://github.com/parkhookjung-debug/myday-diary/releases/tag/v0.15.3-preview) · [작업자 기여 근거](contributions-evidence.json) · [배포 파일·검증 출처](../builds/release-0.15.3-2026-11-25.json)
 
-팀원 확인 칸은 GitHub 근거 확인과 별개이며, 아직 실제 팀원의 확인을 받은 것으로 표시하지 않았습니다. 발표 자료에서 각자가 검토한 뒤 체크하세요. 기존에 제외 요청한 평가 항목 표·플랫폼 구현 범위·공통 데이터/OS 화면 구조의 별도 슬라이드는 다시 넣지 않았습니다.
+기존에 제외 요청한 평가 항목 표·플랫폼 구현 범위·공통 데이터/OS 화면 구조의 별도 슬라이드는 다시 넣지 않았습니다.
 
 ## 01. 마이데이 MyDay
 
@@ -431,19 +431,18 @@ https://github.com/parkhookjung-debug/myday-diary/blob/codex/windows-app/docs/BL
 
 ## 18. 팀원별 역할과 확인된 결과
 
-근거 확인과 본인 확인은 별개입니다. 팀원이 역할·결과를 확인한 뒤 □를 체크하세요.
 
-| GitHub 계정 | 확인된 작업 | 기여 근거 | 본인 확인 |
-| --- | --- | --- | --- |
-| parkhookjung-debug | 기획 · 통합 · 검증 · 배포 | PR #10 · 통합/릴리스 기록 | □ 미확인 |
-| ceed3927 | 디자인 · Mac 일기 화면 | PR #8 · 디자인 직접 푸시 | □ 미확인 |
-| hongmin060115-create | 기념일 · 게임 메뉴 · 블록 개선 | anniversary-calendar 푸시 | □ 미확인 |
-| cms6727 | Android 사진/공유 · 블록 퍼즐 | PR #9 · PR #11 | □ 미확인 |
-| mrsandwith-76 | Windows 할 일 목록 UI | 14aa3f2 · b408c81 (11/25) | □ 미확인 |
+| GitHub 계정 | 확인된 작업 | 기여 근거 |
+| --- | --- | --- |
+| parkhookjung-debug | 기획 · 통합 · 검증 · 배포 | PR #10 · 통합/릴리스 기록 |
+| ceed3927 | 디자인 · Mac 일기 화면 | PR #8 · 디자인 직접 푸시 |
+| hongmin060115-create | 기념일 · 게임 메뉴 · 블록 개선 | anniversary-calendar 푸시 |
+| cms6727 | Android 사진/공유 · 블록 퍼즐 | PR #9 · PR #11 |
+| mrsandwith-76 | Windows 할 일 목록 UI | 14aa3f2 · b408c81 (11/25) |
 
 **발표자 메모**
 
-다섯 계정의 확인된 결과물을 정리했습니다. mrsandwith-76은 11월 25일 Windows 할 일 목록 UI 변경 두 커밋을 올렸고 통합 과정에서 간소화 이전 기능 참조와 저장 호환 오류를 수정했습니다. hongmin060115-create는 커밋 author만이 아니라 실제 브랜치 푸시 기록을 근거로 표시했습니다. 마지막 본인 확인 칸은 실제 팀원에게 역할과 결과가 맞는지 확인받는 용도이며 아직 누구의 확인도 받았다고 표시하지 않았습니다. 오프라인 작업은 팀원 확인 후 추가할 수 있습니다. 기획·통합에는 AI 코딩 도구 활용도 포함되며 모든 코드를 수작업으로 작성했다는 의미는 아닙니다.
+다섯 계정의 확인된 결과물을 정리했습니다. mrsandwith-76은 11월 25일 Windows 할 일 목록 UI 변경 두 커밋을 올렸고 통합 과정에서 간소화 이전 기능 참조와 저장 호환 오류를 수정했습니다. hongmin060115-create는 커밋 author만이 아니라 실제 브랜치 푸시 기록을 근거로 표시했습니다. 오프라인 작업은 팀원 확인 후 추가할 수 있습니다. 기획·통합에는 AI 코딩 도구 활용도 포함되며 모든 코드를 수작업으로 작성했다는 의미는 아닙니다.
 https://github.com/parkhookjung-debug/myday-diary/blob/codex/windows-app/docs/TODO-INTEGRATION-2026-11-25.md
 https://github.com/parkhookjung-debug/myday-diary/blob/codex/windows-app/docs/TEAM-UPDATES-2026-11-23.md
 
