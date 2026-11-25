@@ -1,22 +1,23 @@
 # Windows · Mac · Android 현재 제공 범위
 
-**[0.15.1 시험판 다운로드](https://github.com/parkhookjung-debug/myday-diary/blob/v0.15.1-preview/docs/DOWNLOADS.md)** · [세 앱 공통 개발 규칙](https://github.com/parkhookjung-debug/myday-diary/blob/v0.15.1-preview/docs/DESKTOP-SHARED.md) · [최신 팀원 변경 통합](https://github.com/parkhookjung-debug/myday-diary/blob/v0.15.1-preview/docs/TEAM-UPDATES-2026-11-16.md)
+**[0.15.3 시험판 다운로드](DOWNLOADS.md)** · [세 앱 공통 개발 규칙](DESKTOP-SHARED.md) · [최신 팀원 변경 통합](TODO-INTEGRATION-2026-11-25.md)
 
 | 기능 | Windows | Mac | Android |
 | --- | --- | --- | --- |
 | 일기·사진·할 일·습관·감정·달력·검색 | 제공 | 제공 | 제공 |
 | 일기 형식 100종·자유 배치·내 레이아웃 | 제공 | 제공 | 제공 |
+| 할 일 항목별 체크·중요도 UI | 제공 | 기존 편집기·백업 보존 | 기존 편집기·백업 보존 |
 | 기본 상몬·출석·Lv.100 성장 | 제공 | 제공 | 제공 |
 | 백업 1~9·자동 저장·복구·로컬 채팅 | 제공 | 제공 | 제공 |
 | 생일·기념일 데이터의 백업 보존 | 제공 | 제공 | 제공 |
 | 기념일 편집·달력 ★ 표시 | 제공 | 추후 | 추후 |
-| 미니게임 6종·바탕화면 공놀이 | 제공 | 추후 | 추후 |
+| 미니게임 7종·바탕화면 공놀이 | 제공 | 추후 | 추후 |
 | OS 기능 | 바탕화면 상몬·트레이·탄성 드래그/던지기 | 바탕화면 상몬·메뉴 막대 | 햅틱·홈 위젯·라이브 배경화면 |
 
 0.15 계열은 일기와 기본 상몬·성장에 집중하며 변신·코디·옷장·뽑기·재화·합성 화면을 제거했습니다. 예전 메타데이터는 백업 호환용으로 보존합니다. 카카오 SDK·인증/공유 원본은 유지하지만 공개 로그인·업로드 서버 연결은 비활성입니다.
 
 세 앱은 같은 공통 데이터와 테마를 사용하며 화면과 파일 선택·키보드·진동은 OS에 맞춥니다. 기록은 기기 안에 저장하고 공통 JSON 백업이나 Wi-Fi 전송으로 옮깁니다. 클라우드 자동 동기화는 없습니다. 로컬 채팅은 로컬 서버가 실행 중일 때 사용합니다.
 
-다운로드 파일은 운영체제별로 다릅니다. Windows EXE는 Mac에서 실행하지 않습니다. Mac은 Apple Silicon/macOS 13 이상용 ZIP, Android는 Android 8 이상용 APK입니다. [설치·데이터 보존·서명 안내](https://github.com/parkhookjung-debug/myday-diary/blob/v0.15.1-preview/docs/DOWNLOADS.md)를 확인하세요.
+다운로드 파일은 운영체제별로 다릅니다. Windows EXE는 Mac에서 실행하지 않습니다. Mac은 Apple Silicon/macOS 13 이상용 ZIP, Android는 Android 8 이상용 APK입니다. [설치·데이터 보존·서명 안내](DOWNLOADS.md)를 확인하세요.
 
-기능·공통 원본은 [shared](https://github.com/parkhookjung-debug/myday-diary/tree/v0.15.1-preview/shared), Windows 화면은 [windows](https://github.com/parkhookjung-debug/myday-diary/tree/v0.15.1-preview/windows), Mac 화면은 [macos](https://github.com/parkhookjung-debug/myday-diary/tree/v0.15.1-preview/macos), Android 화면은 [app](https://github.com/parkhookjung-debug/myday-diary/tree/v0.15.1-preview/app)에서 고칩니다. 최신 앱의 개발 소스는 [codex/windows-app](https://github.com/parkhookjung-debug/myday-diary/tree/codex/windows-app)과 릴리스 태그에서 확인합니다.
+기능·공통 원본은 [shared](../shared), Windows 화면은 [windows](../windows), Mac 화면은 [macos](../macos), Android 화면은 [app](../app)에서 고칩니다. 최신 앱의 개발 소스는 [codex/windows-app](https://github.com/parkhookjung-debug/myday-diary/tree/codex/windows-app)과 릴리스 태그에서 확인합니다.

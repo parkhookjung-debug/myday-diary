@@ -1,0 +1,77 @@
+{
+  "releaseTag": "v0.15.3-preview",
+  "date": "2026-11-25",
+  "anonymous": true,
+  "files": [
+    {
+      "file": "DeviceQr.LICENSE.txt",
+      "status": 200,
+      "bytes": 1205,
+      "sha256": "55f720c0a9f7c3d009feebc2cbb59dd5f4f4f26c20cee473200a0207f1997b4c",
+      "matched": true
+    },
+    {
+      "file": "LICENSE.txt",
+      "status": 200,
+      "bytes": 1075,
+      "sha256": "9c12d9fd06bd450c28856c4583dbee7bbd2e580ebf708cb75c3f51e844024ba7",
+      "matched": true
+    },
+    {
+      "file": "MyDay-Android.apk",
+      "status": 200,
+      "bytes": 15991060,
+      "sha256": "e17890ca1297d1dfb560f5e553fe0a22ee8ef4b268cc8b067d7753a0131b3242",
+      "matched": true
+    },
+    {
+      "file": "MyDay-macOS-arm64.zip",
+      "status": 200,
+      "bytes": 1945208,
+      "sha256": "11081b47ec0b0d004598caffa81b62e3a29213bc817c29be7fb0f4d2b8bc7ee8",
+      "matched": true
+    },
+    {
+      "file": "MyDay-Windows.exe",
+      "status": 200,
+      "bytes": 804864,
+      "sha256": "af400838947a7d760310d1a8d2945bbef5de40471c11a0ad0779a52a8e7edddb",
+      "matched": true
+    },
+    {
+      "file": "SangmonBlockPuzzle.exe",
+      "status": 200,
+      "bytes": 804864,
+      "sha256": "af400838947a7d760310d1a8d2945bbef5de40471c11a0ad0779a52a8e7edddb",
+      "matched": true
+    },
+    {
+      "file": "SangmonFetch.exe",
+      "status": 200,
+      "bytes": 804864,
+      "sha256": "af400838947a7d760310d1a8d2945bbef5de40471c11a0ad0779a52a8e7edddb",
+      "matched": true
+    },
+    {
+      "file": "SangmonGame.exe",
+      "status": 200,
+      "bytes": 804864,
+      "sha256": "af400838947a7d760310d1a8d2945bbef5de40471c11a0ad0779a52a8e7edddb",
+      "matched": true
+    },
+    {
+      "file": "SHA256SUMS.txt",
+      "status": 200,
+      "bytes": 762,
+      "sha256": "671ad9042db32b2011be89890aa1c6122c29d40723e1d3ee3dfc6b746a098069",
+      "matched": true
+    },
+    {
+      "file": "SOURCE.json",
+      "status": 200,
+      "bytes": 4827,
+      "sha256": "821d4a5bbcc54517dd5246097faa9e625837065ac50736a20c88f7a2da3dc73d",
+      "matched": true
+    }
+  ]
+}

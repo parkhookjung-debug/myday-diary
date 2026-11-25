@@ -1,5 +1,9 @@
 # 마이데이 발표 기초 자료
 
+**최신 발표는 [0.15.3 발표 내용과 발표자 메모](presentation/PRESENTATION-0.15.3.md)를 사용하세요.** 아래 문서는 2026-10-29 당시의 조사 이력입니다. 최신 팀원 기여와 할 일 목록, 일곱 게임 및 간소화 범위는 새 자료에 반영했습니다.
+
+> 이 문서는 0.14까지의 기능 기록입니다. 0.15의 변신·코디·뽑기·합성 제거 범위는 [현재 간소화 안내](FOCUSED-APP.md)를 확인하세요.
+
 앱 0.14.0 · 2026-10-29 · 기준 소스 73f9c20ed0002a46eff23115359462eedec94a37
 
 [Word 자료](presentation/MyDay-Presentation-Brief-0.14.0.docx) · [오픈소스 조사 CSV](presentation/open-source-inventory.csv) · [팀 기여 근거](presentation/contributions-evidence.json)
