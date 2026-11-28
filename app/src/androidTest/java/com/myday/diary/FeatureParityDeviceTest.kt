@@ -45,7 +45,8 @@ class FeatureParityDeviceTest {
                 assertEquals("\"$id\"",js("MyDayPlayroom.snapshot().id"))
                 js("MyDayPlayroom.pause()")
                 assertEquals("\"paused\"",js("MyDayPlayroom.snapshot().state"))
-                js("window.confirm=()=>true;document.getElementById('back').click()")
+                js("document.getElementById('back').click();document.getElementById('confirmation-cancel').click();document.getElementById('back').click();document.getElementById('confirmation-ok').click()")
+                assertEquals("\"hub\"",js("MyDayPlayroom.snapshot().state"))
             }
             js("MyDayNative.post(JSON.stringify({type:'score',token:'test',round:'device-test',id:'snack',score:30}));MyDayNative.post(JSON.stringify({type:'score',token:'test',round:'device-test',id:'snack',score:30}));true")
             ui.waitUntil(5000){File(folder,"games/scores.json").exists()}

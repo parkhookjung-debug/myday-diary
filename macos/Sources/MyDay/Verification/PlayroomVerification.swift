@@ -21,7 +21,9 @@ import WebKit
             try await perform(web,"MyDayPlayroom.pause()")
             let paused=try await script(web,"MyDayPlayroom.snapshot().state") as? String
             try MacVerification.check(paused=="paused","native game pauses on focus loss")
-            try await perform(web,"window.confirm=()=>true;document.getElementById('back').click()")
+            try await perform(web,"document.getElementById('back').click();document.getElementById('confirmation-cancel').click();document.getElementById('back').click();document.getElementById('confirmation-ok').click()")
+            let closed=try await script(web,"MyDayPlayroom.snapshot().state") as? String
+            try MacVerification.check(closed=="hub","native in-page cancel/confirm returns to the game hub")
         }
         // Exercise the actual persistent bridge twice with one round token.
         try await perform(web,"window.webkit.messageHandlers.myday.postMessage(JSON.stringify({type:'score',token:'test',round:'native-test',id:'snack',score:30}));window.webkit.messageHandlers.myday.postMessage(JSON.stringify({type:'score',token:'test',round:'native-test',id:'snack',score:30}));")
