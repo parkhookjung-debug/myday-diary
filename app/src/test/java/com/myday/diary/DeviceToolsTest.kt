@@ -16,8 +16,10 @@ class DeviceToolsTest {
             val connection=URL(link.origin+"/upload").openConnection(Proxy.NO_PROXY) as HttpURLConnection
             try{connection.requestMethod="POST";connection.doOutput=true;connection.setRequestProperty("Content-Type","application/json");connection.setRequestProperty("Authorization","Bearer ${link.token}");connection.setFixedLengthStreamingMode(bytes.size);connection.outputStream.use{it.write(bytes)};assertEquals(200,connection.responseCode);connection.inputStream.close()}finally{connection.disconnect()}
             assertArrayEquals(bytes,link.incoming)
-            val denied=URL(link.origin+"/download").openConnection(Proxy.NO_PROXY) as HttpURLConnection
-            try{assertEquals(401,denied.responseCode);denied.errorStream?.close()}finally{denied.disconnect()}
+            repeat(20) {
+                val denied=URL(link.origin+"/download").openConnection(Proxy.NO_PROXY) as HttpURLConnection
+                try{assertEquals(401,denied.responseCode);denied.errorStream?.close()}finally{denied.disconnect()}
+            }
         }finally{link.close()};assertFalse(link.active);assertNull(link.incoming)
     }
     @Test fun invitationsStayOnPrivateIpv4WithoutRedirectablePaths(){

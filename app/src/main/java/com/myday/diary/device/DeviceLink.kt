@@ -45,7 +45,10 @@ class DeviceLinkServer(host: String,private val snapshot: ByteArray,private val 
     init {
         require(DeviceAddress.privateIp(host));DeviceAddress.validate(snapshot)
         listener=ServerSocket(0,3,InetAddress.getByName(host));origin="http://$host:${listener.localPort}"
-        Thread({while(active) {try {val socket=listener.accept();synchronized(gate){if(closed || clients.isNotEmpty()){socket.close();return@synchronized};clients.add(socket);worker.execute {handle(socket)}}}catch(_:IOException){break}}},"MyDay device link").apply {isDaemon=true;start()}
+        // A peer can open its next request immediately after receiving our last byte,
+        // before the previous worker has removed its socket. Bound the queue instead
+        // of resetting that legitimate follow-up connection during this short overlap.
+        Thread({while(active) {try {val socket=listener.accept();synchronized(gate){if(closed || clients.size>=3){socket.close();return@synchronized};clients.add(socket);worker.execute {handle(socket)}}}catch(_:IOException){break}}},"MyDay device link").apply {isDaemon=true;start()}
         expiry.schedule({close()},JournalPolicy.transferLifetimeSeconds.toLong(),TimeUnit.SECONDS)
     }
     private fun handle(socket: Socket) {
