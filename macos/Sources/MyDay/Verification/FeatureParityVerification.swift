@@ -3,6 +3,9 @@ import Foundation
 @MainActor enum FeatureParityVerification {
     static func run(root:URL)throws {
         func check(_ ok:Bool,_ label:String)throws{try MacVerification.check(ok,label)}
+        func thrown(_ distance:Double)->PetMotion{let p=PetMotion();p.right=1000;p.bottom=800;p.x=500;p.y=300;p.begin(0);p.drag(500+distance,300,0.05);p.step(0.05);p.release(0.05);return p}
+        let slow=thrown(20),fast=thrown(60);try check(fast.flying && abs(slow.vx*3-fast.vx)<0.000001 && fast.scaleX>1,"native pet throw speed follows pointer velocity and stretches")
+        for _ in 0..<1000{fast.step(1.0/120);try check(fast.x>=fast.left && fast.x<=fast.right && fast.y>=fast.top && fast.y<=fast.bottom,"native pet bounce stays within screen")}
         var b=try TodoRules.applying([TodoItem(text:"일기",checked:true,importance:1),TodoItem(text:"산책",importance:2)],to:DiaryBlock(kind:.todo))
         try check(!b.checked,"partly checked list keeps aggregate false")
         b.text="산책\n일기\n책 읽기"

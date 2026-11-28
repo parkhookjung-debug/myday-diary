@@ -23,4 +23,5 @@ for(const id of G.ids){const g=G.create(id,1);g.pause();const before=JSON.string
 const baking=G.create('bake',1);baking.begin();baking.step(.2);baking.pause();baking.resume();baking.release();assert.equal(baking.completed,0);
 const sling=G.create('sling',1);sling.begin(225,450);sling.aim(110,510);sling.pause();sling.resume();sling.release();assert.equal(sling.shots,0);
 assert.equal(G.dailySeed('2026-11-28'),(Math.imul(20261128,397)^0x53414e47)|0);
+const fetch=G.create('fetch',1);fetch.begin(440,500);fetch.step(.05);fetch.aim(400,450);fetch.step(.05);fetch.aim(350,400);assert(fetch.scaleX!==0);fetch.release();assert(Math.hypot(fetch.ball.vx,fetch.ball.vy)>140);for(let i=0;i<1000;i++)fetch.step(1/120);assert(fetch.ball.x>=18&&fetch.ball.x<=942);fetch.pause();const parked=JSON.stringify(fetch);fetch.step(1);assert.equal(JSON.stringify(fetch),parked);
 console.log(`Seven games: ${checked} native replay snapshots match; pause/cancel and daily seed verified.`);

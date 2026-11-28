@@ -86,7 +86,7 @@ enum WindowsCompatibility {
                   (0...2).contains(try integer(layout["Theme"])), let blocks = layout["Blocks"]?.array, (1...200).contains(blocks.count) else { throw fail("저장 레이아웃 이름 또는 구성이 올바르지 않습니다.") }
             for value in blocks {
                 guard let block = value.object, let kind = block["Kind"]?.string,
-                      ["text", "todo", "habit", "emotion", "photo-slot"].contains(kind) else { throw fail("저장 레이아웃 블록이 올바르지 않습니다.") }
+                      ["text", "todo", "habit", "emotion", "photo-slot", "video"].contains(kind) else { throw fail("저장 레이아웃 블록이 올바르지 않습니다.") }
                 try checkText(block)
                 let width = try integer(block["Width"]), height = try integer(block["Height"])
                 guard width > 0, height > 0 else { throw fail("저장 레이아웃의 크기가 없습니다.") }

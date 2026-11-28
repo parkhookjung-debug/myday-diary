@@ -5,6 +5,7 @@ root=Path(__file__).resolve().parents[1]
 folder=root/'shared/playroom'
 html=(folder/'playroom.html').read_text(encoding='utf-8')
 rules='window.MyDayMiniRules='+json.dumps(json.loads((root/'shared/mini-games.json').read_text()),ensure_ascii=False)+';\nwindow.MyDaySnackRules='+json.dumps(json.loads((root/'shared/snack-game.json').read_text()),ensure_ascii=False)+';'
+rules+='\nwindow.MyDayPetRules='+json.dumps({key:value for key,value in json.loads((root/'shared/desktop.json').read_text(encoding='utf-8'))['limits'].items() if key.startswith('Pet')})+';'
 for marker,content in [('RULES',rules),('ENGINE',(folder/'engine.js').read_text(encoding='utf-8')),('VIEW',(folder/'view.js').read_text(encoding='utf-8'))]:
     if '</script' in content.lower():raise ValueError('Embedded script must not terminate its element')
     html=html.replace('/*'+marker+'*/',content)

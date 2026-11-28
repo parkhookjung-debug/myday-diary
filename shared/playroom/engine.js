@@ -3,6 +3,7 @@
   'use strict';
   const M = root.MyDayMiniRules || (typeof require === 'function' ? require('../mini-games.json') : {});
   const S = root.MyDaySnackRules || (typeof require === 'function' ? require('../snack-game.json') : {});
+  const P = root.MyDayPetRules || (typeof require === 'function' ? require('../desktop.json').limits : {});
   const clamp = (n,a,b) => Math.max(a,Math.min(b,n));
   class Random {
     constructor(seed) { this.state=(seed>>>0)||0x6d2b79f5; }
@@ -163,6 +164,28 @@
     advance(){}
   }
   const constructors={snack:Snack,sling:Sling,fish:Fish,jump:Jump,bake:Bake,blocks:Blocks,'block-puzzle':Puzzle};
-  const api={Random,dailySeed,Snack,Sling,Fish,Jump,Bake,Blocks,Puzzle,create:(id,seed)=>new constructors[id](seed),ids:Object.keys(constructors)};
+  // Counterpart to the Windows desktop ball toy; deliberately separate from scored games.
+  class Fetch extends Round {
+    constructor(seed){super(seed);this.ball={x:440,y:500,vx:0,vy:0};this.pet={x:220,y:490};this.home={...this.pet};this.phase='waiting';this.held=false;this.returns=0;this.scaleX=this.scaleY=1;this.clock=0;this.lastMovement=0;}
+    begin(x,y){if(this.state!=='playing'||!Number.isFinite(x)||!Number.isFinite(y)||Math.hypot(x-this.ball.x,y-this.ball.y)>M.FetchRadius+28)return;this.held=true;this.phase='waiting';this.offset=[x-this.ball.x,y-this.ball.y];this.target={...this.ball};this.sample={x:this.ball.x,y:this.ball.y,time:this.clock};this.ball.vx=this.ball.vy=0;}
+    aim(x,y){if(!this.held||!Number.isFinite(x)||!Number.isFinite(y))return;const next={x:x-this.offset[0],y:y-this.offset[1]};this.target=next;const dt=this.clock-this.sample.time;if(dt<.001)return;const dx=next.x-this.sample.x,dy=next.y-this.sample.y,blend=1-Math.exp(-dt*24);this.ball.vx+=(clamp(dx/dt,-12000,12000)-this.ball.vx)*blend;this.ball.vy+=(clamp(dy/dt,-12000,12000)-this.ball.vy)*blend;if(Math.abs(dx)+Math.abs(dy)>.1)this.lastMovement=this.clock;this.sample={...next,time:this.clock};}
+    release(){if(!this.held)return;this.held=false;const decay=Math.exp(-(this.clock-this.sample.time)*24)*P.PetThrowGainPercent/100;this.ball.vx*=decay;this.ball.vy*=decay;const speed=Math.hypot(this.ball.vx,this.ball.vy);if(this.clock-this.lastMovement>=.12||speed<P.PetMinThrowSpeed)this.ball.vx=this.ball.vy=0;else if(speed>P.PetMaxThrowSpeed){this.ball.vx*=P.PetMaxThrowSpeed/speed;this.ball.vy*=P.PetMaxThrowSpeed/speed;}this.phase='chasing';}
+    cancel(){this.held=false;this.ball.vx=this.ball.vy=0;this.phase='waiting';}
+    advance(h){
+      this.clock+=h;const b=this.ball,p=this.pet;
+      if(this.held){const f=1-Math.exp(-h*16);b.x+=(this.target.x-b.x)*f;b.y+=(this.target.y-b.y)*f;const amount=Math.min(.75,Math.hypot(b.vx,b.vy)/1800+Math.hypot(this.target.x-b.x,this.target.y-b.y)/180);this.scaleX=1+(Math.abs(b.vx)>Math.abs(b.vy)?amount:-amount*.4);this.scaleY=1+(Math.abs(b.vy)>=Math.abs(b.vx)?amount:-amount*.4);}
+      else if(this.phase==='chasing'){b.vx*=Math.exp(-h*.42);b.vy+=P.PetGravity*h;b.x+=b.vx*h;b.y+=b.vy*h;
+        if(b.x<18||b.x>942){b.x=clamp(b.x,18,942);b.vx*= -P.PetRestitutionPercent/100;this.scaleX=.7;this.scaleY=1.25;}
+        if(b.y<110&&b.vy<0){b.y=110;b.vy*= -P.PetRestitutionPercent/100;}
+        if(b.y>=540&&b.vy>0){b.y=540;if(b.vy>150){b.vy*= -P.PetRestitutionPercent/100;this.scaleX=1.3;this.scaleY=.7;}else{b.vy=0;b.vx*=Math.exp(-h*8);}}
+        if(Math.hypot(b.x-p.x,b.y-p.y)<=M.FetchCatchRadius&&Math.hypot(b.vx,b.vy)<1400)this.phase='returning';
+      }
+      if(!this.held&&(this.phase==='chasing'||this.phase==='returning')){const target=this.phase==='returning'?this.home:{x:clamp(b.x,60,900),y:clamp(b.y,150,530)},dx=target.x-p.x,dy=target.y-p.y,d=Math.hypot(dx,dy);if(d>0){const n=Math.min(d,M.FetchSpeed*h);p.x+=dx/d*n;p.y+=dy/d*n;}if(this.phase==='returning'){b.x=p.x+72;b.y=p.y-3;if(d<=8){this.returns++;this.phase='cheering';this.cheer=.8;}}}
+      if(this.phase==='cheering'){this.cheer-=h;if(this.cheer<=0){this.phase='waiting';b.x=this.home.x+110;b.y=540;}}
+      if(!this.held){const blend=1-Math.exp(-h*12);this.scaleX+=(1-this.scaleX)*blend;this.scaleY+=(1-this.scaleY)*blend;}
+      this.message=`공 반환 ${this.returns}번 · 공을 잡아 당겨 던지면 상몬이 가져와요. 경험치는 바뀌지 않아요.`;
+    }
+  }
+  const api={Random,dailySeed,Snack,Sling,Fish,Jump,Bake,Blocks,Puzzle,Fetch,create:(id,seed)=>id==='fetch'?new Fetch(seed):new constructors[id](seed),ids:Object.keys(constructors)};
   if(typeof module!=='undefined'&&module.exports)module.exports=api;else root.MyDayGames=api;
 })(typeof globalThis!=='undefined'?globalThis:this);

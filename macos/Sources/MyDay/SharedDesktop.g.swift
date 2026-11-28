@@ -2,7 +2,7 @@
 import SwiftUI
 
 enum DesktopContract {
-    static let sourceDigest="d7b1f4feba927e89146f3ce2eb67bf1e89532f39a5c0fbbf883a15ca82a8e078"
+    static let sourceDigest="ed2e02a23703b4ab65e90d8045529ec8a30ed36b7e831c0bf29f56045717c7f4"
     static let maxDays=50000
     static let maxBlocks=200
     static let maxTextUtf16=100000
@@ -19,6 +19,11 @@ enum DesktopContract {
     static let textHeight=250
     static let todoHeight=420
     static let maxTodoItems=100
+    static let petMinThrowSpeed=140
+    static let petMaxThrowSpeed=5200
+    static let petGravity=1150
+    static let petThrowGainPercent=180
+    static let petRestitutionPercent=72
     static let chatProtocol=1
     static let chatMaxText=2000
     static let chatMaxTextUtf16=4000

@@ -135,7 +135,7 @@ import java.time.LocalDate
                     }}}
                     item {Card(colors=CardDefaults.cardColors(containerColor=Color.White)) {Column(Modifier.padding(16.dp),verticalArrangement=Arrangement.spacedBy(10.dp)) {
                         Text("소중한 하루 보관하기",style=MaterialTheme.typography.titleMedium)
-                        Text("사진·배치·상몬 성장·장비를 함께 보관하고 Windows에서도 가져올 수 있어요.",style=MaterialTheme.typography.bodySmall)
+                        Text("사진·배치·상몬 성장을 함께 보관하고 세 버전에서 가져올 수 있어요. 영상 원본은 따로 보관해 주세요.",style=MaterialTheme.typography.bodySmall)
                         Button(onExport,modifier=Modifier.fillMaxWidth()) {Text("↓ 백업 다운로드")}
                         OutlinedButton(onImport,modifier=Modifier.fillMaxWidth()) {Text("↥ 백업 복원")}
                     }}}
@@ -143,7 +143,7 @@ import java.time.LocalDate
                         Text("홈 화면의 작은 친구",style=MaterialTheme.typography.titleMedium)
                         OutlinedButton(home::pinWidget,modifier=Modifier.fillMaxWidth()) {Text("홈 화면에 일기 위젯 추가")}
                         Button(home::setWallpaper,modifier=Modifier.fillMaxWidth()) {Text("상몬 라이브 배경화면 설정")}
-                        Text("선택한 상몬과 장비가 홈 화면에도 함께해요.",style=MaterialTheme.typography.bodySmall)
+                        Text("기본 상몬이 홈 화면에서도 함께해요.",style=MaterialTheme.typography.bodySmall)
                     }}}
                 }
             }

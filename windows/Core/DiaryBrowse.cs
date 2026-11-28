@@ -49,7 +49,8 @@ namespace MyDay.Windows.Core
                 // Only user-written text is searchable; prompts and image bytes are excluded.
                 var block=pair.Value.Blocks.FirstOrDefault(b=>!string.IsNullOrWhiteSpace(b.Text) &&
                     (query.Length==0 || b.Text.IndexOf(query,StringComparison.OrdinalIgnoreCase)>=0));
-                if(query.Length>0 && block==null) continue;
+                bool metadataMatch=(pair.Value.Mood??"").IndexOf(query,StringComparison.OrdinalIgnoreCase)>=0 || pair.Value.Blocks.Any(b=>(b.Title??"").IndexOf(query,StringComparison.OrdinalIgnoreCase)>=0) || (book.Studio!=null && book.Studio.Pages.Any(p=>p.Date==pair.Key && p.Tags.Any(tag=>tag.IndexOf(query,StringComparison.OrdinalIgnoreCase)>=0)));
+                if(query.Length>0 && block==null && !metadataMatch) continue;
                 result.Add(new DiaryMatch {Date=date,HasPhoto=HasPhoto(pair.Value),Kind=block==null?null:block.Kind,
                     Preview=block==null?"저장한 블록 "+pair.Value.Blocks.Count+"개":Snippet(block.Text,query)});
             }

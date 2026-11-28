@@ -15,7 +15,7 @@ import com.myday.diary.ui.components.SangmonAvatar
 
 @Composable fun PhoneCompanion(controller: NotebookController,catalog: NotebookCatalog,haptics: DiaryHaptics,attempt:(TactileEvent?,()->Unit)->Unit){
  var playroom by remember {mutableStateOf(false)}
- if(playroom)PhonePlayroom(onDismiss={playroom=false})
+ if(playroom)PhonePlayroom(onDismiss={playroom=false},hapticsEnabled=controller.book.haptics)
  val book=controller.book;val level=NotebookRules.level(book);val xp=NotebookRules.xp(book)
  val today=controller.actualDay;val flags=book.activities[today.toString()]?:0;val attended=flags and NotebookRules.ATTENDANCE!=0
  Column(Modifier.fillMaxSize().verticalScroll(rememberScrollState()).padding(20.dp).testTag("growth-screen"),verticalArrangement=Arrangement.spacedBy(16.dp)){

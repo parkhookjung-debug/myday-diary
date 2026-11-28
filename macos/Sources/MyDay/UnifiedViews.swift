@@ -24,6 +24,7 @@ struct SharedSangmonView: View {
     var companion: SharedCompanion
     var reactionTick=0
     var sleepy=false
+    var motionRow:Int?=nil
     @State private var fireAt = Date.distantPast
     @State private var hopAt=Date.distantPast
     var body: some View {
@@ -32,7 +33,7 @@ struct SharedSangmonView: View {
                 let time = timeline.date.timeIntervalSinceReferenceDate
                 let age = timeline.date.timeIntervalSince(fireAt)
                 let phase = time.truncatingRemainder(dividingBy: 42)
-                let row = age < 0.7 ? 2 : sleepy ? 6 : (30..<31.6).contains(phase) ? 3 : (34..<36.4).contains(phase) ? 6 : 0
+                let row = motionRow == 7 ? 7 : age < 0.7 ? 2 : motionRow ?? (sleepy ? 6 : (30..<31.6).contains(phase) ? 3 : (34..<36.4).contains(phase) ? 6 : 0)
                 let frame = row == 2 ? min(6, Int(age * 10)) : row == 3 ? Int((phase - 30) * 5) : Int(time * (row == 6 ? 3.33 : 1.9)) % 8
                 let hopAge=timeline.date.timeIntervalSince(hopAt)
                 let offset:CGFloat=hopAge<0.9 ? CGFloat(-abs(sin(hopAge*Double.pi*2/0.9))*9) : 0

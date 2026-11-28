@@ -131,6 +131,10 @@ struct MyDayApp: App {
     @NSApplicationDelegateAdaptor(MyDayLifecycle.self) private var lifecycle
     @StateObject private var store = DiaryStore()
     init() {
+        if CommandLine.arguments.contains("--playroom-test") {
+            Task { @MainActor in do{try await PlayroomVerification.run();exit(0)}catch{fputs("Playroom verification failed: \(error)\n",stderr);exit(1)}}
+            dispatchMain()
+        }
         if let index = CommandLine.arguments.firstIndex(of: "--desktop-contract"), CommandLine.arguments.count > index + 1 {
             do { try DesktopVerification.export(to: CommandLine.arguments[index + 1]); exit(0) }
             catch { fputs("Shared desktop verification failed: \(error)\n", stderr); exit(1) }
@@ -171,7 +175,7 @@ struct MyDayApp: App {
                 Button("Windows 백업 내보내기…") { store.exportWindowsBackup() }
                 Button("기록 백업…") { store.exportBackup() }.keyboardShortcut("e", modifiers: [.command, .shift])
                 Button("맥·Windows 백업 가져오기…") { store.importBackup() }
-                Button("상몬 성장과 장비") { store.showingCompanion = true }
+                Button("상몬 성장") { store.showingCompanion = true }
                 Button("상몬 라운지 · 채팅") { LoungeWindow.shared.show() }
                 Button("바탕화면 상몬 보기") { DesktopCompanion.shared.show(store: store) }
             }

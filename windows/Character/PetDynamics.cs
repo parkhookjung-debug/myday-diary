@@ -7,9 +7,9 @@ namespace MyDay.Windows.Character
     // Bounds describe allowed WINDOW origins after the transparent artwork margins are removed.
     public sealed class PetDynamics
     {
-        public const float MinThrowSpeed=140, MaxThrowSpeed=5200, Gravity=1150;
-        public const float ThrowGain=1.80f;
-        private const float Restitution=.72f;
+        public const float MinThrowSpeed=MyDay.Windows.Core.DesktopContract.PetMinThrowSpeed, MaxThrowSpeed=MyDay.Windows.Core.DesktopContract.PetMaxThrowSpeed, Gravity=MyDay.Windows.Core.DesktopContract.PetGravity;
+        public const float ThrowGain=MyDay.Windows.Core.DesktopContract.PetThrowGainPercent/100f;
+        private const float Restitution=MyDay.Windows.Core.DesktopContract.PetRestitutionPercent/100f;
         private PointF target,lastSample;
         private double sampleTime,lastMovement,dragPoseAge;
         private float dragX,dragY,impactX,impactY;

@@ -26,7 +26,7 @@ class CharacterWallpaperRenderer(private val context: Context) {
     private val heartTop = resources.getDimension(R.dimen.wallpaper_heart_top)
 
     fun draw(canvas: Canvas, theme: Int, character: String, x: Float, y: Float, radius: Float, happy: Boolean,
-        timeMillis: Long, moving: Boolean, dragging: Boolean, facingLeft: Boolean,equipment: Equipment=Equipment(),fireAge: Long=-1L) {
+        timeMillis: Long, moving: Boolean, dragging: Boolean, facingLeft: Boolean,equipment: Equipment=Equipment(),fireAge: Long=-1L,scaleX:Float=1f,scaleY:Float=1f) {
         canvas.drawColor(context.getColor(DiaryOptions.backgroundResource(theme)))
         paint.color = context.getColor(R.color.myday_wallpaper_dots)
         var dotX = dotInset
@@ -36,6 +36,7 @@ class CharacterWallpaperRenderer(private val context: Context) {
             dotX += dotSpacing
         }
         paint.color = context.getColor(R.color.myday_character_circle)
+        val saved=canvas.save();canvas.scale(scaleX,scaleY,x,y)
         canvas.drawCircle(x, y, radius, paint)
         val kind = CharacterKind.fromStoredValue(character)
         if(character in listOf("🐰","🐱","🐻")) characterPainter.draw(canvas, kind, x, y, radius * 0.88f,
@@ -47,5 +48,6 @@ class CharacterWallpaperRenderer(private val context: Context) {
             paint.color = context.getColor(R.color.myday_primary)
             canvas.drawText("♡", x, (y - radius - heartGap).coerceAtLeast(heartTop), paint)
         }
+        canvas.restoreToCount(saved)
     }
 }

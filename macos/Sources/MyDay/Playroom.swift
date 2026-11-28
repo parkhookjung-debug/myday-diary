@@ -27,6 +27,7 @@ final class PlayroomBridge:NSObject,WKScriptMessageHandler,WKNavigationDelegate 
         guard message.frameInfo.isMainFrame,let text=message.body as? String,text.utf8.count<=2100000,let bytes=text.data(using:.utf8),let msg=(try? JSONSerialization.jsonObject(with:bytes)) as? [String:Any] else{return}
         let token=msg["token"] as? String ?? "";guard token.count<=150 else{return}
         do {switch msg["type"] as? String {
+        case "haptic":NSHapticFeedbackManager.defaultPerformer.perform(.alignment,performanceTime:.now)
         case "ready":
             let book=try read();let records=Dictionary(uniqueKeysWithValues:book.Entries.map{($0.Id,$0.Best)})
             guard let atlas=SangmonImages.image("sangmon/original.png"),let cg=atlas.cgImage(forProposedRect:nil,context:nil,hints:nil),let png=NSBitmapImageRep(cgImage:cg).representation(using:.png,properties:[:]) else{throw WindowsCompatibility.fail("상몬 이미지를 열지 못했어요.")}
@@ -48,12 +49,15 @@ final class PlayroomBridge:NSObject,WKScriptMessageHandler,WKNavigationDelegate 
     func webView(_ webView:WKWebView,decidePolicyFor action:WKNavigationAction,decisionHandler:@escaping(WKNavigationActionPolicy)->Void){if !acceptedInitialNavigation,action.targetFrame?.isMainFrame==true,action.request.url?.absoluteString=="about:blank"{acceptedInitialNavigation=true;decisionHandler(.allow)}else{decisionHandler(.cancel)}}
 }
 
-private struct PlayroomWeb:NSViewRepresentable {
+struct PlayroomWeb:NSViewRepresentable {
     let directory:URL
     func makeCoordinator()->PlayroomBridge{PlayroomBridge(directory:directory)}
     func makeNSView(context:Context)->WKWebView {
-        let settings=WKWebViewConfiguration();settings.websiteDataStore = .nonPersistent();settings.preferences.javaScriptCanOpenWindowsAutomatically=false;settings.userContentController.add(context.coordinator,name:"myday")
-        let web=WKWebView(frame:.zero,configuration:settings);context.coordinator.web=web;web.navigationDelegate=context.coordinator
+        Self.makeWebView(context.coordinator)
+    }
+    static func makeWebView(_ bridge:PlayroomBridge)->WKWebView {
+        let settings=WKWebViewConfiguration();settings.websiteDataStore = .nonPersistent();settings.preferences.javaScriptCanOpenWindowsAutomatically=false;settings.userContentController.add(bridge,name:"myday")
+        let web=WKWebView(frame:.zero,configuration:settings);bridge.web=web;web.navigationDelegate=bridge
         let url=Bundle.main.url(forResource:"playroom",withExtension:"html") ?? Bundle.module.url(forResource:"playroom",withExtension:"html")
         if let url,let html=try? String(contentsOf:url,encoding:.utf8){web.loadHTMLString(html,baseURL:nil)}
         return web

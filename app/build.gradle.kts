@@ -25,8 +25,8 @@ android {
         applicationId = "com.myday.diary"
         minSdk = 26
         targetSdk = 35
-        versionCode = 18
-        versionName = "0.15.3"
+        versionCode = 19
+        versionName = "0.16.0"
         manifestPlaceholders["appLabel"] = "마이데이"
         manifestPlaceholders["onlineFriendsEnabled"] = onlineFriendsEnabled.toString()
         buildConfigField("boolean", "ONLINE_FRIENDS_ENABLED", onlineFriendsEnabled.toString())

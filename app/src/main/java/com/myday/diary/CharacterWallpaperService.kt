@@ -47,6 +47,7 @@ class CharacterWallpaperService : WallpaperService() {
         private var previousFrame = 0L
         private var nextRead = 0L
         private var happyUntil = 0L
+        private val motion=com.myday.diary.diary.PetMotion()
         private val radius get() = min(renderer.characterRadius, min(width, height) / 4f).coerceAtLeast(1f)
         private val frame = object : Runnable {
             override fun run() {
@@ -68,12 +69,14 @@ class CharacterWallpaperService : WallpaperService() {
             if (!ready) { x = w * 0.5f; y = h * 0.45f }
             ready = w > 0 && h > 0
             constrainPosition()
+            motion.left=radius.toDouble();motion.right=(width-radius).coerceAtLeast(radius).toDouble();motion.top=radius.toDouble();motion.bottom=(height-radius).coerceAtLeast(radius).toDouble();motion.x=x.toDouble();motion.y=y.toDouble();motion.constrain()
             startFrames()
         }
 
         override fun onVisibilityChanged(isVisible: Boolean) {
             visible = isVisible
             dragging = false
+            motion.cancel()
             nextRead = 0L
             startFrames()
         }
@@ -108,20 +111,21 @@ class CharacterWallpaperService : WallpaperService() {
                     touchMoved = false
                     downX = event.x; downY = event.y
                     dragDx = x - event.x; dragDy = y - event.y
+                    if(dragging){motion.x=x.toDouble();motion.y=y.toDouble();motion.begin(SystemClock.uptimeMillis()/1000.0)}
                 }
                 MotionEvent.ACTION_MOVE -> if (dragging) {
                     touchMoved = touchMoved || hypot(event.x - downX, event.y - downY) > 8f * density
-                    x = event.x + dragDx; y = event.y + dragDy
-                    constrainPosition()
+                    motion.drag((event.x+dragDx).toDouble(),(event.y+dragDy).toDouble(),SystemClock.uptimeMillis()/1000.0)
                 }
                 MotionEvent.ACTION_UP -> {
                     if (dragging) {
-                        happyUntil=SystemClock.uptimeMillis()+700L
+                        if(!touchMoved)happyUntil=SystemClock.uptimeMillis()+700L
+                        motion.release(SystemClock.uptimeMillis()/1000.0)
                         WallpaperHaptics.tap(this@CharacterWallpaperService,haptics)
                     }
                     dragging = false
                 }
-                MotionEvent.ACTION_CANCEL -> dragging = false
+                MotionEvent.ACTION_CANCEL -> {dragging=false;motion.cancel()}
             }
             super.onTouchEvent(event)
         }
@@ -138,7 +142,9 @@ class CharacterWallpaperService : WallpaperService() {
                 nextRead = now + 3000L
             }
             val phase=now%42000
-            if (!dragging && now>=happyUntil && phase !in 16000..17999 && phase !in 30000..31599 && phase !in 34000..36399) {
+            val hadMotion=motion.held || motion.flying;motion.step(dt.toDouble())
+            if(hadMotion){x=motion.x.toFloat();y=motion.y.toFloat()}
+            else if (!dragging && now>=happyUntil && phase !in 16000..17999 && phase !in 30000..31599 && phase !in 34000..36399) {
                 x += vx * dt; y += vy * dt
                 if (x < radius) vx = abs(vx)
                 if (x > width - radius) vx = -abs(vx)
@@ -151,7 +157,7 @@ class CharacterWallpaperService : WallpaperService() {
             try {
                 renderer.draw(canvas, theme, character, x, y, radius, now < happyUntil,
                     timeMillis = now, moving = !dragging, dragging = dragging, facingLeft = vx < 0f,
-                    equipment=equipment,fireAge=if(now<happyUntil) 700L-(happyUntil-now) else -1L)
+                    equipment=equipment,fireAge=if(now<happyUntil) 700L-(happyUntil-now) else -1L,scaleX=motion.scaleX.toFloat(),scaleY=motion.scaleY.toFloat())
             } finally { holder.unlockCanvasAndPost(canvas) }
         }
     }

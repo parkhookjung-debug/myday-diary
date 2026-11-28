@@ -17,7 +17,12 @@
     "EmotionHeight": 288,
     "TextHeight": 250,
     "TodoHeight": 420,
-    "MaxTodoItems": 100
+    "MaxTodoItems": 100,
+    "PetMinThrowSpeed": 140,
+    "PetMaxThrowSpeed": 5200,
+    "PetGravity": 1150,
+    "PetThrowGainPercent": 180,
+    "PetRestitutionPercent": 72
   },
   "chat": {
     "ChatProtocol": 1,

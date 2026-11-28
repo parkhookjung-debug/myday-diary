@@ -7,6 +7,12 @@ import java.time.LocalDate
 import org.json.JSONObject
 
 class FeatureParityTest {
+    @Test fun petThrowFollowsPointerSpeedAndBouncesInsideScreen() {
+        fun thrown(distance:Double):PetMotion {val p=PetMotion();p.right=1000.0;p.bottom=800.0;p.x=500.0;p.y=300.0;p.begin(0.0);p.drag(500+distance,300.0,.05);p.step(.05);assertTrue(p.scaleX>1);p.release(.05);return p}
+        val slow=thrown(20.0);val fast=thrown(60.0);assertTrue(fast.flying);assertEquals(slow.vx*3,fast.vx,1e-6)
+        repeat(1000){fast.step(1.0/120);assertTrue(fast.x in fast.left..fast.right && fast.y in fast.top..fast.bottom)}
+        val stationary=PetMotion();stationary.right=1000.0;stationary.bottom=800.0;stationary.begin(0.0);stationary.drag(100.0,0.0,.02);stationary.release(1.0);assertFalse(stationary.flying)
+    }
     @Test fun checklistKeepsPrioritiesThroughLegacyEditsAndBackup() {
         val old=TodoRules.update(DiaryBlock(type="todo"),listOf(DiaryTodoItem("일기",true,1),DiaryTodoItem("산책",false,2)))
         assertFalse(old.checked)

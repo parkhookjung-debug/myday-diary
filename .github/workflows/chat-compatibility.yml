@@ -104,6 +104,9 @@ jobs:
         if: runner.os == 'macOS'
         working-directory: server/cloudflare
         run: npm run test:native -- ../../macos/build/MyDay.app/Contents/MacOS/MyDay
+      - name: Verify actual offline Mac game view and score persistence
+        if: runner.os == 'macOS'
+        run: macos/build/MyDay.app/Contents/MacOS/MyDay --playroom-test
       - name: Export Mac shared desktop behavior
         if: runner.os == 'macOS'
         run: macos/build/MyDay.app/Contents/MacOS/MyDay --desktop-contract "$PWD/macos/build/desktop-contract.json"

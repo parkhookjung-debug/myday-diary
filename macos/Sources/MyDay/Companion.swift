@@ -253,29 +253,41 @@ extension DiaryStore {
 final class DesktopCompanion {
     static let shared = DesktopCompanion()
     private var panel: NSPanel?
+    let motion=PetMotion()
+    private var timer:Timer?
+    private var sampled=ProcessInfo.processInfo.systemUptime
+    private var grab=CGPoint.zero
+    private var walkingLeft=false
     func show(store: DiaryStore) {
         if panel == nil {
-            let window = NSPanel(contentRect: NSRect(x: 100, y: 100, width: 150, height: 170), styleMask: [.borderless, .nonactivatingPanel], backing: .buffered, defer: false)
+            let window = NSPanel(contentRect: NSRect(x: 100, y: 100, width: 260, height: 270), styleMask: [.borderless, .nonactivatingPanel], backing: .buffered, defer: false)
             window.backgroundColor = .clear
             window.isOpaque = false
             window.hasShadow = false
             window.level = .floating
-            window.isMovableByWindowBackground = true
+            window.isMovableByWindowBackground = false
             window.collectionBehavior = [.canJoinAllSpaces, .fullScreenAuxiliary]
-            window.contentView = NSHostingView(rootView: DesktopPetView(store: store))
+            window.contentView = NSHostingView(rootView: DesktopPetView(store: store,motion:motion))
             panel = window
         }
         panel?.orderFrontRegardless()
+        if let panel{motion.x=panel.frame.origin.x;motion.y = -panel.frame.origin.y;bounds();sampled=ProcessInfo.processInfo.systemUptime;timer?.invalidate();timer=Timer(timeInterval:1.0/30,repeats:true){[weak self] _ in Task{@MainActor in self?.tick()}};RunLoop.main.add(timer!,forMode:.common)}
     }
-    func hide() { panel?.orderOut(nil) }
+    func hide() { panel?.orderOut(nil);timer?.invalidate();timer=nil;motion.cancel() }
+    private func bounds(){guard let panel,let screen=panel.screen ?? NSScreen.main else{return};let area=screen.visibleFrame;motion.left=area.minX;motion.right=max(area.minX,area.maxX-panel.frame.width);motion.top = -area.maxY+panel.frame.height;motion.bottom = -area.minY;motion.constrain()}
+    func drag(){guard let panel else{return};let pointer=NSEvent.mouseLocation,now=ProcessInfo.processInfo.systemUptime;if !motion.held{motion.x=panel.frame.minX;motion.y = -panel.frame.minY;motion.begin(now);grab=CGPoint(x:pointer.x-motion.x,y:-pointer.y-motion.y)};motion.drag(pointer.x-grab.x,-pointer.y-grab.y,now)}
+    func release(){motion.release(ProcessInfo.processInfo.systemUptime)}
+    private func tick(){guard let panel,panel.isVisible else{return};let now=ProcessInfo.processInfo.systemUptime,dt=min(0.05,now-sampled);sampled=now;bounds();motion.step(dt);let phase=Date.timeIntervalSinceReferenceDate.truncatingRemainder(dividingBy:42);motion.moving = !motion.held && !motion.flying && !(30..<31.6).contains(phase) && !(34..<36.4).contains(phase);if motion.moving{motion.x+=(walkingLeft ? -14.0:14.0)*dt;if motion.x>=motion.right{walkingLeft=true};if motion.x<=motion.left{walkingLeft=false};motion.constrain()};panel.setFrameOrigin(NSPoint(x:motion.x,y:-motion.y))}
 }
 
 struct DesktopPetView: View {
     @ObservedObject var store: DiaryStore
+    @ObservedObject var motion:PetMotion
     @Environment(\.openWindow) private var openWindow
     var body: some View {
         VStack(spacing: 0) {
-            SharedSangmonView(companion: store.sharedCompanion,reactionTick: store.reactionTick).frame(width: 126, height: 126)
+            SharedSangmonView(companion: store.sharedCompanion,reactionTick: store.reactionTick,motionRow:motion.held ? 7:motion.flying ? 4:motion.moving ? 1:nil).frame(width: 126, height: 126)
+                .scaleEffect(x:motion.scaleX,y:motion.scaleY).simultaneousGesture(DragGesture(minimumDistance:0).onChanged{_ in DesktopCompanion.shared.drag()}.onEnded{_ in DesktopCompanion.shared.release()})
             Button("일기 열기") {
                 NSApp.activate(ignoringOtherApps: true)
                 openWindow(id: "diary")

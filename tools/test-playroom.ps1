@@ -1,5 +1,7 @@
 $ErrorActionPreference='Stop'
 $root=Split-Path $PSScriptRoot -Parent
+node --check (Join-Path $root 'shared/playroom/view.js')
+if($LASTEXITCODE -ne 0){throw 'Shared playroom view has a JavaScript syntax error'}
 $output=Join-Path $root 'build/playroom-tests'
 New-Item -ItemType Directory -Force -Path $output | Out-Null
 $compiler=Join-Path $env:WINDIR 'Microsoft.NET/Framework64/v4.0.30319/csc.exe'

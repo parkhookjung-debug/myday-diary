@@ -109,8 +109,8 @@ class PhoneNotebookDeviceTest {
         ui.onNodeWithTag("diary-list").performScrollToNode(hasTestTag("add-block"));ui.onNodeWithTag("add-block").performClick();ui.onNodeWithText("사진").performClick()
         ui.onNodeWithTag("diary-list").performScrollToNode(hasContentDescription("일기에 첨부한 사진"));screenshot("android-photo")
         ui.onNodeWithTag("nav-1").performClick();screenshot("android-calendar")
-        ui.onNodeWithText("본문·사진 설명 검색").performTextInput("휴대폰")
-        ui.onNodeWithText("본문·사진 설명 검색").performImeAction()
+        ui.onNodeWithTag("calendar-list").performScrollToNode(hasTestTag("calendar-search"));ui.onNodeWithTag("calendar-search").performTextInput("휴대폰")
+        ui.onNodeWithTag("calendar-search").performImeAction()
         ui.onNodeWithTag("calendar-list").performScrollToNode(hasText("휴대폰에서 쓴 기록"));ui.onNodeWithText("휴대폰에서 쓴 기록").assertExists()
         ui.onNodeWithTag("nav-4").performClick();ui.onNodeWithText("라벤더").performClick();screenshot("android-settings")
         ui.runOnIdle {assertEquals(2,c.entry.theme);NotebookPhoto.validate(c.book)}

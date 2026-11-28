@@ -23,8 +23,9 @@ import java.time.YearMonth
     val keyboard=LocalSoftwareKeyboardController.current
     var month by remember(date) {mutableStateOf(YearMonth.from(date))}
     var query by remember {mutableStateOf("")}
+    var anniversaryEditing by remember {mutableStateOf(false)}
     var page by remember(month,query) {mutableIntStateOf(0)}
-    val rows=remember(book.days,month,query) {book.days.entries.filter {(key,e)->if(query.isBlank()) YearMonth.from(LocalDate.parse(key))==month else e.blocks.any {it.text.contains(query.trim(),true)}}.sortedByDescending {it.key}}
+    val rows=remember(book,month,query) {book.days.entries.filter {(key,e)->if(query.isBlank()) YearMonth.from(LocalDate.parse(key))==month else e.mood.contains(query.trim(),true) || book.studio?.note(key)?.tags.orEmpty().any {it.contains(query.trim(),true)} || e.blocks.any {it.text.contains(query.trim(),true)||it.title.contains(query.trim(),true)}}.sortedByDescending {it.key}}
     LazyColumn(Modifier.fillMaxSize().padding(horizontal=20.dp).testTag("calendar-list"),verticalArrangement=Arrangement.spacedBy(12.dp),contentPadding=PaddingValues(bottom=24.dp)) {
         item {Text("차곡차곡 쌓인 기록",style=MaterialTheme.typography.headlineSmall);Text("기록한 날과 사진을 달력에서 찾아요.")}
         item {Card(colors=CardDefaults.cardColors(containerColor=Color.White)) {Column(Modifier.padding(12.dp)) {
@@ -47,8 +48,8 @@ import java.time.YearMonth
                 }
             }}
         }}}
-        if(onAnniversaries!=null) item {PhoneAnniversaries(book.studio?.anniversaries.orEmpty(),date,onAnniversaries)}
-        item {OutlinedTextField(query,{query=it},label={Text("본문·사진 설명 검색")},modifier=Modifier.fillMaxWidth(),singleLine=true,keyboardOptions=KeyboardOptions(imeAction=ImeAction.Search),keyboardActions=KeyboardActions(onSearch={keyboard?.hide()}))}
+        if(onAnniversaries!=null) item {TextButton({anniversaryEditing=true}){Text("생일 · 기념일 편집")}}
+        item {OutlinedTextField(query,{query=it},label={Text("본문·사진 설명·감정·태그 검색")},modifier=Modifier.fillMaxWidth().testTag("calendar-search"),singleLine=true,keyboardOptions=KeyboardOptions(imeAction=ImeAction.Search),keyboardActions=KeyboardActions(onSearch={keyboard?.hide()}))}
         item {Text("${rows.size}일의 기록",style=MaterialTheme.typography.labelLarge)}
         if(rows.isEmpty()) item {Text("찾은 기록이 없어요. 날짜를 눌러 새로운 하루를 시작해 보세요.")}
         items(rows.drop(page*50).take(50),key={it.key}) {(day,e)->Card(Modifier.fillMaxWidth().clickable {onDate(LocalDate.parse(day))},colors=CardDefaults.cardColors(containerColor=Color.White)) {
@@ -56,5 +57,8 @@ import java.time.YearMonth
                 if(e.blocks.any {it.type=="photo"}) Text("사진 있음",style=MaterialTheme.typography.labelSmall,color=MaterialTheme.colorScheme.primary)}
         }}
         if(rows.size>50) item {Row(Modifier.fillMaxWidth(),horizontalArrangement=Arrangement.SpaceBetween) {TextButton({page--},enabled=page>0) {Text("최근 기록")};Text("${page+1} / ${(rows.size+49)/50}");TextButton({page++},enabled=(page+1)*50<rows.size) {Text("이전 기록")}}}
+    }
+    if(anniversaryEditing && onAnniversaries!=null) androidx.compose.ui.window.Dialog(onDismissRequest={anniversaryEditing=false}) {
+        Surface {Column(Modifier.fillMaxWidth().heightIn(max=600.dp).padding(12.dp)) {TextButton({anniversaryEditing=false}){Text("닫기")};PhoneAnniversaries(book.studio?.anniversaries.orEmpty(),date,onAnniversaries)}}
     }
 }
