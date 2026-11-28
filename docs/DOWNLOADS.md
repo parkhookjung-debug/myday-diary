@@ -117,3 +117,5 @@ Windows 데이터 폴더는 `%LOCALAPPDATA%/MyDay/Windows`, Mac은 `~/Library/Ap
 설치가 안 되면 [GitHub Issues](https://github.com/parkhookjung-debug/myday-diary/issues)에 **기기/OS 버전, 앱 버전, 받은 파일 이름, 표시된 오류 문구**를 남겨 주세요. 공개 문의에 개인 일기·사진이 담긴 백업 파일을 그대로 첨부하지 마세요.
 
 검증: Windows 535개 검사와 네이티브 화면·로컬 채팅, Android 출시 빌드 단위 검사 65개·API35 기기 검사 22개·린트 오류 0개·전용 서명, Mac 네이티브 게임 실행·점수 저장·백업·공통 계약을 확인했습니다. [파일별 출처와 검증 기록](builds/release-0.16.0-2026-11-28.json) · [실제 앱 화면](../previews/common-0.16.0/README.md). Galaxy의 실제 진동 느낌과 Intel Mac 실행을 검증한 것은 아닙니다.
+
+[로그인 없이 공개 파일 10개 다운로드·SHA256 일치 확인](builds/release-0.16.0-public-download-check.json).
