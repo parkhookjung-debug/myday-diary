@@ -1,6 +1,6 @@
-# Android 앱 · 0.16.0 공통 시험판
+# Android 앱 · 0.16.1 공통 시험판
 
-[**Android APK 받기**](https://github.com/parkhookjung-debug/myday-diary/releases/download/v0.16.0-preview/MyDay-Android.apk) · [Galaxy 설치·권한·업데이트 안내](../docs/DOWNLOADS.md#android) · [세 버전 공통 기능](../docs/THREE-PLATFORMS.md)
+[**Android APK 받기**](https://github.com/parkhookjung-debug/myday-diary/releases/download/v0.16.1-preview/MyDay-Android.apk) · [Galaxy 설치·권한·업데이트 안내](../docs/DOWNLOADS.md#android) · [세 버전 공통 기능](../docs/THREE-PLATFORMS.md)
 
 일반 사용자는 Android 8 이상 휴대폰에서 APK를 열어 설치합니다. Android Studio는 소스를 수정할 때만 필요합니다. 기존 APK와 서명 충돌이 있으면 먼저 백업하고, 복원을 확인하기 전 앱을 삭제하지 마세요.
 

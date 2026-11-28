@@ -43,7 +43,8 @@
     "Windows native vector renderer",
     "Android shared sprite renderer and live wallpaper",
     "macOS shared sprite renderer and desktop companion",
-    "Android and macOS bundled playroom"
+    "Android and macOS bundled playroom",
+    "Android home widget static frames"
   ],
   "backupIdentityUnchanged": true
 }

@@ -1,22 +1,24 @@
 # 마이데이 (MyDay)
 
-**상몬과 함께 기록하고 쉬어가는 일기 앱. Android·Mac·Windows의 기능을 0.16.0 공통 버전으로 맞췄습니다.**
+**상몬과 함께 기록하고 쉬어가는 일기 앱. Android·Mac·Windows의 기능을 0.16.1 공통 버전으로 맞췄습니다.**
 
 ## 내 기기에 설치하기
 
-[**앱 다운로드 페이지 → 0.16.0 시험판**](https://github.com/parkhookjung-debug/myday-diary/releases/tag/v0.16.0-preview) · [처음 설치부터 업데이트·오류 해결까지](docs/DOWNLOADS.md)
+[**앱 다운로드 페이지 → 0.16.1 시험판**](https://github.com/parkhookjung-debug/myday-diary/releases/tag/v0.16.1-preview) · [처음 설치부터 업데이트·오류 해결까지](docs/DOWNLOADS.md)
 
 | 기기 | 받을 파일 | 설치 순서 |
 | --- | --- | --- |
-| **Android** · Galaxy 등 Android 8+ | [Android APK 받기](https://github.com/parkhookjung-debug/myday-diary/releases/download/v0.16.0-preview/MyDay-Android.apk) | 휴대폰에서 APK 열기 → 이 파일을 여는 앱의 설치 출처 허용 → 설치·열기 · [상세 안내](docs/DOWNLOADS.md#android) |
-| **Mac** · M1 이상 / macOS 13+ | [Mac ZIP 받기](https://github.com/parkhookjung-debug/myday-diary/releases/download/v0.16.0-preview/MyDay-macOS-arm64.zip) | 압축 풀기 → MyDay.app을 응용 프로그램으로 이동 → 실행 · [첫 실행 확인 안내](docs/DOWNLOADS.md#mac) |
-| **Windows** · 10/11 / .NET Framework 4.8+ | [Windows EXE 받기](https://github.com/parkhookjung-debug/myday-diary/releases/download/v0.16.0-preview/MyDay-Windows.exe) | EXE 실행 → 상몬 클릭 / 알림 영역에서 일기 열기 · [상세 안내](docs/DOWNLOADS.md#windows) |
+| **Android** · Galaxy 등 Android 8+ | [Android APK 받기](https://github.com/parkhookjung-debug/myday-diary/releases/download/v0.16.1-preview/MyDay-Android.apk) | 휴대폰에서 APK 열기 → 이 파일을 여는 앱의 설치 출처 허용 → 설치·열기 · [상세 안내](docs/DOWNLOADS.md#android) |
+| **Mac** · M1 이상 / macOS 13+ | [Mac ZIP 받기](https://github.com/parkhookjung-debug/myday-diary/releases/download/v0.16.1-preview/MyDay-macOS-arm64.zip) | 압축 풀기 → MyDay.app을 응용 프로그램으로 이동 → 실행 · [첫 실행 확인 안내](docs/DOWNLOADS.md#mac) |
+| **Windows** · 10/11 / .NET Framework 4.8+ | [Windows EXE 받기](https://github.com/parkhookjung-debug/myday-diary/releases/download/v0.16.1-preview/MyDay-Windows.exe) | EXE 실행 → 상몬 클릭 / 알림 영역에서 일기 열기 · [상세 안내](docs/DOWNLOADS.md#windows) |
 
 일반 사용자는 **위 파일 하나**만 받으면 됩니다. GitHub 로그인·개발 도구는 필요하지 않습니다. `Source code.zip`은 설치 파일이 아닙니다. 이번 지원 대상은 **Android·Mac·Windows 3종**이며 iOS와 Intel Mac 실행 파일은 제공하지 않습니다. Mac 시험판은 Apple 공증 전입니다.
 
 **기존 사용자는 먼저 공통 백업을 저장하세요.** Windows는 알림 영역의 **모두 종료**, Mac은 **종료/⌘Q** 뒤 새 앱으로 교체합니다. Android는 새 APK로 덮어 설치하며, 서명 충돌이 나오면 백업 복원을 확인하기 전 기존 앱을 삭제하지 마세요. [데이터 보존·업데이트 방법](docs/DOWNLOADS.md#기존-기록을-보존하며-업데이트).
 
-**0.16.1 개발판에는 영상 속 새 상몬을 적용했습니다.** 통통한 몸통·점눈·짧은 발·새 입선이 세 앱의 같은 동작으로 이어집니다. [실제 적용 화면과 수정 원본](previews/applied/sangmon-plump-clay/README.md). 아래 다운로드는 검증된 배포판이며 새 설치 파일은 검사 후 갱신합니다.
+**0.16.1에는 영상 속 새 상몬을 적용했습니다.** 통통한 몸통·점눈·짧은 발·새 입선이 세 앱의 같은 동작으로 이어집니다. [실제 적용 화면과 수정 원본](previews/applied/sangmon-plump-clay/README.md).
+
+![새 기본 상몬](previews/applied/sangmon-plump-clay/sangmon.png)
 
 ## 세 버전에서 같은 일을 할 수 있어요
 
@@ -28,7 +30,7 @@
 
 영상은 **원본 파일을 연결**하며 백업에는 경로와 설명만 담습니다. 기기를 바꾸면 원본 영상을 다시 고릅니다. 글·사진·할 일·기념일·좌표·성장은 공통 JSON으로 옮깁니다. 게임 점수는 각 기기에 별도 보관하고, 자동 클라우드 동기화는 하지 않습니다.
 
-[실제 앱 화면](previews/common-0.16.0/README.md) · [공통 기능 전체·세 OS의 조작·수정 파일](docs/THREE-PLATFORMS.md) · [사용자 설명서](docs/USER-MANUAL.md) · [간소화 정책](docs/FOCUSED-APP.md)
+[새 상몬 실제 적용 화면](previews/applied/sangmon-plump-clay/README.md) · [공통 기능 전체·세 OS의 조작·수정 파일](docs/THREE-PLATFORMS.md) · [사용자 설명서](docs/USER-MANUAL.md) · [간소화 정책](docs/FOCUSED-APP.md)
 
 변신·코디·옷장·뽑기·재화·합성 화면은 제거한 상태를 유지합니다. 예전 데이터는 백업 호환용으로 보존합니다. 카카오 SDK·인증/공유 원본은 유지하지만 공개 서버 연결은 꺼져 있습니다. 로컬 채팅을 제외한 일기·게임은 서버 없이 실행합니다.
 

@@ -1,6 +1,6 @@
-# MyDay Windows · 0.16.0 시험판
+# MyDay Windows · 0.16.1 시험판
 
-**[최신 Windows 실행 파일 받기](https://github.com/parkhookjung-debug/myday-diary/releases/download/v0.16.0-preview/MyDay-Windows.exe)** · [세 플랫폼 다운로드/업데이트](../docs/DOWNLOADS.md) · [릴리스 소스](https://github.com/parkhookjung-debug/myday-diary/tree/v0.16.0-preview)
+**[최신 Windows 실행 파일 받기](https://github.com/parkhookjung-debug/myday-diary/releases/download/v0.16.1-preview/MyDay-Windows.exe)** · [세 플랫폼 다운로드/업데이트](../docs/DOWNLOADS.md) · [릴리스 소스](https://github.com/parkhookjung-debug/myday-diary/tree/v0.16.1-preview)
 
 기존 앱을 알림 영역의 **모두 종료**로 완전히 종료한 뒤 새 EXE를 실행합니다. Windows 10/11과 .NET Framework 4.8 이상이 필요합니다. 소스 빌드는 `./windows/build.ps1`이고 테스트는 `windows/bin/MyDay.exe --self-test`입니다.
 
@@ -14,7 +14,7 @@
 - 간식 산책·슬링샷·낚시·통통 점프·불꽃 요리·상몬 블록 쌓기·상몬 블록 퍼즐과 바탕화면 공놀이.
 - 자동 저장·변경 이력·휴지통·백업/복구·기기 간 전송·로컬 채팅.
 
-상몬 게임 ▾에서 바로 고릅니다. [게임만 실행](https://github.com/parkhookjung-debug/myday-diary/releases/download/v0.16.0-preview/SangmonGame.exe) · [공놀이 바로 시작](https://github.com/parkhookjung-debug/myday-diary/releases/download/v0.16.0-preview/SangmonFetch.exe). 게임 점수는 일기 경험치와 별도입니다. 변신·코디·뽑기·재화·합성 UI는 간소화 정책에 따라 제공하지 않습니다. 카카오 SDK 원본은 보존하고 공개 서버 연결은 비활성입니다.
+상몬 게임 ▾에서 바로 고릅니다. [게임만 실행](https://github.com/parkhookjung-debug/myday-diary/releases/download/v0.16.1-preview/SangmonGame.exe) · [공놀이 바로 시작](https://github.com/parkhookjung-debug/myday-diary/releases/download/v0.16.1-preview/SangmonFetch.exe). 게임 점수는 일기 경험치와 별도입니다. 변신·코디·뽑기·재화·합성 UI는 간소화 정책에 따라 제공하지 않습니다. 카카오 SDK 원본은 보존하고 공개 서버 연결은 비활성입니다.
 
 ## 수정할 파일
 
