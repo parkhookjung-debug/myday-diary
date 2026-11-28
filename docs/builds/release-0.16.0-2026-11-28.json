@@ -1,0 +1,140 @@
+{
+  "format": "myday-native-release",
+  "appVersion": "0.16.0",
+  "date": "2026-11-28",
+  "releaseTag": "v0.16.0-preview",
+  "releasePage": "https://github.com/parkhookjung-debug/myday-diary/releases/tag/v0.16.0-preview",
+  "files": [
+    {
+      "file": "DeviceQr.LICENSE.txt",
+      "platform": "license",
+      "bytes": 1205,
+      "sha256": "55f720c0a9f7c3d009feebc2cbb59dd5f4f4f26c20cee473200a0207f1997b4c",
+      "sourceCommit": "25fa13d2e4e4e7848a47e9f4ac576bda6b2b1a00",
+      "ci": null,
+      "url": "https://github.com/parkhookjung-debug/myday-diary/releases/download/v0.16.0-preview/DeviceQr.LICENSE.txt"
+    },
+    {
+      "file": "LICENSE.txt",
+      "platform": "license",
+      "bytes": 1075,
+      "sha256": "9c12d9fd06bd450c28856c4583dbee7bbd2e580ebf708cb75c3f51e844024ba7",
+      "sourceCommit": "25fa13d2e4e4e7848a47e9f4ac576bda6b2b1a00",
+      "ci": null,
+      "url": "https://github.com/parkhookjung-debug/myday-diary/releases/download/v0.16.0-preview/LICENSE.txt"
+    },
+    {
+      "file": "MyDay-Android.apk",
+      "platform": "android",
+      "bytes": 11653217,
+      "sha256": "1c49efa63c647c50e4cb85b525bb226f2fb80ecba2f58775b17f20ec63ed1451",
+      "sourceCommit": "25fa13d2e4e4e7848a47e9f4ac576bda6b2b1a00",
+      "ci": "https://github.com/parkhookjung-debug/myday-diary/actions/runs/46144233536",
+      "url": "https://github.com/parkhookjung-debug/myday-diary/releases/download/v0.16.0-preview/MyDay-Android.apk"
+    },
+    {
+      "file": "MyDay-macOS-arm64.zip",
+      "platform": "macos",
+      "bytes": 2065692,
+      "sha256": "66e0e32103825adaf612fe4b8d3ba08f2ef9f4a6252099ff9f4f34e64d347b3d",
+      "sourceCommit": "25fa13d2e4e4e7848a47e9f4ac576bda6b2b1a00",
+      "ci": "https://github.com/parkhookjung-debug/myday-diary/actions/runs/46144227668",
+      "url": "https://github.com/parkhookjung-debug/myday-diary/releases/download/v0.16.0-preview/MyDay-macOS-arm64.zip"
+    },
+    {
+      "file": "MyDay-Windows.exe",
+      "platform": "windows",
+      "bytes": 811008,
+      "sha256": "617558111e71bb21861a64353f8b5057edbf8e66b101028d224e7c000b7bc675",
+      "sourceCommit": "0a52f207bee98ebfccaae7b22fed486465c45c5e",
+      "ci": "https://github.com/parkhookjung-debug/myday-diary/actions/runs/46123765373",
+      "url": "https://github.com/parkhookjung-debug/myday-diary/releases/download/v0.16.0-preview/MyDay-Windows.exe"
+    },
+    {
+      "file": "SangmonBlockPuzzle.exe",
+      "platform": "windows",
+      "bytes": 811008,
+      "sha256": "617558111e71bb21861a64353f8b5057edbf8e66b101028d224e7c000b7bc675",
+      "sourceCommit": "0a52f207bee98ebfccaae7b22fed486465c45c5e",
+      "ci": "https://github.com/parkhookjung-debug/myday-diary/actions/runs/46123765373",
+      "url": "https://github.com/parkhookjung-debug/myday-diary/releases/download/v0.16.0-preview/SangmonBlockPuzzle.exe"
+    },
+    {
+      "file": "SangmonFetch.exe",
+      "platform": "windows",
+      "bytes": 811008,
+      "sha256": "617558111e71bb21861a64353f8b5057edbf8e66b101028d224e7c000b7bc675",
+      "sourceCommit": "0a52f207bee98ebfccaae7b22fed486465c45c5e",
+      "ci": "https://github.com/parkhookjung-debug/myday-diary/actions/runs/46123765373",
+      "url": "https://github.com/parkhookjung-debug/myday-diary/releases/download/v0.16.0-preview/SangmonFetch.exe"
+    },
+    {
+      "file": "SangmonGame.exe",
+      "platform": "windows",
+      "bytes": 811008,
+      "sha256": "617558111e71bb21861a64353f8b5057edbf8e66b101028d224e7c000b7bc675",
+      "sourceCommit": "0a52f207bee98ebfccaae7b22fed486465c45c5e",
+      "ci": "https://github.com/parkhookjung-debug/myday-diary/actions/runs/46123765373",
+      "url": "https://github.com/parkhookjung-debug/myday-diary/releases/download/v0.16.0-preview/SangmonGame.exe"
+    }
+  ],
+  "platformBuildSources": {
+    "windows": "0a52f207bee98ebfccaae7b22fed486465c45c5e",
+    "macos": "25fa13d2e4e4e7848a47e9f4ac576bda6b2b1a00",
+    "android": "25fa13d2e4e4e7848a47e9f4ac576bda6b2b1a00"
+  },
+  "checks": {
+    "windowsAssertions": 535,
+    "windowsNativeDiaryGamesAndLocalChat": true,
+    "androidReleaseJvmTests": 65,
+    "androidApi35DeviceTests": 22,
+    "androidLintErrors": 0,
+    "androidReleaseSignatureVerified": true,
+    "macNativeBuildAndPlayroom": true,
+    "macWindowsCommonContractsAndBackup": true,
+    "sevenGameReplaySnapshots": 155,
+    "sevenGameReplayMatchesWindows": true,
+    "focusedAssetsOnly": true,
+    "manualActualWindowsKotlinWindowsV10VideoAndChecklistRoundtrip": true,
+    "androidDeviceCi": "https://github.com/parkhookjung-debug/myday-diary/actions/runs/46144230584"
+  },
+  "commonFeatures": [
+    "diary",
+    "photos",
+    "local-video-reference",
+    "multi-item-checklist-priority",
+    "anniversaries",
+    "calendar-search",
+    "templates-100",
+    "free-layout",
+    "attendance-growth",
+    "backup-1-10",
+    "local-chat",
+    "seven-games",
+    "daily-snacks",
+    "fetch"
+  ],
+  "androidSigning": {
+    "type": "project-preview-release",
+    "fixedSince": "0.16.0",
+    "certificateSha256": "1ac43e689b7f7e8b1da74ccc8efeefbfc2584ce7a35f3b8d1023e3bf92190a07",
+    "oldDebugApkMayRequireVerifiedBackupMigration": true
+  },
+  "character": {
+    "current": "existing original ivory clay",
+    "atlasSha256": "2f9ee46eecec4d20d4b46e068ced23778e818594b86a7aa59a641a6cfde7ebc0",
+    "newReferenceVideoDesignApplied": false
+  },
+  "limitations": {
+    "macAppleSiliconOnly": true,
+    "appleNotarized": false,
+    "iosProvided": false,
+    "videoBytesIncludedInDiaryBackup": false,
+    "gameScoresIncludedInDiaryBackup": false,
+    "automaticCloudSync": false,
+    "publicKakaoServerEnabled": false
+  },
+  "mainAppCodeMerged": false,
+  "cloudDeployed": false,
+  "sourceNote": "Every file records its actual successful build source. Windows source files are unchanged by the later Mac WebKit verification and Android local-transfer fixes; the release tag may include documentation-only provenance updates."
+}
