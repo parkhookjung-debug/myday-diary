@@ -65,6 +65,7 @@ enum MacVerification {
         try LoungeVerification.addresses()
         let root = FileManager.default.temporaryDirectory.appendingPathComponent("MyDay-check-\(UUID())")
         defer { try? FileManager.default.removeItem(at: root) }
+        try FeatureParityVerification.run(root:root)
         try QualityVerification.run(root)
         let directory = root.appendingPathComponent("MyDay")
         let store = DiaryStore(directory: directory)

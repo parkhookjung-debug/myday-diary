@@ -111,8 +111,9 @@ final class DiaryStore: ObservableObject {
             let old = before.first { $0.id == block.id }
             let textChanged = old?.text != block.text && !block.text.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
             let photoChanged = old?.photo != block.photo && block.photo != nil
-            let checked = (block.kind == .todo || block.kind == .habit) && block.checked && old?.checked != true
-            return textChanged || photoChanged || checked
+            let videoChanged = old?.videoPath != block.videoPath && block.videoPath != nil
+            let checked = block.kind == .todo ? TodoRules.newlyCompleted(block,old) : block.kind == .habit && block.checked && old?.checked != true
+            return textChanged || photoChanged || videoChanged || checked
         }
         if pendingActivity && pendingBaseline == nil { pendingBaseline = before }
         save()

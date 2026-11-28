@@ -146,11 +146,13 @@ struct PositionedDiaryCard: View {
                         Text("영상은 이 Mac의 원본 파일을 참조하며 공통 백업에는 파일 자체가 포함되지 않아요.").font(.caption2).foregroundStyle(.secondary)
                         Button(block.videoPath == nil ? "영상 선택…" : "영상 바꾸기…") { store.chooseVideo(block.id) }
                     }
-                    TextEditor(text: text).font(.body).scrollContentBackground(.hidden)
+                    if block.kind == .todo {TodoListView(store:store,id:block.id)}
+                    else {TextEditor(text: text).font(.body).scrollContentBackground(.hidden)
                         .frame(height: max(70, CGFloat(displayed.height) - (block.prompt == nil ? 110 : 145) - (block.kind == .photo ? 170 : 0) - (block.kind == .video ? 230 : 0)))
                         .padding(6).background(Color.black.opacity(0.025), in: RoundedRectangle(cornerRadius: 8))
                         .accessibilityLabel(block.kind == .photo || block.kind == .photoSlot ? "사진 설명" : block.kind == .video ? "영상 설명" : "\(block.title ?? block.kind.title) 본문")
-                    if block.kind == .todo || block.kind == .habit {
+                    }
+                    if block.kind == .habit {
                         Toggle("오늘 완료했어요", isOn: Binding(get: { store.entry.blocks.first(where: { $0.id == block.id })?.checked ?? false }, set: { value in
                             store.update { entry in
                                 if let index = entry.blocks.firstIndex(where: { $0.id == block.id }) { entry.blocks[index].checked = value }

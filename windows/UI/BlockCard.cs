@@ -23,6 +23,7 @@ namespace MyDay.Windows.UI
         private Label todoHint;
         private Button todoAdd;
         private bool syncingTodo;
+        private readonly VideoAttachment video;
         private readonly Color todoHeaderFill;
         internal readonly PhotoView Photo;
         internal readonly Button ReplacePhoto;
@@ -34,7 +35,7 @@ namespace MyDay.Windows.UI
             todoHeaderFill=TodoHeaderColor(theme);
             Fill = block.Kind == "emotion" ? Design.Tint : pageStyle=="paper"?Design.Paper:Color.White;
             bool isPhoto=block.Kind=="photo" || block.Kind=="photo-slot";
-            string name = isPhoto ? "사진 기록" : block.Kind == "text" ? "오늘의 일기" : block.Kind == "todo" ? "To Do List" : block.Kind == "habit" ? "습관 체크" : "감정처리반";
+            string name = isPhoto ? "사진 기록" : block.Kind=="video" ? "영상 기록" : block.Kind == "text" ? "오늘의 일기" : block.Kind == "todo" ? "To Do List" : block.Kind == "habit" ? "습관 체크" : "감정처리반";
             if(!string.IsNullOrWhiteSpace(block.Title)) name=block.Title;
             caption = isPhoto ? "PHOTO MOMENT" : block.Kind == "text" ? "DAILY JOURNAL" : block.Kind == "todo" ? "CHECK LIST · PRIORITY" : block.Kind == "habit" ? "HABIT TRACKER" : "DEAR SANGMON";
             DragHandle.Location=Design.Point(8,12); DragHandle.Height=Design.P(56); DragHandle.BackColor=Fill; Controls.Add(DragHandle);
@@ -52,6 +53,7 @@ namespace MyDay.Windows.UI
                 MaxLength=DesktopContract.MaxTextUtf16, Text=block.Text, AccessibleName=name+" 내용", Location=Design.Point(24,78),
                 Anchor=AnchorStyles.Top|AnchorStyles.Bottom|AnchorStyles.Left|AnchorStyles.Right };
             Controls.Add(Editor);
+            if(block.Kind=="video"){video=new VideoAttachment(block,changed);Controls.Add(video);}
             if(block.Kind=="todo") {
                 DiaryTodos.Normalize(block);
                 todoInput=new TextBox { Font=Design.Font(10),ForeColor=Design.Ink,BackColor=Fill,BorderStyle=BorderStyle.FixedSingle,MaxLength=DesktopContract.MaxTextUtf16,AccessibleName="새 할 일 입력",AccessibleDescription="할 일을 입력하고 Enter 또는 추가 버튼을 누르세요.",Location=Design.Point(24,78),Height=Design.P(26),Anchor=AnchorStyles.Top|AnchorStyles.Left|AnchorStyles.Right };
@@ -127,6 +129,7 @@ namespace MyDay.Windows.UI
                     Photo.Bounds=new Rectangle(Design.P(24),Design.P(73),Math.Max(Design.P(80),Width-Design.P(48)),photoHeight);
                     Editor.Bounds=new Rectangle(Design.P(24),Photo.Bottom+Design.P(8),Photo.Width,Math.Max(Design.P(25),Height-Photo.Bottom-Design.P(56)));
                 }
+                if(video!=null){video.Bounds=new Rectangle(Design.P(24),Design.P(75),Math.Max(Design.P(100),Width-Design.P(48)),Design.P(108));Editor.Bounds=new Rectangle(Design.P(24),video.Bottom+Design.P(8),video.Width,Math.Max(Design.P(20),Height-video.Bottom-Design.P(55)));}
                 if(todoList!=null) {
                     todoInput.Bounds=new Rectangle(Design.P(24),Design.P(78),Math.Max(Design.P(70),Width-Design.P(104)),Design.P(26));
                     todoHint.Location=new Point(Design.P(31),Design.P(82));
@@ -154,6 +157,7 @@ namespace MyDay.Windows.UI
             DragHandle.Cursor=title.Cursor=hint.Cursor=editing?Cursors.SizeAll:Cursors.Default;
             ResizeHandle.Cursor=Cursors.SizeNWSE; Editor.ReadOnly=editing;
             if(ReplacePhoto!=null) ReplacePhoto.Enabled=!editing;
+            if(video!=null)video.Enabled=!editing;
             if(todoInput!=null) { todoInput.Enabled=!editing; todoAdd.Enabled=!editing; }
             if(todoList!=null) todoList.Enabled=!editing;
             if(todoHint!=null) todoHint.Visible=!editing && todoInput.Text.Length==0 && !todoInput.Focused;

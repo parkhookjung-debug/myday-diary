@@ -39,6 +39,7 @@ struct MacBackup: Codable {
                     guard photo.count <= 10_000_000, NSImage(data: photo) != nil else { throw CocoaError(.fileReadCorruptFile) }
                 }
                 if let path = block.videoPath { try WindowsCompatibility.checkVideoPath(path) }
+                if block.kind == .todo {_ = try TodoRules.items(block)}
             }
         }
     }
@@ -92,14 +93,14 @@ extension DiaryStore {
 
     func rewardActivity() {
         guard profileLoaded, pendingActivity else { return }
-        let active = entry.blocks.contains { !$0.text.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty || $0.photo != nil || (($0.kind == .todo || $0.kind == .habit) && $0.checked) }
+        let active = entry.blocks.contains { !$0.text.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty || $0.photo != nil || $0.videoPath != nil || (($0.kind == .todo || $0.kind == .habit) && $0.checked) }
         guard active else { return }
         let prior = Dictionary(uniqueKeysWithValues: (pendingBaseline ?? []).map { ($0.id, $0) })
         var flags = 0
         let text = entry.blocks.filter { $0.kind == .text || $0.kind == .emotion }
         if text.reduce(0, { $0 + $1.text.unicodeScalars.filter { !CharacterSet.whitespacesAndNewlines.contains($0) }.reduce(0) { $0 + ($1.value > 0xffff ? 2 : 1) } }) >= 20 && text.contains(where: { prior[$0.id]?.text != $0.text }) { flags |= 2 }
         if entry.blocks.contains(where: { $0.photo != nil && prior[$0.id]?.photo != $0.photo }) { flags |= 4 }
-        if entry.blocks.contains(where: { $0.kind == .todo && $0.checked && prior[$0.id]?.checked != true }) { flags |= 8 }
+        if entry.blocks.contains(where: { $0.kind == .todo && TodoRules.newlyCompleted($0,prior[$0.id]) }) { flags |= 8 }
         if entry.blocks.contains(where: { $0.kind == .habit && $0.checked && prior[$0.id]?.checked != true }) { flags |= 16 }
         commitShared { try $0.addFlags(flags, date: Self.todayKey(), record: true) }
         if error == nil { pendingActivity = false; pendingBaseline = nil }

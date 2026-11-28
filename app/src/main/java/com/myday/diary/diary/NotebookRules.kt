@@ -13,9 +13,9 @@ object NotebookRules {
     const val MAX_WIDTH = 1600
     const val MIN_HEIGHT = 180
     const val MAX_HEIGHT = 1400
-    val kinds = setOf("text", "todo", "habit", "emotion", "photo", "photo-slot")
-    fun meaningful(b: DiaryBlock) = b.text.isNotBlank() || b.type == "photo" && !b.photo.isNullOrEmpty() || b.type in setOf("todo", "habit") && b.checked
-    fun record(entry: DiaryEntry) = entry.blocks.filter(::meaningful).associate {it.id to listOf(it.type,it.text,it.checked,it.photo)}
+    val kinds = setOf("text", "todo", "habit", "emotion", "photo", "photo-slot", "video")
+    fun meaningful(b: DiaryBlock) = b.text.isNotBlank() || b.type=="video" && b.videoPath!=null || b.type == "photo" && !b.photo.isNullOrEmpty() || b.type in setOf("todo", "habit") && b.checked
+    fun record(entry: DiaryEntry) = entry.blocks.filter(::meaningful).associate {it.id to listOf(it.type,it.text,it.checked,it.photo,it.videoPath,if(it.type=="todo") TodoRules.items(it).map {t->t.text to t.checked} else null)}
     const val ATTENDANCE=1;const val WRITING=2;const val PHOTO=4;const val TODO=8;const val HABIT=16
     val goals=listOf(ATTENDANCE,WRITING,PHOTO,TODO,HABIT)
     fun points(flag: Int)=if(flag==WRITING) 10 else 5
@@ -51,14 +51,14 @@ object NotebookRules {
         val text=next.blocks.filter {it.type in setOf("text","emotion")}
         if(text.sumOf {it.text.count {c->!c.isWhitespace()}}>=20 && text.any {old[it.id]?.text!=it.text || old[it.id]?.type!=it.type})flags=flags or WRITING
         if(next.blocks.any {it.type=="photo" && !it.photo.isNullOrEmpty() && old[it.id]?.photo!=it.photo})flags=flags or PHOTO
-        if(next.blocks.any {it.type=="todo" && it.checked && (old[it.id]?.checked!=true || old[it.id]?.type!=it.type)})flags=flags or TODO
+        if(next.blocks.any {it.type=="todo" && TodoRules.newlyCompleted(it,old[it.id])})flags=flags or TODO
         if(next.blocks.any {it.type=="habit" && it.checked && (old[it.id]?.checked!=true || old[it.id]?.type!=it.type)})flags=flags or HABIT
         val key=day.toString();val awarded=if(candidate.awardedDays.size<50000) candidate.awardedDays+key else candidate.awardedDays
         val activities=if(flags!=0 && (key in candidate.activities || candidate.activities.size<50000))candidate.activities+(key to ((candidate.activities[key] ?: 0) or flags)) else candidate.activities
         return candidate.copy(awardedDays=awarded,activities=activities)
     }
     fun bound(b: DiaryBlock) = b.copy(x=b.x.coerceIn(0,MAX_POSITION),y=b.y.coerceIn(0,MAX_POSITION),
-        width=(if(b.width==0) 350 else b.width).coerceIn(MIN_WIDTH,MAX_WIDTH),height=(if(b.height==0) when(b.type) {"photo","photo-slot"->360;"emotion"->288;"todo"->SharedTodo.TodoHeight;else->250} else b.height).coerceIn(MIN_HEIGHT,MAX_HEIGHT))
+        width=(if(b.width==0) 350 else b.width).coerceIn(MIN_WIDTH,MAX_WIDTH),height=(if(b.height==0) when(b.type) {"photo","photo-slot","video"->360;"emotion"->288;"todo"->SharedTodo.TodoHeight;else->250} else b.height).coerceIn(MIN_HEIGHT,MAX_HEIGHT))
     fun arrange(entry: DiaryEntry): DiaryEntry {
         var y=12
         return entry.copy(blocks=entry.blocks.map { b -> bound(b.copy(x=12,y=y,width=if(b.wide) 876 else 420)).also {y+=it.height+16} })
@@ -83,12 +83,12 @@ object NotebookRules {
             bound(b).copy(x=12,y=y,width=if(b.wide) 876 else 420).also {y+=it.height+16}
         })
         return SavedLayout(name=name.trim(),mode=entry.layoutMode,style=entry.pageStyle,theme=entry.theme,
-            blocks=positions.blocks.map {it.copy(id="",type=if(it.type=="photo") "photo-slot" else it.type,text="",checked=false,photo=null,todoItems=null)})
+            blocks=positions.blocks.map {it.copy(id="",type=if(it.type=="photo") "photo-slot" else it.type,text="",checked=false,photo=null,videoPath=null,todoItems=null)})
     }
     fun apply(entry: DiaryEntry, layout: SavedLayout): DiaryEntry {
         val fresh=entry.blocks.isEmpty()
         val target=if(fresh) entry.copy(theme=layout.theme,pageStyle=layout.style,layoutMode=layout.mode) else entry
-        return append(target,layout.blocks.map {it.copy(id=UUID.randomUUID().toString(),text="",checked=false,photo=null,todoItems=null)})
+        return append(target,layout.blocks.map {it.copy(id=UUID.randomUUID().toString(),text="",checked=false,photo=null,videoPath=null,todoItems=null)})
     }
     fun merge(current: DiaryBook, incoming: DiaryBook): DiaryBook {
         val layouts=current.layouts.toMutableList()
@@ -109,7 +109,7 @@ object NotebookRules {
     }
     fun validate(book: DiaryBook) {
         book.studio?.validate()
-        require(book.version in 1..9 && book.days.size<=50000 && book.layouts.size<=MAX_LAYOUTS && book.awardedDays.size<=50000 && book.activities.size<=50000) {"지원하지 않거나 너무 큰 기록 파일이에요."}
+        require(book.version in 1..10 && book.days.size<=50000 && book.layouts.size<=MAX_LAYOUTS && book.awardedDays.size<=50000 && book.activities.size<=50000) {"지원하지 않거나 너무 큰 기록 파일이에요."}
         require(book.characterStyle in SangmonIdentity.levels && xp(book)>=SangmonUnlockXP.values.getValue(book.characterStyle))
         book.awardedDays.forEach {require(LocalDate.parse(it).year in 1..9999)}
         book.activities.forEach {(date,flags)->require(LocalDate.parse(date).year in 1..9999 && flags in 1..31)}
@@ -128,7 +128,7 @@ object NotebookRules {
                 }
                 require(b.x in 0..MAX_POSITION && b.y in 0..MAX_POSITION)
                 require(b.width==0 || b.width in MIN_WIDTH..MAX_WIDTH);require(b.height==0 || b.height in MIN_HEIGHT..MAX_HEIGHT)
-                require(b.type!="photo" || !b.photo.isNullOrEmpty()); require(b.type=="photo" || b.photo==null)
+                require(b.videoPath==null || b.type=="video" && VideoRules.validReference(b.videoPath));require(b.type!="photo" || !b.photo.isNullOrEmpty()); require(b.type=="photo" || b.photo==null)
             }
         }
         require(book.layouts.map {it.id}.distinct().size==book.layouts.size)

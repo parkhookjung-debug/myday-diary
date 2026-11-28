@@ -102,8 +102,9 @@ import java.time.LocalDate
                         Text("차곡차곡, 오늘의 실천",style=MaterialTheme.typography.titleSmall)
                         if(controller.reaction.isNotEmpty()) Text(controller.reaction,style=MaterialTheme.typography.bodySmall,color=AppPalette.olive)
                         listOf("todo" to "할 일","habit" to "습관").forEach {(kind,title)->val tasks=entry.blocks.filter {it.type==kind}
-                            Row(Modifier.fillMaxWidth(),horizontalArrangement=Arrangement.SpaceBetween) {Text(title);Text("${tasks.count {it.checked}} / ${tasks.size}")}
-                            LinearProgressIndicator(progress={if(tasks.isEmpty()) 0f else tasks.count {it.checked}.toFloat()/tasks.size},modifier=Modifier.fillMaxWidth().padding(top=6.dp,bottom=10.dp))
+                            val counts=if(kind=="todo") tasks.flatMap {TodoRules.items(it)}.let {it.count {t->t.checked} to it.size} else tasks.count {it.checked} to tasks.size
+                            Row(Modifier.fillMaxWidth(),horizontalArrangement=Arrangement.SpaceBetween) {Text(title);Text("${counts.first} / ${counts.second}")}
+                            LinearProgressIndicator(progress={if(counts.second==0) 0f else counts.first.toFloat()/counts.second},modifier=Modifier.fillMaxWidth().padding(top=6.dp,bottom=10.dp))
                         }
                     }}}
                     item {FlowRow(horizontalArrangement=Arrangement.spacedBy(8.dp)) {
@@ -120,7 +121,7 @@ import java.time.LocalDate
                         onDelete={deleting=block.id},onPhoto={onPhoto(block.id)},canMoveUp=index>0,canMoveDown=index<entry.blocks.lastIndex)}
                     item {Text("감정처리반은 마음을 적어 보관하는 공간이에요.",style=MaterialTheme.typography.bodySmall)}
                 }
-                1->PhoneCalendar(controller.book,date) {next->attempt(TactileEvent.SELECT) {controller.selectDate(next);if(controller.saved) tab=0}}
+                1->PhoneCalendar(controller.book,date,onAnniversaries={rows->controller.configure {it.copy(studio=(it.studio ?: StudioData()).copy(anniversaries=rows))}}) {next->attempt(TactileEvent.SELECT) {controller.selectDate(next);if(controller.saved) tab=0}}
                 2->PhoneCompanion(controller,catalog,haptics,attempt)
                 3->PhoneCommunity(controller)
                 else->LazyColumn(Modifier.fillMaxSize().padding(horizontal=20.dp),verticalArrangement=Arrangement.spacedBy(14.dp),contentPadding=PaddingValues(top=14.dp,bottom=24.dp)) {

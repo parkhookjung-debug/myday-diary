@@ -149,9 +149,9 @@ struct DiaryView: View {
         VStack(alignment:.leading,spacing:13){
             Label("오늘의 작은 실천",systemImage:"flag.fill").font(.headline).foregroundStyle(DesktopPalette.olive)
             ForEach([BlockKind.todo,.habit],id:\.rawValue){kind in
-                let tasks=store.entry.blocks.filter{$0.kind==kind};let done=tasks.filter(\.checked).count
-                HStack{Text(kind == .todo ? "할 일":"습관").font(.callout);Spacer();Text("\(done) / \(tasks.count)").font(.callout).monospacedDigit()}
-                GeometryReader{geometry in ZStack(alignment:.leading){Capsule().fill(DesktopPalette.soft);Capsule().fill(DesktopPalette.progress).frame(width:max(6,geometry.size.width*CGFloat(done)/CGFloat(max(1,tasks.count))))}}.frame(height:7)
+                let tasks=store.entry.blocks.filter{$0.kind==kind};let todo=tasks.flatMap{(try? TodoRules.items($0)) ?? []};let done=kind == .todo ? todo.filter(\.checked).count:tasks.filter(\.checked).count;let count=kind == .todo ? todo.count:tasks.count
+                HStack{Text(kind == .todo ? "할 일":"습관").font(.callout);Spacer();Text("\(done) / \(count)").font(.callout).monospacedDigit()}
+                GeometryReader{geometry in ZStack(alignment:.leading){Capsule().fill(DesktopPalette.soft);Capsule().fill(DesktopPalette.progress).frame(width:max(6,geometry.size.width*CGFloat(done)/CGFloat(max(1,count))))}}.frame(height:7)
             }
             if store.entry.blocks.allSatisfy({$0.kind != .habit}){Text("등록된 습관이 없어요.").font(.caption).foregroundStyle(DesktopPalette.muted)}
         }.padding(18).frame(maxWidth:520,minHeight:180,alignment:.topLeading).background(DesktopPalette.paper.opacity(0.82),in:RoundedRectangle(cornerRadius:16)).overlay(RoundedRectangle(cornerRadius:16).stroke(DesktopPalette.soft,lineWidth:1))
@@ -197,11 +197,13 @@ struct CompanionWardrobe: View {
 
 struct CompanionContent: View {
     @ObservedObject var store: DiaryStore
+    @State private var playroom=false
     private var s: SharedCompanion { store.sharedCompanion }
     var body: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: 18) {
                 SharedSangmonView(companion: s).frame(width: 150, height: 140)
+                Button("상몬 놀이터 · 일곱 게임"){playroom=true}
                 Text("Lv.\(s.level) · 나의 작은 친구").font(.title)
                 Text("총 \(s.xp) XP · 만렙 Lv.100 · 누적 3,590 XP")
                 ProgressView(value: Double(s.intoLevel), total: Double(s.neededXP)).tint(DesktopPalette.progress)
@@ -213,6 +215,6 @@ struct CompanionContent: View {
                 Text("매일 루틴 약 100일 / 주 5일 약 200일 / 여유롭게 약 300일").font(.caption)
                 if let error = store.error { Text(error).foregroundStyle(.red); Button("다시 저장·불러오기") { store.retrySaveOrLoad() } }
             }.padding(24)
-        }.tint(DesktopPalette.olive).buttonStyle(PaperButtonStyle())
+        }.tint(DesktopPalette.olive).buttonStyle(PaperButtonStyle()).sheet(isPresented:$playroom){PlayroomView(store:store)}
     }
 }

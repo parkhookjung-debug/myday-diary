@@ -17,7 +17,8 @@ data class DiaryBlock(
     val width: Int = 0,
     val height: Int = 0,
     val todoItems: List<DiaryTodoItem>? = null,
-    val todoLayoutVersion: Int = 0
+    val todoLayoutVersion: Int = 0,
+    val videoPath: String? = null
 )
 
 // Preserve Windows checklist details when a backup passes through Android.

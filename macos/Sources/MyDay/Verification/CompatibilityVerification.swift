@@ -59,7 +59,7 @@ enum CompatibilityVerification {
             _ = try WindowsCompatibility.decode(data(legacy))
         }
         var bad = fields
-        bad["Version"] = .number(10)
+        bad["Version"] = .number(11)
         try reject(bad, "future version")
         bad = fields
         bad["Days"] = .array(fields["Days"]!.array! + fields["Days"]!.array!)

@@ -19,7 +19,7 @@ import com.myday.diary.data.DiaryBook
 import java.time.LocalDate
 import java.time.YearMonth
 
-@Composable fun PhoneCalendar(book: DiaryBook,date: LocalDate,onDate: (LocalDate)->Unit) {
+@Composable fun PhoneCalendar(book: DiaryBook,date: LocalDate,onAnniversaries: ((List<com.myday.diary.data.Anniversary>)->Boolean)?=null,onDate: (LocalDate)->Unit) {
     val keyboard=LocalSoftwareKeyboardController.current
     var month by remember(date) {mutableStateOf(YearMonth.from(date))}
     var query by remember {mutableStateOf("")}
@@ -41,11 +41,13 @@ import java.time.YearMonth
                     else {val day=month.atDay(number);val saved=book.days[day.toString()];Surface(Modifier.weight(1f).height(52.dp).padding(2.dp).clickable {onDate(day)},shape=MaterialTheme.shapes.small,
                         color=if(day==date) MaterialTheme.colorScheme.primaryContainer else Color.Transparent) {Column(horizontalAlignment=Alignment.CenterHorizontally,verticalArrangement=Arrangement.Center) {
                         Text(number.toString(),color=if(column==0) Color(0xffad5b4e) else MaterialTheme.colorScheme.onSurface)
-                        Text(if(saved?.blocks?.any {it.type=="photo"}==true) "▧" else if(saved!=null) "•" else "",style=MaterialTheme.typography.labelSmall,color=MaterialTheme.colorScheme.primary)
+                        val anniversaries=book.studio?.anniversaries.orEmpty().filter {com.myday.diary.diary.AnniversaryRules.matches(it,day)}
+                        Text((if(saved?.blocks?.any {it.type=="photo"}==true) "▧" else if(saved!=null) "•" else "")+(if(anniversaries.isNotEmpty()) " ★" else ""),style=MaterialTheme.typography.labelSmall,color=MaterialTheme.colorScheme.primary)
                     }}}
                 }
             }}
         }}}
+        if(onAnniversaries!=null) item {PhoneAnniversaries(book.studio?.anniversaries.orEmpty(),date,onAnniversaries)}
         item {OutlinedTextField(query,{query=it},label={Text("본문·사진 설명 검색")},modifier=Modifier.fillMaxWidth(),singleLine=true,keyboardOptions=KeyboardOptions(imeAction=ImeAction.Search),keyboardActions=KeyboardActions(onSearch={keyboard?.hide()}))}
         item {Text("${rows.size}일의 기록",style=MaterialTheme.typography.labelLarge)}
         if(rows.isEmpty()) item {Text("찾은 기록이 없어요. 날짜를 눌러 새로운 하루를 시작해 보세요.")}

@@ -28,6 +28,12 @@ jobs:
       - name: Build native Windows app
         shell: pwsh
         run: ./windows/build.ps1
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+        with:
+          node-version: '24'
+      - name: Compare seven real Windows games with Android and Mac rules
+        shell: pwsh
+        run: ./tools/test-playroom.ps1
       - name: Verify journal policy and temporary LAN transfer
         shell: pwsh
         run: |

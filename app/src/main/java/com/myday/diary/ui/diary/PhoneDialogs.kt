@@ -41,7 +41,7 @@ import com.myday.diary.diary.NotebookController
     PhoneFullDialog("일기 형식 · 블록 추가",onDismiss,error) {
         Text("블록 바로 추가",Modifier.padding(horizontal=16.dp,vertical=8.dp),style=MaterialTheme.typography.titleMedium)
         FlowRow(Modifier.fillMaxWidth().padding(horizontal=16.dp),horizontalArrangement=Arrangement.spacedBy(8.dp)) {
-            listOf("text" to "글","todo" to "할 일","habit" to "습관","emotion" to "감정","photo" to "사진").forEach {(kind,title)->OutlinedButton({onAddBlock(kind)}) {Text(title)}}
+            listOf("text" to "글","todo" to "할 일","habit" to "습관","emotion" to "감정","photo" to "사진","video" to "영상").forEach {(kind,title)->OutlinedButton({onAddBlock(kind)}) {Text(title)}}
         }
         OutlinedTextField(query,{query=it},label={Text("분야·이름·질문 검색")},modifier=Modifier.fillMaxWidth().padding(16.dp),singleLine=true)
         Row(Modifier.padding(horizontal=16.dp),horizontalArrangement=Arrangement.spacedBy(8.dp)){FilterChip(featuredOnly,{featuredOnly=true},label={Text("추천 20종")});FilterChip(!featuredOnly,{featuredOnly=false},label={Text("전체 100종")})}

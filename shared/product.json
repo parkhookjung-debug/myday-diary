@@ -24,6 +24,7 @@
   "assetIncludes": [
     "catalog.json",
     "device-link.html",
+    "playroom.html",
     "sangmon/original.png",
     "studio/**"
   ]

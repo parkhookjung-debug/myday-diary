@@ -31,7 +31,7 @@ namespace MyDay.Windows.UI
             var intro=Design.Label("추천 20가지와 전체 100종, 필요한 블록을 한곳에서 골라요.",9); intro.ForeColor=Design.Muted; intro.Location=Design.Point(25,56); header.Controls.Add(intro);
             var quick=new FlowLayoutPanel { Location=Design.Point(24,86), Height=Design.P(38), Width=Design.P(800), WrapContents=false };
             var quickLabel=Design.Label("블록 바로 추가",9,true); quickLabel.Margin=Design.Pad(0,8,12,0); quick.Controls.Add(quickLabel);
-            string[] kinds={"text","todo","habit","emotion","photo"}; string[] names={"＋ 글","＋ 할 일","＋ 습관","＋ 감정","＋ 사진"};
+            string[] kinds={"text","todo","habit","emotion","photo","video"}; string[] names={"＋ 글","＋ 할 일","＋ 습관","＋ 감정","＋ 사진","＋ 영상"};
             for(int i=0;i<kinds.Length;i++) { string kind=kinds[i]; var button=Design.Button(names[i]); button.Width=Design.P(76); if(kind=="photo") quickPhoto=button; button.Click+=delegate { SelectedBlockKind=kind; SelectedTemplate=null; DialogResult=DialogResult.OK; Close(); }; quick.Controls.Add(button); }
             header.Controls.Add(quick);
             var filters=new FlowLayoutPanel { Location=Design.Point(24,136), Height=Design.P(36), Width=Design.P(800), WrapContents=false };

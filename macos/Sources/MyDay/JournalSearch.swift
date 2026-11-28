@@ -10,6 +10,7 @@ struct JournalSearch: View {
     @State private var month = Date()
     @State private var showEmpty = false
     @State private var newestFirst = true
+    @State private var anniversaries = false
 
     private var calendar: Calendar { var value=Calendar(identifier:.gregorian);value.locale=Locale(identifier:"ko_KR");value.timeZone=TimeZone.current;return value }
     private var trimmedQuery:String {query.trimmingCharacters(in:.whitespacesAndNewlines)}
@@ -52,6 +53,7 @@ struct JournalSearch: View {
             if let failure {Text(failure).foregroundStyle(.red)}
             HStack(alignment:.top,spacing:14){calendarPanel;recordsPanel}.frame(maxHeight:.infinity)
         }.padding(26).frame(width:940,height:700).background(DesktopPalette.sidebar).foregroundStyle(DesktopPalette.ink).tint(DesktopPalette.olive)
+        .sheet(isPresented:$anniversaries){AnniversaryView(store:store)}
         .onAppear{
             store.save();if let error=store.error{failure=error;return}
             do{days=try store.allDays();selected=store.date;month=store.date}catch{failure="기록을 읽지 못했습니다. \(error.localizedDescription)"}
@@ -67,12 +69,13 @@ struct JournalSearch: View {
                     let inMonth=calendar.isDate(date,equalTo:monthStart,toGranularity:.month)
                     let isSelected=calendar.isDate(date,inSameDayAs:selected)
                     let hasEntry=days[key(date)].map(hasContent) ?? false
-                    Button{selected=date;if !inMonth{month=date}}label:{VStack(spacing:3){Text("\(calendar.component(.day,from:date))").font(.body.weight(isSelected ? .bold:.regular)).frame(width:34,height:28).foregroundStyle(isSelected ? Color.white:inMonth ? DesktopPalette.ink:DesktopPalette.muted.opacity(0.45)).background(isSelected ? DesktopPalette.olive:Color.clear,in:Circle());Circle().fill(hasEntry ? DesktopPalette.olive:Color.clear).frame(width:5,height:5)}}.buttonStyle(.plain)
+                    Button{selected=date;if !inMonth{month=date}}label:{VStack(spacing:3){Text("\(calendar.component(.day,from:date))").font(.body.weight(isSelected ? .bold:.regular)).frame(width:34,height:28).foregroundStyle(isSelected ? Color.white:inMonth ? DesktopPalette.ink:DesktopPalette.muted.opacity(0.45)).background(isSelected ? DesktopPalette.olive:Color.clear,in:Circle());HStack(spacing:2){Circle().fill(hasEntry ? DesktopPalette.olive:Color.clear).frame(width:5,height:5);if (store.studio.Anniversaries ?? []).contains(where:{AnniversaryRules.matches($0,key(date))}){Text("★").font(.caption2).foregroundStyle(DesktopPalette.olive)}}}}.buttonStyle(.plain)
                 }
             }
-            HStack(spacing:8){Circle().fill(DesktopPalette.olive).frame(width:7,height:7);Text("기록이 있는 날").font(.caption).foregroundStyle(DesktopPalette.muted)}
+            HStack(spacing:8){Circle().fill(DesktopPalette.olive).frame(width:7,height:7);Text("기록이 있는 날").font(.caption).foregroundStyle(DesktopPalette.muted);Spacer();Button("기념일 편집"){anniversaries=true}}
             Divider()
             Text(selected.formatted(.dateTime.month().day().weekday(.wide))).font(.headline)
+            ForEach((store.studio.Anniversaries ?? []).filter{AnniversaryRules.matches($0,key(selected))}) {item in Text("★ "+item.Name).font(.caption)}
             Button{open(selected)}label:{HStack{Spacer();Text("이 날의 일기 열기");Image(systemName:"arrow.up.right");Spacer()}.frame(height:38).foregroundStyle(.white).background(DesktopPalette.olive,in:RoundedRectangle(cornerRadius:10))}.buttonStyle(.plain)
         }.padding(20).frame(width:360).frame(maxHeight:.infinity,alignment:.top).background(DesktopPalette.paper,in:RoundedRectangle(cornerRadius:18)).overlay(RoundedRectangle(cornerRadius:18).stroke(DesktopPalette.soft,lineWidth:1))
     }

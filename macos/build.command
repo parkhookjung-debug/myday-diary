@@ -19,6 +19,7 @@ mkdir -p "$app/Contents/MacOS" "$app/Contents/Resources"
 cp "$binary_dir/MyDay" "$app/Contents/MacOS/MyDay"
 cp Sources/MyDay/Resources/templates.json "$app/Contents/Resources/templates.json"
 cp Sources/MyDay/Resources/device-link.html "$app/Contents/Resources/device-link.html"
+cp Sources/MyDay/Resources/playroom.html "$app/Contents/Resources/playroom.html"
 cp -R Sources/MyDay/Resources/Art "$app/Contents/Resources/"
 cat > "$app/Contents/Info.plist" <<'PLIST'
 <?xml version="1.0" encoding="UTF-8"?>

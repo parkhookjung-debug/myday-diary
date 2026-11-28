@@ -28,6 +28,9 @@ namespace MyDay.Windows.Core
         [DataMember(EmitDefaultValue=false)] public string Title;
         [DataMember(EmitDefaultValue=false)] public string Prompt;
         [DataMember(EmitDefaultValue=false)] public string Photo;
+        [DataMember(EmitDefaultValue=false)] public string VideoPath;
+        [DataMember(EmitDefaultValue=false)] public string MacVideoPath;
+        [DataMember(EmitDefaultValue=false)] public string MacVideoText;
         [DataMember(EmitDefaultValue=false)] public List<DiaryTodoItem> TodoItems;
         [DataMember(EmitDefaultValue=false)] public int TodoLayoutVersion;
         internal string ValidatedPhoto;
@@ -96,7 +99,7 @@ namespace MyDay.Windows.Core
         }
         public static void Validate(DiaryBook book)
         {
-            if (book == null || book.Version < 1 || book.Version > 9 || book.Days == null)
+            if (book == null || book.Version < 1 || book.Version > 10 || book.Days == null)
                 throw new InvalidDataException("지원하지 않는 기록 파일입니다.");
             if (book.Days.Count > DesktopContract.MaxDays) throw new InvalidDataException("기록 파일이 너무 큽니다.");
             book.CharacterStyle=MonsterVariants.Id(MonsterVariants.FromId(book.CharacterStyle));
@@ -128,6 +131,7 @@ namespace MyDay.Windows.Core
                         !DesktopContract.BlockKinds.Contains(block.Kind) || block.Text == null || block.Text.Length > DesktopContract.MaxTextUtf16)
                         throw new InvalidDataException("일기 블록 형식이 올바르지 않습니다.");
                     DiaryTodos.Normalize(block);
+                    DiaryVideo.Validate(block);
                     photoCharacters+=block.Photo==null?0:block.Photo.Length;
                     if(photoCharacters>DiaryPhoto.MaxBookCharacters) throw new InvalidDataException("전체 사진 저장 공간이 가득 찼어요. 백업 후 사용하지 않는 사진 블록을 정리해주세요.");
                     DiaryPhoto.Validate(block);
@@ -178,6 +182,7 @@ namespace MyDay.Windows.Core
         public static string Key(DateTime date) { return date.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture); }
         private static void UpgradeVersion(DiaryBook book)
         {
+            if(book.Days.Values.Any(e=>e.Blocks.Any(b=>b.Kind=="video"))||book.Layouts.Any(l=>l.Blocks.Any(b=>b.Kind=="video"))){SangmonCollection.Migrate(book);book.Version=Math.Max(book.Version,10);}
             if(book.Studio!=null){SangmonCollection.Migrate(book);book.Version=Math.Max(book.Version,9);}
             if(book.Collection!=null){book.Version=Math.Max(book.Version,SangmonCollection.NeedsV8(book.Collection)?8:SangmonCollection.State(book.Collection,book.Progress).Closet?7:6);return;}
             if(book.Version>=6)return;

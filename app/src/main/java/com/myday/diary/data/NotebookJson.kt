@@ -17,17 +17,17 @@ object NotebookJson {
     }
     private fun blocks(array: JSONArray, layout: Boolean=false): List<DiaryBlock> = (0 until array.length()).map {i ->
         val o=array.getJSONObject(i)
-        DiaryBlock(id=if(layout) "" else o.getString("Id"),type=o.getString("Kind"),text=o.optString("Text").takeUnless {it=="null"} ?: "",checked=boolean(o,"Checked"),
+        DiaryBlock(id=if(layout) "" else o.getString("Id"),type=if(!o.isNull("MacVideoPath") && o.getString("Kind")=="text") "video" else o.getString("Kind"),text=(if(o.isNull("MacVideoText")) o.optString("Text") else o.getString("MacVideoText")).takeUnless {it=="null"} ?: "",checked=boolean(o,"Checked"),
             title=o.optString("Title").takeUnless {it=="null"} ?: "",prompt=o.optString("Prompt").takeUnless {it=="null"} ?: "",
             photo=if(o.isNull("Photo")) null else o.getString("Photo"),wide=boolean(o,"Wide"),x=integer(o,"X"),y=integer(o,"Y"),width=integer(o,"Width"),height=integer(o,"Height"),
             todoItems=if(layout || o.isNull("TodoItems")) null else o.getJSONArray("TodoItems").let {a -> (0 until a.length()).map {j ->
                 val item=a.getJSONObject(j);require(item.get("Text") is String)
                 DiaryTodoItem(item.getString("Text"),boolean(item,"Checked"),integer(item,"Importance"))
-            }},todoLayoutVersion=if(layout) 0 else integer(o,"TodoLayoutVersion"))
+            }},todoLayoutVersion=if(layout) 0 else integer(o,"TodoLayoutVersion"),videoPath=if(layout) null else if(!o.isNull("VideoPath")) o.getString("VideoPath") else if(!o.isNull("MacVideoPath")) o.getString("MacVideoPath") else null)
     }
     fun decode(raw: String): DiaryBook {
         require(raw.toByteArray(Charsets.UTF_8).size<=MAX_BYTES) {"백업은 128MB 이하로 선택해 주세요."}
-        val o=JSONObject(raw);val version=integer(o,"Version");require(version in 1..9) {"지원하지 않는 백업 버전이에요."}
+        val o=JSONObject(raw);val version=integer(o,"Version");require(version in 1..10) {"지원하지 않는 백업 버전이에요."}
         val days=linkedMapOf<String,DiaryEntry>()
         fun put(date: String,e: JSONObject) {
             require(!days.containsKey(date)) {"백업에 같은 날짜가 중복돼 있어요."}
@@ -59,7 +59,7 @@ object NotebookJson {
             }.also(NotebookRules::validate)
     }
     private fun block(b: DiaryBlock, layout: Boolean=false): JSONObject = JSONObject().apply {
-        if(!layout) {put("Id",b.id);put("Text",b.text);put("Checked",b.checked);b.photo?.let {put("Photo",it)}}
+        if(!layout) {put("Id",b.id);put("Text",b.text);put("Checked",b.checked);b.photo?.let {put("Photo",it)};b.videoPath?.let {put("VideoPath",it)}}
         if(!layout) {
             b.todoItems?.let {items -> put("TodoItems",JSONArray(items.map {item -> JSONObject().put("Text",item.text).put("Checked",item.checked).put("Importance",item.importance)}))}
             if(b.todoLayoutVersion!=0) put("TodoLayoutVersion",b.todoLayoutVersion)
@@ -67,11 +67,13 @@ object NotebookJson {
         put("Kind",b.type);put("Title",b.title);put("Prompt",b.prompt);put("Wide",b.wide)
         put("X",b.x);put("Y",b.y);put("Width",b.width);put("Height",b.height)
     }
-    fun encode(book: DiaryBook): String {
+    fun encode(source: DiaryBook): String {
+        val hasVideo=source.days.values.any {e->e.blocks.any {it.type=="video"}} || source.layouts.any {l->l.blocks.any {it.type=="video"}}
+        val book=if(hasVideo) com.myday.diary.diary.CollectionRules.migrate(source) else source
         NotebookRules.validate(book)
         return JSONObject().apply {
             val expanded=book.activities.isNotEmpty() || EquipmentCatalog.slots.any {val id=book.equipment.get(it);id!="none" && !id.endsWith("-sword") && !id.endsWith("-orb")}
-            put("Version",maxOf(if(book.studio!=null)9 else book.version,if(book.collection!=null) {if(book.collection.actions.any {com.myday.diary.diary.CollectionRules.needsV8(it.kind)})8 else if(com.myday.diary.diary.CollectionRules.state(book).closet)7 else 6} else if(expanded)5 else 4));put("CharacterStyle",book.characterStyle)
+            put("Version",maxOf(if(book.days.values.any {e->e.blocks.any {it.type=="video"}} || book.layouts.any {l->l.blocks.any {it.type=="video"}})10 else if(book.studio!=null)9 else book.version,if(book.collection!=null) {if(book.collection.actions.any {com.myday.diary.diary.CollectionRules.needsV8(it.kind)})8 else if(com.myday.diary.diary.CollectionRules.state(book).closet)7 else 6} else if(expanded)5 else 4));put("CharacterStyle",book.characterStyle)
             put("Days",JSONArray().apply {book.days.toSortedMap().forEach {(date,e)->put(JSONObject().put("Key",date).put("Value",JSONObject()
                 .put("Theme",e.theme).put("Mood",e.mood).put("Character",e.character).put("LayoutMode",e.layoutMode).put("PageStyle",e.pageStyle)
                 .put("Blocks",JSONArray(e.blocks.map {block(it)}))))}})

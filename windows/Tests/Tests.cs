@@ -49,6 +49,7 @@ namespace MyDay.Windows
                     Check(legacy.LayoutMode=="cards" && legacy.PageStyle=="plain" && legacy.Blocks[0].Title==null && legacy.Blocks[0].Width==0 && legacy.Blocks[0].Text=="기존 글","Older diary loads without template or placement fields or losing text");
                 }
                 RunPhotoTests(directory);
+                RunVideoTests(directory);
                 RunJournalToolsTests(directory);
                 RunDeviceToolsTests(directory);
                 RunStudioTests(directory);

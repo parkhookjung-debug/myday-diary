@@ -69,16 +69,16 @@ namespace MyDay.Windows.Core
         {
             return entry!=null && entry.Blocks.Any(Meaningful);
         }
-        private static bool Meaningful(DiaryBlock b) { return !string.IsNullOrWhiteSpace(b.Text) || b.Kind=="photo" && !string.IsNullOrEmpty(b.Photo) || (b.Kind=="todo" || b.Kind=="habit") && b.Checked; }
+        private static bool Meaningful(DiaryBlock b) { return !string.IsNullOrWhiteSpace(b.Text) || b.Kind=="video" && b.VideoPath!=null || b.Kind=="photo" && !string.IsNullOrEmpty(b.Photo) || (b.Kind=="todo" || b.Kind=="habit") && b.Checked; }
         internal static List<DiaryBlock> CaptureRecord(DiaryEntry entry)
         {
-            return entry.Blocks.Where(Meaningful).Select(b=>new DiaryBlock {Id=b.Id,Kind=b.Kind,Text=b.Text,Checked=b.Checked,Photo=b.Photo,
+            return entry.Blocks.Where(Meaningful).Select(b=>new DiaryBlock {Id=b.Id,Kind=b.Kind,Text=b.Text,Checked=b.Checked,Photo=b.Photo,VideoPath=b.VideoPath,
                 TodoItems=b.TodoItems==null?null:b.TodoItems.Select(item=>new DiaryTodoItem {Text=item.Text,Checked=item.Checked,Importance=item.Importance}).ToList()}).ToList();
         }
         internal static bool SameRecord(List<DiaryBlock> saved,DiaryEntry entry)
         {
             var current=entry.Blocks.Where(Meaningful).ToDictionary(b=>b.Id);
-            return saved.Count==current.Count && saved.All(b=>current.ContainsKey(b.Id) && current[b.Id].Kind==b.Kind && current[b.Id].Text==b.Text && current[b.Id].Checked==b.Checked && current[b.Id].Photo==b.Photo && SameTodos(b.TodoItems,current[b.Id].TodoItems));
+            return saved.Count==current.Count && saved.All(b=>current.ContainsKey(b.Id) && current[b.Id].Kind==b.Kind && current[b.Id].Text==b.Text && current[b.Id].Checked==b.Checked && current[b.Id].Photo==b.Photo && current[b.Id].VideoPath==b.VideoPath && SameTodos(b.TodoItems,current[b.Id].TodoItems));
         }
         private static bool SameTodos(List<DiaryTodoItem> left,List<DiaryTodoItem> right)
         {
