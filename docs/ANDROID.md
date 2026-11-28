@@ -1,6 +1,6 @@
 # Android 개발·설치 안내
 
-일반 설치는 [Android APK 다운로드와 Galaxy 설치 안내](DOWNLOADS.md#android)를 따르세요. 현재 공통 버전은 0.16.0이며 예전 0.4/0.8 APK 안내 대신 최신 Release를 사용합니다. iOS 앱은 이번 범위에 없습니다.
+일반 설치는 [Android APK 다운로드와 Galaxy 설치 안내](DOWNLOADS.md#android)를 따르세요. 현재 공통 버전은 0.16.1이며 예전 0.4/0.8 APK 안내 대신 최신 Release를 사용합니다. iOS 앱은 이번 범위에 없습니다.
 
 ## Android Studio로 열기
 

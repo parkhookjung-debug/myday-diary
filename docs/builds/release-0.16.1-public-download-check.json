@@ -1,0 +1,77 @@
+{
+  "releaseTag": "v0.16.1-preview",
+  "date": "2026-11-28",
+  "anonymous": true,
+  "files": [
+    {
+      "file": "DeviceQr.LICENSE.txt",
+      "httpStatus": 200,
+      "bytes": 1205,
+      "sha256": "55f720c0a9f7c3d009feebc2cbb59dd5f4f4f26c20cee473200a0207f1997b4c",
+      "anonymous": true
+    },
+    {
+      "file": "LICENSE.txt",
+      "httpStatus": 200,
+      "bytes": 1075,
+      "sha256": "9c12d9fd06bd450c28856c4583dbee7bbd2e580ebf708cb75c3f51e844024ba7",
+      "anonymous": true
+    },
+    {
+      "file": "MyDay-Android.apk",
+      "httpStatus": 200,
+      "bytes": 11703153,
+      "sha256": "59d22b06402b8e6dbd7d3a3915e6f97a788a462a30453588638a3c970a96a85a",
+      "anonymous": true
+    },
+    {
+      "file": "MyDay-macOS-arm64.zip",
+      "httpStatus": 200,
+      "bytes": 2112869,
+      "sha256": "09562bf0597496aeb365e0152a0fccc1362b621c21c434e62df0df3bf09edaa7",
+      "anonymous": true
+    },
+    {
+      "file": "MyDay-Windows.exe",
+      "httpStatus": 200,
+      "bytes": 813056,
+      "sha256": "cd7b6288269f06cc320f2aa085e7725a6dae213d4815bb620b4a2961cfc01733",
+      "anonymous": true
+    },
+    {
+      "file": "SangmonBlockPuzzle.exe",
+      "httpStatus": 200,
+      "bytes": 813056,
+      "sha256": "cd7b6288269f06cc320f2aa085e7725a6dae213d4815bb620b4a2961cfc01733",
+      "anonymous": true
+    },
+    {
+      "file": "SangmonFetch.exe",
+      "httpStatus": 200,
+      "bytes": 813056,
+      "sha256": "cd7b6288269f06cc320f2aa085e7725a6dae213d4815bb620b4a2961cfc01733",
+      "anonymous": true
+    },
+    {
+      "file": "SangmonGame.exe",
+      "httpStatus": 200,
+      "bytes": 813056,
+      "sha256": "cd7b6288269f06cc320f2aa085e7725a6dae213d4815bb620b4a2961cfc01733",
+      "anonymous": true
+    },
+    {
+      "file": "SHA256SUMS.txt",
+      "httpStatus": 200,
+      "bytes": 762,
+      "sha256": "42f4a09b5ea86b33c28677382282b5f0c41916dd10e0cdac592087658c0de9ab",
+      "anonymous": true
+    },
+    {
+      "file": "SOURCE.json",
+      "httpStatus": 200,
+      "bytes": 6172,
+      "sha256": "33fc32b3caf0d3d46c7221381232f013b87c0cdb38581827658207c45b26e4f2",
+      "anonymous": true
+    }
+  ]
+}

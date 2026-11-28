@@ -1,6 +1,6 @@
-# MyDay Mac · 0.16.0 공통 시험판
+# MyDay Mac · 0.16.1 공통 시험판
 
-[**Mac 앱 다운로드**](https://github.com/parkhookjung-debug/myday-diary/releases/download/v0.16.0-preview/MyDay-macOS-arm64.zip) · [설치와 첫 실행 메시지 해결](../docs/DOWNLOADS.md#mac) · [세 버전 기능](../docs/THREE-PLATFORMS.md)
+[**Mac 앱 다운로드**](https://github.com/parkhookjung-debug/myday-diary/releases/download/v0.16.1-preview/MyDay-macOS-arm64.zip) · [설치와 첫 실행 메시지 해결](../docs/DOWNLOADS.md#mac) · [세 버전 기능](../docs/THREE-PLATFORMS.md)
 
 **Apple Silicon M1 이상·macOS 13 이상**용입니다. ZIP 압축을 풀고 MyDay.app을 응용 프로그램 폴더로 옮겨 엽니다. 기존 앱은 종료/⌘Q한 뒤 교체하세요. 로컬 개발 서명 시험판으로 Apple 공증은 적용하지 않았습니다. Intel용 실행 파일은 배포하지 않습니다.
 

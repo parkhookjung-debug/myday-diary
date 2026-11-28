@@ -1,14 +1,14 @@
 # 마이데이 설치 안내 · Android / Mac / Windows
 
-**[0.16.0 공통 시험판 다운로드](https://github.com/parkhookjung-debug/myday-diary/releases/tag/v0.16.0-preview)**
+**[0.16.1 공통 시험판 다운로드](https://github.com/parkhookjung-debug/myday-diary/releases/tag/v0.16.1-preview)**
 
-마이데이는 상몬과 함께 글·사진·영상·할 일·습관을 기록하는 일기 앱입니다. Android·Mac·Windows에서 같은 일기 기능, 성장 규칙, 일곱 게임을 제공합니다. 설치 파일은 운영체제별로 하나만 선택하세요. GitHub 로그인, Android Studio, Visual Studio, Python은 일반 앱 사용에 필요하지 않습니다.
+마이데이는 상몬과 함께 글·사진·영상·할 일·습관을 기록하는 일기 앱입니다. Android·Mac·Windows에서 같은 일기 기능, 성장 규칙, 일곱 게임을 제공합니다. 설치 파일은 운영체제별로 하나만 선택하세요. 0.16.1에는 영상으로 전달된 통통한 몸통·점눈·짧은 발·새 입선의 상몬을 적용했습니다. GitHub 로그인, Android Studio, Visual Studio, Python은 일반 앱 사용에 필요하지 않습니다.
 
 | 사용하는 기기 | 받을 파일 | 설치 안내 |
 | --- | --- | --- |
-| Galaxy 등 Android 8 이상 | [MyDay-Android.apk](https://github.com/parkhookjung-debug/myday-diary/releases/download/v0.16.0-preview/MyDay-Android.apk) | [Android 설치](#android) |
-| Apple Silicon M1 이상 / macOS 13 이상 | [MyDay-macOS-arm64.zip](https://github.com/parkhookjung-debug/myday-diary/releases/download/v0.16.0-preview/MyDay-macOS-arm64.zip) | [Mac 설치](#mac) |
-| Windows 10·11 / .NET Framework 4.8 이상 | [MyDay-Windows.exe](https://github.com/parkhookjung-debug/myday-diary/releases/download/v0.16.0-preview/MyDay-Windows.exe) | [Windows 실행](#windows) |
+| Galaxy 등 Android 8 이상 | [MyDay-Android.apk](https://github.com/parkhookjung-debug/myday-diary/releases/download/v0.16.1-preview/MyDay-Android.apk) | [Android 설치](#android) |
+| Apple Silicon M1 이상 / macOS 13 이상 | [MyDay-macOS-arm64.zip](https://github.com/parkhookjung-debug/myday-diary/releases/download/v0.16.1-preview/MyDay-macOS-arm64.zip) | [Mac 설치](#mac) |
+| Windows 10·11 / .NET Framework 4.8 이상 | [MyDay-Windows.exe](https://github.com/parkhookjung-debug/myday-diary/releases/download/v0.16.1-preview/MyDay-Windows.exe) | [Windows 실행](#windows) |
 
 지원 대상은 이 **세 종류**입니다. iPhone·iPad용 iOS 앱과 Intel Mac용 실행 파일은 제공하지 않습니다. `Source code (zip)` / `Source code (tar.gz)` / 저장소의 `Code → Download ZIP`은 개발 소스이며 설치 파일이 아닙니다. Releases 화면에서 파일 목록이 접혀 있으면 **Assets**를 펼치세요.
 
@@ -112,10 +112,10 @@ Windows 데이터 폴더는 `%LOCALAPPDATA%/MyDay/Windows`, Mac은 `~/Library/Ap
 
 ## 다운로드 확인·문의
 
-[SHA256SUMS.txt](https://github.com/parkhookjung-debug/myday-diary/releases/download/v0.16.0-preview/SHA256SUMS.txt)와 [SOURCE.json](https://github.com/parkhookjung-debug/myday-diary/releases/download/v0.16.0-preview/SOURCE.json)에서 파일 해시·소스 커밋·플랫폼별 검사 출처를 확인할 수 있습니다. 앱을 직접 빌드하려는 경우 [개발 방법](../README.md#직접-빌드하기)을 보세요.
+[SHA256SUMS.txt](https://github.com/parkhookjung-debug/myday-diary/releases/download/v0.16.1-preview/SHA256SUMS.txt)와 [SOURCE.json](https://github.com/parkhookjung-debug/myday-diary/releases/download/v0.16.1-preview/SOURCE.json)에서 파일 해시·소스 커밋·플랫폼별 검사 출처를 확인할 수 있습니다. 앱을 직접 빌드하려는 경우 [개발 방법](../README.md#직접-빌드하기)을 보세요.
 
 설치가 안 되면 [GitHub Issues](https://github.com/parkhookjung-debug/myday-diary/issues)에 **기기/OS 버전, 앱 버전, 받은 파일 이름, 표시된 오류 문구**를 남겨 주세요. 공개 문의에 개인 일기·사진이 담긴 백업 파일을 그대로 첨부하지 마세요.
 
-검증: Windows 535개 검사와 네이티브 화면·로컬 채팅, Android 출시 빌드 단위 검사 65개·API35 기기 검사 22개·린트 오류 0개·전용 서명, Mac 네이티브 게임 실행·점수 저장·백업·공통 계약을 확인했습니다. [파일별 출처와 검증 기록](builds/release-0.16.0-2026-11-28.json) · [실제 앱 화면](../previews/common-0.16.0/README.md). Galaxy의 실제 진동 느낌과 Intel Mac 실행을 검증한 것은 아닙니다.
+검증: Windows 538개 검사와 네이티브 화면·로컬 채팅, Android 출시 빌드 단위 검사 65개·API35 기기 검사 22개·린트 오류 0개·전용 서명, Mac 네이티브 게임 실행·점수 저장·백업·공통 계약을 확인했습니다. [파일별 출처와 검증 기록](builds/release-0.16.1-2026-11-28.json) · [새 상몬 실제 적용 화면](../previews/applied/sangmon-plump-clay/README.md). Galaxy의 실제 진동 느낌과 Intel Mac 실행을 검증한 것은 아닙니다.
 
-[로그인 없이 공개 파일 10개 다운로드·SHA256 일치 확인](builds/release-0.16.0-public-download-check.json).
+[로그인 없이 공개 파일 10개 다운로드·SHA256 일치 확인](builds/release-0.16.1-public-download-check.json).

@@ -1,0 +1,140 @@
+{
+  "format": "myday-native-release",
+  "appVersion": "0.16.1",
+  "date": "2026-11-28",
+  "releaseTag": "v0.16.1-preview",
+  "releasePage": "https://github.com/parkhookjung-debug/myday-diary/releases/tag/v0.16.1-preview",
+  "files": [
+    {
+      "file": "DeviceQr.LICENSE.txt",
+      "platform": "license",
+      "bytes": 1205,
+      "sha256": "55f720c0a9f7c3d009feebc2cbb59dd5f4f4f26c20cee473200a0207f1997b4c",
+      "sourceCommit": "221bd082818906bf18e6b9c9195bc32fd37910ed",
+      "ci": null,
+      "url": "https://github.com/parkhookjung-debug/myday-diary/releases/download/v0.16.1-preview/DeviceQr.LICENSE.txt"
+    },
+    {
+      "file": "LICENSE.txt",
+      "platform": "license",
+      "bytes": 1075,
+      "sha256": "9c12d9fd06bd450c28856c4583dbee7bbd2e580ebf708cb75c3f51e844024ba7",
+      "sourceCommit": "221bd082818906bf18e6b9c9195bc32fd37910ed",
+      "ci": null,
+      "url": "https://github.com/parkhookjung-debug/myday-diary/releases/download/v0.16.1-preview/LICENSE.txt"
+    },
+    {
+      "file": "MyDay-Android.apk",
+      "platform": "android",
+      "bytes": 11703153,
+      "sha256": "59d22b06402b8e6dbd7d3a3915e6f97a788a462a30453588638a3c970a96a85a",
+      "sourceCommit": "221bd082818906bf18e6b9c9195bc32fd37910ed",
+      "ci": "https://github.com/parkhookjung-debug/myday-diary/actions/runs/46146317184",
+      "url": "https://github.com/parkhookjung-debug/myday-diary/releases/download/v0.16.1-preview/MyDay-Android.apk"
+    },
+    {
+      "file": "MyDay-macOS-arm64.zip",
+      "platform": "macos",
+      "bytes": 2112869,
+      "sha256": "09562bf0597496aeb365e0152a0fccc1362b621c21c434e62df0df3bf09edaa7",
+      "sourceCommit": "221bd082818906bf18e6b9c9195bc32fd37910ed",
+      "ci": "https://github.com/parkhookjung-debug/myday-diary/actions/runs/46146314889",
+      "url": "https://github.com/parkhookjung-debug/myday-diary/releases/download/v0.16.1-preview/MyDay-macOS-arm64.zip"
+    },
+    {
+      "file": "MyDay-Windows.exe",
+      "platform": "windows",
+      "bytes": 813056,
+      "sha256": "cd7b6288269f06cc320f2aa085e7725a6dae213d4815bb620b4a2961cfc01733",
+      "sourceCommit": "221bd082818906bf18e6b9c9195bc32fd37910ed",
+      "ci": "https://github.com/parkhookjung-debug/myday-diary/actions/runs/46146310560",
+      "url": "https://github.com/parkhookjung-debug/myday-diary/releases/download/v0.16.1-preview/MyDay-Windows.exe"
+    },
+    {
+      "file": "SangmonBlockPuzzle.exe",
+      "platform": "windows",
+      "bytes": 813056,
+      "sha256": "cd7b6288269f06cc320f2aa085e7725a6dae213d4815bb620b4a2961cfc01733",
+      "sourceCommit": "221bd082818906bf18e6b9c9195bc32fd37910ed",
+      "ci": "https://github.com/parkhookjung-debug/myday-diary/actions/runs/46146310560",
+      "url": "https://github.com/parkhookjung-debug/myday-diary/releases/download/v0.16.1-preview/SangmonBlockPuzzle.exe"
+    },
+    {
+      "file": "SangmonFetch.exe",
+      "platform": "windows",
+      "bytes": 813056,
+      "sha256": "cd7b6288269f06cc320f2aa085e7725a6dae213d4815bb620b4a2961cfc01733",
+      "sourceCommit": "221bd082818906bf18e6b9c9195bc32fd37910ed",
+      "ci": "https://github.com/parkhookjung-debug/myday-diary/actions/runs/46146310560",
+      "url": "https://github.com/parkhookjung-debug/myday-diary/releases/download/v0.16.1-preview/SangmonFetch.exe"
+    },
+    {
+      "file": "SangmonGame.exe",
+      "platform": "windows",
+      "bytes": 813056,
+      "sha256": "cd7b6288269f06cc320f2aa085e7725a6dae213d4815bb620b4a2961cfc01733",
+      "sourceCommit": "221bd082818906bf18e6b9c9195bc32fd37910ed",
+      "ci": "https://github.com/parkhookjung-debug/myday-diary/actions/runs/46146310560",
+      "url": "https://github.com/parkhookjung-debug/myday-diary/releases/download/v0.16.1-preview/SangmonGame.exe"
+    }
+  ],
+  "platformBuildSources": {
+    "windows": "221bd082818906bf18e6b9c9195bc32fd37910ed",
+    "macos": "221bd082818906bf18e6b9c9195bc32fd37910ed",
+    "android": "221bd082818906bf18e6b9c9195bc32fd37910ed"
+  },
+  "checks": {
+    "windowsAssertions": 538,
+    "windowsNativeDiaryGamesAndLocalChat": true,
+    "androidReleaseJvmTests": 65,
+    "androidApi35DeviceTests": 22,
+    "androidLintErrors": 0,
+    "androidReleaseSignatureVerified": true,
+    "macNativeBuildAndPlayroom": true,
+    "macWindowsCommonContractsAndBackup": true,
+    "sevenGameReplaySnapshots": 155,
+    "sevenGameReplayMatchesWindows": true,
+    "focusedAssetsOnly": true,
+    "androidDeviceSourceCommit": "60a7f985cf5a14c2e958a1e6e2c77c1c1fab7012",
+    "androidDeviceCi": "https://github.com/parkhookjung-debug/myday-diary/actions/runs/46146949062"
+  },
+  "commonFeatures": [
+    "diary",
+    "photos",
+    "local-video-reference",
+    "multi-item-checklist-priority",
+    "anniversaries",
+    "calendar-search",
+    "templates-100",
+    "free-layout",
+    "attendance-growth",
+    "backup-1-10",
+    "local-chat",
+    "seven-games",
+    "daily-snacks",
+    "fetch"
+  ],
+  "androidSigning": {
+    "type": "project-preview-release",
+    "fixedSince": "0.16.0",
+    "certificateSha256": "1ac43e689b7f7e8b1da74ccc8efeefbfc2584ce7a35f3b8d1023e3bf92190a07",
+    "oldDebugApkMayRequireVerifiedBackupMigration": true
+  },
+  "character": {
+    "current": "video-reference plump ivory clay",
+    "atlasSha256": "6f7d19c4811af0a786f622c646a322a5968782c47dcd0f65a06f310b2c29104c",
+    "newReferenceVideoDesignApplied": true
+  },
+  "limitations": {
+    "macAppleSiliconOnly": true,
+    "appleNotarized": false,
+    "iosProvided": false,
+    "videoBytesIncludedInDiaryBackup": false,
+    "gameScoresIncludedInDiaryBackup": false,
+    "automaticCloudSync": false,
+    "publicKakaoServerEnabled": false
+  },
+  "mainAppCodeMerged": false,
+  "cloudDeployed": false,
+  "sourceNote": "Every file records its actual successful build source. All three builds include the redesigned original companion at 221bd08. Android device validation uses 60a7f98, which changes only the antialias threshold in an instrumentation assertion; no app source or assets differ. The release tag may include documentation-only provenance updates."
+}
