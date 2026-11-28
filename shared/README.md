@@ -19,6 +19,7 @@
 | 할 일 기본 높이·목록 항목 한도 | [desktop.json](desktop.json)의 limits.TodoHeight·MaxTodoItems → C#·Swift·Kotlin 생성 |
 | 채팅 메시지·닉네임·페이지·내역 제한 | [desktop.json](desktop.json)의 chat |
 | 두 OS에서 같아야 하는 이동·크기 결과 | [fixtures/layout.json](fixtures/layout.json) |
+| 새 기본 상몬의 영상 원본·64프레임 규격·그림 해시 | [character-art.json](character-art.json), [실제 적용 화면](../previews/applied/sangmon-plump-clay/README.md) |
 | 공동 디자인의 원본 커밋·반영 기준 | [design-source.json](design-source.json), [디자인 반영 안내](../docs/DESIGN-SYNC.md) |
 | Windows·Mac·Android 만렙·주간 보너스·99/200/295일 검증 패턴 | [desktop.json](desktop.json)의 growth·growthProfiles, [성장 안내](../docs/SANGMON-GROWTH.md) |
 | 등급·뽑기 확률·조각·합성·제작·수집 성취 보상 | [collection.json](collection.json), [공방 안내](../docs/SANGMON-ATELIER.md) |

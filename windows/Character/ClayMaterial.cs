@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Drawing2D;
@@ -46,7 +46,7 @@ namespace MyDay.Windows.Character
                 } finally {mask.UnlockBits(data);}
             }
             // Distance to the silhouette makes the same soft bevel around the snout,
-            // eye bumps and lower arch. No background color enters the alpha channel.
+            // eye bumps and stubby feet. No background color enters the alpha channel.
             float[] distance=new float[length];
             for(int i=0;i<length;i++) distance[i]=coverage[i]<128?0:10000;
             for(int y=1;y<Height-1;y++) for(int x=1;x<Width-1;x++) {
@@ -104,33 +104,31 @@ namespace MyDay.Windows.Character
 
         public static void Face(Graphics g,MonsterPose pose)
         {
-            using(var mouth=new MonsterPainter.Shape().M(120,586).Q(154,567,185,561).C(205,557,222,565,227,579)
-                .C(232,593,220,614,209,625).Q(168,643,133,611).Q(123,601,120,586).Close())
-            using(var fill=new LinearGradientBrush(new Rectangle(120,558,114,78),Color.FromArgb(255,248,235),Color.FromArgb(193,172,151),90)) g.FillPath(fill,mouth.Path);
-            using(var lip=new MonsterPainter.Shape().M(120,586).Q(154,567,185,561).C(205,557,222,565,227,579).C(232,593,220,614,209,625)) {
-                foreach(float width in new[] {12f,8f,4f}) using(var pen=new Pen(Color.FromArgb(width==4?210:25,76,60,48),width) {StartCap=LineCap.Round,EndCap=LineCap.Round}) g.DrawPath(pen,lip.Path);
+            // A single open line, including the small tongue. Never fill an oval snout
+            // or create an extra yawn mouth: the reference's side lip stays unchanged.
+            using(var lip=new MonsterPainter.Shape().M(134,631)
+                .C(177,611,237,595,269,605).C(295,613,302,627,274,635)
+                .C(280,654,273,663,263,663).C(254,664,250,652,247,646).L(230,650)) {
+                using(var soft=new Pen(Color.FromArgb(24,76,60,48),9) {StartCap=LineCap.Round,EndCap=LineCap.Round,LineJoin=LineJoin.Round}) g.DrawPath(soft,lip.Path);
+                using(var pen=new Pen(Color.FromArgb(215,76,66,54),4.3f) {StartCap=LineCap.Round,EndCap=LineCap.Round,LineJoin=LineJoin.Round}) g.DrawPath(pen,lip.Path);
             }
             if(pose.Closed) {
-                using(var eyes=new MonsterPainter.Shape().M(235,480).Q(245,pose.Happy?462:489,256,478).M(295,478).Q(306,pose.Happy?461:488,316,475))
-                using(var pen=new Pen(Color.FromArgb(53,45,40),5.5f) {StartCap=LineCap.Round,EndCap=LineCap.Round}) g.DrawPath(pen,eyes.Path);
-            } else foreach(float x in new[] {246f,305f}) {
-                var saved=g.Save(); g.TranslateTransform(x+pose.LookX*5,476+pose.LookY*4); g.RotateTransform(18);
-                var bounds=new RectangleF(-10,-18*pose.EyeScale,20,34*pose.EyeScale);
-                using(var shadow=new SolidBrush(Color.FromArgb(33,94,68,46))) g.FillEllipse(shadow,-12,-18*pose.EyeScale,25,37*pose.EyeScale);
-                using(var fill=new LinearGradientBrush(bounds,Color.FromArgb(78,65,55),Color.FromArgb(20,18,17),55)) g.FillEllipse(fill,bounds);
-                using(var shine=new SolidBrush(Color.FromArgb(250,255,253,247))) g.FillEllipse(shine,-5,-12*pose.EyeScale,4.5f,8);
-                using(var shine=new SolidBrush(Color.FromArgb(75,255,247,230))) g.FillEllipse(shine,3,6*pose.EyeScale,3,4);
-                g.Restore(saved);
+                using(var eyes=new MonsterPainter.Shape().M(199,495).Q(208,pose.Happy?484:501,218,495).M(291,481).Q(300,pose.Happy?470:487,310,481))
+                using(var pen=new Pen(Color.FromArgb(40,37,32),5) {StartCap=LineCap.Round,EndCap=LineCap.Round}) g.DrawPath(pen,eyes.Path);
+            } else {
+                using(var fill=new SolidBrush(Color.FromArgb(32,30,26)))
+                foreach(var eye in new[] {new PointF(208,495),new PointF(300,481)})
+                    g.FillEllipse(fill,eye.X-9.5f+pose.LookX*5,eye.Y-9.5f*pose.EyeScale+pose.LookY*4,19,19*pose.EyeScale);
             }
         }
 
         public static void Flame(Graphics g)
         {
             // A small round puff with a tapered connection to the existing side lip.
-            using(var puff=new MonsterPainter.Shape().M(121,586).C(100,584,94,563,77,558)
-                .C(64,549,54,553,51,560).C(24,548,8,566,12,585)
-                .C(9,607,34,620,53,609).C(72,611,86,592,101,591).Q(114,590,121,586).Close())
-            using(var light=new PathGradientBrush(puff.Path) {CenterPoint=new PointF(45,583),CenterColor=Color.FromArgb(255,254,181),SurroundColors=new[] {Color.FromArgb(255,156,48)}}) g.FillPath(light,puff.Path);
+            using(var puff=new MonsterPainter.Shape().M(135,631).C(114,629,108,608,91,603)
+                .C(78,594,68,598,65,605).C(38,593,22,611,26,630)
+                .C(23,652,48,665,67,654).C(86,656,100,637,115,636).Q(128,635,135,631).Close())
+            using(var light=new PathGradientBrush(puff.Path) {CenterPoint=new PointF(59,628),CenterColor=Color.FromArgb(255,254,181),SurroundColors=new[] {Color.FromArgb(255,156,48)}}) g.FillPath(light,puff.Path);
         }
     }
 }

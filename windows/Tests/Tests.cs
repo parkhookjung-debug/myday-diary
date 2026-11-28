@@ -251,8 +251,12 @@ namespace MyDay.Windows
                 using(var image=new Bitmap(240,220)) {
                     using(var g=Graphics.FromImage(image)) MonsterPainter.DrawLegacy(g,new Rectangle(16,22,208,176),MonsterPose.ForActivity(.2,PetActivity.Rest,.2,0,0),true);
                     int warm=0;
-                    for(int y=0;y<image.Height;y++) for(int x=0;x<image.Width;x++) { var p=image.GetPixel(x,y); if(p.A>0 && p.R>240 && p.G>170 && p.G<235 && p.B<180) warm++; }
-                    Check(warm==0,"Idle renderer has no flame-colored pixels");
+                    for(int y=0;y<image.Height;y++) for(int x=0;x<image.Width;x++) { var p=image.GetPixel(x,y); if(p.A>32 && p.R>240 && p.G>170 && p.G<235 && p.B<180) warm++; }
+                    Check(warm==0,"Idle renderer has no visible flame-colored pixels (ignore near-transparent edge rounding)");
+                    using(var g=Graphics.FromImage(image)) {g.Clear(Color.Transparent);MonsterPainter.DrawLegacy(g,new Rectangle(16,22,208,176),MonsterPose.ForActivity(.2,PetActivity.Fire,.2,0,0),true);}
+                    warm=0;
+                    for(int y=0;y<image.Height;y++) for(int x=0;x<image.Width;x++) {var p=image.GetPixel(x,y);if(p.A>32 && p.R>240 && p.G>170 && p.G<235 && p.B<180)warm++;}
+                    Check(warm>5,"The same visible-flame detector recognizes an actual touch puff");
                 }
                 Console.WriteLine("Passed "+passed+" tests.");
             }

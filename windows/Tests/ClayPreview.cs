@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
@@ -14,7 +14,7 @@ namespace MyDay.Windows
         {
             Directory.CreateDirectory(directory);
             var activities=new[] {PetActivity.Rest,PetActivity.Walk,PetActivity.Hop,PetActivity.Look,PetActivity.Fire,PetActivity.Yawn,PetActivity.Sleep,PetActivity.Drag,PetActivity.Rest};
-            var labels=new[] {"숨 쉬기","작은 걸음","점프","두리번","터치 불꽃","하품 · 옆입 유지","졸기","드래그","장비 착용"};
+            var labels=new[] {"숨 쉬기","작은 걸음","점프","두리번","터치 불꽃","하품 · 옆입 유지","졸기","드래그","오른쪽 보기"};
             var ages=new[] {0.0,.2,.325,.4,.25,.4,1.0,.2,.2};
             using(var board=new Bitmap(960,900)) {
                 using(var g=Graphics.FromImage(board))
@@ -24,11 +24,11 @@ namespace MyDay.Windows
                         int x=i%3*320,y=i/3*300; bool dark=i==6 || i==8;
                         using(var brush=new SolidBrush(dark?Color.FromArgb(34,39,48):Color.FromArgb(250,248,243))) g.FillRectangle(brush,x+6,y+6,308,288);
                         var pose=MonsterPose.ForActivity(ages[i],activities[i],ages[i],0,0);
-                        var equipment=i==8?new SangmonEquipment {WeaponId="frost-sword",CharmId="astral-orb"}:null;
-                        MonsterPainter.DrawLegacy(g,new Rectangle(x+12,y+25,296,226),pose,true,MonsterVariant.Original,equipment);
+                        SangmonEquipment equipment=null;
+                        MonsterPainter.DrawLegacy(g,new Rectangle(x+12,y+25,296,226),pose,i!=8,MonsterVariant.Original,equipment);
                         using(var brush=new SolidBrush(dark?Color.FromArgb(234,231,225):Color.FromArgb(84,75,67))) g.DrawString(labels[i],font,brush,x+20,y+266);
                         using(var sprite=new Bitmap(320,280)) {
-                            using(var sg=Graphics.FromImage(sprite)) MonsterPainter.DrawLegacy(sg,new Rectangle(12,18,296,226),pose,true,MonsterVariant.Original,equipment);
+                            using(var sg=Graphics.FromImage(sprite)) MonsterPainter.DrawLegacy(sg,new Rectangle(12,18,296,226),pose,i!=8,MonsterVariant.Original,equipment);
                             sprite.Save(Path.Combine(directory,"pose-"+i+".png"),ImageFormat.Png);
                         }
                     }

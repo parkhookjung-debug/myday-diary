@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using MyDay.Windows.Core;
@@ -87,9 +87,17 @@ namespace MyDay.Windows.Character
             g.SmoothingMode = SmoothingMode.AntiAlias;
             float scale = Math.Min(area.Width / 555f, area.Height / 430f);
             if(equipment!=null && (SangmonItems.Get(equipment,"head")!="none" || SangmonItems.Get(equipment,"back")!="none" || SangmonItems.Get(equipment,"aura")!="none"))scale*=.9f;
-            float shadowWidth=area.Width*(.31f+pose.Bob*.005f);
-            using(var shadow=new SolidBrush(Color.FromArgb(23,Ink)))
-                g.FillEllipse(shadow,area.X+area.Width*.62f-shadowWidth/2,area.Y+area.Height*.91f,shadowWidth,area.Height*.045f);
+            if(variant==MonsterVariant.Original) {
+                float width=scale*(320+pose.Bob*2), center=area.X+area.Width/2f+(facingLeft?41:-41)*scale;
+                using(var contact=new GraphicsPath()) {
+                    contact.AddEllipse(center-width/2,area.Y+area.Height/2f+154*scale,width,17*scale);
+                    using(var shade=new PathGradientBrush(contact) {CenterColor=Color.FromArgb(27,Ink),SurroundColors=new[] {Color.Transparent}}) g.FillPath(shade,contact);
+                }
+            } else {
+                float shadowWidth=area.Width*(.31f+pose.Bob*.005f);
+                using(var shadow=new SolidBrush(Color.FromArgb(23,Ink)))
+                    g.FillEllipse(shadow,area.X+area.Width*.62f-shadowWidth/2,area.Y+area.Height*.91f,shadowWidth,area.Height*.045f);
+            }
             g.TranslateTransform(area.X + area.Width / 2f, area.Y + area.Height / 2f + pose.Bob * scale * 5.8f);
             g.ScaleTransform(facingLeft ? scale : -scale, scale);
             g.TranslateTransform(-275, -615);
@@ -107,7 +115,21 @@ namespace MyDay.Windows.Character
             GameSkins.DrawBehind(g,pose,variant);
             RewardSkins.DrawBehind(g,pose,variant);
             float l = variant==MonsterVariant.Original?ClayMaterial.Step(pose.Toe):pose.Toe, r = -l;
-            if(variant==MonsterVariant.Puffy) {
+            if(variant==MonsterVariant.Original) {
+                // Video redesign: broad eye bumps, plump belly and short scalloped feet.
+                // Keep the original ID so diary, growth and backup references do not change.
+                using(var body=new Shape().M(170,551)
+                    .C(166,521,174,480,194,465).C(216,445,246,463,261,501)
+                    .C(266,471,284,448,307,448).C(335,447,353,480,357,512)
+                    .C(417,506,469,538,499,591).C(522,631,530,681,515,723+r)
+                    .C(507,748+r,492,771+r,474,768+r).Q(462,768+r,452,759+r)
+                    .Q(441,771+r,429,765+r).C(420,761+r,426,744,410,741)
+                    .C(382,733,348,742,317,739).C(286,737,261,735,243,743)
+                    .C(231,749,221,764+l,209,766+l).Q(197,770+l,192,759+l)
+                    .C(181,766+l,164,767+l,163,751+l).Q(160,730,170,711)
+                    .C(139,700,114,676,112,646).C(109,611,135,576,170,551).Close())
+                    ClayMaterial.Body(g,body.Path,l);
+            } else if(variant==MonsterVariant.Puffy) {
                 using(var body=new Shape().M(215,513).C(219,482,231,451,248,439).C(261,433,268,455,275,491)
                     .C(281,466,288,430,307,433).C(326,435,337,469,342,498).C(425,500,509,566,507,647)
                     .C(507,725,441,770,355,776).C(271,788,194,763,165,721).C(142,682,156,654,180,636)
@@ -165,7 +187,7 @@ namespace MyDay.Windows.Character
             }
             if(pose.Curious || pose.Happy) {
                 using(var blush=new SolidBrush(Color.FromArgb(pose.Happy?75:40,238,156,122))) {
-                    g.FillEllipse(blush,226,509,22,11); g.FillEllipse(blush,310,509,22,11);
+                    g.FillEllipse(blush,variant==MonsterVariant.Original?197:226,variant==MonsterVariant.Original?519:509,22,11); g.FillEllipse(blush,variant==MonsterVariant.Original?293:310,509,22,11);
                 }
             }
             DrawDetails(g,variant);
@@ -175,7 +197,7 @@ namespace MyDay.Windows.Character
             if (!pose.Held && pose.FireStrength>.01f)
             {
                 float size = .42f + pose.FireStrength*(.47f + pose.Pulse*.13f);
-                float anchorX=variant==MonsterVariant.Original?120:136, anchorY=variant==MonsterVariant.Original?586:636;
+                float anchorX=variant==MonsterVariant.Original?134:136, anchorY=variant==MonsterVariant.Original?631:636;
                 g.TranslateTransform(anchorX,anchorY); g.ScaleTransform(size,size); g.RotateTransform((pose.Pulse-.5f)*7); g.TranslateTransform(-anchorX,-anchorY);
                 if(variant==MonsterVariant.Original) ClayMaterial.Flame(g);
                 else {
@@ -191,7 +213,7 @@ namespace MyDay.Windows.Character
                 if(pose.Happy && pose.FireStrength>0) {
                     for(int i=0;i<5;i++) {
                         float phase=(pose.Phase*1.7f+i*.19f)%1;
-                        float px=(variant==MonsterVariant.Original?45:70)-phase*65,py=(variant==MonsterVariant.Original?586:641)+(float)Math.Sin(phase*6+i)*22;
+                        float px=(variant==MonsterVariant.Original?59:70)-phase*65,py=(variant==MonsterVariant.Original?631:641)+(float)Math.Sin(phase*6+i)*22;
                         using(var ember=new SolidBrush(Color.FromArgb((int)(170*(1-phase)*pose.FireStrength),i%2==0?Fire:Color.FromArgb(237,160,91))))
                             g.FillEllipse(ember,px,py,5+phase*3,5+phase*3);
                     }

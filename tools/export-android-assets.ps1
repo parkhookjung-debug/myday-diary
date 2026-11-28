@@ -1,5 +1,6 @@
-param([switch]$ItemsOnly,[ValidateSet('weapon','charm','head','face','neck','back','aura','ground')][string]$ItemSlot)
+﻿param([switch]$Focused,[switch]$CheckFocused,[switch]$ItemsOnly,[ValidateSet('weapon','charm','head','face','neck','back','aura','ground')][string]$ItemSlot)
 $ErrorActionPreference='Stop'
+if(($Focused -or $CheckFocused) -and ($ItemsOnly -or $ItemSlot)){throw 'Focused cannot be combined with item export.'}
 $projectRoot=Split-Path $PSScriptRoot -Parent
 $compiler=Join-Path $env:WINDIR 'Microsoft.NET/Framework64/v4.0.30319/csc.exe'
 $output=Join-Path $projectRoot '.bootstrap/ExportAndroidAssets.exe'
@@ -8,6 +9,7 @@ $sources=Get-ChildItem -LiteralPath (Join-Path $projectRoot 'windows') -Filter '
 & $compiler /nologo /target:exe /main:AndroidAssetExporter ('/out:'+$output) /reference:System.Drawing.dll /reference:System.Windows.Forms.dll /reference:System.Runtime.Serialization.dll /reference:System.Web.Extensions.dll (Join-Path $PSScriptRoot 'ExportAndroidAssets.cs') @sources
 if($LASTEXITCODE -ne 0) {throw 'Android 공유 에셋 생성기 빌드 실패'}
 $exportArgs=@((Join-Path $projectRoot 'app/src/main/assets'))
+if($CheckFocused){$exportArgs+='--focused-check'}elseif($Focused){$exportArgs+='--focused'}
 if($ItemsOnly -or $ItemSlot){$exportArgs+='--items-only'}
 if($ItemSlot){$exportArgs+=$ItemSlot}
 & $output @exportArgs

@@ -54,6 +54,13 @@ jobs:
           if ($LASTEXITCODE -ne 0) { throw 'Local transfer tests failed' }
           python -m unittest discover -s tools -p test_sync_journal.py -v
           if ($LASTEXITCODE -ne 0) { throw 'Journal policy tests failed' }
+      - name: Verify shared character frames match native artwork
+        shell: pwsh
+        run: |
+          ./tools/export-android-assets.ps1 -CheckFocused
+          if ($LASTEXITCODE -ne 0) { throw 'Shared character art is stale' }
+          python -m unittest discover -s tools -p test_character_art.py -v
+          if ($LASTEXITCODE -ne 0) { throw 'Character art provenance failed' }
       - name: Validate storage and character animation
         shell: pwsh
         run: |

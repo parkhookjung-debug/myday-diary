@@ -1,0 +1,49 @@
+{
+  "format": "myday-character-art",
+  "version": 1,
+  "revision": "sangmon-plump-clay-2026-11-28",
+  "characterId": "original",
+  "reference": {
+    "fileName": "sangmon-2d-to-matching-3d.mp4",
+    "sha256": "247641da764aa77f8c31b9010942ba128af3004317c203dc7e7429d0e08dbeba",
+    "frame": "final 3D pose",
+    "providedBy": "project owner",
+    "rawVideoBundled": false
+  },
+  "appearance": [
+    "plump broad ivory body",
+    "wide round eye bumps",
+    "solid round black pupils",
+    "low nearly flat belly",
+    "short scalloped feet",
+    "thin curved side lip with small tongue"
+  ],
+  "renderer": [
+    "windows/Character/MonsterPainter.cs",
+    "windows/Character/ClayMaterial.cs"
+  ],
+  "atlas": {
+    "path": "app/src/main/assets/sangmon/original.png",
+    "sha256": "6f7d19c4811af0a786f622c646a322a5968782c47dcd0f65a06f310b2c29104c",
+    "columns": 8,
+    "rows": [
+      "rest",
+      "walk",
+      "touch-fire",
+      "yawn",
+      "hop",
+      "look",
+      "sleep",
+      "drag"
+    ],
+    "cellWidth": 192,
+    "cellHeight": 192
+  },
+  "consumers": [
+    "Windows native vector renderer",
+    "Android shared sprite renderer and live wallpaper",
+    "macOS shared sprite renderer and desktop companion",
+    "Android and macOS bundled playroom"
+  ],
+  "backupIdentityUnchanged": true
+}

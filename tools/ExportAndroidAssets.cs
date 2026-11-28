@@ -16,7 +16,22 @@ public static class AndroidAssetExporter
     }
     private static int Export(string[] args)
     {
-        if(args.Length<1 || args.Length>3 || (args.Length>=2 && args[1]!="--items-only")) return 1;
+        if(args.Length<1 || args.Length>3 || (args.Length>=2 && args[1]!="--items-only" && args[1]!="--focused" && args[1]!="--focused-check")) return 1;
+        if(args.Length==2 && (args[1]=="--focused" || args[1]=="--focused-check")) {
+            var target=Path.Combine(Path.GetFullPath(args[0]),"sangmon");Directory.CreateDirectory(target);
+            string destination=Path.Combine(target,"original.png");
+            if(args[1]=="--focused-check") {
+                using(var expected=new Bitmap(destination)) using(var actual=CreateAtlas(MonsterVariant.Original)) {
+                    if(expected.Size!=actual.Size)throw new InvalidOperationException("Original atlas dimensions differ from the shipped painter.");
+                    for(int y=0;y<actual.Height;y++)for(int x=0;x<actual.Width;x++)
+                        if(expected.GetPixel(x,y)!=actual.GetPixel(x,y))throw new InvalidOperationException("Original atlas is stale at "+x+","+y+". Run -Focused.");
+                }
+                Console.WriteLine("All 64 original frames match the shipped Windows painter.");return 0;
+            }
+            ExportAtlas(destination,MonsterVariant.Original);
+            Console.WriteLine("Exported the focused original companion only (8 activities x 8 frames).");
+            return 0;
+        }
         bool itemsOnly=args.Length>=2;
         string itemSlot=args.Length==3?args[2]:null;
         if(itemSlot!=null && !SangmonItems.Slots.Contains(itemSlot))return 1;
@@ -39,16 +54,9 @@ public static class AndroidAssetExporter
                     x=JournalLayouts.Arrange(t.Layout,t.Sections.Length,900)[index].X,y=JournalLayouts.Arrange(t.Layout,t.Sections.Length,900)[index].Y,
                     width=JournalLayouts.Arrange(t.Layout,t.Sections.Length,900)[index].Width,height=JournalLayouts.Arrange(t.Layout,t.Sections.Length,900)[index].Height}).ToArray()}).ToArray()
         }),new System.Text.UTF8Encoding(false));
-        var activities=new[] {PetActivity.Rest,PetActivity.Walk,PetActivity.Fire,PetActivity.Yawn,PetActivity.Hop,PetActivity.Look,PetActivity.Sleep,PetActivity.Drag};
-        foreach(var variant in itemsOnly?new MonsterVariant[0]:MonsterVariants.All) using(var atlas=new Bitmap(192*8,192*activities.Length)) {
-            using(var g=Graphics.FromImage(atlas)) for(int row=0;row<activities.Length;row++) for(int frame=0;frame<8;frame++) {
-                var activity=activities[row];
-                double age=row==0?new[] {0,.3,.8,1.2,2.4,3.2,3.86,4.05}[frame]:row==1 || row==2?frame*.1:row==4?frame*.65/8:row==3?frame*.2:frame*.3;
-                var saved=g.Save();g.TranslateTransform(frame*192,row*192);
-                MonsterPainter.Draw(g,new Rectangle(10,12,172,158),MonsterPose.ForActivity(age,activity,age,0,0),true,variant);g.Restore(saved);
-            }
-            atlas.Save(Path.Combine(characters,MonsterVariants.Id(variant)+".png"),ImageFormat.Png);
-            using(var portrait=atlas.Clone(new Rectangle(0,0,192,192),PixelFormat.Format32bppArgb)) portrait.Save(Path.Combine(portraits,MonsterVariants.Id(variant)+".png"),ImageFormat.Png);
+        foreach(var variant in itemsOnly?new MonsterVariant[0]:MonsterVariants.All) {
+            string path=Path.Combine(characters,MonsterVariants.Id(variant)+".png");ExportAtlas(path,variant);
+            using(var atlas=new Bitmap(path)) using(var portrait=atlas.Clone(new Rectangle(0,0,192,192),PixelFormat.Format32bppArgb)) portrait.Save(Path.Combine(portraits,MonsterVariants.Id(variant)+".png"),ImageFormat.Png);
         }
         var items=SangmonItems.All.Where(i=>itemSlot==null || i.Slot==itemSlot).ToArray();
         foreach(var item in items) using(var image=new Bitmap(192,240)) {
@@ -90,4 +98,22 @@ public static class AndroidAssetExporter
         File.Copy(Path.Combine(resourcePath,"windows-v7.json"),Path.Combine(deviceResources,"windows-v7.json"),true);
         Console.WriteLine("Exported "+(itemsOnly?"existing Sangmon atlases unchanged, ":"64 Sangmon atlases, ")+items.Length+" items/overlays and "+DiaryTemplates.All.Length+" templates.");return 0;
     }
+    private static void ExportAtlas(string path,MonsterVariant variant)
+    {
+        using(var atlas=CreateAtlas(variant))atlas.Save(path,ImageFormat.Png);
+    }
+    private static Bitmap CreateAtlas(MonsterVariant variant)
+    {
+        var activities=new[] {PetActivity.Rest,PetActivity.Walk,PetActivity.Fire,PetActivity.Yawn,PetActivity.Hop,PetActivity.Look,PetActivity.Sleep,PetActivity.Drag};
+        var atlas=new Bitmap(192*8,192*activities.Length);
+        {
+            using(var g=Graphics.FromImage(atlas)) for(int row=0;row<activities.Length;row++) for(int frame=0;frame<8;frame++) {
+                double age=row==0?new[] {0,.3,.8,1.2,2.4,3.2,3.86,4.05}[frame]:row==1 || row==2?frame*.1:row==4?frame*.65/8:row==3?frame*.2:frame*.3;
+                var saved=g.Save();g.TranslateTransform(frame*192,row*192);
+                MonsterPainter.Draw(g,new Rectangle(10,12,172,158),MonsterPose.ForActivity(age,activities[row],age,0,0),true,variant);g.Restore(saved);
+            }
+        }
+        return atlas;
+    }
+
 }

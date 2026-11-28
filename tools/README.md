@@ -17,6 +17,10 @@
 | CI 에뮬레이터에서 화면·저장 검사 | [android-device-tests.sh](android-device-tests.sh) | 일회용 CI AVD·캡처·보고서, 개인 휴대폰이 연결된 PC 실행용이 아님 |
 | Windows 렌더러의 PNG 프레임을 GIF로 묶기 | [package-preview.py](package-preview.py) | 선택 미리보기 도구 |
 
+## 현재 기본 상몬만 갱신하기
+
+0.16.1 새 외형에는 `./tools/export-android-assets.ps1 -Focused`를 사용합니다. `-CheckFocused`로 Windows 렌더러와 Android·Mac용 64프레임의 픽셀 일치를 검사합니다. [공통 명세](../shared/character-art.json)와 [실제 적용 그림](../previews/applied/sangmon-plump-clay/README.md)을 함께 갱신합니다. 이 모드는 과거 변신·장비·목록·백업 자료에 손대지 않습니다.
+
 ## 공통 그림·질문을 수정하는 순서
 
 1. [Windows 상몬/아이템 원본](../windows/Character/README.md), [아이템 이름·설명](../windows/Core/SangmonItems.cs), [20개 형식 질문 원본](../windows/Core/Templates/README.md)을 수정합니다.
