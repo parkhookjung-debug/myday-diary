@@ -1,61 +1,117 @@
-# MyDay 0.15.3 다운로드와 설치
+# 마이데이 설치 안내 · Android / Mac / Windows
 
-2026-11-25 · 세 플랫폼 시험판. [다운로드 페이지](https://github.com/parkhookjung-debug/myday-diary/releases/tag/v0.15.3-preview)에서 운영체제에 맞는 파일 **하나**를 받습니다. 공개 Release 첨부 파일이므로 GitHub Actions 로그인이나 개발 도구 없이 다운로드할 수 있습니다. `Source code (zip)`과 `Source code (tar.gz)`는 실행 앱이 아닌 개발 소스입니다.
+**[0.16.0 공통 시험판 다운로드](https://github.com/parkhookjung-debug/myday-diary/releases/tag/v0.16.0-preview)**
 
-| 운영체제 | 다운로드 | 실행 방법 |
+마이데이는 상몬과 함께 글·사진·영상·할 일·습관을 기록하는 일기 앱입니다. Android·Mac·Windows에서 같은 일기 기능, 성장 규칙, 일곱 게임을 제공합니다. 설치 파일은 운영체제별로 하나만 선택하세요. GitHub 로그인, Android Studio, Visual Studio, Python은 일반 앱 사용에 필요하지 않습니다.
+
+| 사용하는 기기 | 받을 파일 | 설치 안내 |
 | --- | --- | --- |
-| Windows 10/11 · .NET Framework 4.8+ | [Windows 실행 파일 (.exe)](https://github.com/parkhookjung-debug/myday-diary/releases/download/v0.15.3-preview/MyDay-Windows.exe) | 기존 앱 종료 후 EXE 실행 |
-| Mac · Apple Silicon(M1 이상) · macOS 13+ | [Mac 앱 (.zip)](https://github.com/parkhookjung-debug/myday-diary/releases/download/v0.15.3-preview/MyDay-macOS-arm64.zip) | 압축을 풀고 `MyDay.app` 실행 |
-| Android 8 이상 · Galaxy 등 | [Android 설치 파일 (.apk)](https://github.com/parkhookjung-debug/myday-diary/releases/download/v0.15.3-preview/MyDay-Android.apk) | 휴대폰에서 APK 다운로드 후 설치 |
+| Galaxy 등 Android 8 이상 | [MyDay-Android.apk](https://github.com/parkhookjung-debug/myday-diary/releases/download/v0.16.0-preview/MyDay-Android.apk) | [Android 설치](#android) |
+| Apple Silicon M1 이상 / macOS 13 이상 | [MyDay-macOS-arm64.zip](https://github.com/parkhookjung-debug/myday-diary/releases/download/v0.16.0-preview/MyDay-macOS-arm64.zip) | [Mac 설치](#mac) |
+| Windows 10·11 / .NET Framework 4.8 이상 | [MyDay-Windows.exe](https://github.com/parkhookjung-debug/myday-diary/releases/download/v0.16.0-preview/MyDay-Windows.exe) | [Windows 실행](#windows) |
 
-**새 업데이트:** Windows 할 일 목록의 항목별 추가·편집·체크·삭제·중요도와 전체 완료를 제공합니다. 기존 일곱 게임과 기념일을 유지하며 Android 백업에서 항목별 정보를 보존합니다. [사용법과 작업자·검증](TODO-INTEGRATION-2026-11-25.md).
+지원 대상은 이 **세 종류**입니다. iPhone·iPad용 iOS 앱과 Intel Mac용 실행 파일은 제공하지 않습니다. `Source code (zip)` / `Source code (tar.gz)` / 저장소의 `Code → Download ZIP`은 개발 소스이며 설치 파일이 아닙니다. Releases 화면에서 파일 목록이 접혀 있으면 **Assets**를 펼치세요.
 
-## 처음 실행하기
+<a id="android"></a>
+## Android · Galaxy
 
-### Windows
+### 처음 설치
 
-1. `MyDay-Windows.exe`를 내려받습니다. 별도 설치 프로그램 없이 실행합니다. Windows 10/11과 .NET Framework 4.8 이상이 필요합니다.
-2. 기존 MyDay가 실행 중이면 앱의 종료 기능으로 완전히 종료한 뒤 새 파일을 실행합니다. 일기 창만 닫는 동작은 앱 전체 종료와 다를 수 있습니다.
-3. 바탕화면의 상몬을 클릭해 일기 창을 엽니다. 잡아끌면 몸이 늘어나고, 빠르게 놓으면 던진 속도에 비례해 날아가 화면 가장자리에서 튕깁니다.
-4. 이 Windows 파일에는 일곱 게임(상몬 블록 퍼즐 포함)·바탕화면 공놀이·게임 선택 메뉴·기념일 달력과 테트리스 최고기록 통합도 포함합니다. 상몬 블록은 다섯 개를 놓을 때마다 낙하 속도가 올라갑니다. Mac·Android는 기념일 백업 자료를 보존하며 게임 화면과 기념일 편집은 Windows에 먼저 제공합니다.
+1. **휴대폰에서** 위의 `MyDay-Android.apk` 링크를 누릅니다. PC에서 받았다면 USB 등으로 APK를 휴대폰의 `Download` 폴더로 옮깁니다.
+2. 브라우저 다운로드 목록 또는 **내 파일 → 다운로드**에서 `MyDay-Android.apk`를 누릅니다. 이름이 `.zip`으로 바뀌지 않았는지 확인하세요.
+3. 설치가 차단되면 표시된 **설정**으로 이동해, 지금 APK를 여는 브라우저나 내 파일 앱에만 **이 출처 허용 / 알 수 없는 앱 설치 허용**을 켭니다. 메뉴 이름은 Galaxy·Android 버전에 따라 다릅니다.
+4. 설치 화면으로 돌아가 **설치 → 열기**를 누릅니다. 홈 화면이나 앱 목록에서는 **마이데이**로 찾습니다. 설치 후 3번의 출처 허용은 다시 꺼도 앱 사용에 지장이 없습니다.
+5. 시작 안내를 닫고 글 한 줄을 씁니다. 다른 날짜로 이동했다가 돌아왔을 때 글이 남아 있으면 저장까지 확인한 것입니다.
 
-### Mac
+Google Play 등록본이 아닌 GitHub 시험판 APK입니다. Play Protect 전체를 끄는 방식으로 설치하지 마세요. 악성 앱 경고가 뜨면 설치를 멈추고 공식 Release의 파일·버전을 확인해 주세요. [Google의 Play Protect 안내](https://support.google.com/android/answer/2812853?hl=ko).
 
-1. Apple Silicon(M1·M2·M3·M4 등) Mac과 macOS 13 이상에서 `MyDay-macOS-arm64.zip`을 받습니다. Intel Mac용 바이너리는 포함하지 않습니다.
-2. 압축을 풀고 `MyDay.app`을 응용 프로그램 폴더로 옮겨 실행합니다.
-3. 개발용 로컬 서명이 적용된 시험판이며 Apple 공증은 적용하지 않았습니다. 실제 Mac에서 운영체제의 앱 실행 확인이 필요할 수 있습니다. 실행 문제를 보고할 때 Mac 칩·macOS 버전·표시된 메시지를 함께 남겨 주세요.
+### 사진·영상·상몬 설정
 
-### Android
+- 사진·영상 추가 시 시스템 파일 선택기에서 직접 파일을 고릅니다. 영상은 기기에서 재생 가능한 **MP4(H.264)**를 권장하며 원본은 2GB 이하여야 합니다.
+- **상몬 성장 → 상몬 놀이터**에서 일곱 게임·오늘의 간식 도전·공놀이를 엽니다. 터치로 조작하고, 휴대폰의 뒤로 가기나 화면의 닫기로 돌아옵니다.
+- **설정·백업 → 홈 화면에 일기 위젯 추가** 또는 **상몬 라이브 배경화면 설정**을 누릅니다. 위젯 추가·배경화면 적용은 Android 시스템 확인 화면에서 완료합니다.
+- 배경화면의 상몬을 잡아 움직이면 늘어나고, 빠르게 놓으면 속도에 따라 날아가 가장자리에서 튕깁니다. 홈 런처가 배경화면에 터치를 전달해야 동작합니다.
+- 햅틱은 앱의 **설정·백업 → 햅틱 반응**과 휴대폰의 터치 피드백 설정을 따릅니다. 무음·접근성·제조사 설정에 따라 느낌이 다를 수 있습니다.
 
-1. Android 8 이상 휴대폰에서 `MyDay-Android.apk`를 내려받아 설치합니다. Google Play 배포본이 아닌 테스트용 APK입니다.
-2. 기기의 APK 설치 안내에 따라 설치한 뒤 **마이데이**를 엽니다. 홈 위젯·라이브 배경화면·햅틱을 사용할 수 있습니다.
-3. 이번 파일은 검증된 CI의 디버그 서명 시험판입니다. 이전 APK와 서명이 다르면 덮어 설치가 안 될 수 있습니다. **기록을 백업하고 복원 가능한지 확인하기 전에는 기존 앱을 삭제하지 마세요.** 앞으로 동일한 배포 서명을 사용하는 정식 업데이트 체계는 별도 작업입니다.
+### Android 업데이트가 안 될 때
 
-## 기존 기록을 유지하면서 업데이트
+0.16.0부터 프로젝트 전용 시험판 서명을 사용합니다. 이후 같은 키로 서명된 새 APK는 기존 앱을 지우지 않고 열어 **업데이트**를 누릅니다. 이전 디버그 APK와 서명이 다르면 `앱이 설치되지 않았습니다` / `기존 패키지와 충돌`이 표시될 수 있습니다. 파일 이름을 바꾸거나 같은 파일을 다시 받아도 서명은 달라지지 않습니다.
 
-**공통 JSON 백업 저장 → 앱 완전 종료 → 새 앱으로 교체 → 기록·사진·경험치 확인** 순서로 진행합니다. 백업 버전 1~9를 지원합니다. 과거 외형·장비·수집 메타데이터는 호환용으로 보존하되 새 앱에서는 기본 상몬을 표시합니다. 기존 설치 파일과 백업은 새 앱에서 확인을 마칠 때까지 보관합니다.
+이 경우 **기존 앱을 삭제하지 말고**, 먼저 기존 앱의 **설정·백업 → 백업 다운로드**로 JSON을 휴대폰 밖에도 보관하세요. 가능하면 다른 Windows·Mac 앱에서 백업의 일기·사진·경험치를 먼저 확인합니다. 복원이 검증된 백업 없이 앱을 삭제하면 앱 내부 기록을 잃을 수 있습니다. 서명 전환 여부는 해당 Release 설명과 `SOURCE.json`을 확인하세요. 영상 원본과 게임 점수는 아래 [데이터 안내](#data)를 별도로 확인합니다.
 
-공통 기능은 일기·사진·블록 자유 배치·일기 형식 100종·달력과 검색·기록 관리·기본 상몬·출석과 레벨업·백업/복구·기기 간 전송·로컬 라운지입니다. 변신·코디·옷장·뽑기·재화·합성 화면은 제거했습니다. Windows·Mac·Android의 입력 방식과 일부 시스템 기능은 서로 다릅니다.
+<a id="mac"></a>
+## Mac
 
-기록은 기기 내부에 저장합니다. 세 기기의 자동 동기화는 없고 공통 백업이나 기기 연결로 옮깁니다. 채팅은 기존 로컬 서버를 실행했을 때 사용하며, 외부 인터넷 공개 채팅 서버는 제공하지 않습니다. 카카오 연동 SDK·인증·공유 원본은 보존하지만 공개 로그인·업로드 연결은 비활성입니다.
+### 지원하는 Mac 확인
 
-## 게임만 실행하기
+왼쪽 위 **Apple 메뉴 → 이 Mac에 관하여**를 엽니다. **칩: Apple M1·M2·M3·M4 등 Apple Silicon**이고 **macOS 13 Ventura 이상**이어야 합니다. `프로세서: Intel`이면 현재 배포 ZIP의 지원 대상이 아닙니다. Windows EXE와 Android APK도 Mac에서 실행하는 파일이 아닙니다.
 
-Windows에서 [SangmonGame.exe](https://github.com/parkhookjung-debug/myday-diary/releases/download/v0.15.3-preview/SangmonGame.exe)는 일곱 게임 플레이룸을 바로 엽니다. [SangmonFetch.exe](https://github.com/parkhookjung-debug/myday-diary/releases/download/v0.15.3-preview/SangmonFetch.exe)는 바탕화면 공놀이를 시작합니다. 두 파일은 일기 앱과 같은 검증 바이너리이며 파일 이름에 따라 처음 열리는 화면만 다릅니다.
+### 설치와 첫 실행
 
-상몬 블록 퍼즐만 열려면 Release의 `SangmonBlockPuzzle.exe`를 실행합니다. 기존 낙하형 블록 쌓기와 별개의 8×8 배치 퍼즐입니다.
+1. Mac에서 `MyDay-macOS-arm64.zip`을 다운로드합니다.
+2. Finder의 다운로드 폴더에서 ZIP을 두 번 클릭해 압축을 풉니다. ZIP 안을 미리 보는 상태로 실행하지 마세요.
+3. 압축을 푼 **MyDay.app**을 Finder의 **응용 프로그램(Applications)** 폴더로 옮깁니다. 기존 앱이 실행 중이면 메뉴 막대의 마이데이 메뉴에서 **종료**하거나 `⌘Q`로 종료한 뒤 교체합니다.
+4. 응용 프로그램 폴더의 `MyDay.app`을 두 번 클릭합니다. 표시 이름은 **마이데이**입니다.
+5. 시작 안내 뒤 글을 작성하고 앱을 종료·재실행해 기록이 남는지 확인합니다. 메뉴 막대의 마이데이 메뉴에서 **일기 열기 / 바탕화면 상몬 보기**도 사용할 수 있습니다.
 
-## 파일 확인과 소스
+### 개발자 확인 메시지가 표시될 때
 
-Release의 `SHA256SUMS.txt`로 배포 파일의 SHA256을 확인할 수 있습니다. `SOURCE.json`은 각 운영체제 파일의 실제 빌드 커밋·CI·크기·SHA256을 기록합니다. 검증된 파일을 그대로 게시했으며 Mac ZIP의 실행 권한과 서명을 유지하도록 재압축하지 않았습니다.
+이 시험판은 로컬 개발 서명이 적용되어 있으며 Apple 공증은 아직 적용하지 않았습니다. **공식 Release에서 받은 파일임을 확인한 경우**, 한 번 실행을 시도한 후 **시스템 설정 → 개인정보 보호 및 보안** 아래의 관련 차단 메시지에서 **확인 없이 열기(Open Anyway)**를 선택하고 시스템 확인을 진행할 수 있습니다. 버튼은 첫 실행 시도 뒤 일정 시간 동안만 보입니다. [Apple의 공식 앱 열기 안내](https://support.apple.com/ko-kr/102445).
 
-- [파일 출처·해시](https://github.com/parkhookjung-debug/myday-diary/releases/download/v0.15.3-preview/SOURCE.json) · [SHA256 목록](https://github.com/parkhookjung-debug/myday-diary/releases/download/v0.15.3-preview/SHA256SUMS.txt)
-- [배포 소스](https://github.com/parkhookjung-debug/myday-diary/tree/v0.15.3-preview) · [간소화 기능·호환성](https://github.com/parkhookjung-debug/myday-diary/blob/v0.15.3-preview/docs/FOCUSED-APP.md)
-- [Windows 상몬 사용법·조절 파일](https://github.com/parkhookjung-debug/myday-diary/blob/v0.15.3-preview/docs/DESKTOP-PET-MOTION.md)
-- [전체 사용자 설명서](https://github.com/parkhookjung-debug/myday-diary/blob/v0.15.3-preview/docs/USER-MANUAL.md): 이전 기능 설명도 포함하므로 현재 제공 범위는 간소화 안내를 우선합니다.
+`컴퓨터를 손상시킵니다` 같은 악성 앱 경고나 `손상되어 열 수 없습니다`가 나오면 이 절차를 반복해 우회하지 말고 새 ZIP의 다운로드와 무결성을 확인하세요. 전역 보안 기능을 끄는 터미널 명령은 필요하지 않습니다.
 
-검증 완료: Windows 522 assertions·네이티브 일기/포인터/렌더링·로컬 채팅, Android JVM 60개·API35 기기 19개·lint 오류 0개, Mac Apple Silicon 빌드·공통 계약·Windows 백업 교환·로컬 채팅. Intel Mac 실행과 실제 Galaxy의 햅틱 느낌은 별도 실기기 확인 범위입니다.
+<a id="windows"></a>
+## Windows
 
-[0.15.3 파일별 검증 기록](builds/release-0.15.3-2026-11-25.json) · [팀원 변경과 통합 범위](TEAM-UPDATES-2026-11-23.md).
+### 처음 실행
 
-[로그인 없이 공개 다운로드 10개·SHA256 대조 완료](builds/release-0.15.3-public-download-check.json).
+1. `MyDay-Windows.exe`를 다운로드합니다. EXE 자체가 앱이므로 별도 설치 마법사는 없습니다. 본인이 관리할 폴더에 보관하세요.
+2. EXE를 두 번 클릭합니다. 관리자 권한 실행은 필요하지 않습니다.
+3. 첫 실행에는 바탕화면 상몬이 나타날 수 있습니다. **상몬 클릭 → 일기 열기** 또는 작업 표시줄 오른쪽 알림 영역의 MyDay 아이콘을 사용합니다. 아이콘이 안 보이면 숨겨진 아이콘 `∧`를 펼치세요.
+4. 시작 안내 뒤 글을 작성합니다. 이전 날짜로 이동했다 돌아와 글이 남는지 확인합니다.
+5. **상몬 게임** 메뉴에서 일곱 게임·간식 도전·공놀이를 고릅니다. 상몬은 마우스로 잡아 늘리거나 던질 수 있습니다.
+
+이 파일은 공개 시험판으로 Windows의 평판 확인 메시지가 나올 수 있습니다. 공식 파일과 해시를 확인한 뒤 Windows가 제공하는 개별 실행 확인 절차를 사용하세요. 학교·기관 PC 정책으로 실행이 막힌 경우 관리자 정책을 임의로 해제하지 말고 담당자에게 문의하세요.
+
+### 실행되지 않을 때
+
+- `.NET Framework` 설치 안내가 나오면 Microsoft의 [.NET Framework 4.8 Runtime](https://dotnet.microsoft.com/ko-kr/download/dotnet-framework/net48)을 설치합니다. 개발용 Developer Pack은 필요하지 않습니다. Windows가 재시작을 요구하면 재시작한 뒤 앱을 엽니다.
+- `이미 실행 중`이면 알림 영역에서 기존 MyDay를 열거나 **모두 종료**한 뒤 새 EXE를 실행합니다.
+- 일기 창 오른쪽 위 **X는 창 숨기기**입니다. 앱 전체 종료는 알림 영역 메뉴의 **모두 종료**를 사용하세요. 종료하지 않으면 기존 EXE를 새 파일로 교체할 수 없습니다.
+- 상몬을 숨겼다면 알림 영역 메뉴에서 상몬을 다시 표시하거나 일기 창을 엽니다.
+
+Windows에서 게임만 열려면 같은 Release의 `SangmonGame.exe`, 공놀이는 `SangmonFetch.exe`, 8×8 퍼즐은 `SangmonBlockPuzzle.exe`를 사용할 수 있습니다. 내부 프로그램은 같고 처음 여는 화면이 다릅니다. 보통은 **MyDay-Windows.exe 하나만 받으면 충분합니다.**
+
+<a id="data"></a>
+## 세 버전의 기능과 데이터
+
+세 버전은 일기·사진·영상 참조·항목별 할 일과 중요도·습관·감정·100종 형식·자유 배치·기념일·달력·검색·출석·Lv.100 성장·로컬 채팅·기록 관리·백업/복구·일곱 게임을 제공합니다. [기능별 동작과 수정 파일](THREE-PLATFORMS.md).
+
+| 보관하는 내용 | 보관·이동 방식 |
+| --- | --- |
+| 일기·사진·체크리스트·좌표·기념일·경험치 | **공통 JSON 백업**으로 세 앱 사이에 옮김. 사진은 백업에 포함 |
+| 영상 | 백업에는 **원본 파일 경로/참조와 설명**만 포함. 영상 파일은 별도 보관하고 기기를 바꾸면 다시 선택 |
+| 게임 최고 점수 | 각 기기의 게임 기록 파일에 별도 보관. 일기 JSON 백업에는 포함하지 않음 |
+| PIN·기기 권한·앱 설치 상태 | 해당 기기에서 관리. PIN은 화면 잠금으로 일기 파일 암호화 기능은 아님 |
+
+백업은 이전 **버전 1~9를 읽고**, 영상 블록이 있으면 새 **버전 10**으로 내보냅니다. 버전 10 백업은 **0.16.0 이상** 앱에서 여세요. 예전 변신·장비·수집 메타데이터는 호환을 위해 보존하지만 그 화면은 다시 제공하지 않습니다.
+
+기록은 각 기기 안에 저장되며 **자동 클라우드 동기화는 없습니다**. 파일 백업 또는 앱의 **기록 도구 → Wi-Fi·QR**로 옮깁니다. 다른 기기에서 가져올 때 같은 날짜의 변경이 있으면 가져오기 안내를 확인하세요.
+
+로컬 채팅은 같은 네트워크에서 기존 로컬 서버와 초대코드를 준비했을 때 사용할 수 있습니다. 일반 일기와 게임에는 서버가 필요하지 않습니다. 공개 서버·유료 서비스는 추가하지 않았으며 카카오 SDK/인증/공유 원본은 보존하되 공개 로그인·업로드 연결은 꺼져 있습니다. [로컬 채팅 안내](CHAT.md).
+
+## 기존 기록을 보존하며 업데이트
+
+1. 기존 앱의 **설정·백업 → 백업 다운로드**로 공통 JSON을 앱 저장 폴더 밖에 저장합니다. 영상 원본도 별도로 보관합니다.
+2. Windows는 **모두 종료**, Mac은 **종료/⌘Q**로 완전히 종료합니다. Android는 기존 앱을 유지한 채 새 APK로 덮어 설치합니다.
+3. 위 표의 **같은 운영체제 파일**로 교체합니다. 일기 데이터 폴더는 삭제하지 않습니다.
+4. 새 앱에서 최근 글·사진·할 일·기념일·좌표·경험치를 확인합니다. 확인을 마칠 때까지 이전 설치 파일과 백업을 보관합니다.
+5. 기록이 없다면 설정·백업에서 보관한 JSON을 복원합니다. 오류가 나면 빈 기록으로 덮어쓰지 말고 원래 백업을 보관한 상태로 문의하세요.
+
+Windows 데이터 폴더는 `%LOCALAPPDATA%/MyDay/Windows`, Mac은 `~/Library/Application Support/MyDay/`입니다. Android의 앱 내부 파일은 앱 제거 때 지워질 수 있으므로, 내보낸 백업을 `Download`나 다른 기기에 보관합니다.
+
+## 다운로드 확인·문의
+
+[SHA256SUMS.txt](https://github.com/parkhookjung-debug/myday-diary/releases/download/v0.16.0-preview/SHA256SUMS.txt)와 [SOURCE.json](https://github.com/parkhookjung-debug/myday-diary/releases/download/v0.16.0-preview/SOURCE.json)에서 파일 해시·소스 커밋·플랫폼별 검사 출처를 확인할 수 있습니다. 앱을 직접 빌드하려는 경우 [개발 방법](../README.md#직접-빌드하기)을 보세요.
+
+설치가 안 되면 [GitHub Issues](https://github.com/parkhookjung-debug/myday-diary/issues)에 **기기/OS 버전, 앱 버전, 받은 파일 이름, 표시된 오류 문구**를 남겨 주세요. 공개 문의에 개인 일기·사진이 담긴 백업 파일을 그대로 첨부하지 마세요.

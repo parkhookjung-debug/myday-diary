@@ -27,7 +27,7 @@ struct JournalSearch: View {
                 guard let entry=days[key] else{return false}
                 guard hasContent(entry) else{return false}
                 let note=store.studio.note(key)
-                return entry.mood.localizedCaseInsensitiveContains(trimmedQuery) || note.Tags.contains{$0.localizedCaseInsensitiveContains(trimmedQuery)} || entry.blocks.contains{block in (block.title ?? "").localizedCaseInsensitiveContains(trimmedQuery) || block.text.localizedCaseInsensitiveContains(trimmedQuery)}
+                return entry.mood.localizedCaseInsensitiveContains(trimmedQuery) || note.Tags.contains{$0.localizedCaseInsensitiveContains(trimmedQuery)} || entry.blocks.contains{block in block.text.localizedCaseInsensitiveContains(trimmedQuery)}
             }
         } else if showEmpty {
             let count=calendar.range(of:.day,in:.month,for:monthStart)?.count ?? 0

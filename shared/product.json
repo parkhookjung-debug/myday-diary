@@ -11,7 +11,13 @@
     "growth",
     "backup-recovery",
     "local-chat",
-    "kakao-integration-source"
+    "kakao-integration-source",
+    "video-references",
+    "todo-priority",
+    "anniversaries",
+    "mini-games",
+    "daily-challenge",
+    "pet-fetch"
   ],
   "removed": [
     "character-transformations",

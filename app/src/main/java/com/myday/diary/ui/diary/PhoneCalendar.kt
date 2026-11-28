@@ -25,7 +25,7 @@ import java.time.YearMonth
     var query by remember {mutableStateOf("")}
     var anniversaryEditing by remember {mutableStateOf(false)}
     var page by remember(month,query) {mutableIntStateOf(0)}
-    val rows=remember(book,month,query) {book.days.entries.filter {(key,e)->if(query.isBlank()) YearMonth.from(LocalDate.parse(key))==month else e.mood.contains(query.trim(),true) || book.studio?.note(key)?.tags.orEmpty().any {it.contains(query.trim(),true)} || e.blocks.any {it.text.contains(query.trim(),true)||it.title.contains(query.trim(),true)}}.sortedByDescending {it.key}}
+    val rows=remember(book,month,query) {book.days.entries.filter {(key,e)->if(query.isBlank()) YearMonth.from(LocalDate.parse(key))==month else e.mood.contains(query.trim(),true) || book.studio?.note(key)?.tags.orEmpty().any {it.contains(query.trim(),true)} || e.blocks.any {it.text.contains(query.trim(),true)}}.sortedByDescending {it.key}}
     LazyColumn(Modifier.fillMaxSize().padding(horizontal=20.dp).testTag("calendar-list"),verticalArrangement=Arrangement.spacedBy(12.dp),contentPadding=PaddingValues(bottom=24.dp)) {
         item {Text("차곡차곡 쌓인 기록",style=MaterialTheme.typography.headlineSmall);Text("기록한 날과 사진을 달력에서 찾아요.")}
         item {Card(colors=CardDefaults.cardColors(containerColor=Color.White)) {Column(Modifier.padding(12.dp)) {

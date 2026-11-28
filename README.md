@@ -1,48 +1,47 @@
 # 마이데이 (MyDay)
 
-## 앱 다운로드 · 0.15.3 시험판
+**상몬과 함께 기록하고 쉬어가는 일기 앱. Android·Mac·Windows의 기능을 0.16.0 공통 버전으로 맞췄습니다.**
 
-**[다운로드 페이지 열기](https://github.com/parkhookjung-debug/myday-diary/releases/tag/v0.15.3-preview)** — 내 운영체제에 맞는 파일 하나를 받으세요. GitHub 로그인과 개발 도구가 필요 없습니다.
+## 내 기기에 설치하기
 
-| 운영체제 | 다운로드 | 실행 방법 |
+[**앱 다운로드 페이지 → 0.16.0 시험판**](https://github.com/parkhookjung-debug/myday-diary/releases/tag/v0.16.0-preview) · [처음 설치부터 업데이트·오류 해결까지](docs/DOWNLOADS.md)
+
+| 기기 | 받을 파일 | 설치 순서 |
 | --- | --- | --- |
-| Windows 10/11 · .NET Framework 4.8+ | [Windows 실행 파일 (.exe)](https://github.com/parkhookjung-debug/myday-diary/releases/download/v0.15.3-preview/MyDay-Windows.exe) | 기존 앱 종료 후 EXE 실행 |
-| Mac · Apple Silicon(M1 이상) · macOS 13+ | [Mac 앱 (.zip)](https://github.com/parkhookjung-debug/myday-diary/releases/download/v0.15.3-preview/MyDay-macOS-arm64.zip) | 압축을 풀고 `MyDay.app` 실행 |
-| Android 8 이상 · Galaxy 등 | [Android 설치 파일 (.apk)](https://github.com/parkhookjung-debug/myday-diary/releases/download/v0.15.3-preview/MyDay-Android.apk) | 휴대폰에서 APK 다운로드 후 설치 |
+| **Android** · Galaxy 등 Android 8+ | [Android APK 받기](https://github.com/parkhookjung-debug/myday-diary/releases/download/v0.16.0-preview/MyDay-Android.apk) | 휴대폰에서 APK 열기 → 이 파일을 여는 앱의 설치 출처 허용 → 설치·열기 · [상세 안내](docs/DOWNLOADS.md#android) |
+| **Mac** · M1 이상 / macOS 13+ | [Mac ZIP 받기](https://github.com/parkhookjung-debug/myday-diary/releases/download/v0.16.0-preview/MyDay-macOS-arm64.zip) | 압축 풀기 → MyDay.app을 응용 프로그램으로 이동 → 실행 · [첫 실행 확인 안내](docs/DOWNLOADS.md#mac) |
+| **Windows** · 10/11 / .NET Framework 4.8+ | [Windows EXE 받기](https://github.com/parkhookjung-debug/myday-diary/releases/download/v0.16.0-preview/MyDay-Windows.exe) | EXE 실행 → 상몬 클릭 / 알림 영역에서 일기 열기 · [상세 안내](docs/DOWNLOADS.md#windows) |
 
-[자세한 설치·업데이트 안내](docs/DOWNLOADS.md). Mac은 **Apple Silicon 전용**이며 Apple 공증 미적용 시험판입니다. Android는 **디버그 서명 APK**입니다. 기존 사용자는 **공통 백업 → 앱 완전 종료 → 새 앱 실행 → 기록 확인** 순서로 업데이트하세요. Android 서명이 달라 설치가 안 되더라도 백업 확인 전 기존 앱을 삭제하지 마세요.
+일반 사용자는 **위 파일 하나**만 받으면 됩니다. GitHub 로그인·개발 도구는 필요하지 않습니다. `Source code.zip`은 설치 파일이 아닙니다. 이번 지원 대상은 **Android·Mac·Windows 3종**이며 iOS와 Intel Mac 실행 파일은 제공하지 않습니다. Mac 시험판은 Apple 공증 전입니다.
 
-배포 소스는 [v0.15.3-preview 태그](https://github.com/parkhookjung-debug/myday-diary/tree/v0.15.3-preview)에서 확인합니다. Windows 파일에는 탄성 드래그·던지기, 일곱 게임·공놀이, 기념일 달력과 이전 테트리스 최고기록 가져오기가 포함됩니다. Mac·Android도 기념일 백업 자료를 보존하며 게임 화면과 기념일 편집은 Windows에 먼저 제공합니다. [플랫폼별 파일 출처·SHA256](https://github.com/parkhookjung-debug/myday-diary/releases/download/v0.15.3-preview/SOURCE.json)
+**기존 사용자는 먼저 공통 백업을 저장하세요.** Windows는 알림 영역의 **모두 종료**, Mac은 **종료/⌘Q** 뒤 새 앱으로 교체합니다. Android는 새 APK로 덮어 설치하며, 서명 충돌이 나오면 백업 복원을 확인하기 전 기존 앱을 삭제하지 마세요. [데이터 보존·업데이트 방법](docs/DOWNLOADS.md#기존-기록을-보존하며-업데이트).
 
-[![Android CI](https://github.com/parkhookjung-debug/myday-diary/actions/workflows/android.yml/badge.svg)](https://github.com/parkhookjung-debug/myday-diary/actions/workflows/android.yml)
-[![Windows CI](https://github.com/parkhookjung-debug/myday-diary/actions/workflows/windows.yml/badge.svg)](https://github.com/parkhookjung-debug/myday-diary/actions/workflows/windows.yml)
-[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
+## 세 버전에서 같은 일을 할 수 있어요
 
-Windows·Mac·Android에서 쓰는 일기 앱입니다. 사진과 일기 블록을 자유롭게 배치하고, 기록할수록 함께 자라는 캐릭터 **상몬**을 키웁니다.
+- **내 일기 구성:** 글·사진·영상·할 일·습관·감정 블록, 100종 일기 형식, 블록 자유 배치와 내 레이아웃.
+- **기록 찾기:** 달력·본문/사진 설명/감정/태그 검색, 생일·기념일 편집과 ★ 표시, 사진 앨범·즐겨찾기·기록 관리.
+- **함께하는 상몬:** 기본 상몬의 탄성 드래그·속도 비례 던지기, 출석과 기록으로 Lv.100 성장. 운영체제에 맞는 바탕화면/라이브 배경화면과 햅틱.
+- **쉬어가기:** 일곱 게임·오늘의 간식 도전·공놀이. 최고 기록과 결과 이미지, 일시 정지. 게임과 일기 경험치는 별도입니다.
+- **보관과 연결:** 자동 저장·백업/복구·자동 백업·Wi-Fi/QR 이동·로컬 채팅.
 
-![Windows 일기 화면](previews/focused-20261111/windows-example.png)
+영상은 **원본 파일을 연결**하며 백업에는 경로와 설명만 담습니다. 기기를 바꾸면 원본 영상을 다시 고릅니다. 글·사진·할 일·기념일·좌표·성장은 공통 JSON으로 옮깁니다. 게임 점수는 각 기기에 별도 보관하고, 자동 클라우드 동기화는 하지 않습니다.
 
-- **일기**: 글·할 일·습관·감정·사진 블록, 자유 배치, 일기 형식 100종(추천 20종), 내 레이아웃 저장
-- **기록 탐색**: 월간 달력, 본문·사진 설명 검색, 감정 달력, 태그·즐겨찾기, 월별 사진 앨범
-- **상몬 성장**: 기본 상몬 한 마리, 출석·일기·할 일·습관으로 Lv.100까지 성장
-- **안전한 저장**: 자동 저장, 직전 저장본 복구, 휴지통·변경 이력, 하루 한 번 자동 백업, 기기 간 Wi-Fi 전송
-- **플랫폼별 기능**: Windows 바탕화면 캐릭터 · Android 홈 위젯·라이브 배경화면·햅틱 · 세 앱 공통 라운지 채팅(로컬 서버)
+[공통 기능 전체·세 OS의 조작·수정 파일](docs/THREE-PLATFORMS.md) · [사용자 설명서](docs/USER-MANUAL.md) · [간소화 정책](docs/FOCUSED-APP.md)
 
-기록은 각 기기에만 저장합니다. 플랫폼 사이의 자동 동기화는 없고, 공통 JSON 백업(버전 1~9)으로 옮깁니다.
+변신·코디·옷장·뽑기·재화·합성 화면은 제거한 상태를 유지합니다. 예전 데이터는 백업 호환용으로 보존합니다. 카카오 SDK·인증/공유 원본은 유지하지만 공개 서버 연결은 꺼져 있습니다. 로컬 채팅을 제외한 일기·게임은 서버 없이 실행합니다.
 
-> **현재 버전 0.15.3**: 상몬 변신·코디·뽑기·재화·합성 화면을 제거하고 일기와 레벨업에 집중합니다. 로컬 채팅과 카카오 연동 원본은 유지하며 공개 서버는 이전처럼 비활성입니다. [간소화 내용·호환성·수정 파일](docs/FOCUSED-APP.md). [0.14 통합 기록](docs/INTEGRATION-2026-10-29.md)
+## 기능을 고치려면 여기부터 보세요
 
-**Windows 상몬 새 동작:** [잡으면 늘어나고, 빠르게 던지면 화면 가장자리에서 튕깁니다](docs/DESKTOP-PET-MOTION.md) · [동작 미리보기](previews/pet-motion-20261111/README.md)
-
-**Windows 0.15.3 공개 시험판:** [플레이룸 7종 + 바탕화면 공놀이](docs/BLOCK-PUZZLE-INTEGRATION-2026-11-23.md) — 간식 도전·슬링샷·낚시·통통 점프·불꽃 요리·**상몬 블록 쌓기**·**상몬 블록 퍼즐**. [실제 화면](previews/block-puzzle-integration-20261123/README.md). 새 Release에서 바로 받을 수 있습니다.
-
-**11월 25일 업데이트:** mrsandwith-76의 여러 항목 할 일 목록과 중요도 UI를 반영하고 저장 호환을 보강했습니다. [사용법·수정 파일·검증](docs/TODO-INTEGRATION-2026-11-25.md). 이전에 제거한 변신·코디·옷장 기능은 다시 추가하지 않습니다.
-
-**기존 통합:** [기념일 달력·게임 선택 메뉴·상몬 테트리스 최고기록](docs/BRANCH-INTEGRATION-2026-11-14.md). 상몬 블록 디자인을 유지하며 이전 테트리스 기록을 보존해 가져옵니다.
-
-**11월 23일 Windows 통합:** cms6727의 [상몬 블록 퍼즐 PR #11](https://github.com/parkhookjung-debug/myday-diary/pull/11)을 기존 앱에 통합했습니다. 8×8 보드에 블록을 놓아 가로·세로 줄을 지우는 일곱 번째 게임입니다. 기존 여섯 게임과 일기·사진·성장은 유지하며 퍼즐 점수는 별도 파일에 저장합니다. [실행·수정 파일·검증 안내](docs/BLOCK-PUZZLE-INTEGRATION-2026-11-23.md). 0.15.3 공개 다운로드의 Windows 앱에 일곱 게임을 함께 제공합니다.
-
-**팀원 변경 확인:** [전체 브랜치·푸시 점검과 반영 결과](docs/TEAM-UPDATES-2026-11-16.md). hongmin060115-create의 미반영 변경을 상몬 디자인에 맞춰 통합했습니다. 앱 안의 **기록 도구 → 업데이트 → 0.15.3 시험판 받기**도 같은 다운로드 페이지로 연결합니다.
+| 고칠 내용 | 첫 번째로 열 파일/문서 |
+| --- | --- |
+| 일기 형식 100종의 제목·질문 | [shared/catalog/templates.json](shared/catalog/templates.json) |
+| 색상·배치·할 일 제한·상몬 물리 수치 | [shared/desktop.json](shared/desktop.json) → `python tools/sync-desktop.py` |
+| 게임 동작·그림·터치 화면 | [shared/playroom](shared/playroom) · [Windows UI](windows/UI) · [세 플랫폼 연결 위치](docs/THREE-PLATFORMS.md#어느-파일을-수정하나요) |
+| 영상 첨부·체크리스트·기념일 | [세 버전의 수정 파일 표](docs/THREE-PLATFORMS.md#어느-파일을-수정하나요) |
+| Windows 화면 | [windows/UI](windows/UI) · [Windows 안내](windows/README.md) |
+| Mac 화면 | [macos/Sources/MyDay](macos/Sources/MyDay) · [Mac 안내](macos/README.md) |
+| Android 화면·터치·햅틱 | [app/src/main/java/com/myday/diary/ui](app/src/main/java/com/myday/diary/ui) · [Android 안내](app/README.md) |
+| 저장·백업·채팅·기기 전송 | [개발자 수정 가이드](docs/EDITING-GUIDE.md) · [파일 구조](docs/REPOSITORY-STRUCTURE.md) |
 
 ## 직접 빌드하기
 
@@ -58,7 +57,7 @@ git switch codex/windows-app
 | Android | Kotlin / Jetpack Compose (JDK 17+, SDK 35) | `./gradlew :app:assembleDebug` | `./gradlew :app:testDebugUnitTest` |
 | macOS | Swift / SwiftUI | `zsh macos/build.command` | CI의 macOS 작업 |
 
-`shared/`의 공통 원본(일기 형식·색상·성장·채팅 규칙)을 고친 뒤에는 `python tools/sync-desktop.py`로 각 앱의 생성 코드(`*.g.cs`, `*.g.kt`, `*.g.swift`)를 다시 만듭니다. 생성 파일은 직접 고치지 마세요. [공통 개발 순서](docs/DESKTOP-SHARED.md)
+`shared/`의 공통 원본(일기 형식·색상·성장·채팅 규칙)을 고친 뒤에는 `python tools/sync-desktop.py`로 각 앱의 생성 코드(`*.g.cs`, `*.g.kt`, `*.g.swift`)를 다시 만듭니다. 게임 원본을 고쳤다면 `python tools/sync-playroom.py`도 실행합니다. 생성 파일은 직접 고치지 마세요. [공통 개발 순서](docs/DESKTOP-SHARED.md)
 
 ## 폴더 구조
 

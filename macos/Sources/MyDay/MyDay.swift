@@ -132,8 +132,10 @@ struct MyDayApp: App {
     @StateObject private var store = DiaryStore()
     init() {
         if CommandLine.arguments.contains("--playroom-test") {
+            let app=NSApplication.shared
+            setbuf(stdout,nil)
             Task { @MainActor in do{try await PlayroomVerification.run();exit(0)}catch{fputs("Playroom verification failed: \(error)\n",stderr);exit(1)}}
-            dispatchMain()
+            app.run()
         }
         if let index = CommandLine.arguments.firstIndex(of: "--desktop-contract"), CommandLine.arguments.count > index + 1 {
             do { try DesktopVerification.export(to: CommandLine.arguments[index + 1]); exit(0) }

@@ -1,64 +1,47 @@
-# MyDay macOS 0.12.0 · 세 플랫폼 공통 앱
+# MyDay Mac · 0.16.0 공통 시험판
 
-**0.15 간소화:** [현재 기능과 제거 범위](../docs/FOCUSED-APP.md). 기본 상몬·레벨업과 기록 기능에 집중하며 로컬 채팅·카카오 연동 원본을 유지합니다.
+[**Mac 앱 다운로드**](https://github.com/parkhookjung-debug/myday-diary/releases/download/v0.16.0-preview/MyDay-macOS-arm64.zip) · [설치와 첫 실행 메시지 해결](../docs/DOWNLOADS.md#mac) · [세 버전 기능](../docs/THREE-PLATFORMS.md)
 
-[0.12.0 저장 복구·첫 안내·성장 현황·설치 안내와 수정 파일](../docs/QUALITY-UPDATE.md). 설정·백업에서 사용 안내를 다시 엽니다.
+**Apple Silicon M1 이상·macOS 13 이상**용입니다. ZIP 압축을 풀고 MyDay.app을 응용 프로그램 폴더로 옮겨 엽니다. 기존 앱은 종료/⌘Q한 뒤 교체하세요. 로컬 개발 서명 시험판으로 Apple 공증은 적용하지 않았습니다. Intel용 실행 파일은 배포하지 않습니다.
 
-Windows·Android와 같은 메뉴, 일기 형식 100종, 상몬 64종·300소품·8슬롯, Lv.100 성장·출석·등급 선물 공방을 제공하는 SwiftUI 앱입니다. [전체 기능·공통 원본·수정할 파일·기기별 차이](../docs/THREE-PLATFORMS.md).
+## 사용할 수 있는 기능
 
-사이드바 또는 설정의 **기록 도구**에서 휴지통·변경 이력, 월간 리포트, 매일 알림, 앱 내 Wi-Fi·QR 연결, 월별 사진 앨범, 최근 3일 자동 백업, 업데이트 확인을 엽니다. [연결·앨범·백업 사용법·수정 파일](../docs/DEVICE-ALBUM-BACKUP.md) · [기존 기록 도구](../docs/JOURNAL-TOOLS.md). 글·사진 저장·습관 실천에는 상몬이 작은 점프로 반응합니다.
+글·사진·로컬 영상 연결·할 일 항목과 중요도·습관·감정·자유 배치·100종 일기 형식·기념일·달력·검색·앨범·기록 관리·출석·Lv.100 성장·백업/복구·Wi-Fi 전송·로컬 채팅을 제공합니다.
 
-[0.11.0 하루 꾸미기](../docs/STUDIO.md): 사진·스티커, 방·가구·쉬기, 감정 달력, 태그·즐겨찾기, 질문, 기기별 PIN 잠금을 사이드바에서 엽니다. 새 꾸미기 자료는 백업 버전 9이며 PIN 설정은 기기별로 유지합니다.
+**상몬 성장 → 상몬 놀이터**에서 일곱 게임·간식 도전·공놀이를 엽니다. 바탕화면 상몬은 잡아 늘리고 던질 수 있으며, 메뉴 막대에서 숨기거나 다시 표시합니다. 공놀이는 앱 안에서 실행합니다. 영상은 원본을 연결하므로 기기 이동 때 다시 선택합니다.
 
-## 실행 파일 받기
-
-GitHub **Actions → 해당 소스 커밋의 Mac·Windows 검사 → Artifacts → myday-chat-macOS-ARM64**에서 ZIP을 받습니다. 안의 `MyDay-macOS-arm64-v0.12.0-preview.zip`을 풀고 `MyDay.app`을 응용 프로그램 폴더로 복사합니다. [완료된 검사·다운로드 링크](../previews/quality/README.md). 기존 Releases의 이전 Mac ZIP에는 최신 기능이 포함되지 않습니다.
-
-macOS 13 이상을 지원합니다. CI 파일은 Apple Silicon용입니다. Intel Mac은 해당 Mac에서 빌드하세요. 로컬 개발 서명이며 Apple 공증은 적용하지 않았습니다. 기존 앱에서 공통 백업을 저장한 뒤 종료하고 새 앱을 실행합니다.
+변신·코디·뽑기·재화·합성 화면은 제공하지 않습니다. 과거 메타데이터는 백업 호환용으로 보존합니다. 게임 점수는 일기/경험치와 별도입니다. 공개 서버·카카오 공개 로그인·자동 클라우드 동기화는 제공하지 않습니다.
 
 ## 소스에서 빌드
 
-Command Line Tools가 설치된 Mac에서 저장소 루트 기준:
+Mac에 Xcode Command Line Tools와 Swift 5.9 이상을 준비한 뒤 저장소 루트에서 실행합니다.
 
 ```sh
+git switch codex/windows-app
+python3 tools/sync-desktop.py
+python3 tools/sync-playroom.py
 zsh macos/build.command
-# 또는 빌드 후 앱 열기
-zsh macos/run.command
 ```
 
-빌드 시 `tools/prepare-mac-assets.py`가 Android와 같은 Windows 원본 그림을 Mac 리소스 폴더에 준비합니다. Python 3은 개발 빌드에만 필요하고 완성한 앱 실행에는 필요하지 않습니다. `swift build`만 직접 쓰려면 먼저 이 준비 도구를 실행하세요.
+`macos/build/MyDay.app`과 버전이 붙은 ZIP이 생성됩니다. 앱 자체 사용에는 Xcode·Python이 필요하지 않습니다. 빌드 스크립트는 프로젝트의 생성 출력만 교체하며 사용자 일기 저장 폴더를 사용하지 않습니다.
 
-## 같은 화면과 기능
+```sh
+macos/build/MyDay.app/Contents/MacOS/MyDay --self-test
+macos/build/MyDay.app/Contents/MacOS/MyDay --playroom-test
+macos/build/MyDay.app/Contents/MacOS/MyDay --render-preview
+```
 
-메뉴는 **일기 → 달력·검색 → 상몬·공방 → 라운지 → 설정·백업**입니다. 넓은 창은 좌측 메뉴·가운데 일기·오른쪽 상몬 카드, 좁은 창은 상몬 카드를 일기 위로 옮깁니다.
+## 수정할 파일
 
-- 날짜별 글·사진·할 일·습관·감정, 자동 저장·저장 실패 재시도, 달력·전체 본문·사진 설명 검색.
-- 질문과 배치를 미리 보는 일기 형식 100종, 기본 블록·레이아웃 별표 즐겨찾기와 같은 화면의 기본 분류에서 글·할 일·습관·감정·사진·영상 블록 추가. 자유 배치의 제목 드래그·↘ 크기 조절·확대·가로 스크롤.
-- **내 레이아웃:** 현재 빈 배치 저장·검색·이름 변경·삭제·다른 날 적용. 글·사진·체크 상태를 복사하지 않습니다.
-- Windows에서 만든 같은 상몬 64종·소품 300종을 표시하고 8개 슬롯에 독립 장착합니다. 터치 때 잠깐 불꽃, 평소 숨쉬기·눈 깜박임·휴식·입 없는 하품 프레임을 사용합니다.
-- [성장 점수표](../docs/SANGMON-GROWTH.md): Lv.100·3,590 XP, 출석 5·첫 기록 10·글 20자 10·사진 5·할 일 5·습관 5, 연속 7일 출석 보너스 10 XP.
-- [공방](../docs/SANGMON-ATELIER.md): 같은 등급 확률·10회 새 소품 보장·꽃잎 교환·조각 합성·제작·10~300종 성취 보상.
-- 바탕화면 친구는 메뉴 막대에서 표시·숨기기, 마우스로 이동하며 일기 열기 버튼을 제공합니다.
+| 변경 내용 | 파일 |
+| --- | --- |
+| 앱 화면·성장·설정 | [UnifiedViews.swift](Sources/MyDay/UnifiedViews.swift) |
+| 일기 카드·영상 플레이어 | [DiaryBoard.swift](Sources/MyDay/DiaryBoard.swift) |
+| 항목별 할 일·중요도 | [TodoListView.swift](Sources/MyDay/TodoListView.swift), [TodoRules.swift](Sources/MyDay/TodoRules.swift) |
+| 달력·기념일 | [JournalSearch.swift](Sources/MyDay/JournalSearch.swift), [AnniversaryView.swift](Sources/MyDay/AnniversaryView.swift) |
+| 게임 연결·점수·결과 저장 | [Playroom.swift](Sources/MyDay/Playroom.swift), 공통 [shared/playroom](../shared/playroom) |
+| 바탕화면 상몬·늘어남·던지기 | [Companion.swift](Sources/MyDay/Companion.swift), [PetMotion.swift](Sources/MyDay/PetMotion.swift) |
+| 저장·공통 백업·영상 참조 변환 | [MyDay.swift](Sources/MyDay/MyDay.swift), [WindowsCompatibility.swift](Sources/MyDay/WindowsCompatibility.swift) |
+| 네이티브 검사 | [Verification](Sources/MyDay/Verification) |
 
-## 백업과 기존 기록 보존
-
-기록 위치는 `~/Library/Application Support/MyDay/`입니다. 날짜별 일기 JSON·사진과 기존 `companion.json`, 공통 성장·장비·경제를 보관하는 `windows-metadata.json`을 로컬에 저장합니다. 서버에 일기·사진을 자동 전송하지 않습니다.
-
-**설정·백업 → 공통 백업 다운로드 / 백업 복원**으로 Windows·Android와 같은 버전 1~9 JSON을 읽고 최신 필드를 보존합니다. 동일 날짜는 가져온 일기로 교체하고 다른 날짜는 유지합니다. 성장 지급 날짜·미션은 합집합으로 처리하며, 따로 진행한 경제 내역은 병합을 거부합니다. 가져오기 전 확인과 `MyDay-previous-…` 복구 사본을 유지합니다.
-
-기존 Mac 전용 백업 버전 1~3과 예전 일기도 계속 읽습니다. 버전 3은 영상 블록의 로컬 파일 경로를 보존합니다. **Mac 전용 백업 복원은 전체 교체**, 공통 백업은 날짜별 병합입니다. 새 공통 기능을 저장할 때 기존 XP 지급 날짜와 착용 소품을 이전하며 기본 소품 8종을 제공합니다. 최신 버전 8 백업은 구버전 Mac 앱에서 열 수 없습니다.
-
-사진은 긴 변 1,600px 이하 JPEG로 저장합니다. 영상 블록은 이 Mac의 MP4·MOV 원본 경로를 참조하며 영상 파일 자체는 복사하거나 공통 백업에 넣지 않습니다. 공통 백업은 영상 설명과 Mac 재연결용 경로만 확장 필드로 보존합니다. 공통 백업은 사진당 2MB, Base64 총합 64Mi 문자, 전체 JSON 128MB, 날짜당 200블록을 검사합니다. 원본의 추가 필드·블록 ID·자유 좌표·사진 설명·내 레이아웃도 유지합니다.
-
-## 라운지
-
-기존 로컬 서버 주소·닉네임·초대코드로 접속합니다. [같은 Wi-Fi와 서버 실행](../docs/FREE-CHAT.md). Windows·Android 사용자와 같은 API를 쓰고 ⌘+Enter로 전송합니다. 초대코드·세션 토큰은 백업과 디스크에 저장하지 않습니다. 새 공개 서버나 유료 서비스를 배포하지 않습니다.
-
-## 수정 위치와 검증
-
-- 공통 메뉴·인사말: `shared/app-shell.json`, 색상·제한·성장 상수: `shared/desktop.json`, 경제 정책: `shared/collection.json` → `python tools/sync-desktop.py`.
-- Mac 화면: `Sources/MyDay/UnifiedViews.swift`, `SavedLayouts.swift`. 그림 패키징: `tools/prepare-mac-assets.py`.
-- Mac 성장·소품·경제: `SharedCompanion.swift`, 저장 연결: `CompanionStore.swift`.
-- 공통 백업: `WindowsCompatibility.swift`. 실제 버전 8 왕복·쓰기 실패·이전 검증: `Verification/UnifiedVerification.swift`.
-
-`build/MyDay.app/Contents/MacOS/MyDay --self-test`는 개인 일기를 변경하지 않는 임시 자료로 검사합니다. `--render-preview`는 넓은/좁은 일기와 상몬·형식·자유 배치 PNG를 만듭니다. Mac CI는 실제 앱을 빌드하고 Windows의 실제 직렬화 코드와 최신 백업 교환을 검사합니다. 실기기 창 조작·Intel 빌드·접근성은 별도 기기 검증 대상입니다.
+개인 데이터는 `~/Library/Application Support/MyDay/`에 저장합니다. 업데이트 전 **설정·백업 → 백업 다운로드**로 공통 JSON을 앱 폴더 밖에 보관하세요. 설정의 Mac 전용 백업보다 공통 백업을 사용하면 Windows·Android로 옮기기 편합니다.

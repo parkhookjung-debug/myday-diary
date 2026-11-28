@@ -20,6 +20,7 @@ import com.myday.diary.platform.*
     val items=TodoRules.items(block)
     fun commit(next: List<DiaryTodoItem>) {runCatching {TodoRules.update(block,next)}.onSuccess {onEdit(it);problem=null}.onFailure {problem=it.message ?: "목록을 저장하지 못했어요."}}
     fun add() {if(draft.trim().isNotEmpty() && items.size<100) {val next=items+DiaryTodoItem(draft.trim());if(next.sumOf {it.text.length}+next.size-1<=100000) {commit(next);draft="";haptics.perform(TactileEvent.CHECK)}else problem="할 일 내용은 전체 100,000자까지예요."}}
+    Column(verticalArrangement=Arrangement.spacedBy(8.dp)) {
     Row(verticalAlignment=Alignment.CenterVertically,horizontalArrangement=Arrangement.spacedBy(8.dp)) {
         OutlinedTextField(draft,{draft=it.take(100000)},label={Text("새 할 일")},modifier=Modifier.weight(1f).testTag("todo-input"),singleLine=true,
             keyboardOptions=KeyboardOptions(imeAction=ImeAction.Done),keyboardActions=KeyboardActions(onDone={add()}))
@@ -42,4 +43,5 @@ import com.myday.diary.platform.*
         Checkbox(items.all {it.checked},{value->commit(items.map {it.copy(checked=value)})},modifier=Modifier.testTag("todo-all"));Text("목록 모두 완료")
     }
     problem?.let {Text(it,color=MaterialTheme.colorScheme.error)}
+    }
 }

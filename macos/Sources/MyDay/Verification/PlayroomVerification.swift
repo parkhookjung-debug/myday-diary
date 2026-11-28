@@ -4,6 +4,7 @@ import WebKit
 @MainActor enum PlayroomVerification {
     static func script(_ web:WKWebView,_ source:String)async throws->Any? {try await withCheckedThrowingContinuation {continuation in web.evaluateJavaScript(source){result,error in if let error{continuation.resume(throwing:error)}else{continuation.resume(returning:result)}}}}
     static func run()async throws {
+        print("Native playroom: starting on AppKit main run loop")
         let root=FileManager.default.temporaryDirectory.appendingPathComponent("MyDay-playroom-\(UUID())")
         defer{try? FileManager.default.removeItem(at:root)}
         let bridge=PlayroomBridge(directory:root);let web=PlayroomWeb.makeWebView(bridge)
@@ -12,6 +13,7 @@ import WebKit
         var ready=false
         for _ in 0..<100 {try await Task.sleep(nanoseconds:100_000_000);if (try? await script(web,"document.querySelectorAll('#cards .card').length")) as? Int==9{ready=true;break}}
         try MacVerification.check(ready,"native WKWebView offline playroom loads its nine cards")
+        print("Native playroom: hub loaded")
         for (index,id) in ["snack","sling","fish","jump","bake","blocks","block-puzzle"].enumerated(){
             _ = try await script(web,"document.querySelectorAll('#cards .card')[\(index)].click()")
             let current=try await script(web,"MyDayPlayroom.snapshot().id") as? String;try MacVerification.check(current==id,"native game opens: "+id)
