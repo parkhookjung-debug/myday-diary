@@ -1,0 +1,48 @@
+{
+  "format": "myday-branch-integrations",
+  "version": 1,
+  "reviewedOn": "2026-11-16",
+  "sourceBranch": "codex/anniversary-calendar",
+  "sourceHead": "40b718ffccba58a1edb9fd6cae23d3e961f4c8fd",
+  "sourceCommits": [
+    "4501cd281e8d0f16b85525fa3c97674bfddb0a07",
+    "053e429",
+    "e6c817b",
+    "c9401bb",
+    "ee7a404",
+    "fe3ae6a",
+    "c178931000fd96f2105ca9fbe552d3eb6e26b31d",
+    "40b718ffccba58a1edb9fd6cae23d3e961f4c8fd"
+  ],
+  "approach": "reviewed native adaptation on codex/windows-app; no unconditional branch merge",
+  "included": [
+    "annual and one-time anniversary calendar",
+    "compact menu preserving all six games and desktop fetch",
+    "separate best-score card in existing Sangmon block design",
+    "read-only import of legacy tetris-record.json without incrementing completed plays",
+    "optional anniversary data preservation across Windows Android macOS v9 backups",
+    "fall speed increases every five placed pieces independently of line score level",
+    "subtle Sangmon board backdrop and soft translucent original-shaped blocks",
+    "verified executables distributed as v0.15.1-preview release assets rather than copied branch binaries"
+  ],
+  "gameImplementation": "windows/Core/BlockGame.cs + windows/UI/BlockGameWindow.cs",
+  "scoreImplementation": "windows/Core/GameRecords.cs",
+  "guide": "docs/BRANCH-INTEGRATION-2026-11-14.md",
+  "publishedReleaseReplaced": false,
+  "sourcePusher": "hongmin060115-create",
+  "blockPuzzleIntegration": {
+    "reviewedOn": "2026-11-23",
+    "author": "cms6727",
+    "pullRequest": 11,
+    "sourceBranch": "codex/block-puzzle-review",
+    "sourceHead": "06045194dae05bef139b45bc3606f61b9903f996",
+    "targetBranch": "codex/windows-app",
+    "approach": "source reviewed before merge; native build and isolated data validation",
+    "gameCount": 7,
+    "releaseTag": "v0.15.2-preview",
+    "gameImplementation": "windows/Core/BlockPuzzle.cs + windows/UI/BlockPuzzleWindow.cs",
+    "scoreFile": "Games/block-puzzle.json (separate from Games/scores.json)",
+    "guide": "docs/BLOCK-PUZZLE-INTEGRATION-2026-11-23.md",
+    "publishedReleaseReplaced": false
+  }
+}

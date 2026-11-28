@@ -1,5 +1,7 @@
 # 상몬과 아이템 그림 수정
 
+**0.15 기본 상몬만 표시합니다.** `MonsterPainter.Draw`는 저장된 과거 외형·장비와 관계없이 기본 클레이 상몬을 그립니다. `DrawLegacy`는 이전 자산과 백업 호환성 검사를 위한 개발용 경로입니다. 변신·장착 선택 화면은 제거했습니다. [현재 범위](../../docs/FOCUSED-APP.md).
+
 상몬 도형·추가 의상·아이템·행동·바탕화면 투명 창을 관리합니다. 이름과 해금 조건, 장비 목록은 Core와 함께 확인합니다.
 
 [전체 수정 가이드](../../docs/EDITING-GUIDE.md) · [프로젝트 첫 화면](../../README.md)
@@ -17,4 +19,9 @@
 | 8슬롯 착용 위치 | [ItemPainter.Wardrobe.cs](ItemPainter.Wardrobe.cs) | Placement·앞/뒤 레이어·Android 착용 PNG 원본 |
 | 소품 이름과 설명 | [SangmonItems.cs](../Core/SangmonItems.cs) | 그림과 별도로 관리하는 아이템 목록 |
 | 걷기·쉬기·하품·클릭 반응 | [PetBehavior.cs](PetBehavior.cs) | 행동 전환·가속·반응 시간 |
-| 바탕화면 이동·메뉴·장비 적용 | [DesktopPet.cs](DesktopPet.cs) | 투명 창·드래그·경계·우클릭 메뉴 |
+| 바탕화면 이동·마우스·메뉴 | [DesktopPet.cs](DesktopPet.cs) | 투명 창·드래그·경계·우클릭 메뉴 |
+| 탄성·던지기·중력·화면 충돌 | [PetDynamics.cs](PetDynamics.cs) | [사용법과 조절 값](../../docs/DESKTOP-PET-MOTION.md) |
+
+## 바탕화면 공놀이
+
+[FetchGame.cs](FetchGame.cs)는 추적·운반·귀환, [DesktopBallWindow.cs](DesktopBallWindow.cs)는 작은 투명 공 창과 드래그, [DesktopPet.Fetch.cs](DesktopPet.Fetch.cs)는 기존 상몬과의 연결/정리를 담당합니다. [사용법·공통 규칙·검사](../../docs/JUMP-AND-DESKTOP-FETCH.md).

@@ -78,6 +78,10 @@ namespace MyDay.Windows.Character
             Draw(g,area,pose,facingLeft,variant,null);
         }
         public static void Draw(Graphics g, Rectangle area, MonsterPose pose, bool facingLeft,MonsterVariant variant,SangmonEquipment equipment)
+        { DrawLegacy(g,area,pose,facingLeft,MonsterVariant.Original,null); }
+        internal static void DrawLegacy(Graphics g,Rectangle area,MonsterPose pose,bool facingLeft){DrawLegacy(g,area,pose,facingLeft,MonsterVariant.Original,null);}
+        internal static void DrawLegacy(Graphics g,Rectangle area,MonsterPose pose,bool facingLeft,MonsterVariant variant){DrawLegacy(g,area,pose,facingLeft,variant,null);}
+        internal static void DrawLegacy(Graphics g,Rectangle area,MonsterPose pose,bool facingLeft,MonsterVariant variant,SangmonEquipment equipment)
         {
             var save = g.Save();
             g.SmoothingMode = SmoothingMode.AntiAlias;

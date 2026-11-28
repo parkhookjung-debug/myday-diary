@@ -28,9 +28,19 @@ jobs:
       - name: Build native Windows app
         shell: pwsh
         run: ./windows/build.ps1
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+        with:
+          node-version: '24'
+      - name: Compare seven real Windows games with Android and Mac rules
+        shell: pwsh
+        run: ./tools/test-playroom.ps1
       - name: Verify journal policy and temporary LAN transfer
         shell: pwsh
         run: |
+          python tools/sync-mini-games.py --check
+          if ($LASTEXITCODE -ne 0) { throw 'Mini-game rules out of date' }
+          python tools/sync-snack-game.py --check
+          if ($LASTEXITCODE -ne 0) { throw 'Snack game rules out of date' }
           python tools/sync-experience.py --check
           if ($LASTEXITCODE -ne 0) { throw 'Experience guide out of date' }
           python -m unittest discover -s tools -p test_sync_experience.py -v
@@ -74,11 +84,14 @@ jobs:
           name: myday-windows-${{ github.run_number }}
           path: |
             windows/bin/MyDay.exe
+            windows/bin/SangmonBlockPuzzle.exe
             windows/bin/test-results.txt
             windows/bin/test-errors.txt
             windows/bin/native-results.txt
             windows/bin/native-errors.txt
             windows/bin/smoke-output/windows-*.png
+            windows/bin/smoke-output/block-puzzle-*.png
+            windows/bin/smoke-output/block-puzzle-ui-result.txt
             windows/bin/smoke-output/smoke-result.txt
             windows/README.md
             windows/Core/DeviceQr.LICENSE.txt

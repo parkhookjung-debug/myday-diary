@@ -58,7 +58,9 @@ enum WindowsCompatibility {
         }
     }
     static func checkVideoPath(_ path: String) throws {
-        guard !path.isEmpty, path.utf16.count <= 4096, path.hasPrefix("/"), path.rangeOfCharacter(from: .controlCharacters) == nil else {
+        let local=path.hasPrefix("/") && !path.hasPrefix("//") || path.range(of:"^[A-Za-z]:[\\\\/].+",options:.regularExpression) != nil
+        let content=URL(string:path).map{$0.scheme=="content" && !($0.host ?? "").isEmpty} ?? false
+        guard !path.isEmpty, path.utf16.count <= 4096, local || content, path.rangeOfCharacter(from: .controlCharacters) == nil else {
             throw fail("영상 파일 경로가 올바르지 않습니다.")
         }
     }
@@ -84,7 +86,7 @@ enum WindowsCompatibility {
                   (0...2).contains(try integer(layout["Theme"])), let blocks = layout["Blocks"]?.array, (1...200).contains(blocks.count) else { throw fail("저장 레이아웃 이름 또는 구성이 올바르지 않습니다.") }
             for value in blocks {
                 guard let block = value.object, let kind = block["Kind"]?.string,
-                      ["text", "todo", "habit", "emotion", "photo-slot"].contains(kind) else { throw fail("저장 레이아웃 블록이 올바르지 않습니다.") }
+                      ["text", "todo", "habit", "emotion", "photo-slot", "video"].contains(kind) else { throw fail("저장 레이아웃 블록이 올바르지 않습니다.") }
                 try checkText(block)
                 let width = try integer(block["Width"]), height = try integer(block["Height"])
                 guard width > 0, height > 0 else { throw fail("저장 레이아웃의 크기가 없습니다.") }
@@ -100,7 +102,7 @@ enum WindowsCompatibility {
     static func validateMetadata(_ metadata: WindowsMetadata?) throws {
         guard let metadata else { return }
         let version = try integer(metadata.fields["Version"], fallback: 1)
-        guard (1...9).contains(version) else { throw fail("기록 버전 1~9만 지원합니다.") }
+        guard (1...10).contains(version) else { throw fail("기록 버전 1~10만 지원합니다.") }
         _ = try StudioData.decode(metadata.fields["Studio"])
         try validateLayouts(metadata.fields)
         _ = try awardedDays(metadata.fields)
@@ -111,7 +113,7 @@ enum WindowsCompatibility {
     static func decode(_ data: Data, companion existing: CompanionProfile = CompanionProfile()) throws -> MacBackup {
         guard data.count <= maxBytes else { throw fail("백업은 128MB 이하만 가져올 수 있습니다.") }
         guard let root = try JSONDecoder().decode(JSONValue.self, from: data).object else { throw fail("Windows 백업 형식이 아닙니다.") }
-        guard let version = root["Version"]?.int, (1...9).contains(version), let rawDays = root["Days"] else { throw fail("기록 버전 1~9만 지원합니다.") }
+        guard let version = root["Version"]?.int, (1...10).contains(version), let rawDays = root["Days"] else { throw fail("기록 버전 1~10만 지원합니다.") }
         var pairs: [(String, JSONValue)] = []
         if let array = rawDays.array {
             for value in array {
@@ -134,10 +136,11 @@ enum WindowsCompatibility {
             day.windowsFields = remainder(object, excluding: ["Theme", "Mood", "Blocks", "LayoutMode", "PageStyle"])
             var ids = Set<String>()
             for value in blocks {
-                guard let fields = value.object, let kind = fields["Kind"]?.string.flatMap(BlockKind.init(rawValue:)), kind != .video else { throw fail("알 수 없는 Windows 블록입니다.") }
+                guard let fields = value.object, let kind = fields["Kind"]?.string.flatMap(BlockKind.init(rawValue:)) else { throw fail("알 수 없는 Windows 블록입니다.") }
                 let windowsID = try string(fields["Id"])
                 guard !windowsID.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty, ids.insert(windowsID).inserted else { throw fail("블록 ID가 비어 있거나 중복됩니다.") }
                 var block = DiaryBlock(kind: kind, text: try string(fields["Text"]), checked: try boolean(fields["Checked"]))
+                if let path=try optionalString(fields["VideoPath"]){guard kind == .video else{throw fail("영상 블록 형식이 올바르지 않습니다.")};try checkVideoPath(path);block.videoPath=path}
                 if let path = try optionalString(fields["MacVideoPath"]) {
                     guard kind == .text else { throw fail("Mac 영상 블록 형식이 올바르지 않습니다.") }
                     try checkVideoPath(path); block.kind = .video; block.videoPath = path
@@ -160,7 +163,8 @@ enum WindowsCompatibility {
                     block.photo = data
                     photoCharacters += encoded.utf16.count
                 } else if let photo = fields["Photo"], photo != .null { throw fail("사진 데이터는 사진 블록에만 넣을 수 있습니다.") }
-                block.windowsFields = remainder(fields, excluding: ["Id", "Kind", "Text", "Checked", "Title", "Prompt", "Wide", "X", "Y", "Width", "Height", "Photo", "MacVideoPath", "MacVideoText"])
+                block.windowsFields = remainder(fields, excluding: ["Id", "Kind", "Text", "Checked", "Title", "Prompt", "Wide", "X", "Y", "Width", "Height", "Photo", "VideoPath", "MacVideoPath", "MacVideoText"])
+                if block.kind == .todo {_ = try TodoRules.items(block)}
                 day.blocks.append(block)
             }
             guard photoCharacters <= 64 * 1024 * 1024 else { throw fail("전체 사진 용량이 Windows 제한을 초과했습니다.") }
@@ -188,10 +192,11 @@ enum WindowsCompatibility {
     static func encode(_ backup: MacBackup) throws -> Data {
         try backup.validate()
         var root = backup.windowsMetadata?.fields ?? [:]
-        if (root["Version"]?.int ?? 4) >= 7 {
+        if (root["Version"]?.int ?? 4) >= 7 || backup.days.values.contains(where:{$0.blocks.contains{$0.kind == .video}}) || (root["Layouts"]?.array ?? []).contains(where:{($0.object?["Blocks"]?.array ?? []).contains{$0.object?["Kind"]?.string=="video"}}) {
             var unified = SharedCompanion(root); try unified.prepare(legacy: backup.companion); root = unified.fields
         }
-        root["Version"] = .number(Double(max(4, root["Version"]?.int ?? 4)))
+        let hasVideo=backup.days.values.contains{$0.blocks.contains{$0.kind == .video}} || (root["Layouts"]?.array ?? []).contains{($0.object?["Blocks"]?.array ?? []).contains{$0.object?["Kind"]?.string=="video"}}
+        root["Version"] = .number(Double(max(hasVideo ? 10:4, root["Version"]?.int ?? 4)))
         if root["CharacterStyle"] == nil { root["CharacterStyle"] = .string("original") }
         if root["Layouts"] == nil { root["Layouts"] = .array([]) }
         var progress = root["Progress"]?.object ?? [:]
@@ -216,14 +221,14 @@ enum WindowsCompatibility {
                 let id = block.windowsID ?? block.id.uuidString.replacingOccurrences(of: "-", with: "").lowercased()
                 guard !id.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty, ids.insert(id).inserted else { throw fail("Windows 블록 ID가 중복됩니다.") }
                 fields["Id"] = .string(id)
-                fields["Kind"] = .string(block.kind == .video ? "text" : block.kind == .photo && block.photo == nil ? "photo-slot" : block.kind.rawValue)
+                fields["Kind"] = .string(block.kind == .photo && block.photo == nil ? "photo-slot" : block.kind.rawValue)
                 if block.kind == .video, let path = block.videoPath {
                     try checkVideoPath(path)
-                    fields["Text"] = .string(block.text.isEmpty ? "Mac 영상: \(URL(fileURLWithPath:path).lastPathComponent) · 원본 파일은 이 Mac에 있습니다." : block.text)
-                    fields["MacVideoPath"] = .string(path); fields["MacVideoText"] = .string(block.text)
+                    fields["VideoPath"] = .string(path)
                 } else {
-                    fields["Text"] = .string(block.text); fields.removeValue(forKey:"MacVideoPath"); fields.removeValue(forKey:"MacVideoText")
+                    fields.removeValue(forKey:"VideoPath")
                 }
+                fields["Text"] = .string(block.text);fields.removeValue(forKey:"MacVideoPath");fields.removeValue(forKey:"MacVideoText")
                 fields["Checked"] = .bool(block.checked)
                 fields["Wide"] = .bool(block.wide)
                 fields["X"] = .number(Double(block.x)); fields["Y"] = .number(Double(block.y))

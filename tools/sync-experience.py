@@ -6,11 +6,6 @@ def render(root=ROOT):
     p=json.loads((root/'shared/experience.json').read_text(encoding='utf-8'))
     assert p['version']==1 and [s['id'] for s in p['sections']]==['start','map','rewards','update']
     assert all(isinstance(s[k],str) and 0<len(s[k])<4000 for s in p['sections'] for k in ('title','body'))
-    economy=json.loads((root/'shared/collection.json').read_text(encoding='utf-8'))
-    assert len(economy['weights'])==len(economy['names'])==4 and sum(economy['weights'])==10000
-    odds=' / '.join(name+' '+format(weight/100,'g')+'%' for name,weight in zip(economy['names'],economy['weights']))
-    assert '{odds}' in p['sections'][2]['body'], 'Keep the shared policy odds placeholder'
-    p['sections'][2]['body']=p['sections'][2]['body'].replace('{odds}',odds)
     growth=json.loads((root/'shared/desktop.json').read_text(encoding='utf-8'))['growth']
     assert growth=={'GrowthMaxLevel':100,'GrowthMaxXP':3590,'GrowthAttendanceWeekXP':10,'GrowthDailyActivityXP':40}, 'Update growth help when changing the growth model'
     q=lambda s:json.dumps(s,ensure_ascii=False)

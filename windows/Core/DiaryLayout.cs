@@ -9,7 +9,7 @@ namespace MyDay.Windows.Core
     public static class DiaryLayout
     {
         public const int MinWidth=DesktopContract.MinWidth,MaxWidth=DesktopContract.MaxWidth,MinHeight=DesktopContract.MinHeight,MaxHeight=DesktopContract.MaxHeight,MaxPosition=DesktopContract.MaxPosition;
-        public static int DefaultHeight(DiaryBlock block) { return block.Kind=="photo" || block.Kind=="photo-slot"?DesktopContract.PhotoHeight:block.Kind=="emotion"?DesktopContract.EmotionHeight:DesktopContract.TextHeight; }
+        public static int DefaultHeight(DiaryBlock block) { return block.Kind=="photo" || block.Kind=="photo-slot" || block.Kind=="video"?DesktopContract.PhotoHeight:block.Kind=="emotion"?DesktopContract.EmotionHeight:block.Kind=="todo"?DesktopContract.TodoHeight:DesktopContract.TextHeight; }
         public static List<Rectangle> AutoArrange(IList<DiaryBlock> blocks,int width)
         {
             int available=Math.Max(MinWidth+12,width-16),x=0,y=4,rowHeight=0;

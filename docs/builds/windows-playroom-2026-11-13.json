@@ -1,0 +1,28 @@
+{
+  "date": "2026-11-13",
+  "variant": "Windows playroom development build; separate from the published 0.15.0 baseline",
+  "sourceCommit": "a86e9d98071a9614eaa7662f713605fae157afee",
+  "ci": "https://github.com/parkhookjung-debug/myday-diary/actions/runs/43441035212",
+  "ciConclusion": "success",
+  "files": [
+    "SangmonGame.exe",
+    "MyDay.exe"
+  ],
+  "bytes": 648704,
+  "sha256": "7b02570ecb13f44e6f54a9a382e1f29e8c171ba599d09ad66b9f75ee57576796",
+  "checks": {
+    "assertions": 400,
+    "nativeDiaryAndThreeGames": true,
+    "pointerKeyCaptureAndResultCard": true,
+    "lockedScoreSaveAndFutureVersionPreservation": true,
+    "localChat": true
+  },
+  "gameRecords": "%LOCALAPPDATA%/MyDay/Windows/Games/scores.json",
+  "journalExperienceChanged": false,
+  "games": [
+    "snack-combo-and-daily-challenge",
+    "slingshot",
+    "fishing"
+  ],
+  "macAndroidGamesImplemented": false
+}

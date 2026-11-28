@@ -69,15 +69,20 @@ namespace MyDay.Windows.Core
         {
             return entry!=null && entry.Blocks.Any(Meaningful);
         }
-        private static bool Meaningful(DiaryBlock b) { return !string.IsNullOrWhiteSpace(b.Text) || b.Kind=="photo" && !string.IsNullOrEmpty(b.Photo) || (b.Kind=="todo" || b.Kind=="habit") && b.Checked; }
+        private static bool Meaningful(DiaryBlock b) { return !string.IsNullOrWhiteSpace(b.Text) || b.Kind=="video" && b.VideoPath!=null || b.Kind=="photo" && !string.IsNullOrEmpty(b.Photo) || (b.Kind=="todo" || b.Kind=="habit") && b.Checked; }
         internal static List<DiaryBlock> CaptureRecord(DiaryEntry entry)
         {
-            return entry.Blocks.Where(Meaningful).Select(b=>new DiaryBlock {Id=b.Id,Kind=b.Kind,Text=b.Text,Checked=b.Checked,Photo=b.Photo}).ToList();
+            return entry.Blocks.Where(Meaningful).Select(b=>new DiaryBlock {Id=b.Id,Kind=b.Kind,Text=b.Text,Checked=b.Checked,Photo=b.Photo,VideoPath=b.VideoPath,
+                TodoItems=b.TodoItems==null?null:b.TodoItems.Select(item=>new DiaryTodoItem {Text=item.Text,Checked=item.Checked,Importance=item.Importance}).ToList()}).ToList();
         }
         internal static bool SameRecord(List<DiaryBlock> saved,DiaryEntry entry)
         {
             var current=entry.Blocks.Where(Meaningful).ToDictionary(b=>b.Id);
-            return saved.Count==current.Count && saved.All(b=>current.ContainsKey(b.Id) && current[b.Id].Kind==b.Kind && current[b.Id].Text==b.Text && current[b.Id].Checked==b.Checked && current[b.Id].Photo==b.Photo);
+            return saved.Count==current.Count && saved.All(b=>current.ContainsKey(b.Id) && current[b.Id].Kind==b.Kind && current[b.Id].Text==b.Text && current[b.Id].Checked==b.Checked && current[b.Id].Photo==b.Photo && current[b.Id].VideoPath==b.VideoPath && SameTodos(b.TodoItems,current[b.Id].TodoItems));
+        }
+        private static bool SameTodos(List<DiaryTodoItem> left,List<DiaryTodoItem> right)
+        {
+            return (left==null?0:left.Count)==(right==null?0:right.Count) && (left==null || left.Select((item,index)=>item.Text==right[index].Text && item.Checked==right[index].Checked).All(equal=>equal));
         }
         // Return a candidate; the caller commits it only with a successful diary save.
         public static SangmonProgress Award(SangmonProgress current,DiaryEntry entry,DateTime actualDay,List<DiaryBlock> baseline=null)
@@ -90,7 +95,7 @@ namespace MyDay.Windows.Core
             var text=entry.Blocks.Where(b=>b.Kind=="text" || b.Kind=="emotion").ToList();
             if(text.Sum(b=>(b.Text??"").Count(c=>!char.IsWhiteSpace(c)))>=20 && text.Any(textChanged))flags|=Writing;
             if(entry.Blocks.Any(b=>b.Kind=="photo" && !string.IsNullOrEmpty(b.Photo) && (!prior.ContainsKey(b.Id) || prior[b.Id].Photo!=b.Photo)))flags|=Photo;
-            if(entry.Blocks.Any(b=>b.Kind=="todo" && b.Checked && (!prior.ContainsKey(b.Id) || !prior[b.Id].Checked || prior[b.Id].Kind!=b.Kind)))flags|=Todo;
+            if(entry.Blocks.Any(b=>b.Kind=="todo" && (b.TodoItems==null || b.TodoItems.Count==0?b.Checked && (!prior.ContainsKey(b.Id) || !prior[b.Id].Checked || prior[b.Id].Kind!=b.Kind):b.TodoItems.Select((item,index)=>new {item,index}).Any(candidate=>candidate.item.Checked && (!prior.ContainsKey(b.Id) || prior[b.Id].TodoItems==null || candidate.index>=prior[b.Id].TodoItems.Count || prior[b.Id].TodoItems[candidate.index].Text!=candidate.item.Text || !prior[b.Id].TodoItems[candidate.index].Checked)))))flags|=Todo;
             if(entry.Blocks.Any(b=>b.Kind=="habit" && b.Checked && (!prior.ContainsKey(b.Id) || !prior[b.Id].Checked || prior[b.Id].Kind!=b.Kind)))flags|=Habit;
             var result=AddFlags(current,actualDay,flags);
             if(result!=null && result.AwardedDays.Contains(key) || current!=null && current.AwardedDays.Count>=50000)return result;

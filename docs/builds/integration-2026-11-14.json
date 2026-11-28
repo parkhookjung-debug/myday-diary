@@ -1,0 +1,86 @@
+{
+  "date": "2026-11-14",
+  "variant": "Reviewed anniversary branch integration retaining Sangmon block design",
+  "integrationSource": "codex/anniversary-calendar@fe3ae6a9bbda9f8169d18a4fb1bbec0428f6bdad",
+  "files": [
+    {
+      "path": "Windows/MyDay.exe",
+      "platform": "windows",
+      "bytes": 756224,
+      "sha256": "386657d47103ca5e541df8abd832027b97e1528e51b9e07c45b36bdc743ec3e4",
+      "sourceCommit": "0e1186408586f612b877dfdafddd1055cb4c00e6",
+      "ci": "https://github.com/parkhookjung-debug/myday-diary/actions/runs/43566437095"
+    },
+    {
+      "path": "Windows/SangmonGame.exe",
+      "platform": "windows",
+      "bytes": 756224,
+      "sha256": "386657d47103ca5e541df8abd832027b97e1528e51b9e07c45b36bdc743ec3e4",
+      "sourceCommit": "0e1186408586f612b877dfdafddd1055cb4c00e6",
+      "ci": "https://github.com/parkhookjung-debug/myday-diary/actions/runs/43566437095"
+    },
+    {
+      "path": "Windows/SangmonFetch.exe",
+      "platform": "windows",
+      "bytes": 756224,
+      "sha256": "386657d47103ca5e541df8abd832027b97e1528e51b9e07c45b36bdc743ec3e4",
+      "sourceCommit": "0e1186408586f612b877dfdafddd1055cb4c00e6",
+      "ci": "https://github.com/parkhookjung-debug/myday-diary/actions/runs/43566437095"
+    },
+    {
+      "path": "Android/MyDay-Android.apk",
+      "platform": "android",
+      "bytes": 15991060,
+      "sha256": "4b05a535151a8acbd1349f2dc567e6cd4e3f2e00d659a6124090165c1aaa78c4",
+      "sourceCommit": "0e1186408586f612b877dfdafddd1055cb4c00e6",
+      "ci": "https://github.com/parkhookjung-debug/myday-diary/actions/runs/43566439349"
+    },
+    {
+      "path": "macOS/MyDay-macOS-arm64.zip",
+      "platform": "macos",
+      "bytes": 1945313,
+      "sha256": "530e33df68602a6f21b52f845f060fcb3e0db1689edc4ed95fe72e508b2fda09",
+      "sourceCommit": "892adaa3b037f096fa590d9cb5133049246e838c",
+      "ci": "https://github.com/parkhookjung-debug/myday-diary/actions/runs/43567082444"
+    }
+  ],
+  "ci": {
+    "windows": {
+      "conclusion": "success",
+      "headSha": "0e1186408586f612b877dfdafddd1055cb4c00e6",
+      "url": "https://github.com/parkhookjung-debug/myday-diary/actions/runs/43566437095"
+    },
+    "android": {
+      "conclusion": "success",
+      "headSha": "0e1186408586f612b877dfdafddd1055cb4c00e6",
+      "url": "https://github.com/parkhookjung-debug/myday-diary/actions/runs/43566439349"
+    },
+    "macos": {
+      "conclusion": "success",
+      "headSha": "892adaa3b037f096fa590d9cb5133049246e838c",
+      "url": "https://github.com/parkhookjung-debug/myday-diary/actions/runs/43567082444"
+    }
+  },
+  "checks": {
+    "windowsAssertions": 491,
+    "nativeAnniversaryAddSortedDeleteAndRollback": true,
+    "compactAllSixGameMenuAndOriginalBlockDesign": true,
+    "legacyTetrisImportNoPlayCountAndSourcePreserved": true,
+    "androidUnitTests": 57,
+    "androidDeviceTests": 19,
+    "androidLintErrors": 0,
+    "androidWindowsAnniversaryBackupRoundTrip": true,
+    "macWindowsAnniversaryBackupRoundTrip": true,
+    "macJoinedEmojiNamesPreserved": true,
+    "localChat": true
+  },
+  "featureScope": {
+    "windows": "anniversary UI + compact game menu + Sangmon block best card and legacy score import",
+    "android": "preserve optional anniversary metadata in backup and studio edits",
+    "macos": "preserve optional anniversary metadata and joined emoji names in backup and studio edits"
+  },
+  "newMacAndroidGameScreens": false,
+  "publishedBaselineReplaced": false,
+  "mainMerged": false,
+  "cloudDeployed": false
+}

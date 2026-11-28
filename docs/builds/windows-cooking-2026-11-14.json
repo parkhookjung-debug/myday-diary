@@ -1,0 +1,29 @@
+{
+  "date": "2026-11-14",
+  "variant": "Windows five-game playroom, fire cooking and desktop fetch development build",
+  "sourceCommit": "08ef1eb3295d7e4a06b2b39a1555b7c93b0002b6",
+  "ci": "https://github.com/parkhookjung-debug/myday-diary/actions/runs/43452732024",
+  "ciConclusion": "success",
+  "files": [
+    "MyDay.exe",
+    "SangmonGame.exe",
+    "SangmonFetch.exe"
+  ],
+  "bytes": 705536,
+  "sha256": "74801169f5823a0fb4fd3ef55913fe1799f84ca34c87a83f676390a8a8277924",
+  "checks": {
+    "assertions": 448,
+    "nativeDiaryFiveGamesAndFetch": true,
+    "cookingKeyboardMouseCaptureAndFocus": true,
+    "smallWindowLaunchButtonsVisible": true,
+    "cookingResultSavedOnce": true,
+    "resultPng": true,
+    "localChat": true
+  },
+  "journalExperienceChanged": false,
+  "newGames": [
+    "fire-cooking"
+  ],
+  "macAndroidGamesImplemented": false,
+  "publishedBaselineReplaced": false
+}

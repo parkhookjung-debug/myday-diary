@@ -7,7 +7,7 @@ object AppShell {
     const val greeting="오늘은 어떤 하루였나요?"
     const val subtitle="완벽하지 않아도 괜찮아요. 나의 속도로, 한 줄씩."
     const val friendTitle="오늘도 네 편이야"
-    val titles=listOf("일기","달력·검색","상몬·공방","라운지","설정·백업")
+    val titles=listOf("일기","달력·검색","상몬 성장","라운지","설정·백업")
     val symbols=listOf("▤","▦","✦","◌","⚙")
 }
 

@@ -2,7 +2,7 @@
 import SwiftUI
 
 enum DesktopContract {
-    static let sourceDigest="4994d0a72c6c4e400c8ebd71ba8a6c1591e37e27991cf2072870baff48dc2f94"
+    static let sourceDigest="ed2e02a23703b4ab65e90d8045529ec8a30ed36b7e831c0bf29f56045717c7f4"
     static let maxDays=50000
     static let maxBlocks=200
     static let maxTextUtf16=100000
@@ -17,6 +17,13 @@ enum DesktopContract {
     static let photoHeight=360
     static let emotionHeight=288
     static let textHeight=250
+    static let todoHeight=420
+    static let maxTodoItems=100
+    static let petMinThrowSpeed=140
+    static let petMaxThrowSpeed=5200
+    static let petGravity=1150
+    static let petThrowGainPercent=180
+    static let petRestitutionPercent=72
     static let chatProtocol=1
     static let chatMaxText=2000
     static let chatMaxTextUtf16=4000
@@ -35,7 +42,7 @@ enum DesktopContract {
     static let growthAttendanceWeekXP=10
     static let growthDailyActivityXP=40
     static let templateCount=100
-    static let blockKinds=["text","todo","habit","emotion","photo","photo-slot"]
+    static let blockKinds=["text","todo","habit","emotion","photo","photo-slot","video"]
     static let pageStyles=["plain","paper","dots"]
     static let featuredTemplateIds=["free","one-line","reflection","weekly-review","gratitude","three-thanks","mood-check","worry-sort","cornell-notes","study-log","bullet","daily-plan","habit-log","sleep-log","letter","future-letter","brainstorm","dream-log","travel-day","year-end"]
     static let categories=["daily","reflection","gratitude","emotions","learning","planning","wellbeing","relationships","creativity","memories"]

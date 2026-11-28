@@ -6,10 +6,30 @@
   "subtitle": "완벽하지 않아도 괜찮아요. 나의 속도로, 한 줄씩.",
   "friendTitle": "오늘도 네 편이야",
   "navigation": [
-    {"id":"diary","title":"일기","symbol":"▤"},
-    {"id":"calendar","title":"달력·검색","symbol":"▦"},
-    {"id":"companion","title":"상몬·공방","symbol":"✦"},
-    {"id":"chat","title":"라운지","symbol":"◌"},
-    {"id":"settings","title":"설정·백업","symbol":"⚙"}
+    {
+      "id": "diary",
+      "title": "일기",
+      "symbol": "▤"
+    },
+    {
+      "id": "calendar",
+      "title": "달력·검색",
+      "symbol": "▦"
+    },
+    {
+      "id": "companion",
+      "title": "상몬 성장",
+      "symbol": "✦"
+    },
+    {
+      "id": "chat",
+      "title": "라운지",
+      "symbol": "◌"
+    },
+    {
+      "id": "settings",
+      "title": "설정·백업",
+      "symbol": "⚙"
+    }
   ]
 }

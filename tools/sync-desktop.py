@@ -156,6 +156,7 @@ def render(root=ROOT):
     swift += ['        ['+','.join(map(str,[int(case['resize']),*case['original'],*case['delta'],*case['expected']]))+'],\n' for case in cases]
     swift += ['    ]\n    static let growthProfiles: [[Int]]='+json.dumps([[p['expectedDays'],*p['week']] for p in c['growthProfiles']])+'\n}\n']
     return {
+        'app/src/main/java/com/myday/diary/diary/SharedTodo.g.kt':HEADER+'package com.myday.diary.diary\n\ninternal object SharedTodo {\n'+''.join('    const val '+key+'='+str(c['limits'][key])+'\n' for key in ['TodoHeight','MaxTodoItems'])+'}\n',
         'windows/Core/Shared/AppShell.g.cs':''.join(shell_cs),
         'app/src/main/java/com/myday/diary/ui/design/AppShell.g.kt':''.join(shell_kt),
         'macos/Sources/MyDay/AppShell.g.swift':''.join(shell_swift),
@@ -163,6 +164,7 @@ def render(root=ROOT):
         'app/src/main/java/com/myday/diary/chat/ChatContract.g.kt':HEADER+'package com.myday.diary.chat\n\nobject ChatContract {\n'+''.join('    const val '+k+'='+str(v)+'\n' for k,v in c['chat'].items())+'}\n',
         'windows/Core/Shared/CollectionPolicy.g.cs':''.join(collection_cs),
         'app/src/main/java/com/myday/diary/diary/SharedCollection.g.kt':''.join(collection_kt),
+        'app/src/main/java/com/myday/diary/diary/SharedPet.g.kt':HEADER+'package com.myday.diary.diary\n\ninternal object SharedPet {\n'+''.join('    const val '+k+'='+str(v)+'\n' for k,v in c['limits'].items() if k.startswith('Pet'))+'}\n',
         'app/src/main/java/com/myday/diary/diary/SharedGrowth.g.kt': HEADER+'package com.myday.diary.diary\n\ninternal object SharedGrowth {\n'+''.join('    const val '+k+'='+str(v)+'\n' for k,v in c['growth'].items())+'    val profiles=arrayOf(\n'+''.join('        intArrayOf('+','.join(map(str,[p['expectedDays'],*p['week']]))+'),\n' for p in c['growthProfiles'])+'    )\n}\n',
         'windows/Core/Shared/DesktopContract.g.cs': ''.join(cs),
         'windows/Core/Shared/Templates.g.cs': ''.join(native_templates),

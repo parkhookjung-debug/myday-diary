@@ -11,7 +11,7 @@ struct BlockRect: Equatable {
 enum DiaryLayout {
     static func clamp(_ value: Int, _ lower: Int, _ upper: Int) -> Int { min(upper, max(lower, value)) }
     static func defaultHeight(_ block: DiaryBlock) -> Int {
-        block.kind == .photo || block.kind == .photoSlot || block.kind == .video ? DesktopContract.photoHeight : block.kind == .emotion ? DesktopContract.emotionHeight : DesktopContract.textHeight
+        block.kind == .photo || block.kind == .photoSlot || block.kind == .video ? DesktopContract.photoHeight : block.kind == .emotion ? DesktopContract.emotionHeight : block.kind == .todo ? DesktopContract.todoHeight : DesktopContract.textHeight
     }
     static func bounds(_ block: DiaryBlock) -> BlockRect {
         BlockRect(x: block.x, y: block.y, width: block.width > 0 ? block.width : DesktopContract.defaultWidth, height: block.height > 0 ? block.height : defaultHeight(block))

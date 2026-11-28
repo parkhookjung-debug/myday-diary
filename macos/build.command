@@ -19,6 +19,7 @@ mkdir -p "$app/Contents/MacOS" "$app/Contents/Resources"
 cp "$binary_dir/MyDay" "$app/Contents/MacOS/MyDay"
 cp Sources/MyDay/Resources/templates.json "$app/Contents/Resources/templates.json"
 cp Sources/MyDay/Resources/device-link.html "$app/Contents/Resources/device-link.html"
+cp Sources/MyDay/Resources/playroom.html "$app/Contents/Resources/playroom.html"
 cp -R Sources/MyDay/Resources/Art "$app/Contents/Resources/"
 cat > "$app/Contents/Info.plist" <<'PLIST'
 <?xml version="1.0" encoding="UTF-8"?>
@@ -29,8 +30,8 @@ cat > "$app/Contents/Info.plist" <<'PLIST'
     <key>CFBundleName</key><string>마이데이</string>
     <key>CFBundleDisplayName</key><string>마이데이</string>
     <key>CFBundlePackageType</key><string>APPL</string>
-    <key>CFBundleShortVersionString</key><string>0.14.0</string>
-    <key>CFBundleVersion</key><string>14</string>
+    <key>CFBundleShortVersionString</key><string>0.16.0</string>
+    <key>CFBundleVersion</key><string>19</string>
     <key>NSLocalNetworkUsageDescription</key><string>같은 Wi-Fi의 기기와 일기 백업을 주고받습니다.</string>
     <key>LSMinimumSystemVersion</key><string>13.0</string>
     <key>NSHighResolutionCapable</key><true/>

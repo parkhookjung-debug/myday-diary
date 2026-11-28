@@ -1,0 +1,52 @@
+{
+  "version": "0.15.0",
+  "date": "2026-11-11",
+  "branch": "codex/windows-app",
+  "backupVersionRange": [
+    1,
+    9
+  ],
+  "publicFriendsEnabled": false,
+  "kakaoIntegrationSourceRetained": true,
+  "files": [
+    {
+      "platform": "windows",
+      "file": "MyDay-Windows.exe",
+      "sourceCommit": "fb1f8145fbcf8c0884134a7e2b13002fe674029a",
+      "ci": "https://github.com/parkhookjung-debug/myday-diary/actions/runs/43023459628",
+      "artifact": "myday-windows-69",
+      "sha256": "7489538821c736ea558b6afd85647ec421db4f9bc09bb2d2509569b244bddfe8",
+      "bytes": 567808
+    },
+    {
+      "platform": "macos",
+      "file": "MyDay-macOS-arm64.zip",
+      "sourceCommit": "df85eb9cc8e239108bc4bc9b30809ca2200487ce",
+      "ci": "https://github.com/parkhookjung-debug/myday-diary/actions/runs/43026084065",
+      "artifact": "myday-chat-macOS-ARM64",
+      "sha256": "08ef76a4c87d98bce661b1ac291641a18ca1454ec4aba3c855896e585e61a4e7",
+      "bytes": 1931281
+    },
+    {
+      "platform": "android",
+      "file": "MyDay-Android.apk",
+      "sourceCommit": "c5e24bd31a31a8a2e8b643b02a9575aa03119677",
+      "ci": "https://github.com/parkhookjung-debug/myday-diary/actions/runs/43025057825",
+      "artifact": "myday-debug-76",
+      "sha256": "94bf87cebd3c7e0684841f4ad4c5d16836f779f02967fd46052ec1719f60309e",
+      "bytes": 15974676
+    }
+  ],
+  "checks": {
+    "windowsAssertions": 328,
+    "windowsNativeSmoke": true,
+    "localChatClients": true,
+    "androidJvmTests": 56,
+    "androidDeviceTests": 19,
+    "androidDeviceApi": 35,
+    "androidLintErrors": 0,
+    "macNativeBuild": true,
+    "desktopContractAndBackupInterop": true
+  },
+  "scope": "Basic Sangmon, journaling and XP; retired outfits and collection metadata retained only for backup compatibility."
+}

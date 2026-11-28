@@ -5,4 +5,6 @@ static let furnitureNames=["화분","의자","러그","조명","테이블","쿠�
 static let furnitureSymbols=["♧","▥","▰","☀","▤","♡"]
 static let moods=["평온해요","행복해요","피곤해요","속상해요","설레요"]
 static let stickers=["꽃","하트","별","테이프"]
+static let anniversaryLimit=500
+static let anniversaryNameLength=40
 }

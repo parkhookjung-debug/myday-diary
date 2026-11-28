@@ -24,7 +24,7 @@ namespace MyDay.Windows.UI
         private int page;
         private bool resizingResults;
         public DateTime? SelectedDate { get; private set; }
-        public JournalBrowser(DiaryBook book,DateTime current,DateTime min,DateTime max)
+        public JournalBrowser(DiaryBook book,DateTime current,DateTime min,DateTime max,Action save=null)
         {
             this.book=book; this.current=current.Date; this.min=min.Date; this.max=max.Date;
             Text="MyDay · 달력과 일기 검색"; Font=Design.Font(10); ForeColor=Design.Ink; BackColor=Design.Backgrounds[0];
@@ -44,9 +44,10 @@ namespace MyDay.Windows.UI
             var left=new Panel {Dock=DockStyle.Fill,Margin=Design.Pad(0,0,14,0)};
             calendar=new MonthCalendar(book,current,min,max,OpenDate) {Dock=DockStyle.Top,Height=Design.P(340)}; left.Controls.Add(calendar);
             var leftFooter=new Panel {Dock=DockStyle.Top,Height=Design.P(92)};
-            var legend=Design.Label("● 저장한 기록   ▧ 사진 있는 날",8); legend.ForeColor=Design.Muted; legend.Location=Design.Point(8,8); leftFooter.Controls.Add(legend);
+            var legend=Design.Label("● 기록   ▧ 사진   ★ 생일·기념일",8); legend.ForeColor=Design.Muted; legend.Location=Design.Point(8,8); leftFooter.Controls.Add(legend);
             monthSummary=Design.Label("",9,true); monthSummary.ForeColor=Design.Accent; monthSummary.Location=Design.Point(8,32); leftFooter.Controls.Add(monthSummary);
             var today=Design.Button("이번 달"); today.Size=Design.Size(80,28); today.Location=Design.Point(8,57); today.Click+=delegate { calendar.SetMonth(DateTime.Today); }; leftFooter.Controls.Add(today);
+            var anniversaries=Design.Button("생일·기념일 관리");anniversaries.Size=Design.Size(148,28);anniversaries.Location=Design.Point(96,57);anniversaries.Enabled=save!=null;anniversaries.Click+=delegate{using(var window=new AnniversaryWindow(book,save))window.ShowDialog(this);calendar.SetMonth(calendar.Month);RunSearch();};leftFooter.Controls.Add(anniversaries);
             left.Controls.Add(leftFooter); leftFooter.BringToFront();
             left.Resize+=delegate { calendar.Height=Math.Max(Design.P(260),Math.Min(Design.P(340),left.ClientSize.Height-Design.P(92))); };
             var right=new TableLayoutPanel {Dock=DockStyle.Fill,ColumnCount=1,RowCount=4,Margin=Design.Pad(0)};

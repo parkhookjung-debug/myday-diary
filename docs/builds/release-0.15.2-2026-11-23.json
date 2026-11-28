@@ -1,0 +1,86 @@
+{
+  "format": "myday-native-release",
+  "appVersion": "0.15.2",
+  "date": "2026-11-23",
+  "releaseTag": "v0.15.2-preview",
+  "releasePage": "https://github.com/parkhookjung-debug/myday-diary/releases/tag/v0.15.2-preview",
+  "buildSourceCommit": "d499ed6bad7efec59e7be806dbfc5601727549e1",
+  "files": [
+    {
+      "file": "MyDay-Windows.exe",
+      "platform": "windows",
+      "bytes": 784384,
+      "sha256": "2edb29376056008e8cbd1fb41caa0eba673b807dd293de38fbe4fc902ac80425",
+      "sourceCommit": "d499ed6bad7efec59e7be806dbfc5601727549e1",
+      "ci": "https://github.com/parkhookjung-debug/myday-diary/actions/runs/45143148077",
+      "url": "https://github.com/parkhookjung-debug/myday-diary/releases/download/v0.15.2-preview/MyDay-Windows.exe"
+    },
+    {
+      "file": "SangmonGame.exe",
+      "platform": "windows",
+      "bytes": 784384,
+      "sha256": "2edb29376056008e8cbd1fb41caa0eba673b807dd293de38fbe4fc902ac80425",
+      "sourceCommit": "d499ed6bad7efec59e7be806dbfc5601727549e1",
+      "ci": "https://github.com/parkhookjung-debug/myday-diary/actions/runs/45143148077",
+      "url": "https://github.com/parkhookjung-debug/myday-diary/releases/download/v0.15.2-preview/SangmonGame.exe"
+    },
+    {
+      "file": "SangmonFetch.exe",
+      "platform": "windows",
+      "bytes": 784384,
+      "sha256": "2edb29376056008e8cbd1fb41caa0eba673b807dd293de38fbe4fc902ac80425",
+      "sourceCommit": "d499ed6bad7efec59e7be806dbfc5601727549e1",
+      "ci": "https://github.com/parkhookjung-debug/myday-diary/actions/runs/45143148077",
+      "url": "https://github.com/parkhookjung-debug/myday-diary/releases/download/v0.15.2-preview/SangmonFetch.exe"
+    },
+    {
+      "file": "SangmonBlockPuzzle.exe",
+      "platform": "windows",
+      "bytes": 784384,
+      "sha256": "2edb29376056008e8cbd1fb41caa0eba673b807dd293de38fbe4fc902ac80425",
+      "sourceCommit": "d499ed6bad7efec59e7be806dbfc5601727549e1",
+      "ci": "https://github.com/parkhookjung-debug/myday-diary/actions/runs/45143148077",
+      "url": "https://github.com/parkhookjung-debug/myday-diary/releases/download/v0.15.2-preview/SangmonBlockPuzzle.exe"
+    },
+    {
+      "file": "MyDay-Android.apk",
+      "platform": "android",
+      "bytes": 15991060,
+      "sha256": "78174dcda8f9583095d5be914b985c10e95559b416810975ca54e2129a4f6bd3",
+      "sourceCommit": "d499ed6bad7efec59e7be806dbfc5601727549e1",
+      "ci": "https://github.com/parkhookjung-debug/myday-diary/actions/runs/45143153663",
+      "url": "https://github.com/parkhookjung-debug/myday-diary/releases/download/v0.15.2-preview/MyDay-Android.apk"
+    },
+    {
+      "file": "MyDay-macOS-arm64.zip",
+      "platform": "macos",
+      "bytes": 1945279,
+      "sha256": "541ea018918868963c5b8c43fafb3850b8a04b1436dee388aa39630c2ce38afc",
+      "sourceCommit": "d499ed6bad7efec59e7be806dbfc5601727549e1",
+      "ci": "https://github.com/parkhookjung-debug/myday-diary/actions/runs/45143160441",
+      "url": "https://github.com/parkhookjung-debug/myday-diary/releases/download/v0.15.2-preview/MyDay-macOS-arm64.zip"
+    }
+  ],
+  "checks": {
+    "windowsAssertions": 512,
+    "nativeSevenGamesDiaryAnniversariesAndFetch": true,
+    "blockPuzzleSeededPlacements": 1800,
+    "legacySixGameScoresBytePreserved": true,
+    "androidJvmTests": 57,
+    "androidDeviceApi35Tests": 19,
+    "androidLintErrors": 0,
+    "windowsAndroidMacBackupRoundTrips": true,
+    "macBuildAndNativeContracts": true,
+    "localChat": true,
+    "focusedAssetsOnly": true
+  },
+  "integratedPullRequest": 11,
+  "sourceAuthor": "cms6727",
+  "integratedSourceCommit": "06045194dae05bef139b45bc3606f61b9903f996",
+  "windowsGameCount": 7,
+  "macAndroidNewGameScreens": false,
+  "mainAppCodeMerged": false,
+  "cloudDeployed": false,
+  "androidCiAttempt": 2,
+  "androidInitialFailure": "Kakao Maven connection timeout; same-source retry succeeded"
+}

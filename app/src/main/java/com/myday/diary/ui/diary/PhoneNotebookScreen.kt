@@ -97,13 +97,14 @@ import java.time.LocalDate
                         Text("YOUR LITTLE FRIEND",style=MaterialTheme.typography.labelSmall)
                         Row(verticalAlignment=androidx.compose.ui.Alignment.CenterVertically) {
                             SangmonAvatar(controller.book.characterStyle,controller.book.equipment,Modifier.size(92.dp),haptics,controller.reactionTick)
-                            Column(Modifier.weight(1f)) {Text(AppShell.friendTitle,style=MaterialTheme.typography.titleMedium);Text("Lv.${NotebookRules.level(controller.book)} · ${NotebookRules.xp(controller.book)} XP",style=MaterialTheme.typography.labelSmall);TextButton({tab=2}) {Text("상몬·공방 열기")}}
+                            Column(Modifier.weight(1f)) {Text(AppShell.friendTitle,style=MaterialTheme.typography.titleMedium);Text("Lv.${NotebookRules.level(controller.book)} · ${NotebookRules.xp(controller.book)} XP",style=MaterialTheme.typography.labelSmall);TextButton({tab=2}) {Text("상몬 성장 열기")}}
                         }
                         Text("차곡차곡, 오늘의 실천",style=MaterialTheme.typography.titleSmall)
                         if(controller.reaction.isNotEmpty()) Text(controller.reaction,style=MaterialTheme.typography.bodySmall,color=AppPalette.olive)
                         listOf("todo" to "할 일","habit" to "습관").forEach {(kind,title)->val tasks=entry.blocks.filter {it.type==kind}
-                            Row(Modifier.fillMaxWidth(),horizontalArrangement=Arrangement.SpaceBetween) {Text(title);Text("${tasks.count {it.checked}} / ${tasks.size}")}
-                            LinearProgressIndicator(progress={if(tasks.isEmpty()) 0f else tasks.count {it.checked}.toFloat()/tasks.size},modifier=Modifier.fillMaxWidth().padding(top=6.dp,bottom=10.dp))
+                            val counts=if(kind=="todo") tasks.flatMap {TodoRules.items(it)}.let {it.count {t->t.checked} to it.size} else tasks.count {it.checked} to tasks.size
+                            Row(Modifier.fillMaxWidth(),horizontalArrangement=Arrangement.SpaceBetween) {Text(title);Text("${counts.first} / ${counts.second}")}
+                            LinearProgressIndicator(progress={if(counts.second==0) 0f else counts.first.toFloat()/counts.second},modifier=Modifier.fillMaxWidth().padding(top=6.dp,bottom=10.dp))
                         }
                     }}}
                     item {FlowRow(horizontalArrangement=Arrangement.spacedBy(8.dp)) {
@@ -120,7 +121,7 @@ import java.time.LocalDate
                         onDelete={deleting=block.id},onPhoto={onPhoto(block.id)},canMoveUp=index>0,canMoveDown=index<entry.blocks.lastIndex)}
                     item {Text("감정처리반은 마음을 적어 보관하는 공간이에요.",style=MaterialTheme.typography.bodySmall)}
                 }
-                1->PhoneCalendar(controller.book,date) {next->attempt(TactileEvent.SELECT) {controller.selectDate(next);if(controller.saved) tab=0}}
+                1->PhoneCalendar(controller.book,date,onAnniversaries={rows->controller.configure {it.copy(studio=(it.studio ?: StudioData()).copy(anniversaries=rows))}}) {next->attempt(TactileEvent.SELECT) {controller.selectDate(next);if(controller.saved) tab=0}}
                 2->PhoneCompanion(controller,catalog,haptics,attempt)
                 3->PhoneCommunity(controller)
                 else->LazyColumn(Modifier.fillMaxSize().padding(horizontal=20.dp),verticalArrangement=Arrangement.spacedBy(14.dp),contentPadding=PaddingValues(top=14.dp,bottom=24.dp)) {
@@ -129,12 +130,12 @@ import java.time.LocalDate
                     item {Button({journalTools=true},modifier=Modifier.fillMaxWidth().testTag("journal-tools-open")) {Text("기록 도구 · 복구 / 리포트 / 알림")}}
                     item {Text("오늘의 분위기",style=MaterialTheme.typography.headlineSmall);FlowRow(horizontalArrangement=Arrangement.spacedBy(8.dp)) {DiaryOptions.themes.forEach {theme->FilterChip(entry.theme==theme.id,{attempt(TactileEvent.SELECT) {controller.edit(entry.copy(theme=theme.id))}},label={Text(theme.name)})}}}
                     item {Card(colors=CardDefaults.cardColors(containerColor=Color.White)) {Row(Modifier.fillMaxWidth().padding(16.dp),horizontalArrangement=Arrangement.SpaceBetween) {
-                        Column(Modifier.weight(1f)) {Text("햅틱 반응",style=MaterialTheme.typography.titleMedium);Text("체크·블록 이동·장착에 짧게 반응해요. 휴대폰의 터치 피드백 설정을 따라요.",style=MaterialTheme.typography.bodySmall)}
+                        Column(Modifier.weight(1f)) {Text("햅틱 반응",style=MaterialTheme.typography.titleMedium);Text("체크·블록 이동에 짧게 반응해요. 휴대폰의 터치 피드백 설정을 따라요.",style=MaterialTheme.typography.bodySmall)}
                         Switch(controller.book.haptics,{enabled->attempt(null) {controller.configure {it.copy(haptics=enabled)}}})
                     }}}
                     item {Card(colors=CardDefaults.cardColors(containerColor=Color.White)) {Column(Modifier.padding(16.dp),verticalArrangement=Arrangement.spacedBy(10.dp)) {
                         Text("소중한 하루 보관하기",style=MaterialTheme.typography.titleMedium)
-                        Text("사진·배치·상몬 성장·장비를 함께 보관하고 Windows에서도 가져올 수 있어요.",style=MaterialTheme.typography.bodySmall)
+                        Text("사진·배치·상몬 성장을 함께 보관하고 세 버전에서 가져올 수 있어요. 영상 원본은 따로 보관해 주세요.",style=MaterialTheme.typography.bodySmall)
                         Button(onExport,modifier=Modifier.fillMaxWidth()) {Text("↓ 백업 다운로드")}
                         OutlinedButton(onImport,modifier=Modifier.fillMaxWidth()) {Text("↥ 백업 복원")}
                     }}}
@@ -142,7 +143,7 @@ import java.time.LocalDate
                         Text("홈 화면의 작은 친구",style=MaterialTheme.typography.titleMedium)
                         OutlinedButton(home::pinWidget,modifier=Modifier.fillMaxWidth()) {Text("홈 화면에 일기 위젯 추가")}
                         Button(home::setWallpaper,modifier=Modifier.fillMaxWidth()) {Text("상몬 라이브 배경화면 설정")}
-                        Text("선택한 상몬과 장비가 홈 화면에도 함께해요.",style=MaterialTheme.typography.bodySmall)
+                        Text("기본 상몬이 홈 화면에서도 함께해요.",style=MaterialTheme.typography.bodySmall)
                     }}}
                 }
             }

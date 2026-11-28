@@ -1,5 +1,7 @@
 # Windows·Mac·Android 공통 원본
 
+**현재 0.15 제품 범위:** [product.json](product.json)에서 기본 상몬 한 마리와 배포 이미지 허용 목록을 관리합니다. 변신·코디·뽑기·재화·합성 화면은 제거했고, 기존 장비·수집 규칙은 이전 백업 검증용으로 보관합니다. [간소화 안내](../docs/FOCUSED-APP.md).
+
 **세 앱에 함께 적용할 내용은 이 폴더에서 수정합니다.** Windows 화면은 WinForms, Mac 화면은 SwiftUI를 유지합니다. 공통 JSON에서 C#·Swift 코드와 Mac 리소스를 생성하며 앱 실행 때 Python·인터넷·서버는 필요하지 않습니다.
 
 공통 화면·기능과 실행 파일: [세 플랫폼 안내](../docs/THREE-PLATFORMS.md).
@@ -14,6 +16,7 @@
 | 분류 이름·배치 이름·참고 링크 | [desktop.json](desktop.json)의 categories·layouts·references |
 | 공통 색상·종이·배경·채팅 말풍선 | [desktop.json](desktop.json)의 design |
 | 블록 수·본문·제목·질문 길이·좌표·크기 | [desktop.json](desktop.json)의 limits |
+| 할 일 기본 높이·목록 항목 한도 | [desktop.json](desktop.json)의 limits.TodoHeight·MaxTodoItems → C#·Swift·Kotlin 생성 |
 | 채팅 메시지·닉네임·페이지·내역 제한 | [desktop.json](desktop.json)의 chat |
 | 두 OS에서 같아야 하는 이동·크기 결과 | [fixtures/layout.json](fixtures/layout.json) |
 | 공동 디자인의 원본 커밋·반영 기준 | [design-source.json](design-source.json), [디자인 반영 안내](../docs/DESIGN-SYNC.md) |

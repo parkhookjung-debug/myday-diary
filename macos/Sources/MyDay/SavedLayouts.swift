@@ -18,11 +18,12 @@ extension DiaryStore {
                 let positions = entry.layoutMode == "free" ? entry.blocks.map(DiaryLayout.bounds) : DiaryLayout.autoArrange(entry.blocks, width: 900)
                 let blocks: [JSONValue] = entry.blocks.enumerated().map { index, b in
                     let r = positions[index]
-                    return .object(["Kind": .string(b.kind == .photo ? "photo-slot" : b.kind == .video ? "text" : b.kind.rawValue), "Title": b.title.map(JSONValue.string) ?? .null, "Prompt": b.prompt.map(JSONValue.string) ?? .null, "Wide": .bool(b.wide), "X": .number(Double(r.x)), "Y": .number(Double(r.y)), "Width": .number(Double(r.width)), "Height": .number(Double(r.height))])
+                    return .object(["Kind": .string(b.kind == .photo ? "photo-slot" : b.kind.rawValue), "Title": b.title.map(JSONValue.string) ?? .null, "Prompt": b.prompt.map(JSONValue.string) ?? .null, "Wide": .bool(b.wide), "X": .number(Double(r.x)), "Y": .number(Double(r.y)), "Width": .number(Double(r.width)), "Height": .number(Double(r.height))])
                 }
                 list.append(["Id": .string(UUID().uuidString.lowercased()), "Name": .string(name), "Mode": .string(entry.layoutMode), "Style": .string(entry.pageStyle), "Theme": .number(Double(entry.theme)), "Blocks": .array(blocks)])
             }
             s.fields["Layouts"] = .array(list.map(JSONValue.object))
+            if list.contains(where:{($0["Blocks"]?.array ?? []).contains{$0.object?["Kind"]?.string=="video"}}){s.fields["Version"] = .number(10)}
         }
     }
     func deleteLayout(_ id: String) { save(); guard error == nil else { return }; commitShared { s in s.fields["Layouts"] = .array((s.fields["Layouts"]?.array ?? []).filter { $0.object?["Id"]?.string != id }) } }

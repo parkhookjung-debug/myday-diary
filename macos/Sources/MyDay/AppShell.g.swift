@@ -5,6 +5,6 @@ enum AppShell {
     static let greeting="오늘은 어떤 하루였나요?"
     static let subtitle="완벽하지 않아도 괜찮아요. 나의 속도로, 한 줄씩."
     static let friendTitle="오늘도 네 편이야"
-    static let titles=["일기","달력·검색","상몬·공방","라운지","설정·백업"]
+    static let titles=["일기","달력·검색","상몬 성장","라운지","설정·백업"]
     static let symbols=["▤","▦","✦","◌","⚙"]
 }

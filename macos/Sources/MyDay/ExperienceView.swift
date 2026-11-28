@@ -19,8 +19,8 @@ struct ExperienceView:View {
             HStack{Spacer();Button("시작하기"){dismiss()}.keyboardShortcut(.defaultAction)}.padding(20)
         }.frame(minWidth:580,idealWidth:780,minHeight:520,idealHeight:700).background(DesktopPalette.sidebar).foregroundStyle(DesktopPalette.ink).tint(DesktopPalette.olive).buttonStyle(PaperButtonStyle())
     }
-    private var rewardSummary:some View {let s=store.sharedCompanion;let state=(try? s.state()) ?? SharedCollectionState()
-        return Text("Lv.\(s.level) · \(s.xp) XP · 만렙까지 \(max(0,DesktopContract.growthMaxXP-s.xp)) XP\n클로버 \(state.coins)개 · \(state.coins/20)회 뽑기 가능 · 다음 1회까지 \(max(0,20-state.coins))개\n"+(state.owned.count==300 ? "소품 300종 수집 완료":"\(10-state.draws%10)회 후 새 소품 보장")+" · 보유 \(state.owned.count) / 300종").font(.headline)
+    private var rewardSummary:some View {let s=store.sharedCompanion
+        return Text("Lv.\(s.level) · \(s.xp) XP · 만렙까지 \(max(0,DesktopContract.growthMaxXP-s.xp)) XP").font(.headline)
     }
 }
 struct RecoveryView:View {

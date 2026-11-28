@@ -10,6 +10,11 @@ arr=lambda k:','.join(json.dumps(x,ensure_ascii=False) for x in data[k])
 cs='namespace MyDay.Windows.Core { public static class StudioCatalog {\n'+''.join('public static readonly string[] '+k[0].upper()+k[1:]+'={'+arr(k)+'};\n' for k in keys)+'}}\n'
 kt='package com.myday.diary.data\nobject StudioCatalog {\n'+''.join('val '+k+'=listOf('+arr(k)+')\n' for k in keys)+'}\n'
 sw='enum StudioCatalog {\n'+''.join('static let '+k+'=['+arr(k)+']\n' for k in keys)+'}\n'
+for key in ('anniversaryLimit','anniversaryNameLength'):
+ assert isinstance(data[key],int) and not isinstance(data[key],bool) and 1<=data[key]<=500
+cs=cs[:-3]+''.join('public const int '+key[0].upper()+key[1:]+'='+str(data[key])+';\n' for key in ('anniversaryLimit','anniversaryNameLength'))+'}}\n'
+kt=kt[:-2]+''.join('const val '+key+'='+str(data[key])+'\n' for key in ('anniversaryLimit','anniversaryNameLength'))+'}\n'
+sw=sw[:-2]+''.join('static let '+key+'='+str(data[key])+'\n' for key in ('anniversaryLimit','anniversaryNameLength'))+'}\n'
 outputs={'windows/Core/Shared/StudioCatalog.g.cs':cs,'app/src/main/java/com/myday/diary/data/StudioCatalog.g.kt':kt,'macos/Sources/MyDay/StudioCatalog.g.swift':sw}
 for path,value in outputs.items():
  p=root/path

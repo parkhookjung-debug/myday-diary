@@ -20,7 +20,7 @@ def expected():
         'Layouts':[case['expected'] for case in cases],
         'Limits':[limits[k] for k in ['MaxDays','MaxBlocks','MaxTextUtf16','MaxTitleUtf16','MaxPromptUtf16','MinWidth','MaxWidth','MinHeight','MaxHeight','MaxPosition']]
             + [chat[k] for k in ['ChatProtocol','ChatMaxText','ChatMaxPage','ChatMaxUsers','ChatVisibleHistory']],
-        'Heights':[limits['PhotoHeight'] if k in ['photo','photo-slot'] else limits['EmotionHeight'] if k=='emotion' else limits['TextHeight'] for k in c['blockKinds']],
+        'Heights':[limits['PhotoHeight'] if k in ['photo','photo-slot','video'] else limits['EmotionHeight'] if k=='emotion' else limits['TodoHeight'] if k=='todo' else limits['TextHeight'] for k in c['blockKinds']],
         'Palette':[c['design'][k] for k in ['Ink','Muted','Accent','Paper']] + c['design']['Backgrounds'],
     }
 

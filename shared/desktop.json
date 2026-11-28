@@ -15,7 +15,14 @@
     "DefaultWidth": 340,
     "PhotoHeight": 360,
     "EmotionHeight": 288,
-    "TextHeight": 250
+    "TextHeight": 250,
+    "TodoHeight": 420,
+    "MaxTodoItems": 100,
+    "PetMinThrowSpeed": 140,
+    "PetMaxThrowSpeed": 5200,
+    "PetGravity": 1150,
+    "PetThrowGainPercent": 180,
+    "PetRestitutionPercent": 72
   },
   "chat": {
     "ChatProtocol": 1,
@@ -88,7 +95,8 @@
     "habit",
     "emotion",
     "photo",
-    "photo-slot"
+    "photo-slot",
+    "video"
   ],
   "pageStyles": [
     "plain",
