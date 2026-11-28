@@ -3,6 +3,7 @@ import WebKit
 
 @MainActor enum PlayroomVerification {
     static func script(_ web:WKWebView,_ source:String)async throws->Any? {try await withCheckedThrowingContinuation {continuation in web.evaluateJavaScript(source){result,error in if let error{continuation.resume(throwing:error)}else{continuation.resume(returning:result)}}}}
+    static func perform(_ web:WKWebView,_ source:String)async throws{_ = try await script(web,source+"\n;null")}
     static func run()async throws {
         print("Native playroom: starting on AppKit main run loop")
         let root=FileManager.default.temporaryDirectory.appendingPathComponent("MyDay-playroom-\(UUID())")
@@ -15,15 +16,15 @@ import WebKit
         try MacVerification.check(ready,"native WKWebView offline playroom loads its nine cards")
         print("Native playroom: hub loaded")
         for (index,id) in ["snack","sling","fish","jump","bake","blocks","block-puzzle"].enumerated(){
-            _ = try await script(web,"document.querySelectorAll('#cards .card')[\(index)].click()")
+            try await perform(web,"document.querySelectorAll('#cards .card')[\(index)].click()")
             let current=try await script(web,"MyDayPlayroom.snapshot().id") as? String;try MacVerification.check(current==id,"native game opens: "+id)
-            _ = try await script(web,"MyDayPlayroom.pause()")
+            try await perform(web,"MyDayPlayroom.pause()")
             let paused=try await script(web,"MyDayPlayroom.snapshot().state") as? String
             try MacVerification.check(paused=="paused","native game pauses on focus loss")
-            _ = try await script(web,"window.confirm=()=>true;document.getElementById('back').click()")
+            try await perform(web,"window.confirm=()=>true;document.getElementById('back').click()")
         }
         // Exercise the actual persistent bridge twice with one round token.
-        _ = try await script(web,"window.webkit.messageHandlers.myday.postMessage(JSON.stringify({type:'score',token:'test',round:'native-test',id:'snack',score:30}));window.webkit.messageHandlers.myday.postMessage(JSON.stringify({type:'score',token:'test',round:'native-test',id:'snack',score:30}));")
+        try await perform(web,"window.webkit.messageHandlers.myday.postMessage(JSON.stringify({type:'score',token:'test',round:'native-test',id:'snack',score:30}));window.webkit.messageHandlers.myday.postMessage(JSON.stringify({type:'score',token:'test',round:'native-test',id:'snack',score:30}));")
         for _ in 0..<40 {if FileManager.default.fileExists(atPath:root.appendingPathComponent("games/scores.json").path){break};try await Task.sleep(nanoseconds:50_000_000)}
         let raw=try JSONSerialization.jsonObject(with:Data(contentsOf:root.appendingPathComponent("games/scores.json"))) as! [String:Any];let rows=raw["Entries"] as! [[String:Any]]
         try MacVerification.check(rows.count==1 && rows[0]["Best"] as? Int==30 && rows[0]["Plays"] as? Int==1,"native bridge persists a finished round exactly once")
