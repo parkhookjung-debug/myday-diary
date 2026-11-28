@@ -100,7 +100,8 @@ class NotebookStorageDeviceTest {
         assertTrue(plain.sameAs(retired));plain.recycle();retired.recycle()
         val original=target.assets.open("sangmon/original.png").use {BitmapFactory.decodeStream(it)}
         assertEquals(1536,original.width);assertEquals(1536,original.height)
-        fun warm(row: Int,frame: Int): Int {var count=0;for(y in 0 until 192) for(x in 0 until 192) {val p=original.getPixel(frame*192+x,row*192+y);if(Color.alpha(p)>0 && Color.red(p)>240 && Color.green(p) in 171..234 && Color.blue(p)<180) count++};return count}
+        // Ignore near-transparent antialias rounding; use the same visible-flame threshold as Windows.
+        fun warm(row: Int,frame: Int): Int {var count=0;for(y in 0 until 192) for(x in 0 until 192) {val p=original.getPixel(frame*192+x,row*192+y);if(Color.alpha(p)>32 && Color.red(p)>240 && Color.green(p) in 171..234 && Color.blue(p)<180) count++};return count}
         assertEquals(0,warm(0,0));assertTrue(warm(2,2)>10);original.recycle()
     }
 }
